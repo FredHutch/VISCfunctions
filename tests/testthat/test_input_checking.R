@@ -29,6 +29,7 @@ test_that(".check_binary_input error-free when expected", {
   expect_error(.check_binary_input(1:2), NA)
   expect_error(.check_binary_input(5), NA)
   expect_error(.check_binary_input(factor(rep(1:2,10))), NA)
+  expect_error(.check_binary_input(c(F,T,T,F)), NA)
   my_vals <- c(1,10,1,1,NA,10)
   expect_error(.check_binary_input(my_vals), NA)
 })
