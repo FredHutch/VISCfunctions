@@ -9,9 +9,12 @@ test_that(".check_numeric_input error-free when expected", {
 })
 
 test_that(".check_numeric_input throws appropriate errors", {
+  my_matrix <- matrix(1:10,nrow = 2)
+  expect_error(.check_numeric_input(my_matrix), 'my_matrix must be a vector \\(one-dimensional object\\)')
+
   expect_error(.check_numeric_input(numeric(0)), 'numeric\\(0\\) length must be > 0')
 
-  expect_error(.check_numeric_input(c(NA,NA,NA)), 'c\\(NA, NA, NA\\) must have non "NA" values')
+  expect_error(.check_numeric_input(c(NA,NA,NA)), 'c\\(NA, NA, NA\\) must have at least a non "NA" value')
 
   expect_error(.check_numeric_input(letters[1:5]), 'letters\\[1:5\\] must be a numeric vector')
   my_letters <- letters[1:10]
@@ -35,9 +38,12 @@ test_that(".check_binary_input error-free when expected", {
 })
 
 test_that(".check_binary_input throws appropriate errors", {
+  my_matrix <- matrix(rep(c('a','b'),5),nrow = 2)
+  expect_error(.check_binary_input(my_matrix), 'my_matrix must be a vector \\(one-dimensional object\\)')
+
   expect_error(.check_binary_input(numeric(0)), 'numeric\\(0\\) length must be > 0')
 
-  expect_error(.check_binary_input(c(NA,NA,NA)), 'c\\(NA, NA, NA\\) must have non "NA" values')
+  expect_error(.check_binary_input(c(NA,NA,NA)), 'c\\(NA, NA, NA\\) must have at least a non "NA" value')
 
   expect_error(.check_binary_input(1:10), '1\\:10 can not have more than 2 distinct values')
 })
@@ -52,9 +58,12 @@ test_that(".check_response_input error-free when expected", {
 })
 
 test_that(".check_response_input throws appropriate errors", {
+  my_matrix <- matrix(rep(0:1,5),nrow = 2)
+  expect_error(.check_response_input(my_matrix), 'my_matrix must be a vector \\(one-dimensional object\\)')
+
   expect_error(.check_response_input(numeric(0)), 'numeric\\(0\\) length must be > 0')
 
-  expect_error(.check_response_input(c(NA,NA,NA)), 'c\\(NA, NA, NA\\) must have non "NA" values')
+  expect_error(.check_response_input(c(NA,NA,NA)), 'c\\(NA, NA, NA\\) must have at least a non "NA" value')
 
   expect_error(.check_response_input(1:10), '1\\:10 must contain only 0/1 or T/F values')
   my_letters <- c('a','b')
