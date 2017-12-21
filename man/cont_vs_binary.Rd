@@ -10,7 +10,7 @@ cont_vs_binary(x, y, method = c("wilcox", "t"), paired = FALSE,
 \arguments{
 \item{x}{numeric vector (can include NA values)}
 
-\item{y}{vector with only 2 levels (can include NA values)}
+\item{y}{vector with only 2 levels (can include NA values unless \code{paired = TRUE})}
 
 \item{method}{what test to run (wilcox or t test)}
 
@@ -27,15 +27,20 @@ pvalue for comparing x at the different levels of y
 Either Wilcox or T-Test Performed, for unpaired or paired data
 }
 \details{
-Runs wilcox_test() in the coin package, with "exact" distribution and mid-ranks ties method.
+Runs \code{wilcox_test()} in the coin package, with "exact" distribution and mid-ranks ties method.
 
-For one sided tests if y is a factor variable the level order is respected, otherwise the levels will set to alphabetical order (i.e. if alternative = less then testing a < b )
+For one sided tests if y is a factor variable the level order is respected, otherwise the levels will set to alphabetical order (i.e. if \code{alternative = less} then testing a < b )
+
+If Paired = TRUE assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{Paired = TRUE} then \code{y} must have the same number of samples for each level.
 }
 \examples{
 
 set.seed(5432322)
 x <- c(rnorm(10,0,3), rnorm(10,3,3))
 y <- c(rep('a', 10), rep('b', 10))
-cont_vs_binary(x,y)
+cont_vs_binary(x = x, y = y, method = 'wilcox', paired = FALSE)
+cont_vs_binary(x = x, y = y, method = 'wilcox', paired = TRUE)
+cont_vs_binary(x = x, y = y, method = 't', paired = FALSE)
+cont_vs_binary(x = x, y = y, method = 't', paired = TRUE)
 
 }
