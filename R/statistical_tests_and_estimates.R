@@ -20,12 +20,12 @@
 #' set.seed(5432322)
 #' x <- c(rnorm(10,0,3), rnorm(10,3,3))
 #' y <- c(rep('a', 10), rep('b', 10))
-#' continuous_vs_binary_test(x,y)
+#' cont_vs_binary(x,y)
 #'
 #' @export
 
 
-continuous_vs_binary_test <- function(x, y, method = c('wilcox', 't'), paired = FALSE, verbose = FALSE, ...){
+cont_vs_binary <- function(x, y, method = c('wilcox', 't'), paired = FALSE, verbose = FALSE, ...){
   # Input checking
   method <- match.arg(method)
   .check_numeric_input(x)
@@ -33,6 +33,10 @@ continuous_vs_binary_test <- function(x, y, method = c('wilcox', 't'), paired = 
   y <- droplevels(factor(y))
 
   data_here <- na.omit(data.frame(x,y))
+  if (nrow(data_here) == 0) {
+    if (verbose) message('There are no observations with non-mising values of both "x" and "y", so p=NA returned')
+    return(NA)
+  }
 
   if (length(unique(data_here$x)) == 1) {
     if (verbose) message('"x" only has 1 distinct value when considering non-missing values of y, so p=1 returned')
