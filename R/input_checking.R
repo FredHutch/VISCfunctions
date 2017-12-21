@@ -54,7 +54,7 @@
   if (length(x) == 0) stop(deparse(match.call()[[2]]), ' length must be > 0')
   x <- x[!is.na(x)]
   if (length(x) == 0) stop(deparse(match.call()[[2]]), ' must have at least a non "NA" value')
-  if (!is.logical(x) & !all(x %in% c(NA,'T','F') & !all(x %in% c(NA,0,1))) stop(deparse(match.call()[[2]]), ' must contain only 0/1 or T/F values')
+  if (!is.logical(x) & !all(x %in% c(NA,'T','F')) & !all(x %in% c(NA,0,1))) stop(deparse(match.call()[[2]]), ' must contain only 0/1 or T/F values')
 }
 
 

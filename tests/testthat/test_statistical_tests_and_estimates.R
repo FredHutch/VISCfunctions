@@ -1,7 +1,7 @@
 context("statistical_tests_and_estimates")
 
 # test cont_vs_binary
-test_that("cont_vs_binary testing not throwing errors", {
+test_that("cont_vs_binary testing", {
 
   ###No ties testing all four options (wilcox/t and paired/unpaired)###
   set.seed(5432322)
@@ -18,7 +18,7 @@ test_that("cont_vs_binary testing not throwing errors", {
   expect_equal(object = cont_vs_binary(x = x, y = y, method = 't', paired = FALSE, verbose = T),
                expected = 0.01890551, tolerance = 1e-7)
   #t.test(x~factor(y), paired=T, var.equal = T)$p.value
-  #t.test(x[1:10], x[11:20], paired=T, var.equal = T)$p.value
+  #t.test(x[1:10], x[11:20], paired=T, var.Cequal = T)$p.value
   expect_equal(object = cont_vs_binary(x = x, y = y, method = 't', paired = TRUE, verbose = T),
                expected = 0.03394079, tolerance = 1e-7)
   #Testing var.equal = T option in t.test
@@ -37,7 +37,7 @@ test_that("cont_vs_binary testing not throwing errors", {
                  regexp = '"x" only has 1 distinct value when considering non-missing values of y, so p=1 returned')
 
   #Testing case where all y have same value
-  expect_equal(object = cont_vs_binary(x = x, y = rep(1,20)), expected = 1)
+  expect_equal(object = cont_vs_binary(x = x, y = rep(1,20)), expected = NA)
   expect_message(object = cont_vs_binary(x = x, y = rep(1,20), verbose = T),
                  regexp = '"y" only has 1 level when considering non-missing values of x, so p=NA returned')
 })
