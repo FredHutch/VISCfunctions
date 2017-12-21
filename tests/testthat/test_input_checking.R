@@ -68,6 +68,8 @@ test_that(".check_response_input throws appropriate errors", {
   expect_error(.check_response_input(1:10), '1\\:10 must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
   my_letters <- c('a','b')
   expect_error(.check_response_input(my_letters), 'my_letters must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
+  my_letters <- c('T','F')
+  expect_error(.check_response_input(my_letters), 'my_letters must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
 })
 
 
