@@ -8,24 +8,32 @@ test_that("two_samp_cont_test testing", {
   x <- c(NA,rnorm(10,0,3), rnorm(10,3,3),NA)
   y <- c(rep('a', 10), NA, NA, rep('b', 10))
 
-  #coin::pvalue(coin::wilcox_test(x~factor(y),distribution = "exact", ties.method = "mid-ranks"))
+  # Wilcox Unpaired
   expect_equal(object = two_samp_cont_test(x = x, y = y, method = 'wilcox', paired = FALSE, verbose = T),
-               expected = 0.02443439, tolerance = 1e-8)
-  #coin::pvalue(coin::wilcoxsign_test(x[1:10]~x[13:22],distribution = "exact"))
+               expected = coin::pvalue(coin::wilcox_test(x~factor(y),distribution = "exact", ties.method = "mid-ranks"))
+               , tolerance = 1e-8)
+  # Wilcox Paired
   expect_equal(object = two_samp_cont_test(x = x[-(11:12)], y = y[-(11:12)], method = 'wilcox', paired = TRUE, verbose = T),
-               expected = 0.109375, tolerance = 1e-8)
-  #t.test(x~factor(y), paired=F, var.equal = F)$p.value
+               expected = coin::pvalue(coin::wilcoxsign_test(x[1:10]~x[13:22],distribution = "exact"))
+               , tolerance = 1e-8)
+  # T-Test Unpaired
   #t.test(x[1:10], x[13:22], paired=F, var.equal = F)$p.value
   expect_equal(object = two_samp_cont_test(x = x, y = y, method = 't', paired = FALSE, verbose = T),
-               expected = 0.02138081, tolerance = 1e-8)
-  #t.test(x[-c(1,10:13,22)]~factor(y[-c(1,10:13,22)]), paired=T, var.equal = F)$p.value
-  #t.test(x[1:10], x[13:22], paired=T, var.equal = F)$p.value
+               expected = t.test(x~factor(y), paired = F, var.equal = F)$p.value,
+               tolerance = 1e-8)
+  # T-Test Paired
+  #Note the list also works: t.test(x[1:10], x[13:22], paired=T, var.equal = F)$p.value
   expect_equal(object = two_samp_cont_test(x = x[-(11:12)], y = y[-(11:12)], method = 't', paired = TRUE, verbose = T),
-               expected = 0.0752293, tolerance = 1e-8)
-  #Testing var.equal = T option in t.test
-  #t.test(x~factor(y), paired=F, var.equal = T)$p.value
+               expected = t.test(x[-c(1,10:13,22)]~factor(y[-c(1,10:13,22)]), paired = T, var.equal = F)$p.value,
+               tolerance = 1e-8)
+  #Testing var.equal = T option in T-Test Unpaired
   expect_equal(object = two_samp_cont_test(x = x, y = y, method = 't', paired = FALSE, verbose = T, var.equal = T),
-               expected = 0.02129004, tolerance = 1e-8)
+               expected = t.test(x~factor(y), paired = F, var.equal = T)$p.value,
+               tolerance = 1e-8)
+  #Testing alternative param can be used
+  expect_equal(object = two_samp_cont_test(x = x, y = y, method = 't', paired = FALSE, verbose = T, alternative = 'less'),
+               expected = t.test(x~factor(y), paired = F, alternative = 'less')$p.value,
+               tolerance = 1e-8)
 
   #Testing if x and y are different lengths
   expect_error(two_samp_cont_test(x = x[-1], y = y), '"x" and "y" must be the same length')
