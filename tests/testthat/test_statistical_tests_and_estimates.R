@@ -31,8 +31,8 @@ test_that("two_samp_cont_test testing", {
   expect_error(two_samp_cont_test(x = x[-1], y = y), '"x" and "y" must be the same length')
 
   #Testing paired errors
-  expect_error(two_samp_cont_test(x = x, y = y, method = 't', paired = TRUE), 'When "Paired" = TRUE "y" can not have missing values')
-  expect_error(two_samp_cont_test(x = x[-(11:13)], y = y[-(11:13)], method = 't', paired = TRUE), 'When "Paired" = TRUE "y" must have the same number of samples for each level')
+  expect_error(two_samp_cont_test(x = x, y = y, method = 't', paired = TRUE), 'When "paired" = TRUE "y" can not have missing values')
+  expect_error(two_samp_cont_test(x = x[-(11:13)], y = y[-(11:13)], method = 't', paired = TRUE), 'When "paired" = TRUE "y" must have the same number of samples for each level')
 
   #Testing case where no non-missing pairs
   expect_equal(object = two_samp_cont_test(x = c(rep(1,20),rep(NA,20)), y = c(rep(NA,20),rep(1,20))), expected = NA)
