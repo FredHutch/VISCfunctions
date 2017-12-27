@@ -15,22 +15,22 @@
 #'
 #' For one sided tests if y is a factor variable the level order is respected, otherwise the levels will set to alphabetical order (i.e. if \code{alternative = less} then testing a < b )
 #'
-#' If Paired = TRUE assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{Paired = TRUE} then \code{y} must have the same number of samples for each level.
+#' If paired = TRUE assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{paired = TRUE} then \code{y} must have the same number of samples for each level.
 #'
 #' @examples
 #'
 #' set.seed(5432322)
 #' x <- c(rnorm(10,0,3), rnorm(10,3,3))
 #' y <- c(rep('a', 10), rep('b', 10))
-#' cont_vs_binary(x = x, y = y, method = 'wilcox', paired = FALSE)
-#' cont_vs_binary(x = x, y = y, method = 'wilcox', paired = TRUE)
-#' cont_vs_binary(x = x, y = y, method = 't', paired = FALSE)
-#' cont_vs_binary(x = x, y = y, method = 't', paired = TRUE)
+#' two_samp_cont_test(x = x, y = y, method = 'wilcox', paired = FALSE)
+#' two_samp_cont_test(x = x, y = y, method = 'wilcox', paired = TRUE)
+#' two_samp_cont_test(x = x, y = y, method = 't', paired = FALSE)
+#' two_samp_cont_test(x = x, y = y, method = 't', paired = TRUE)
 #'
 #' @export
 
 
-cont_vs_binary <- function(x, y, method = c('wilcox', 't'), paired = FALSE, verbose = FALSE, ...){
+two_samp_cont_test <- function(x, y, method = c('wilcox', 't'), paired = FALSE, verbose = FALSE, ...){
   # Input checking
   method <- match.arg(method)
   .check_numeric_input(x)
@@ -40,8 +40,8 @@ cont_vs_binary <- function(x, y, method = c('wilcox', 't'), paired = FALSE, verb
   if (length(x) != length(y)) stop('"x" and "y" must be the same length')
 
   #Some paired error checking
-  if (paired & any(is.na(y))) stop('When "Paired" = TRUE "y" can not have missing values')
-  if (paired & sum(y == levels(y)[1]) != sum(y == levels(y)[2])) stop('When "Paired" = TRUE "y" must have the same number of samples for each level')
+  if (paired & any(is.na(y))) stop('When "paired" = TRUE "y" can not have missing values')
+  if (paired & sum(y == levels(y)[1]) != sum(y == levels(y)[2])) stop('When "paired" = TRUE "y" must have the same number of samples for each level')
 
   # Removing cases where x and y are both NA
   data_here <- data.frame(x,y)[!(is.na(x) & is.na(y)),]
