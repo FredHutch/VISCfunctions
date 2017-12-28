@@ -34,14 +34,10 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't'), paired = FALSE, 
   # Input checking
   method <- match.arg(method)
   .check_numeric_input(x)
-  .check_binary_input(y)
+  .check_binary_input(y, paired = paired)
   y <- droplevels(factor(y))
 
   if (length(x) != length(y)) stop('"x" and "y" must be the same length')
-
-  #Some paired error checking
-  if (paired & any(is.na(y))) stop('When "paired" = TRUE "y" can not have missing values')
-  if (paired & sum(y == levels(y)[1]) != sum(y == levels(y)[2])) stop('When "paired" = TRUE "y" must have the same number of samples for each level')
 
   # Removing cases where x and y are both NA
   data_here <- data.frame(x,y)[!(is.na(x) & is.na(y)),]
