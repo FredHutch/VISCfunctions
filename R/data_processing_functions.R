@@ -10,7 +10,7 @@
 #' y_bin <- c(rep(1:2,6))
 #' y_cont <- c(1:10,NA,100)
 #' .rm_na_and_check(x, y_bin)
-#' .rm_na_and_check(x, y_cont)
+#' .rm_na_and_check(x, y_cont, y_type = 'continuous')
 #'
 
 .rm_na_and_check = function(x, y, y_type = c('binary', 'continuous'), verbose = FALSE){
@@ -38,7 +38,7 @@
       if (verbose) message('"y" only has 1 level when considering non-missing values of x, so p=NA returned')
       return(NA)
     } else {
-      if (verbose) message('"y" only has 1 level when considering non-missing values of x, so p=1 returned')
+      if (verbose) message('"y" only has 1 distinct value when considering non-missing values of x, so p=1 returned')
       return(1)
     }
   }
