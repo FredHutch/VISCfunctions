@@ -24,6 +24,7 @@
 #' Checking Binary Vector Input
 #'
 #' @param x binary vector (can include NA values)
+#' @param paired a logical indicating whether to add paired testing checking
 #'
 #' @examples
 #' example_vals <- c(rep(0:1,10), NA)
@@ -31,12 +32,15 @@
 #' .check_binary_input(letters[1:10])
 #'
 
-.check_binary_input = function(x){
+.check_binary_input = function(x, paired = FALSE){
   if (length(dim(x)) > 1) stop(deparse(match.call()[[2]]), ' must be a vector (one-dimensional object)')
   if (length(x) == 0) stop(deparse(match.call()[[2]]), ' length must be > 0')
+  if (paired & any(is.na(x))) stop('When "paired" = TRUE ', deparse(match.call()[[2]]), ' can not have missing values')
   x <- x[!is.na(x)]
   if (length(x) == 0) stop(deparse(match.call()[[2]]), ' must have at least a non "NA" value')
   if (length(unique(x)) > 2) stop(deparse(match.call()[[2]]), ' can not have more than 2 distinct values')
+  if (paired & length(unique(x)) == 1) stop('When "paired" = TRUE ', deparse(match.call()[[2]]), ' must have exactly 2 distinct values')
+  if (paired & sum(x == unique(x)[1]) != sum(x == unique(x)[2])) stop('When "paired" = TRUE ', deparse(match.call()[[2]]), ' must have the same number of samples for each level')
 }
 
 #' Checking Response Vector Input
