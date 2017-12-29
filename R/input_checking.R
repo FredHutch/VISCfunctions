@@ -11,13 +11,14 @@
 #'
 
 .check_numeric_input = function(x, lower_bound = NULL, upper_bound = NULL){
-  if (length(dim(x)) > 1) stop('"', deparse(match.call()[[2]]), '" must be a vector (one-dimensional object)')
-  if (length(x) == 0) stop('"', deparse(match.call()[[2]]), '" length must be > 0')
+  param_name <- deparse(match.call()[[2]])
+  if (length(dim(x)) > 1) stop('"', param_name, '" must be a vector (one-dimensional object)')
+  if (length(x) == 0) stop('"', param_name, '" length must be > 0')
   x <- x[!is.na(x)]
-  if (length(x) == 0) stop('"', deparse(match.call()[[2]]), '" must have at least one non-NA value')
-  if (!is.numeric(x)) stop('"', deparse(match.call()[[2]]), '" must be a numeric vector')
-  if (!is.null(lower_bound) & any(x < lower_bound)) stop('"', deparse(match.call()[[2]]), '" must be greater than ', lower_bound)
-  if (!is.null(upper_bound) & any(x > upper_bound)) stop('"', deparse(match.call()[[2]]), '" must be less than ', upper_bound)
+  if (length(x) == 0) stop('"', param_name, '" must have at least one non-NA value')
+  if (!is.numeric(x)) stop('"', param_name, '" must be a numeric vector')
+  if (!is.null(lower_bound) & any(x < lower_bound)) stop('"', param_name, '" must be greater than ', lower_bound)
+  if (!is.null(upper_bound) & any(x > upper_bound)) stop('"', param_name, '" must be less than ', upper_bound)
 }
 
 
@@ -33,14 +34,15 @@
 #'
 
 .check_binary_input = function(x, paired = FALSE){
-  if (length(dim(x)) > 1) stop('"', deparse(match.call()[[2]]), '" must be a vector (one-dimensional object)')
-  if (length(x) == 0) stop('"', deparse(match.call()[[2]]), '" length must be > 0')
-  if (paired & any(is.na(x))) stop('When "paired" = TRUE "', deparse(match.call()[[2]]), '" cannot have missing values')
+  param_name <- deparse(match.call()[[2]])
+  if (length(dim(x)) > 1) stop('"', param_name, '" must be a vector (one-dimensional object)')
+  if (length(x) == 0) stop('"', param_name, '" length must be > 0')
+  if (paired & any(is.na(x))) stop('When "paired" = TRUE "', param_name, '" cannot have missing values')
   x <- x[!is.na(x)]
-  if (length(x) == 0) stop('"', deparse(match.call()[[2]]), '" must have at least one non-NA value')
-  if (length(unique(x)) > 2) stop('"', deparse(match.call()[[2]]), '" cannot have more than 2 distinct values')
-  if (paired & length(unique(x)) == 1) stop('When "paired" = TRUE ', '"', deparse(match.call()[[2]]), '" must have exactly 2 distinct values')
-  if (paired & sum(x == unique(x)[1]) != sum(x == unique(x)[2])) stop('When "paired" = TRUE "', deparse(match.call()[[2]]), '" must have the same number of samples for each level')
+  if (length(x) == 0) stop('"', param_name, '" must have at least one non-NA value')
+  if (length(unique(x)) > 2) stop('"', param_name, '" cannot have more than 2 distinct values')
+  if (paired & length(unique(x)) == 1) stop('When "paired" = TRUE ', '"', param_name, '" must have exactly 2 distinct values')
+  if (paired & sum(x == unique(x)[1]) != sum(x == unique(x)[2])) stop('When "paired" = TRUE "', param_name, '" must have the same number of samples for each level')
 }
 
 #' Checking Response Vector Input
@@ -54,11 +56,12 @@
 #'
 
 .check_response_input = function(x){
-  if (length(dim(x)) > 1) stop('"', deparse(match.call()[[2]]), '" must be a vector (one-dimensional object)')
-  if (length(x) == 0) stop('"', deparse(match.call()[[2]]), '" length must be > 0')
+  param_name <- deparse(match.call()[[2]])
+  if (length(dim(x)) > 1) stop('"', param_name, '" must be a vector (one-dimensional object)')
+  if (length(x) == 0) stop('"', param_name, '" length must be > 0')
   x <- x[!is.na(x)]
-  if (length(x) == 0) stop('"', deparse(match.call()[[2]]), '" must have at least one non-NA value')
-  if (!is.logical(x) & !all(x %in% c(NA,0,1))) stop('"', deparse(match.call()[[2]]), '" must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
+  if (length(x) == 0) stop('"', param_name, '" must have at least one non-NA value')
+  if (!is.logical(x) & !all(x %in% c(NA,0,1))) stop('"', param_name, '" must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
 }
 
 
