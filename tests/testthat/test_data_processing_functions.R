@@ -17,7 +17,7 @@ test_that(".rm_na_and_check returning p value", {
   #no complete cases
   expect_equal(.rm_na_and_check(c(1,1,NA,NA), c(NA,NA,1,1)), expected = NA)
   expect_message(.rm_na_and_check(c(1,1,NA,NA), c(NA,NA,1,1), verbose = T),
-                 regexp = 'There are no observations with non-mising values of both "x" and "y", so p=NA returned')
+                 regexp = 'There are no observations with non-missing values of both "x" and "y", so p=NA returned')
 
   #x only one value
   expect_equal(.rm_na_and_check(rep(1,6), rep(1:2,3)), expected = 1)

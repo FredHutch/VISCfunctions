@@ -25,7 +25,7 @@
 
   #Various scenarios where will give message and return p value (NA or 1) instead of data.frame
   if (all(is.na(x) | is.na(y))) {
-    if (verbose) message('There are no observations with non-mising values of both "x" and "y", so p=NA returned')
+    if (verbose) message('There are no observations with non-missing values of both "x" and "y", so p=NA returned')
     return(NA)
   }
 
