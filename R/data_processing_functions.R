@@ -2,7 +2,7 @@
 #'
 #' @param x numeric vector (can include NA values)
 #' @param y numeric vector (can include NA values)
-#' @param y_type is y a binary/group variable or contiuous variable. This will impact p value returned when
+#' @param y_type is y a binary/group variable or continuous variable. This will impact if an p value of NA or 1 is returned when y has only 1 distinct value.
 #' @param verbose a logical variable indicating if warnings and messages should be displayed
 #'
 #' @examples
@@ -15,6 +15,8 @@
 
 .rm_na_and_check = function(x, y, y_type = c('binary', 'continuous'), verbose = FALSE){
   y_type <- match.arg(y_type)
+  .check_numeric_input(x)
+  if (y_type == 'binary') .check_binary_input(y) else .check_binary_input(y)
 
   if (length(x) != length(y)) stop('"x" and "y" must be the same length')
 
