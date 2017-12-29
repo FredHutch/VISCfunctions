@@ -16,7 +16,7 @@
 .rm_na_and_check = function(x, y, y_type = c('binary', 'continuous'), verbose = FALSE){
   y_type <- match.arg(y_type)
   .check_numeric_input(x)
-  if (y_type == 'binary') .check_binary_input(y) else .check_binary_input(y)
+  if (y_type == 'binary') .check_binary_input(y) else .check_numeric_input(y)
 
   if (length(x) != length(y)) stop('"x" and "y" must be the same length')
 
@@ -24,7 +24,7 @@
   data_here <- data.frame(x,y)[!(is.na(x) & is.na(y)),]
 
   #Various scenarios where will give message and return p value (NA or 1) instead of data.frame
-  if (nrow(data_here) == 0 | all(is.na(x) | is.na(y))) {
+  if (all(is.na(x) | is.na(y))) {
     if (verbose) message('There are no observations with non-mising values of both "x" and "y", so p=NA returned')
     return(NA)
   }

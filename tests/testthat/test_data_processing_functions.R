@@ -19,10 +19,6 @@ test_that(".rm_na_and_check returning p value", {
   expect_message(.rm_na_and_check(c(1,1,NA,NA), c(NA,NA,1,1), verbose = T),
                  regexp = 'There are no observations with non-mising values of both "x" and "y", so p=NA returned')
 
-  expect_equal(.rm_na_and_check(c(1,1,1,1), c(NA,NA,NA,NA)), expected = NA)
-  expect_message(.rm_na_and_check(c(1,1,NA,NA), c(NA,NA,1,1), verbose = T),
-                 regexp = 'There are no observations with non-mising values of both "x" and "y", so p=NA returned')
-
   #x only one value
   expect_equal(.rm_na_and_check(rep(1,6), rep(1:2,3)), expected = 1)
   expect_message(.rm_na_and_check(rep(1,6), rep(1:2,3), verbose = T),
