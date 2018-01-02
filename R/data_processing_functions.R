@@ -5,6 +5,8 @@
 #' @param y_type is y a binary/group variable or continuous variable. This will impact if an p value of NA or 1 is returned when y has only 1 distinct value.
 #' @param verbose a logical variable indicating if warnings and messages should be displayed
 #'
+#' @return A data.frame with all completely NA rows removed or a NA or 1 pvalue if no complete cases or only one distinct value
+#'
 #' @examples
 #' x <- c(1:10,NA,100)
 #' y_bin <- c(rep(1:2,6))

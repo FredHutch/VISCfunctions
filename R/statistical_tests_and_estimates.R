@@ -37,24 +37,9 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't'), paired = FALSE, 
   .check_binary_input(y, paired = paired)
   y <- droplevels(factor(y))
 
-  if (length(x) != length(y)) stop('"x" and "y" must be the same length')
-
-  # Removing cases where x and y are both NA
-  data_here <- data.frame(x,y)[!(is.na(x) & is.na(y)),]
-  if (nrow(data_here) == 0 | all(is.na(x) | is.na(y))) {
-    if (verbose) message('There are no observations with non-mising values of both "x" and "y", so p=NA returned')
-    return(NA)
-  }
-
-  if (length(unique(data_here$x[!is.na(data_here$y)])) == 1) {
-    if (verbose) message('"x" only has 1 distinct value when considering non-missing values of y, so p=1 returned')
-    return(1)
-  }
-
-  if (length(unique(data_here$y[!is.na(data_here$x)])) == 1) {
-    if (verbose) message('"y" only has 1 level when considering non-missing values of x, so p=NA returned')
-    return(NA)
-  }
+  # Removing cases where x and y are both NA and returning p value where no complete cases or only one distinct value
+  rm_na_and_check_output <- .rm_na_and_check(x, y, y_type = 'binary', verbose = verbose)
+  if (is.data.frame(rm_na_and_check_output)) data_here <- rm_na_and_check_output else return(rm_na_and_check_output)
 
   if (method == 'wilcox') {
     if (paired) {
