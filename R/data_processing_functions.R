@@ -32,17 +32,17 @@
   }
 
   if (length(unique(data_here$x[!is.na(data_here$y)])) == 1) {
-    if (verbose) message('"x" only has 1 distinct value when considering non-missing values of y, so p=1 returned')
+    if (verbose) message('"x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned')
     return(1)
   }
 
   if (length(unique(data_here$y[!is.na(data_here$x)])) == 1) {
     #if binary/group variable NA should be returned, but if continuous then p=1 returned
     if (y_type == 'binary') {
-      if (verbose) message('"y" only has 1 level when considering non-missing values of x, so p=NA returned')
+      if (verbose) message('"y" only has 1 level when considering non-missing values of "x", so p=NA returned')
       return(NA)
     } else {
-      if (verbose) message('"y" only has 1 distinct value when considering non-missing values of x, so p=1 returned')
+      if (verbose) message('"y" only has 1 distinct value when considering non-missing values of "x", so p=1 returned')
       return(1)
     }
   }
