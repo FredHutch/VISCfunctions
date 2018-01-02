@@ -1,7 +1,7 @@
 context("statistical_tests_and_estimates")
 
 # test two_samp_cont_test
-test_that("two_samp_cont_test testing", {
+test_that("two_samp_cont_test testing various options (no errors)", {
 
   ###Testing all four options (wilcox/t and paired/unpaired)###
   set.seed(5432322)
@@ -35,12 +35,22 @@ test_that("two_samp_cont_test testing", {
                expected = t.test(x~factor(y), paired = F, alternative = 'less')$p.value,
                tolerance = 1e-8)
 
-  #Testing if x and y are different lengths
-  expect_error(two_samp_cont_test(x = x[-1], y = y), '"x" and "y" must be the same length')
+  #Testing t.test where both levels of y have a single x value
+  expect_equal(object = two_samp_cont_test(x = rep(1:2,5), y = rep(0:1,5), method = 't'), expected = NA)
+  expect_message(object = two_samp_cont_test(x = rep(1:2,5), y = rep(0:1,5), method = 't', verbose = T),
+                 regexp = 't.test can not run when both levels of "y" have only 1 unique "x" value, so p=NA returned')
 
-  #Testing paired errors
-  expect_error(two_samp_cont_test(x = x, y = y, method = 't', paired = TRUE), 'When "paired" = TRUE "y" cannot have missing values')
-  expect_error(two_samp_cont_test(x = x[-(11:13)], y = y[-(11:13)], method = 't', paired = TRUE), 'When "paired" = TRUE "y" must have the same number of samples for each level')
+
+})
+
+
+test_that("two_samp_cont_test throwing internal .rm_na_and_check checking errors", {
+  set.seed(5432322)
+  x <- c(NA,rnorm(10,0,3), rnorm(10,3,3),NA)
+  y <- c(rep('a', 10), NA, NA, rep('b', 10))
+
+  #Testing if x and y are different lengths
+  expect_error(two_samp_cont_test(x = 1:9, y = rep(0:1,5)), '"x" and "y" must be the same length')
 
   #Testing case where no non-missing pairs
   expect_equal(object = two_samp_cont_test(x = c(rep(1,20),rep(NA,20)), y = c(rep(NA,20),rep(1,20))), expected = NA)
@@ -75,4 +85,8 @@ test_that("two_samp_cont_test throwing internal input checking errors", {
   expect_error(two_samp_cont_test(x,numeric(0)), '"y" length must be > 0')
   expect_error(two_samp_cont_test(x,c(NA,NA,NA)), '"y" must have at least one non-NA value')
   expect_error(two_samp_cont_test(x,1:10), '"y" cannot have more than 2 distinct values')
+
+  #Testing paired errors
+  expect_error(two_samp_cont_test(x = 1:10, y = c(rep(0:1,4),0,NA), method = 't', paired = TRUE), 'When "paired" = TRUE "y" cannot have missing values')
+  expect_error(two_samp_cont_test(x = 1:11, y = c(rep(0:1,5),1), paired = TRUE), 'When "paired" = TRUE "y" must have the same number of samples for each level')
 })
