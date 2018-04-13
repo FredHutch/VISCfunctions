@@ -1,9 +1,11 @@
 #' Combining Two Vectors, Removing Completely Missing Rows, with P Value Returns in Certain Cases
 #'
-#' @param x numeric vector (can include NA values)
-#' @param y numeric vector (can include NA values)
-#' @param y_type is y a binary/group variable or continuous variable. This will impact if an p value of NA or 1 is returned when y has only 1 distinct value.
-#' @param verbose a logical variable indicating if warnings and messages should be displayed
+#' @param x numeric vector (can include NA values).
+#' @param y numeric vector (can include NA values).
+#' @param y_type is y a binary/group variable or continuous variable. This will impact if a p-value of NA or 1 is returned when y has only 1 distinct value.
+#' @param verbose a logical variable indicating if warnings and messages should be displayed.
+#'
+#' @return A data.frame with all completely NA rows removed or a NA or 1 pvalue if no complete cases or only one distinct value.
 #'
 #' @examples
 #' x <- c(1:10,NA,100)
@@ -30,17 +32,17 @@
   }
 
   if (length(unique(data_here$x[!is.na(data_here$y)])) == 1) {
-    if (verbose) message('"x" only has 1 distinct value when considering non-missing values of y, so p=1 returned')
+    if (verbose) message('"x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned')
     return(1)
   }
 
   if (length(unique(data_here$y[!is.na(data_here$x)])) == 1) {
     #if binary/group variable NA should be returned, but if continuous then p=1 returned
     if (y_type == 'binary') {
-      if (verbose) message('"y" only has 1 level when considering non-missing values of x, so p=NA returned')
+      if (verbose) message('"y" only has 1 level when considering non-missing values of "x", so p=NA returned')
       return(NA)
     } else {
-      if (verbose) message('"y" only has 1 distinct value when considering non-missing values of x, so p=1 returned')
+      if (verbose) message('"y" only has 1 distinct value when considering non-missing values of "x", so p=1 returned')
       return(1)
     }
   }

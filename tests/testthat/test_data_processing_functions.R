@@ -22,15 +22,15 @@ test_that(".rm_na_and_check returning p value", {
   #x only one value
   expect_equal(.rm_na_and_check(rep(1,6), rep(1:2,3)), expected = 1)
   expect_message(.rm_na_and_check(rep(1,6), rep(1:2,3), verbose = T),
-                 regexp = '"x" only has 1 distinct value when considering non-missing values of y, so p=1 returned')
+                 regexp = '"x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned')
   #binary y only one value
   expect_equal(.rm_na_and_check(rep(1:2,3),rep(1,6)), expected = NA)
   expect_message(.rm_na_and_check(rep(1:2,3),rep(1,6), verbose = T),
-                 regexp = '"y" only has 1 level when considering non-missing values of x, so p=NA returned')
+                 regexp = '"y" only has 1 level when considering non-missing values of "x", so p=NA returned')
 
   #continuous y only one value
   expect_equal(.rm_na_and_check(rep(1:2,3),rep(1,6), y_type = 'cont'), expected = 1)
   expect_message(.rm_na_and_check(rep(1:2,3),rep(1,6), y_type = 'cont', verbose = T),
-                 regexp = '"y" only has 1 distinct value when considering non-missing values of x, so p=1 returned')
+                 regexp = '"y" only has 1 distinct value when considering non-missing values of "x", so p=1 returned')
 
 })
