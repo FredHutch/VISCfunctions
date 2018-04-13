@@ -8,20 +8,20 @@ two_samp_cont_test(x, y, method = c("wilcox", "t"), paired = FALSE,
   verbose = FALSE, ...)
 }
 \arguments{
-\item{x}{numeric vector (can include NA values)}
+\item{x}{numeric vector (can include NA values).}
 
-\item{y}{vector with only 2 levels (can include NA values unless \code{paired = TRUE})}
+\item{y}{vector with only 2 levels (can include NA values unless \code{paired = TRUE}).}
 
-\item{method}{what test to run (wilcox or t test)}
+\item{method}{what test to run (wilcox or t-test).}
 
 \item{paired}{a logical indicating whether you want a paired test.}
 
-\item{verbose}{a logical variable indicating if warnings and messages should be displayed}
+\item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
 
 \item{...}{parameters to pass to wilcox_test or t.test functions. For example the testing direction (\code{alternative}) in either call or the \code{var.equal} in the t.test function.}
 }
 \value{
-pvalue for comparing x at the different levels of y
+p-value for comparing x at the different levels of y.
 }
 \description{
 Either Wilcox or T-Test Performed, for unpaired or paired data
@@ -29,9 +29,9 @@ Either Wilcox or T-Test Performed, for unpaired or paired data
 \details{
 Runs \code{wilcox_test()} in the coin package, with "exact" distribution and mid-ranks ties method.
 
-For one sided tests if y is a factor variable the level order is respected, otherwise the levels will set to alphabetical order (i.e. if \code{alternative = less} then testing a < b )
+For one sided tests if \code{y} is a factor variable the level order is respected, otherwise the levels will set to alphabetical order (i.e. if \code{alternative = less} then testing a < b ).
 
-If paired = TRUE assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{paired = TRUE} then \code{y} must have the same number of samples for each level.
+If \code{paired = TRUE} assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{paired = TRUE} then \code{y} must have the same number of samples for each level.
 }
 \examples{
 

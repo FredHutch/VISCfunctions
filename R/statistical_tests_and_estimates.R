@@ -2,20 +2,20 @@
 #'
 #' Either Wilcox or T-Test Performed, for unpaired or paired data
 #'
-#' @param x numeric vector (can include NA values)
-#' @param y vector with only 2 levels (can include NA values unless \code{paired = TRUE})
-#' @param method what test to run (wilcox or t test)
+#' @param x numeric vector (can include NA values).
+#' @param y vector with only 2 levels (can include NA values unless \code{paired = TRUE}).
+#' @param method what test to run (wilcox or t-test).
 #' @param paired a logical indicating whether you want a paired test.
-#' @param verbose a logical variable indicating if warnings and messages should be displayed
+#' @param verbose a logical variable indicating if warnings and messages should be displayed.
 #' @param ... parameters to pass to wilcox_test or t.test functions. For example the testing direction (\code{alternative}) in either call or the \code{var.equal} in the t.test function.
-#' @return pvalue for comparing x at the different levels of y
+#' @return p-value for comparing x at the different levels of y.
 #' @details
 #'
 #' Runs \code{wilcox_test()} in the coin package, with "exact" distribution and mid-ranks ties method.
 #'
-#' For one sided tests if y is a factor variable the level order is respected, otherwise the levels will set to alphabetical order (i.e. if \code{alternative = less} then testing a < b )
+#' For one sided tests if \code{y} is a factor variable the level order is respected, otherwise the levels will set to alphabetical order (i.e. if \code{alternative = less} then testing a < b ).
 #'
-#' If paired = TRUE assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{paired = TRUE} then \code{y} must have the same number of samples for each level.
+#' If \code{paired = TRUE} assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{paired = TRUE} then \code{y} must have the same number of samples for each level.
 #'
 #' @examples
 #'
@@ -37,7 +37,7 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't'), paired = FALSE, 
   .check_binary_input(y, paired = paired)
   y <- droplevels(factor(y))
 
-  # Removing cases where x and y are both NA and returning p value where no complete cases or only one distinct value
+  # Removing cases where x and y are both NA and returning p-value where no complete cases or only one distinct value
   rm_na_and_check_output <- .rm_na_and_check(x, y, y_type = 'binary', verbose = verbose)
   if (is.data.frame(rm_na_and_check_output)) data_here <- rm_na_and_check_output else return(rm_na_and_check_output)
 
