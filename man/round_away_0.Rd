@@ -9,7 +9,7 @@ round_away_0(x, rounding_digits = 0, verbose = FALSE)
 \arguments{
 \item{x}{numeric vector (can include NA values).}
 
-\item{rounding_digits}{positive integer of length 1 between 1 and 14, giving the amount of digits to round to.}
+\item{rounding_digits}{positive integer of length 1 between 0 and 14, giving the amount of digits to round to.}
 
 \item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
 }
