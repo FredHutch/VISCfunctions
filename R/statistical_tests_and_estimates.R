@@ -2,11 +2,14 @@
 #'
 #' round_away_0 takes a numeric vector, rounds them to a specified digit amount using the round away from 0 method for ties (i.e. 1.5). This is the SAS method for rounding.
 #'
-#' @param x numeric vector (can include NA values)
-#' @param rounding_digits positive integer of length 1 between 1 and 11, giving the amount of digits to round to
-#' @param tolerance_digits positive integer of length 1 that must be less than rounding_digits, giving the digits for noise to add to x for proper rounding
+#' @param x numeric vector (can include NA values).
+#' @param rounding_digits positive integer of length 1 between 1 and 14, giving the amount of digits to round to.
 #' @param verbose a logical variable indicating if warnings and messages should be displayed.
-#' @return numeric vector of rounded values
+#' @return numeric vector of rounded values.
+#' @details
+#'
+#' \code{round_away_0} is not designed for use at precision levels <= 1e-15
+#'
 #' @examples
 #'
 #' vals_to_round = c(NA,-3.5:3.5,NA)
@@ -22,15 +25,11 @@
 #'
 #' @export
 
-round_away_0 <- function(x, rounding_digits = 0, tolerance_digits = 12, verbose = FALSE){
+round_away_0 <- function(x, rounding_digits = 0, verbose = FALSE){
   .check_numeric_input(x)
-  .check_numeric_input(rounding_digits, lower_bound = 0, upper_bound = 11, scalar = TRUE)
-  .check_numeric_input(tolerance_digits, lower_bound = 1, scalar = TRUE)
+  .check_numeric_input(rounding_digits, lower_bound = 0, upper_bound = 14, scalar = TRUE)
 
-  if (tolerance_digits < rounding_digits) {
-    stop('"tolerance_digits" must be larger than "rounding_digits"')
-  }
-  sign(x) * round(abs(x) + 10 ^ -tolerance_digits, rounding_digits)
+  sign(x) * round(abs(x) + 1e-15, rounding_digits)
 }
 
 

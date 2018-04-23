@@ -28,19 +28,9 @@ test_that("round_away_0 throwing errors", {
   #Checking rounding_digits
   expect_error(round_away_0(x, rounding_digits = c(1,2)), '"rounding_digits" length must be 1 since expecting scalar')
   expect_error(round_away_0(x, rounding_digits = -1), '"rounding_digits" must be greater than or equal to 0')
-  expect_error(round_away_0(x, rounding_digits = 12), '"rounding_digits" must be less than or equal to 11')
+  expect_error(round_away_0(x, rounding_digits = 15), '"rounding_digits" must be less than or equal to 14')
   expect_error(round_away_0(x, rounding_digits = numeric(0)), '"rounding_digits" length must be > 0')
   expect_error(round_away_0(x, rounding_digits = NA), '"rounding_digits" must have at least one non-NA value')
-
-  #Checking tolerance_digits
-  expect_error(round_away_0(x, tolerance_digits = c(1,2)), '"tolerance_digits" length must be 1 since expecting scalar')
-  expect_error(round_away_0(x, tolerance_digits = -1), '"tolerance_digits" must be greater than or equal to 1')
-  expect_error(round_away_0(x, tolerance_digits = numeric(0)), '"tolerance_digits" length must be > 0')
-  expect_error(round_away_0(x, tolerance_digits = NA), '"tolerance_digits" must have at least one non-NA value')
-
-  #Checking rounding_digits must be smaller than tolerance_digits
-  expect_error(round_away_0(x, rounding_digits = 5, tolerance_digits = 4), '"tolerance_digits" must be larger than "rounding_digits"')
-
 })
 
 

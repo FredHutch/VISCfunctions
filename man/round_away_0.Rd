@@ -4,23 +4,23 @@
 \alias{round_away_0}
 \title{Rounding Using Round Away From 0 Method}
 \usage{
-round_away_0(x, rounding_digits = 0, tolerance_digits = 12,
-  verbose = FALSE)
+round_away_0(x, rounding_digits = 0, verbose = FALSE)
 }
 \arguments{
-\item{x}{numeric vector (can include NA values)}
+\item{x}{numeric vector (can include NA values).}
 
-\item{rounding_digits}{positive integer of length 1 between 1 and 11, giving the amount of digits to round to}
-
-\item{tolerance_digits}{positive integer of length 1 that must be less than rounding_digits, giving the digits for noise to add to x for proper rounding}
+\item{rounding_digits}{positive integer of length 1 between 1 and 14, giving the amount of digits to round to.}
 
 \item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
 }
 \value{
-numeric vector of rounded values
+numeric vector of rounded values.
 }
 \description{
 round_away_0 takes a numeric vector, rounds them to a specified digit amount using the round away from 0 method for ties (i.e. 1.5). This is the SAS method for rounding.
+}
+\details{
+\code{round_away_0} is not designed for use at precision levels <= 1e-15
 }
 \examples{
 
