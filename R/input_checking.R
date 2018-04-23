@@ -1,8 +1,9 @@
 #' Checking Numeric Vector Input
 #'
-#' @param x numeric vector (can include NA values)
-#' @param lower_bound numeric value indicating the lowest allowed value
-#' @param upper_bound numeric value indicating the highest allowed value
+#' @param x numeric vector (can include NA values).
+#' @param lower_bound numeric value indicating the lowest allowed value.
+#' @param upper_bound numeric value indicating the highest allowed value.
+#' @param scalar logical value indicating if the checked value should only had an length of 1
 #'
 #' @examples
 #' example_vals <- c(1:10,NA,100)
@@ -10,15 +11,16 @@
 #' .check_numeric_input(letters[1:10])
 #'
 
-.check_numeric_input = function(x, lower_bound = NULL, upper_bound = NULL){
+.check_numeric_input = function(x, lower_bound = NULL, upper_bound = NULL, scalar = FALSE){
   param_name <- deparse(match.call()[[2]])
   if (length(dim(x)) > 1) stop('"', param_name, '" must be a vector (one-dimensional object)')
   if (length(x) == 0) stop('"', param_name, '" length must be > 0')
+  if (scalar & length(x) != 1) stop('"', param_name, '" length must be 1 since expecting scalar')
   x <- x[!is.na(x)]
   if (length(x) == 0) stop('"', param_name, '" must have at least one non-NA value')
   if (!is.numeric(x)) stop('"', param_name, '" must be a numeric vector')
-  if (!is.null(lower_bound) & any(x < lower_bound)) stop('"', param_name, '" must be greater than ', lower_bound)
-  if (!is.null(upper_bound) & any(x > upper_bound)) stop('"', param_name, '" must be less than ', upper_bound)
+  if (!is.null(lower_bound) & any(x < lower_bound)) stop('"', param_name, '" must be greater than or equal to ', lower_bound)
+  if (!is.null(upper_bound) & any(x > upper_bound)) stop('"', param_name, '" must be less than or equal to ', upper_bound)
 }
 
 
