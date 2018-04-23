@@ -1,5 +1,51 @@
 context("statistical_tests_and_estimates")
 
+
+# test round_away_0
+test_that("round_away_0 testing various options (no errors)", {
+  x = c(0,2.499,2.5,2.5001,3.5,4.05, NA)
+
+  #Note 2.5 goes to 3 as expected
+  expect_equal(object = round_away_0(x),
+               expected = c(0,2,3,3,4,4,NA))
+
+  #Note 4.05 goes to 4.1 as expected
+  expect_equal(object = round_away_0(x, rounding_digits = 1),
+               expected = c(0,2.5,2.5,2.5,3.5,4.1,NA))
+})
+
+test_that("round_away_0 throwing errors", {
+  set.seed(5432322)
+  x <- c(rnorm(10,0,3), rnorm(10,3,3))
+  my_matrix <- matrix(1:10,nrow = 2)
+
+  #Checking x
+  expect_error(round_away_0(x = my_matrix), '"x" must be a vector \\(one-dimensional object\\)')
+  expect_error(round_away_0(x = numeric(0)), '"x" length must be > 0')
+  expect_error(round_away_0(x = c(NA,NA,NA)), '"x" must have at least one non-NA value')
+  expect_error(round_away_0(x = letters[1:5]), '"x" must be a numeric vector')
+
+  #Checking rounding_digits
+  expect_error(round_away_0(x, rounding_digits = c(1,2)), '"rounding_digits" length must be 1 since expecting scalar')
+  expect_error(round_away_0(x, rounding_digits = -1), '"rounding_digits" must be greater than or equal to 0')
+  expect_error(round_away_0(x, rounding_digits = 12), '"rounding_digits" must be less than or equal to 11')
+  expect_error(round_away_0(x, rounding_digits = numeric(0)), '"rounding_digits" length must be > 0')
+  expect_error(round_away_0(x, rounding_digits = NA), '"rounding_digits" must have at least one non-NA value')
+
+  #Checking tolerance_digits
+  expect_error(round_away_0(x, tolerance_digits = c(1,2)), '"tolerance_digits" length must be 1 since expecting scalar')
+  expect_error(round_away_0(x, tolerance_digits = -1), '"tolerance_digits" must be greater than or equal to 1')
+  expect_error(round_away_0(x, tolerance_digits = numeric(0)), '"tolerance_digits" length must be > 0')
+  expect_error(round_away_0(x, tolerance_digits = NA), '"tolerance_digits" must have at least one non-NA value')
+
+  #Checking rounding_digits must be smaller than tolerance_digits
+  expect_error(round_away_0(x, rounding_digits = 5, tolerance_digits = 4), '"tolerance_digits" must be larger than "rounding_digits"')
+
+})
+
+
+
+
 # test two_samp_cont_test
 test_that("two_samp_cont_test testing various options (no errors)", {
 

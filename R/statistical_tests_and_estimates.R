@@ -1,3 +1,39 @@
+#' Rounding Using Round Away From 0 Method
+#'
+#' round_away_0 takes a numeric vector, rounds them to a specified digit amount using the round away from 0 method for ties (i.e. 1.5). This is the SAS method for rounding.
+#'
+#' @param x numeric vector (can include NA values)
+#' @param rounding_digits positive integer of length 1 between 1 and 11, giving the amount of digits to round to
+#' @param tolerance_digits positive integer of length 1 that must be less than rounding_digits, giving the digits for noise to add to x for proper rounding
+#' @param verbose a logical variable indicating if warnings and messages should be displayed.
+#' @return numeric vector of rounded values
+#' @examples
+#'
+#' vals_to_round = c(NA,-3.5:3.5,NA)
+#' # [1]   NA -3.5 -2.5 -1.5 -0.5  0.5  1.5  2.5  3.5   NA
+#'
+#' # round() will round to even numbers when tied at X.5
+#' round(vals_to_round)
+#' # [1] NA -4 -2 -2  0  0  2  2  4 NA
+#'
+#' # round_away_0() will round away from 0 when tied at X.5
+#' round_away_0(vals_to_round)
+#' # [1] NA -4 -3 -2 -1  1  2  3  4 NA
+#'
+#' @export
+
+round_away_0 <- function(x, rounding_digits = 0, tolerance_digits = 12, verbose = FALSE){
+  .check_numeric_input(x)
+  .check_numeric_input(rounding_digits, lower_bound = 0, upper_bound = 11, scalar = TRUE)
+  .check_numeric_input(tolerance_digits, lower_bound = 1, scalar = TRUE)
+
+  if (tolerance_digits < rounding_digits) {
+    stop('"tolerance_digits" must be larger than "rounding_digits"')
+  }
+  sign(x) * round(abs(x) + 10 ^ -tolerance_digits, rounding_digits)
+}
+
+
 #' Continuous Variable Compared to Binary Variable Test (VISC)
 #'
 #' Either Wilcox or T-Test Performed, for unpaired or paired data
