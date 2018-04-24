@@ -10,7 +10,7 @@ test_that("round_away_0 testing various options (no errors)", {
                expected = c(0,2,3,3,4,4,NA))
 
   #Note 4.05 goes to 4.1 as expected
-  expect_equal(object = round_away_0(x, rounding_digits = 1),
+  expect_equal(object = round_away_0(x, digits = 1),
                expected = c(0,2.5,2.5,2.5,3.5,4.1,NA))
 })
 
@@ -26,11 +26,11 @@ test_that("round_away_0 throwing errors", {
   expect_error(round_away_0(x = letters[1:5]), '"x" must be a numeric vector')
 
   #Checking rounding_digits
-  expect_error(round_away_0(x, rounding_digits = c(1,2)), '"rounding_digits" length must be 1 since expecting scalar')
-  expect_error(round_away_0(x, rounding_digits = -1), '"rounding_digits" must be greater than or equal to 0')
-  expect_error(round_away_0(x, rounding_digits = 15), '"rounding_digits" must be less than or equal to 14')
-  expect_error(round_away_0(x, rounding_digits = numeric(0)), '"rounding_digits" length must be > 0')
-  expect_error(round_away_0(x, rounding_digits = NA), '"rounding_digits" must have at least one non-NA value')
+  expect_error(round_away_0(x, digits = c(1,2)), '"digits" length must be 1 since expecting scalar')
+  expect_error(round_away_0(x, digits = -1), '"digits" must be greater than or equal to 0')
+  expect_error(round_away_0(x, digits = 15), '"digits" must be less than or equal to 14')
+  expect_error(round_away_0(x, digits = numeric(0)), '"digits" length must be > 0')
+  expect_error(round_away_0(x, digits = NA), '"digits" must have at least one non-NA value')
 })
 
 

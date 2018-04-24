@@ -3,7 +3,7 @@
 #' round_away_0 takes a numeric vector, rounds them to a specified digit amount using the round away from 0 method for ties (i.e. 1.5). This is the SAS method for rounding.
 #'
 #' @param x numeric vector (can include NA values).
-#' @param rounding_digits positive integer of length 1 between 0 and 14, giving the amount of digits to round to.
+#' @param digits positive integer of length 1 between 0 and 14, giving the amount of digits to round to.
 #' @param verbose a logical variable indicating if warnings and messages should be displayed.
 #' @return numeric vector of rounded values.
 #' @details
@@ -25,11 +25,11 @@
 #'
 #' @export
 
-round_away_0 <- function(x, rounding_digits = 0, verbose = FALSE){
+round_away_0 <- function(x, digits = 0, verbose = FALSE){
   .check_numeric_input(x)
-  .check_numeric_input(rounding_digits, lower_bound = 0, upper_bound = 14, scalar = TRUE)
+  .check_numeric_input(digits, lower_bound = 0, upper_bound = 14, scalar = TRUE)
 
-  sign(x) * round(abs(x) + 1e-15, rounding_digits)
+  sign(x) * round(abs(x) + 1e-15, digits)
 }
 
 
