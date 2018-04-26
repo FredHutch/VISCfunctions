@@ -4,6 +4,7 @@
 #' @param lower_bound numeric value indicating the lowest allowed value.
 #' @param upper_bound numeric value indicating the highest allowed value.
 #' @param scalar logical value indicating if the checked value should only had an length of 1
+#' @param whole_num logical value indicating if the checked value should be a whole number
 #'
 #' @examples
 #' example_vals <- c(1:10,NA,100)
@@ -11,7 +12,7 @@
 #' .check_numeric_input(letters[1:10])
 #'
 
-.check_numeric_input = function(x, lower_bound = NULL, upper_bound = NULL, scalar = FALSE){
+.check_numeric_input = function(x, lower_bound = NULL, upper_bound = NULL, scalar = FALSE, whole_num = FALSE){
   param_name <- deparse(match.call()[[2]])
   if (length(dim(x)) > 1) stop('"', param_name, '" must be a vector (one-dimensional object)')
   if (length(x) == 0) stop('"', param_name, '" length must be > 0')
@@ -21,6 +22,7 @@
   if (!is.numeric(x)) stop('"', param_name, '" must be a numeric vector')
   if (!is.null(lower_bound) & any(x < lower_bound)) stop('"', param_name, '" must be greater than or equal to ', lower_bound)
   if (!is.null(upper_bound) & any(x > upper_bound)) stop('"', param_name, '" must be less than or equal to ', upper_bound)
+  if (whole_num & any(x %% 1 != 0)) stop('"', param_name, '" must be whole number(s)')
 }
 
 

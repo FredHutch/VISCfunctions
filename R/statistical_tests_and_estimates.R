@@ -27,7 +27,7 @@
 
 round_away_0 <- function(x, digits = 0, verbose = FALSE){
   .check_numeric_input(x)
-  .check_numeric_input(digits, lower_bound = 0, upper_bound = 14, scalar = TRUE)
+  .check_numeric_input(digits, lower_bound = 0, upper_bound = 14, scalar = TRUE, whole_num = TRUE)
 
   sign(x) * round(abs(x) + 1e-15, digits)
 }

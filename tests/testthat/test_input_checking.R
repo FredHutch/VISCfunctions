@@ -7,6 +7,7 @@ test_that(".check_numeric_input error-free when expected", {
   my_vals <- c(1,5,2,NA)
   expect_null(.check_numeric_input(my_vals))
   expect_null(.check_numeric_input(1, scalar = TRUE))
+  expect_null(.check_numeric_input(-10:10, whole_num = TRUE))
 
 })
 
@@ -27,6 +28,9 @@ test_that(".check_numeric_input throws appropriate errors", {
   expect_error(.check_numeric_input(1:10, lower_bound = 0, upper_bound = 5), '"1\\:10" must be less than or equal to 5')
 
   expect_error(.check_numeric_input(1:10, scalar = TRUE), '"1\\:10" length must be 1 since expecting scalar')
+
+  expect_error(.check_numeric_input(1.5:10.5, whole_num = TRUE), '"1.5\\:10.5" must be whole number\\(s\\)')
+
 })
 
 

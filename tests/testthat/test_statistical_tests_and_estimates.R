@@ -22,6 +22,7 @@ test_that("round_away_0 throwing errors", {
   #Checking x
   expect_error(round_away_0(x = my_matrix), '"x" must be a vector \\(one-dimensional object\\)')
   expect_error(round_away_0(x = numeric(0)), '"x" length must be > 0')
+  expect_error(round_away_0(x = NULL), '"x" length must be > 0')
   expect_error(round_away_0(x = c(NA,NA,NA)), '"x" must have at least one non-NA value')
   expect_error(round_away_0(x = letters[1:5]), '"x" must be a numeric vector')
 
@@ -31,6 +32,7 @@ test_that("round_away_0 throwing errors", {
   expect_error(round_away_0(x, digits = 15), '"digits" must be less than or equal to 14')
   expect_error(round_away_0(x, digits = numeric(0)), '"digits" length must be > 0')
   expect_error(round_away_0(x, digits = NA), '"digits" must have at least one non-NA value')
+  expect_error(round_away_0(x, digits = 1.5), '"digits" must be whole number\\(s\\)')
 })
 
 
