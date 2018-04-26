@@ -4,15 +4,14 @@
 \alias{tbl_grp_paste}
 \title{Pasting Together Information for Two Groups}
 \usage{
-tbl_grp_paste(data, vars_to_paste = c("median_min_max", "mean_sd"),
-  first_name = "Group1", second_name = "Group2", sep_val = " vs. ",
-  alternative = c("two.sided", "less", "greater"), digits = 0,
-  keep_all = TRUE)
+tbl_grp_paste(data, vars_to_paste = "all", first_name = "Group1",
+  second_name = "Group2", sep_val = " vs. ", alternative = c("two.sided",
+  "less", "greater"), digits = 0, keep_all = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{data}{input dataset. User must use consistant naming throughout, with a underscore to seperate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be columns defining the group names (i.e. 'Group1' and 'Group2'), which are used to form the \code{Comparison} variable.}
 
-\item{vars_to_paste}{vector of names of measures to paste together. can be the predefined 'median_min_max' or 'mean_sd', or any variable as long as they have matching columns for each group (i.e. Group1_MyMeasure and Group2_MyMeasure). The default is both predefined values, 'median_min_max' and 'mean_sd'.}
+\item{vars_to_paste}{vector of names of measures to paste together. Can be the predefined 'median_min_max' or 'mean_sd', or any variable as long as they have matching columns for each group (i.e. Group1_MyMeasure and Group2_MyMeasure). Multiple mesures can be requested. Also can specify "all" (default), which will run 'median_min_max' and 'mean_sd', as well as any pairs of columns in the proper format.}
 
 \item{first_name}{name of first group (sting before the '_') . Default is 'Group1'.}
 
@@ -25,6 +24,8 @@ tbl_grp_paste(data, vars_to_paste = c("median_min_max", "mean_sd"),
 \item{digits}{integer indicating the number of decimal places to round to before pasting for numeric variables. Defualt is 0.}
 
 \item{keep_all}{logical indicating if all other variables in \code{data} should be returned with the pasted variables}
+
+\item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
 }
 \value{
 data.frame with all the pasted values requested. Each name will have '_info' at the end of the names (i.e. mean_info, median_info, ...)

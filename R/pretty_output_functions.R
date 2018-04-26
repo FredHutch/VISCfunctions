@@ -4,13 +4,14 @@
 #'
 #'
 #' @param data input dataset. User must use consistant naming throughout, with a underscore to seperate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be columns defining the group names (i.e. 'Group1' and 'Group2'), which are used to form the \code{Comparison} variable.
-#' @param vars_to_paste vector of names of measures to paste together. can be the predefined 'median_min_max' or 'mean_sd', or any variable as long as they have matching columns for each group (i.e. Group1_MyMeasure and Group2_MyMeasure). The default is both predefined values, 'median_min_max' and 'mean_sd'.
+#' @param vars_to_paste vector of names of measures to paste together. Can be the predefined 'median_min_max' or 'mean_sd', or any variable as long as they have matching columns for each group (i.e. Group1_MyMeasure and Group2_MyMeasure). Multiple mesures can be requested. Also can specify "all" (default), which will run 'median_min_max' and 'mean_sd', as well as any pairs of columns in the proper format.
 #' @param first_name name of first group (sting before the '_') . Default is 'Group1'.
 #' @param second_name name of second group (sting before the '_'). Default is 'Group2'.
 #' @param sep_val value to be pasted between the two measures. Default is ' vs. '.
 #' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". Will be used in determining the value to be pasted between the group names.
 #' @param digits integer indicating the number of decimal places to round to before pasting for numeric variables. Defualt is 0.
 #' @param keep_all logical indicating if all other variables in \code{data} should be returned with the pasted variables
+#' @param verbose a logical variable indicating if warnings and messages should be displayed.
 #' @details
 #'
 #' User must use consistant naming throughout, with a underscore to seperate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be columns defining the group names (i.e. \code{Group1} and \code{Group2}), which are used to form the \code{Comparison} variable.
@@ -45,7 +46,7 @@
 #' @export
 
 
-tbl_grp_paste <- function(data, vars_to_paste = c('median_min_max','mean_sd'), first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = c("two.sided", "less", "greater"), digits = 0, keep_all = TRUE){
+tbl_grp_paste <- function(data, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = c("two.sided", "less", "greater"), digits = 0, keep_all = TRUE, verbose = FALSE){
 
   #####Checking variables being used
 
@@ -54,11 +55,32 @@ tbl_grp_paste <- function(data, vars_to_paste = c('median_min_max','mean_sd'), f
   .check_numeric_input(digits, lower_bound = 0, scalar = TRUE)
   if (sum(first_name == names(data)) != 1) stop('Expecting one column named "', first_name , '" in input dataset, but there are ', sum(first_name == names(data)), ' present')
   if (sum(second_name == names(data)) != 1) stop('Expecting one column named "', second_name , '" in input dataset, but there are ', sum(second_name == names(data)), ' present')
+  if (length(vars_to_paste) != 1 & any(vars_to_paste == 'all')) {
+    vars_to_paste = 'all'
+    if (verbose) message('Since "all" specified other entries of vars_to_paste ignored.')
+  }
+
+  # Defining vars when vars_to_paste set to 'all'
+    if (length(vars_to_paste) == 1 & any(vars_to_paste == 'all')) {
+      temp_group1_names <- names(data)[substr(names(data), 0, regexpr('_',names(data)) - 1) == 'Group1']
+      temp_group2_names <- names(data)[substr(names(data), 0, regexpr('_',names(data)) - 1) == 'Group2']
+      temp_group1_measures <- substr(temp_group1_names, regexpr('_',temp_group1_names) + 1, nchar(temp_group1_names))
+      temp_group2_measures <- substr(temp_group2_names, regexpr('_',temp_group2_names) + 1, nchar(temp_group2_names))
+      vars_to_paste_here <- unique(intersect(temp_group1_measures, temp_group2_measures))
+
+      # Adding speacial cases
+      if (sum(vars_to_paste_here %in% c('median','min','max')) == 3) vars_to_paste_here <- c('median_min_max', vars_to_paste_here)
+      if (sum(vars_to_paste_here %in% c('mean','sd')) == 2) vars_to_paste_here <- c('mean_sd', vars_to_paste_here)
+
+    } else {
+      vars_to_paste_here <- unique(vars_to_paste)
+    }
+    if (vars_to_paste == 'all' & length(vars_to_paste_here) == 0) stop('"all" specified, but no matching columns to paste')
 
   # Need to define which variables to check. Special considerations for the predefined values
-  vars_to_check <- vars_to_paste[!vars_to_paste %in% c('median_min_max','mean_sd')]
-  if (any(vars_to_paste == 'median_min_max')) vars_to_check <- unique(c(vars_to_check, 'median', 'min', 'max'))
-  if (any(vars_to_paste == 'mean_sd')) vars_to_check <- unique(c(vars_to_check, 'mean', 'sd'))
+  vars_to_check <- vars_to_paste_here[!vars_to_paste_here %in% c('median_min_max','mean_sd')]
+  if (any(vars_to_paste_here == 'median_min_max')) vars_to_check <- unique(c(vars_to_check, 'median', 'min', 'max'))
+  if (any(vars_to_paste_here == 'mean_sd')) vars_to_check <- unique(c(vars_to_check, 'mean', 'sd'))
 
   # Need to check the group1 and group2 version of each variable being pasted
   group1_vars_to_check <- paste0(first_name, '_', vars_to_check)
@@ -91,8 +113,8 @@ tbl_grp_paste <- function(data, vars_to_paste = c('median_min_max','mean_sd'), f
 
   # Other variables
   pasted_results <- list()
-  for (i in 1:length(vars_to_paste)) {
-    if (vars_to_paste[i] == 'median_min_max') {
+  for (i in 1:length(vars_to_paste_here)) {
+    if (vars_to_paste_here[i] == 'median_min_max') {
       pasted_results[[i]] <- paste0(
         paste0(round_if_numeric(data[, paste0(first_name, '_mean')], digits), '[',
                round_if_numeric(data[, paste0(first_name, '_min')], digits), ', ',
@@ -102,7 +124,7 @@ tbl_grp_paste <- function(data, vars_to_paste = c('median_min_max','mean_sd'), f
                round_if_numeric(data[, paste0(second_name, '_min')], digits), ', ',
                round_if_numeric(data[, paste0(second_name, '_max')], digits), ']', sep = '')
       )
-    } else if (vars_to_paste[i] == 'mean_sd') {
+    } else if (vars_to_paste_here[i] == 'mean_sd') {
       pasted_results[[i]] <- paste0(
         paste0(round_if_numeric(data[, paste0(first_name, '_mean')], digits), '(',
                round_if_numeric(data[, paste0(first_name, '_sd')], digits), ')', sep = ''),
@@ -111,13 +133,13 @@ tbl_grp_paste <- function(data, vars_to_paste = c('median_min_max','mean_sd'), f
                round_if_numeric(data[, paste0(second_name, '_sd')], digits), ')', sep = '')
       )
     } else {
-      pasted_results[[i]] <- paste0(round_if_numeric(data[, paste0(first_name, '_', vars_to_paste[i])], digits),
+      pasted_results[[i]] <- paste0(round_if_numeric(data[, paste0(first_name, '_', vars_to_paste_here[i])], digits),
         sep_val,
-        round_if_numeric(data[, paste0(second_name, '_', vars_to_paste[i])], digits)
+        round_if_numeric(data[, paste0(second_name, '_', vars_to_paste_here[i])], digits)
       )
     }
   }
-  names(pasted_results) <- paste0(vars_to_paste, '_info')
+  names(pasted_results) <- paste0(vars_to_paste_here, '_info')
 
   pasted_results <- data.frame('Comparison' = comparison_var,pasted_results)
 
@@ -135,7 +157,4 @@ tbl_grp_paste <- function(data, vars_to_paste = c('median_min_max','mean_sd'), f
 round_if_numeric <- function(xx, digits = 0){
   if (is.numeric(xx)) round_away_0(xx, digits = digits) else xx
 }
-
-
-
 
