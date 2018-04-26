@@ -1,5 +1,43 @@
 context("statistical_tests_and_estimates")
 
+
+# test round_away_0
+test_that("round_away_0 testing various options (no errors)", {
+  x = c(0,2.499,2.5,2.5001,3.5,4.05, NA)
+
+  #Note 2.5 goes to 3 as expected
+  expect_equal(object = round_away_0(x),
+               expected = c(0,2,3,3,4,4,NA))
+
+  #Note 4.05 goes to 4.1 as expected
+  expect_equal(object = round_away_0(x, digits = 1),
+               expected = c(0,2.5,2.5,2.5,3.5,4.1,NA))
+})
+
+test_that("round_away_0 throwing errors", {
+  set.seed(5432322)
+  x <- c(rnorm(10,0,3), rnorm(10,3,3))
+  my_matrix <- matrix(1:10,nrow = 2)
+
+  #Checking x
+  expect_error(round_away_0(x = my_matrix), '"x" must be a vector \\(one-dimensional object\\)')
+  expect_error(round_away_0(x = numeric(0)), '"x" length must be > 0')
+  expect_error(round_away_0(x = NULL), '"x" length must be > 0')
+  expect_error(round_away_0(x = c(NA,NA,NA)), '"x" must have at least one non-NA value')
+  expect_error(round_away_0(x = letters[1:5]), '"x" must be a numeric vector')
+
+  #Checking rounding_digits
+  expect_error(round_away_0(x, digits = c(1,2)), '"digits" length must be 1 since expecting scalar')
+  expect_error(round_away_0(x, digits = -1), '"digits" must be greater than or equal to 0')
+  expect_error(round_away_0(x, digits = 15), '"digits" must be less than or equal to 14')
+  expect_error(round_away_0(x, digits = numeric(0)), '"digits" length must be > 0')
+  expect_error(round_away_0(x, digits = NA), '"digits" must have at least one non-NA value')
+  expect_error(round_away_0(x, digits = 1.5), '"digits" must be whole number\\(s\\)')
+})
+
+
+
+
 # test two_samp_cont_test
 test_that("two_samp_cont_test testing various options (no errors)", {
 
