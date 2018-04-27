@@ -43,19 +43,26 @@ User must use consistant naming throughout, with a underscore to seperate the gr
 
 # devtools::install_github(repo = "VIDD-VISC/VISCfunctions.data", host="https://github.fhcrc.org/api/v3")
 require(VISCfunctions.data)
-require(data.table)
 data(exampleData_BAMA)
 
 desriptive_stats_by_group <- exampleData_BAMA[, .(
-Group1 = unique(group[group == 1]), Group2 = unique(group[group == 2]),
-Group1_n = length(magnitude[group == 1]), Group2_n = length(magnitude[group == 2]),
-Group1_mean = mean(magnitude[group == 1]), Group2_mean = mean(magnitude[group == 2]),
-Group1_sd = sd(magnitude[group == 1]), Group2_sd = sd(magnitude[group == 2]),
-Group1_median = median(magnitude[group == 1]), Group2_median = median(magnitude[group == 2]),
-Group1_min = min(magnitude[group == 1]), Group2_min = min(magnitude[group == 2]),
-Group1_max = max(magnitude[group == 1]), Group2_max = max(magnitude[group == 2])
+     Group1 = unique(group[group == 1]), Group2 = unique(group[group == 2]),
+     Group1_n = length(magnitude[group == 1]), Group2_n = length(magnitude[group == 2]),
+     Group1_mean = mean(magnitude[group == 1]), Group2_mean = mean(magnitude[group == 2]),
+     Group1_sd = sd(magnitude[group == 1]), Group2_sd = sd(magnitude[group == 2]),
+     Group1_median = median(magnitude[group == 1]), Group2_median = median(magnitude[group == 2]),
+     Group1_min = min(magnitude[group == 1]), Group2_min = min(magnitude[group == 2]),
+     Group1_max = max(magnitude[group == 1]), Group2_max = max(magnitude[group == 2])
 ), by = .(visitno,antigen)]
-tbl_grp_paste(data = desriptive_stats_by_group, vars_to_paste = c('n','median_min_max','mean_sd', 'mean', 'sd', 'median', 'min', 'max'), first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
+
+
+
+tbl_grp_paste(data = desriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
+
+# Only getting predefined values
+tbl_grp_paste(data = desriptive_stats_by_group, vars_to_paste = c('median_min_max','mean_sd'), first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
+# Playing around with options
+tbl_grp_paste(data = desriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = 'less', digits = 5, keep_all = FALSE)
 
 
 }
