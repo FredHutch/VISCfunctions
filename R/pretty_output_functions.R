@@ -42,7 +42,7 @@
 #' tbl_grp_paste(data = desriptive_stats_by_group, vars_to_paste = c('n','median_min_max','mean_sd', 'mean', 'sd', 'median', 'min', 'max'), first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
 #'
 #'
-#'
+#' @import data.table
 #' @export
 
 
@@ -69,9 +69,10 @@ tbl_grp_paste <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
       vars_to_paste_here <- unique(intersect(temp_group1_measures, temp_group2_measures))
 
       # Adding speacial cases
-      if (sum(vars_to_paste_here %in% c('median','min','max')) == 3) vars_to_paste_here <- c('median_min_max', vars_to_paste_here)
-      if (sum(vars_to_paste_here %in% c('mean','sd')) == 2) vars_to_paste_here <- c('mean_sd', vars_to_paste_here)
+      if (sum(vars_to_paste_here %in% c('median','min','max')) == 3) vars_to_paste_here <- c(vars_to_paste_here, 'median_min_max')
+      if (sum(vars_to_paste_here %in% c('mean','sd')) == 2) vars_to_paste_here <- c(vars_to_paste_here, 'mean_sd')
 
+      if (verbose) message('The following measures will be combined: ', paste0(vars_to_paste_here, collapse = ', '))
     } else {
       vars_to_paste_here <- unique(vars_to_paste)
     }
@@ -86,19 +87,15 @@ tbl_grp_paste <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
   group1_vars_to_check <- paste0(first_name, '_', vars_to_check)
   group2_vars_to_check <- paste0(second_name, '_', vars_to_check)
   for (i in 1:length(vars_to_check)) {
-    if (sum(group1_vars_to_check[i] == names(data)) != 1) stop('Expecting one column named "', group1_vars_to_check[i] , '" in nput dataset, but there are ', sum(group1_vars_to_check[i] == names(data)), ' present')
+    if (sum(group1_vars_to_check[i] == names(data)) != 1) stop('Expecting one column named "', group1_vars_to_check[i] , '" in input dataset, but there are ', sum(group1_vars_to_check[i] == names(data)), ' present')
     temp_group1_var <- data[, group1_vars_to_check[i] == names(data)]
-    .check_numeric_input(temp_group1_var)
+    if (is.numeric(temp_group1_var)) .check_numeric_input(temp_group1_var)
 
-    if (sum(group2_vars_to_check[i] == names(data)) != 1) stop('Expecting one column named "', group2_vars_to_check[i] , '" in nput dataset, but there are ', sum(group2_vars_to_check[i] == names(data)), ' present')
+    if (sum(group2_vars_to_check[i] == names(data)) != 1) stop('Expecting one column named "', group2_vars_to_check[i] , '" in input dataset, but there are ', sum(group2_vars_to_check[i] == names(data)), ' present')
     temp_group2_var <- data[, group2_vars_to_check[i] == names(data)]
-    .check_numeric_input(temp_group2_var)
+    if(is.numeric(temp_group2_var)) .check_numeric_input(temp_group2_var)
   }
 
-
-
-  # If user doesn't define first_sep_val it is set to sep_val
-  if (is.null(first_sep_val)) first_sep_val <- sep_val
 
 
   ##### Pasting variables
@@ -116,11 +113,11 @@ tbl_grp_paste <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
   for (i in 1:length(vars_to_paste_here)) {
     if (vars_to_paste_here[i] == 'median_min_max') {
       pasted_results[[i]] <- paste0(
-        paste0(round_if_numeric(data[, paste0(first_name, '_mean')], digits), '[',
+        paste0(round_if_numeric(data[, paste0(first_name, '_median')], digits), '[',
                round_if_numeric(data[, paste0(first_name, '_min')], digits), ', ',
                round_if_numeric(data[, paste0(first_name, '_max')], digits), ']', sep = ''),
         sep_val,
-        paste0(round_if_numeric(data[, paste0(second_name, '_mean')], digits), '[',
+        paste0(round_if_numeric(data[, paste0(second_name, '_median')], digits), '[',
                round_if_numeric(data[, paste0(second_name, '_min')], digits), ', ',
                round_if_numeric(data[, paste0(second_name, '_max')], digits), ']', sep = '')
       )
@@ -141,12 +138,12 @@ tbl_grp_paste <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
   }
   names(pasted_results) <- paste0(vars_to_paste_here, '_info')
 
-  pasted_results <- data.frame('Comparison' = comparison_var,pasted_results)
+  pasted_results <- data.frame('Comparison' = comparison_var,pasted_results, stringsAsFactors = FALSE)
 
   # Returning all data if desired
   if (keep_all) {
     index_to_keep <- !names(data) %in% c(first_name, second_name, group1_vars_to_check, group2_vars_to_check)
-    data.frame(data[, index_to_keep], pasted_results)
+    data.frame(data[, index_to_keep], pasted_results, stringsAsFactors = FALSE)
   } else {
     pasted_results
   }

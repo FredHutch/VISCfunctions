@@ -58,5 +58,4 @@ Group1_max = max(magnitude[group == 1]), Group2_max = max(magnitude[group == 2])
 tbl_grp_paste(data = desriptive_stats_by_group, vars_to_paste = c('n','median_min_max','mean_sd', 'mean', 'sd', 'median', 'min', 'max'), first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
 
 
-
 }
