@@ -21,14 +21,14 @@ tbl_grp_paste(data, vars_to_paste = "all", first_name = "Group1",
 
 \item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". Will be used in determining the value to be pasted between the group names.}
 
-\item{digits}{integer indicating the number of decimal places to round to before pasting for numeric variables. Defualt is 0.}
+\item{digits}{integer indicating the number of decimal places to round to before pasting for numeric variables. Default is 0.}
 
 \item{keep_all}{logical indicating if all other variables in \code{data} should be returned with the pasted variables}
 
 \item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
 }
 \value{
-data.frame with all the pasted values requested. Each name will have '_info' at the end of the names (i.e. mean_info, median_info, ...)
+data.frame with all the pasted values requested. Each name will have '_comparison' at the end of the names (i.e. mean_comparison, median_comparison, ...)
 }
 \description{
 Paste together information, often statistics, from two groups. Two predefined pasting exist, mean(sd) and median[min,max], but user may also paste any single measure together.

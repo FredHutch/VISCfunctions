@@ -24,13 +24,13 @@ test_that("tbl_grp_paste testing various options (no errors)", {
                antigen = testing_dataset$antigen,
                Group1_IQR = testing_dataset$Group1_IQR,
                Comparison = paste0(testing_dataset$Group1, first_sep, testing_dataset$Group2),
-               n_info = paste0(testing_dataset$Group1_n, sep, testing_dataset$Group1_n),
-               mean_info = paste0(round_away_0(testing_dataset$Group1_mean, digits), sep, round_away_0(testing_dataset$Group2_mean, digits)),
-               sd_info = paste0(round_away_0(testing_dataset$Group1_sd, digits), sep, round_away_0(testing_dataset$Group2_sd, digits)),
-               median_info = paste0(round_away_0(testing_dataset$Group1_median, digits), sep, round_away_0(testing_dataset$Group2_median, digits)),
-               min_info = paste0(round_away_0(testing_dataset$Group1_min, digits), sep, round_away_0(testing_dataset$Group2_min, digits)),
-               max_info = paste0(round_away_0(testing_dataset$Group1_max, digits), sep, round_away_0(testing_dataset$Group2_max, digits)),
-               median_min_max_info = paste0(
+               n_comparison = paste0(testing_dataset$Group1_n, sep, testing_dataset$Group1_n),
+               mean_comparison = paste0(round_away_0(testing_dataset$Group1_mean, digits), sep, round_away_0(testing_dataset$Group2_mean, digits)),
+               sd_comparison = paste0(round_away_0(testing_dataset$Group1_sd, digits), sep, round_away_0(testing_dataset$Group2_sd, digits)),
+               median_comparison = paste0(round_away_0(testing_dataset$Group1_median, digits), sep, round_away_0(testing_dataset$Group2_median, digits)),
+               min_comparison = paste0(round_away_0(testing_dataset$Group1_min, digits), sep, round_away_0(testing_dataset$Group2_min, digits)),
+               max_comparison = paste0(round_away_0(testing_dataset$Group1_max, digits), sep, round_away_0(testing_dataset$Group2_max, digits)),
+               median_min_max_comparison = paste0(
                  paste0(round_away_0(testing_dataset$Group1_median, digits), '[',
                         round_away_0(testing_dataset$Group1_min, digits), ', ',
                         round_away_0(testing_dataset$Group1_max, digits), ']', sep = ''),
@@ -39,7 +39,7 @@ test_that("tbl_grp_paste testing various options (no errors)", {
                         round_away_0(testing_dataset$Group2_min, digits), ', ',
                         round_away_0(testing_dataset$Group2_max, digits), ']', sep = '')
                ),
-               mean_sd_info = paste0(
+               mean_sd_comparison = paste0(
                  paste0(round_away_0(testing_dataset$Group1_mean, digits), '(',
                         round_away_0(testing_dataset$Group1_sd, digits), ')', sep = ''),
                  sep,
@@ -51,9 +51,9 @@ test_that("tbl_grp_paste testing various options (no errors)", {
 
 
   # Testing
-  defualt_expected_results <- testing_fun(data_in = testing_dataset,first_sep = ' vs. ', sep = ' vs. ',digits = 0)
+  default_expected_results <- testing_fun(data_in = testing_dataset,first_sep = ' vs. ', sep = ' vs. ',digits = 0)
   expect_equal(object = tbl_grp_paste(data = testing_dataset),
-               expected = defualt_expected_results
+               expected = default_expected_results
   )
   # Testing message with all
   expect_message(object = tbl_grp_paste(data = testing_dataset, verbose = TRUE),
@@ -61,7 +61,7 @@ test_that("tbl_grp_paste testing various options (no errors)", {
   )
   # No Passthrough var
   expect_equal(object = tbl_grp_paste(data = testing_dataset, keep_all = FALSE),
-               expected = defualt_expected_results[, !names(defualt_expected_results) %in% c('visitno','antigen','Group1_IQR')]
+               expected = default_expected_results[, !names(default_expected_results) %in% c('visitno','antigen','Group1_IQR')]
   )
   # Different Seperator
   expect_equal(object = tbl_grp_paste(data = testing_dataset, sep_val = '/'),
@@ -75,7 +75,21 @@ test_that("tbl_grp_paste testing various options (no errors)", {
   expect_equal(object = tbl_grp_paste(data = testing_dataset, digits = 5),
                expected =  testing_fun(data_in = testing_dataset,first_sep = ' vs. ', sep = ' vs. ',digits = 5)
   )
-
+  # If all selected but no matching gives NULL or data, depening on keep_all, and gives message
+  expect_equal(object = tbl_grp_paste(data = testing_dataset[, c('Group1','Group2','Group1_mean','Group2_sd')]),
+               expected =  testing_dataset[, c('Group1','Group2','Group1_mean','Group2_sd')]
+  )
+  expect_message(object = tbl_grp_paste(data = testing_dataset[, c('Group1','Group2','Group1_mean','Group2_sd')], verbose = TRUE),
+               regexp =  '"all" specified, but no matching columns to paste'
+  )
+  expect_null(object = tbl_grp_paste(data = testing_dataset[, c('Group1','Group2','Group1_mean','Group2_sd')], keep_all = FALSE))
+  # Trying different group naming
+  expect_equal(object = tbl_grp_paste(data = testing_dataset[, .(Group_1 = Group1, Group_2 = Group2, Group_2_mean = Group2_mean, Group_1_mean = Group1_mean)], first_name = 'Group_1', second_name = 'Group_2'),
+               expected =  default_expected_results[, c('Comparison', 'mean_comparison')]
+  )
+  expect_equal(object = tbl_grp_paste(data = testing_dataset[, .(`G.r/o|up_1` = Group1, Group_2 = Group2, Group_2_mean = Group2_mean, `G.r/o|up_1_mean` = Group1_mean)], first_name = 'G.r/o|up_1', second_name = 'Group_2', keep_all = FALSE),
+               expected =  default_expected_results[, c('Comparison', 'mean_comparison')]
+  )
 
 
   ### Throwing errors
@@ -91,14 +105,9 @@ test_that("tbl_grp_paste testing various options (no errors)", {
   )
 
   # Wrong Measures Given or no matching measures
-  expect_error(object = tbl_grp_paste(data = testing_dataset[, c('Group1','Group2','Group1_mean','Group2_sd')]),
-               regexp = '"all" specified, but no matching columns to paste'
-  )
-  expect_error(object = tbl_grp_paste(data = testing_dataset[, c('Group1','Group2','Group1_mean','Group2_mean')], vars_to_paste = 'sd'),
-               regexp = 'Expecting one column named "Group1_sd" in input dataset, but there are 0 present'
-  )
   expect_error(object = tbl_grp_paste(data = testing_dataset[, c('Group1','Group2','Group1_mean','Group2_mean')], vars_to_paste = 'mean_sd'),
                regexp = 'Expecting one column named "Group1_sd" in input dataset, but there are 0 present'
   )
+
 
 })
