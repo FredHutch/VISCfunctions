@@ -4,7 +4,6 @@
 #'
 #' @param x numeric vector (can include NA values).
 #' @param digits positive integer of length 1 between 0 and 14, giving the amount of digits to round to.
-#' @param verbose a logical variable indicating if warnings and messages should be displayed.
 #' @return numeric vector of rounded values.
 #' @details
 #'
@@ -25,11 +24,33 @@
 #'
 #' @export
 
-round_away_0 <- function(x, digits = 0, verbose = FALSE){
+round_away_0 <- function(x, digits = 0){
   .check_numeric_input(x)
   .check_numeric_input(digits, lower_bound = 0, upper_bound = 14, scalar = TRUE, whole_num = TRUE)
 
   sign(x) * round(abs(x) + 1e-15, digits)
+}
+
+#' Wrapper for round_away_0 to account for non-numeric values
+#'
+#' Internal wrapper for round_away_0
+#'
+#' @param x vector (can include NA values).
+#' @param digits positive integer of length 1 between 0 and 14, giving the amount of digits to round to.
+#' @return numeric vector of rounded values.
+#' @details
+#'
+#' \code{round_away_0} is not designed for use at precision levels <= 1e-15
+#'
+#' @examples
+#'
+#' .round_if_numeric(c(NA,-3.5:3.5,NA))
+#' .round_if_numeric(c(NA,letters[1:5],NA))
+#'
+#'
+
+.round_if_numeric <- function(x, digits = 0){
+  if (is.numeric(x)) round_away_0(x, digits = digits) else x
 }
 
 
