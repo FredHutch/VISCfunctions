@@ -3,7 +3,7 @@
 #' round_away_0 takes a numeric vector, rounds them to a specified digit amount using the round away from 0 method for ties (i.e. 1.5). This is the SAS method for rounding.
 #'
 #' @param x numeric vector (can include NA values).
-#' @param digits positive integer of length 1 between 0 and 14, giving the amount of digits to round to.
+#' @param digits positive integer of length 1 between 0 (default) and 14, giving the amount of digits to round to.
 #' @return numeric vector of rounded values.
 #' @details
 #'
