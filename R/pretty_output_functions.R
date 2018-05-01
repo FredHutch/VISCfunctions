@@ -7,8 +7,8 @@
 #' @param stat2 second statistic to be pasted (optional).
 #' @param stat3 third statistic to be pasted (optional).
 #' @param digits positive integer of length 1 between 0 (default) and 14, giving the amount of digits to round to.
-#' @param bound_char the character to be used between stat1 and stat2/stat3. Available options are '(' (default), '[', '{', and '|'.
-#' @param sep the string to be used between stat2 and stat3. The default is ', '
+#' @param bound_char the character to be used between stat1 and stat2/stat3. Available options are '(' (default), '[', '\{', and '|'.
+#' @param sep the string to be used between stat2 and stat3. The default is ', '.
 #' @param na_str_out the character to replace missing values with.
 #' @return string of combined values
 #'

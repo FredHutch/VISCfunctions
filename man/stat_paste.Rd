@@ -16,7 +16,9 @@ stat_paste(stat1, stat2 = NULL, stat3 = NULL, digits = 0,
 
 \item{digits}{positive integer of length 1 between 0 (default) and 14, giving the amount of digits to round to.}
 
-\item{sep}{the string to be used between stat2 and stat3. The default is ', '}
+\item{bound_char}{the character to be used between stat1 and stat2/stat3. Available options are '(' (default), '[', '\{', and '|'.}
+
+\item{sep}{the string to be used between stat2 and stat3. The default is ', '.}
 
 \item{na_str_out}{the character to replace missing values with.}
 }
