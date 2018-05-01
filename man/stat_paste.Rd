@@ -39,8 +39,7 @@ For two values it returns \code{stat1 (stat2)}. e.g., mean (sd)
 
 For three values it returns \code{stat1 (stat2, stat3)}. e.g., estimate (95\% lower, 95\% upper) or median [min, max]
 
-Currently the method does not take in string variables (so doesn't work with pretty_pvalues). Also, does not convert missing
-values for the lower or upper arguments.
+Currently the method does work with string variables, but of course rounded would not be relevant for strings.
 }
 \examples{
 
