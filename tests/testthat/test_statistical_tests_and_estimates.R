@@ -35,6 +35,23 @@ test_that("round_away_0 throwing errors", {
   expect_error(round_away_0(x, digits = 1.5), '"digits" must be whole number\\(s\\)')
 })
 
+# test .round_if_numeric
+test_that("round_away_0 testing various options (no errors)", {
+  x = c(0,2.499,2.5,2.5001,3.5,4.05, NA)
+
+  #Note 2.5 goes to 3 as expected
+  expect_equal(object = .round_if_numeric(x),
+               expected = c(0,2,3,3,4,4,NA))
+  #Note 4.05 goes to 4.1 as expected
+  expect_equal(object = .round_if_numeric(x, digits = 1),
+               expected = c(0,2.5,2.5,2.5,3.5,4.1,NA))
+  #Testing for character
+  #Note 2.5 goes to 3 as expected
+  expect_equal(object = .round_if_numeric(c(NA,letters[1:5])),
+               expected = c(NA,letters[1:5]))
+
+})
+
 
 
 
