@@ -4,7 +4,8 @@ VISCfunctions
 A collection of VISC functions for annotation, statistical calculations, data manipulation, etc.
 
 The first rule of VISCfunctions: **We NEVER push to the master.**    
-Please use [pull requests](https://github.fhcrc.org/VIDD-VISC/SRA-Documentation/blob/master/Code-Documentation/pull-request-information.md).
+Please use [pull requests](https://github.fhcrc.org/VIDD-VISC/SRA-Documentation/blob/master/Code-Documentation/pull-request-information.md).    
+[Click here for a brief summary on building and installing a package with RStudio.](https://github.fhcrc.org/VIDD-VISC/SRA-Documentation/blob/master/Code-Documentation/build_and_test_package.md)
 
 
 VISCfunctions Principles
