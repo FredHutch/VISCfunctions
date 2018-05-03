@@ -26,20 +26,14 @@ stat_paste(stat1, stat2 = NULL, stat3 = NULL, digits = 0,
 string of combined values
 }
 \description{
-stat_paste() takes a up to 3 numeric values, rounds them to a specified digit amount,
-and then combines then accordingly.
+Takes in up to 3 numeric values, rounds each to a specified digit amount (if numeric), and then combines them accordingly.
 }
 \details{
-Will take a set of numbers and round them and then combine them in typical table display formats. Will also
-convert missing estimates to a character string.
+One value provided - returns a rounded value or the missing character.
+Two values - returns stat1 (stat2). e.g., mean (sd)
+Three values - returns stat1 (stat2, stat3). e.g., estimate (95\% lower, 95\% upper) or median [min, max]
 
-If one value provided just returns a rounded value or the missing character.
-
-For two values it returns \code{stat1 (stat2)}. e.g., mean (sd)
-
-For three values it returns \code{stat1 (stat2, stat3)}. e.g., estimate (95\% lower, 95\% upper) or median [min, max]
-
-Currently the method does work with string variables, but of course rounded would not be relevant for strings.
+Currently the method does work with string variables, but of course rounding would not be relevant for strings.
 }
 \examples{
 
@@ -49,7 +43,16 @@ stat_paste(5.109293, 2.145)
 stat_paste(5.109293, 1.7645, 8.0345)
 stat_paste(NA, NA, NA)
 stat_paste(5.109, "p < 0.001", digits = 3)
-stat_paste(c(rep(5,5),NA),c(1:5,NA),c(1,NA,2,NA,3,NA),'[')
+stat_paste(c(rep(5,5),NA),c(1:5,NA),c(1,NA,2,NA,3,NA),bound_char = '[')
 
+library(VISCfunctions.data)
+library(data.table)
+data(testData_BAMA)
+testData_BAMA [, .(
+  median_min_max = stat_paste(
+     median(magnitude, na.rm = TRUE),
+     min(magnitude, na.rm = TRUE),
+     max(magnitude, na.rm = TRUE)
+     )), by = .(antigen, visit, group)]
 
 }
