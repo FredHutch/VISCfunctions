@@ -9,7 +9,7 @@ round_away_0(x, digits = 0)
 \arguments{
 \item{x}{numeric vector (can include NA values).}
 
-\item{digits}{positive integer of length 1 between 0 and 14, giving the amount of digits to round to.}
+\item{digits}{positive integer of length 1 between 0 (default) and 14, giving the amount of digits to round to.}
 }
 \value{
 numeric vector of rounded values.
