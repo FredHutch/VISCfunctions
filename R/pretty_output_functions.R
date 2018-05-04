@@ -106,8 +106,6 @@ tbl_grp_paste <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
     if (is.numeric(temp_group2_var)) .check_numeric_input(temp_group2_var)
   }
 
-
-
   ##### Pasting variables
 
   # Comparison variable
@@ -123,26 +121,34 @@ tbl_grp_paste <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
   for (i in 1:length(vars_to_paste_here)) {
     if (vars_to_paste_here[i] == 'median_min_max') {
       pasted_results[[i]] <- paste0(
-        paste0(.round_if_numeric(data_here[, paste0(first_name, '_median')], digits), '[',
-               .round_if_numeric(data_here[, paste0(first_name, '_min')], digits), ', ',
-               .round_if_numeric(data_here[, paste0(first_name, '_max')], digits), ']', sep = ''),
+        stat_paste(stat1 = data_here[, paste0(first_name, '_median')],
+                   stat2 = data_here[, paste0(first_name, '_min')],
+                   stat3 = data_here[, paste0(first_name, '_max')],
+                   digits = digits, bound_char = '[', sep = ', ', na_str_out = '---'
+        ),
         sep_val,
-        paste0(.round_if_numeric(data_here[, paste0(second_name, '_median')], digits), '[',
-               .round_if_numeric(data_here[, paste0(second_name, '_min')], digits), ', ',
-               .round_if_numeric(data_here[, paste0(second_name, '_max')], digits), ']', sep = '')
+        stat_paste(stat1 = data_here[, paste0(second_name, '_median')],
+                   stat2 = data_here[, paste0(second_name, '_min')],
+                   stat3 = data_here[, paste0(second_name, '_max')],
+                   digits = digits, bound_char = '[', sep = ', ', na_str_out = '---'
+        )
       )
     } else if (vars_to_paste_here[i] == 'mean_sd') {
-      pasted_results[[i]] <- paste0(
-        paste0(.round_if_numeric(data_here[, paste0(first_name, '_mean')], digits), '(',
-               .round_if_numeric(data_here[, paste0(first_name, '_sd')], digits), ')', sep = ''),
+      pasted_results[[i]] <-  paste0(
+        stat_paste(stat1 = data_here[, paste0(first_name, '_mean')],
+                   stat2 = data_here[, paste0(first_name, '_sd')],
+                   digits = digits, bound_char = '(', na_str_out = '---'
+        ),
         sep_val,
-        paste0(.round_if_numeric(data_here[, paste0(second_name, '_mean')], digits), '(',
-               .round_if_numeric(data_here[, paste0(second_name, '_sd')], digits), ')', sep = '')
+        stat_paste(stat1 = data_here[, paste0(second_name, '_mean')],
+                   stat2 = data_here[, paste0(second_name, '_sd')],
+                   digits = digits, bound_char = '(', na_str_out = '---'
+        )
       )
     } else {
       pasted_results[[i]] <- paste0(.round_if_numeric(data_here[, paste0(first_name, '_', vars_to_paste_here[i])], digits),
-        sep_val,
-        .round_if_numeric(data_here[, paste0(second_name, '_', vars_to_paste_here[i])], digits)
+                                    sep_val,
+                                    .round_if_numeric(data_here[, paste0(second_name, '_', vars_to_paste_here[i])], digits)
       )
     }
   }

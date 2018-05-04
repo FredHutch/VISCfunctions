@@ -31,19 +31,19 @@ test_that("tbl_grp_paste testing various options (no errors)", {
                min_comparison = paste0(round_away_0(testing_dataset$Group1_min, digits), sep, round_away_0(testing_dataset$Group2_min, digits)),
                max_comparison = paste0(round_away_0(testing_dataset$Group1_max, digits), sep, round_away_0(testing_dataset$Group2_max, digits)),
                median_min_max_comparison = paste0(
-                 paste0(round_away_0(testing_dataset$Group1_median, digits), '[',
+                 paste0(round_away_0(testing_dataset$Group1_median, digits), ' [',
                         round_away_0(testing_dataset$Group1_min, digits), ', ',
                         round_away_0(testing_dataset$Group1_max, digits), ']', sep = ''),
                  sep,
-                 paste0(round_away_0(testing_dataset$Group2_median, digits), '[',
+                 paste0(round_away_0(testing_dataset$Group2_median, digits), ' [',
                         round_away_0(testing_dataset$Group2_min, digits), ', ',
                         round_away_0(testing_dataset$Group2_max, digits), ']', sep = '')
                ),
                mean_sd_comparison = paste0(
-                 paste0(round_away_0(testing_dataset$Group1_mean, digits), '(',
+                 paste0(round_away_0(testing_dataset$Group1_mean, digits), ' (',
                         round_away_0(testing_dataset$Group1_sd, digits), ')', sep = ''),
                  sep,
-                 paste0(round_away_0(testing_dataset$Group2_mean, digits), '(',
+                 paste0(round_away_0(testing_dataset$Group2_mean, digits), ' (',
                         round_away_0(testing_dataset$Group2_sd, digits), ')', sep = '')
                ),
                stringsAsFactors = FALSE)
