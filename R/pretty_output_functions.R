@@ -40,19 +40,19 @@
 #'
 #'
 #'
-#' tbl_grp_paste(data = desriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
+#' paste_tbl_grp(data = desriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
 #'
 #' # Only getting predefined values
-#' tbl_grp_paste(data = desriptive_stats_by_group, vars_to_paste = c('median_min_max','mean_sd'), first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
+#' paste_tbl_grp(data = desriptive_stats_by_group, vars_to_paste = c('median_min_max','mean_sd'), first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
 #' # Playing around with options
-#' tbl_grp_paste(data = desriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = 'less', digits = 5, keep_all = FALSE)
+#' paste_tbl_grp(data = desriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = 'less', digits = 5, keep_all = FALSE)
 #'
 #'
 #' @import data.table
 #' @export
 
 
-tbl_grp_paste <- function(data, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = c("two.sided", "less", "greater"), digits = 0, keep_all = TRUE, verbose = FALSE){
+paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = c("two.sided", "less", "greater"), digits = 0, keep_all = TRUE, verbose = FALSE){
 
   #####Checking variables being used
 
