@@ -90,6 +90,9 @@ test_that("tbl_grp_paste testing various options (no errors)", {
   expect_equal(object = tbl_grp_paste(data = testing_dataset[, .(`G.r/o|up_1` = Group1, Group_2 = Group2, Group_2_mean = Group2_mean, `G.r/o|up_1_mean` = Group1_mean)], first_name = 'G.r/o|up_1', second_name = 'Group_2', keep_all = FALSE),
                expected =  default_expected_results[, c('Comparison', 'mean_comparison')]
   )
+  expect_equal(object = tbl_grp_paste(data = testing_dataset[, .(`Group-1` = Group1, `Group-12` = Group2, `Group-12_mean` = Group2_mean, `Group-1_mean` = Group1_mean)], first_name = 'Group-1', second_name = 'Group-12'),
+               expected =  default_expected_results[, c('Comparison', 'mean_comparison')]
+  )
 
 
   ### Throwing errors

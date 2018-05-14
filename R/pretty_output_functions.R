@@ -59,6 +59,7 @@ tbl_grp_paste <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
   data_here <- as.data.frame(data)
   alternative <- match.arg(alternative)
   .check_numeric_input(digits, lower_bound = 0, scalar = TRUE)
+  if (first_name == second_name) stop('"first_name" and "second_name" must be different')
   if (sum(first_name == names(data_here)) != 1) stop('Expecting one column named "', first_name , '" in input dataset, but there are ', sum(first_name == names(data_here)), ' present')
   if (sum(second_name == names(data_here)) != 1) stop('Expecting one column named "', second_name , '" in input dataset, but there are ', sum(second_name == names(data_here)), ' present')
   if (length(vars_to_paste) != 1 & any(vars_to_paste == 'all')) {
@@ -68,8 +69,11 @@ tbl_grp_paste <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
 
   # Defining vars when vars_to_paste set to 'all'
     if (length(vars_to_paste) == 1 & any(vars_to_paste == 'all')) {
-      temp_group1_names <- names(data_here)[substr(names(data_here), 0, nchar(first_name)) == first_name]
-      temp_group2_names <- names(data_here)[substr(names(data_here), 0, nchar(second_name)) == second_name]
+      #Need to address if one group name a subset of another
+      temp_group1_names <- names(data_here)[(substr(names(data_here), 0, nchar(first_name)) == first_name) &
+                                              (nchar(first_name) > nchar(second_name) | substr(names(data_here), 0, nchar(second_name)) != second_name)]
+      temp_group2_names <- names(data_here)[(substr(names(data_here), 0, nchar(second_name)) == second_name) &
+                                              (nchar(second_name) > nchar(first_name) | substr(names(data_here), 0, nchar(first_name)) != first_name)]
       temp_group1_measures <- gsub(paste0(first_name,'_'), '', temp_group1_names, fixed = T)
       temp_group2_measures <- gsub(paste0(second_name,'_'), '', temp_group2_names, fixed = T)
       vars_to_paste_here <- unique(intersect(temp_group1_measures, temp_group2_measures))
@@ -159,7 +163,7 @@ tbl_grp_paste <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
   # Returning all data if desired
   if (keep_all) {
     index_to_keep <- !names(data_here) %in% c(first_name, second_name, group1_vars_to_check, group2_vars_to_check)
-    data.frame(data_here[, index_to_keep], pasted_results, stringsAsFactors = FALSE)
+    data.frame(data_here[, index_to_keep, drop = FALSE], pasted_results, stringsAsFactors = FALSE)
   } else {
     pasted_results
   }
