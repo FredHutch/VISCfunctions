@@ -1,23 +1,22 @@
 #' Pasting Together Information for Two Groups
 #'
-#' Paste together information, often statistics, from two groups. Two predefined pasting exist, mean(sd) and median[min,max], but user may also paste any single measure together.
+#' Paste together information, often statistics, from two groups. There are two predefined combinations: mean(sd) and median[min,max], but user may also paste any single measure together.
 #'
 #'
-#' @param data input dataset. User must use consistant naming throughout, with a underscore to seperate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be columns defining the group names (i.e. 'Group1' and 'Group2'), which are used to form the \code{Comparison} variable.
-#' @param vars_to_paste vector of names of measures to paste together. Can be the predefined 'median_min_max' or 'mean_sd', or any variable as long as they have matching columns for each group (i.e. Group1_MyMeasure and Group2_MyMeasure). Multiple mesures can be requested. Also can specify "all" (default), which will run 'median_min_max' and 'mean_sd', as well as any pairs of columns in the proper format.
-#' @param first_name name of first group (sting before the '_') . Default is 'Group1'.
-#' @param second_name name of second group (sting before the '_'). Default is 'Group2'.
+#' @param data input dataset. User must use consistent naming throughout, \strong{with an underscore} to separate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be two columns with column names that exactly match the input for \code{first_name} and \code{second_name} (i.e. 'Group1' and 'Group2'), which are used to form the \code{Comparison} variable.
+#' @param vars_to_paste vector of names of common measures to paste together. Can be the predefined 'median_min_max' or 'mean_sd', or any variable as long as they have matching columns for each group (i.e. Group1_MyMeasure and Group2_MyMeasure). Multiple measures can be requested. Default: "all" will run 'median_min_max' and 'mean_sd', as well as any pairs of columns in the proper format.
+#' @param first_name name of first group (string before '_') . Default is 'Group1'.
+#' @param second_name name of second group (string before '_'). Default is 'Group2'.
 #' @param sep_val value to be pasted between the two measures. Default is ' vs. '.
-#' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". Will be used in determining the value to be pasted between the group names.
+#' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". Will be used to determine the character to be pasted between the group names (\code{Comparison} variable).  Specifying "two.sided" will use the \code{sep_val} input.
 #' @param digits integer indicating the number of decimal places to round to before pasting for numeric variables. Default is 0.
-#' @param keep_all logical indicating if all other variables in \code{data} should be returned with the pasted variables
-#' @param verbose a logical variable indicating if warnings and messages should be displayed.
+#' @param keep_all logical indicating if all remaining, unpasted variables in \code{data} should be returned with the pasted variables. Default TRUE.
+#' @param verbose a logical variable indicating if warnings and messages should be displayed. Default FALSE.
 #' @details
 #'
-#' User must use consistant naming throughout, with a underscore to seperate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be columns defining the group names (i.e. \code{Group1} and \code{Group2}), which are used to form the \code{Comparison} variable.
+#' User must use consistant naming throughout, with a underscore to separate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be columns defining the group names (i.e. \code{Group1} and \code{Group2}), which are used to form the \code{Comparison} variable.
 #'
 #' \code{alternative} included as a parameter so the direction can easily be seen in one-sided test. If "two.sided" is selected the value to be pasted between the two group names will be set to \code{sep_val}, where "greater" will use " > " and "less" with use " < " as the pasting value.
-#'
 #'
 #'
 #' @return data.frame with all the pasted values requested. Each name will have '_comparison' at the end of the names (i.e. mean_comparison, median_comparison, ...)
@@ -28,7 +27,7 @@
 #' require(VISCfunctions.data)
 #' data(exampleData_BAMA)
 #'
-#' desriptive_stats_by_group <- exampleData_BAMA[, .(
+#' descriptive_stats_by_group <- exampleData_BAMA[, .(
 #'      Group1 = unique(group[group == 1]), Group2 = unique(group[group == 2]),
 #'      Group1_n = length(magnitude[group == 1]), Group2_n = length(magnitude[group == 2]),
 #'      Group1_mean = mean(magnitude[group == 1]), Group2_mean = mean(magnitude[group == 2]),
@@ -38,15 +37,29 @@
 #'      Group1_max = max(magnitude[group == 1]), Group2_max = max(magnitude[group == 2])
 #' ), by = .(visitno,antigen)]
 #'
+#' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
+#' 
+#' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = c("mean", "median_min_max"), alternative= "less", keep_all = FALSE)
+#'
+#' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = 'less', digits = 5, keep_all = FALSE)
 #'
 #'
-#' paste_tbl_grp(data = desriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
+#' # Same example wit tidyverse (dplyr+tidyr) with some custom functions
+#' 
+#' library(tidyverse)
 #'
-#' # Only getting predefined values
-#' paste_tbl_grp(data = desriptive_stats_by_group, vars_to_paste = c('median_min_max','mean_sd'), first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
-#' # Playing around with options
-#' paste_tbl_grp(data = desriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = 'less', digits = 5, keep_all = FALSE)
+#'q95_fun = function(x) quantile(x, 0.95)
+#'N = function(x) length(x)
 #'
+#'exampleData_BAMA %>% 
+#'  mutate(group = paste0("Group", group)) %>%
+#'  group_by(group, visitno, antigen) %>%
+#'  summarise_at("magnitude", funs(N, mean, sd, median, min, max, q95_fun)) %>% 
+#'  gather(variable, value, -(group:antigen)) %>% # these three chains create a wide dataset
+#'  unite(temp, group, variable) %>%
+#'  spread(temp, value) %>%
+#'  mutate(Group1 = "Group 1", Group2 = "Group 2") %>%
+#'  paste_tbl_grp() 
 #'
 #' @import data.table
 #' @export
@@ -87,7 +100,7 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
       vars_to_paste_here <- unique(vars_to_paste)
     }
     # Giving a message if nothing to return
-    if (vars_to_paste == 'all' & length(vars_to_paste_here) == 0) {
+    if (any(vars_to_paste == 'all') & length(vars_to_paste_here) == 0) {
       if (verbose) message('"all" specified, but no matching columns to paste')
       if (keep_all) return(data) else return(NULL)
     }
