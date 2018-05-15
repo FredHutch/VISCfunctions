@@ -10,6 +10,7 @@
 #' @param sep_val value to be pasted between the two measures. Default is ' vs. '.
 #' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". Will be used to determine the character to be pasted between the group names (\code{Comparison} variable).  Specifying "two.sided" will use the \code{sep_val} input.
 #' @param digits integer indicating the number of decimal places to round to before pasting for numeric variables. Default is 0.
+#' @param trailing_zeros logical indicating if trailing zeros should included (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector
 #' @param keep_all logical indicating if all remaining, unpasted variables in \code{data} should be returned with the pasted variables. Default TRUE.
 #' @param verbose a logical variable indicating if warnings and messages should be displayed. Default FALSE.
 #' @details
@@ -65,7 +66,7 @@
 #' @export
 
 
-paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = c("two.sided", "less", "greater"), digits = 0, keep_all = TRUE, verbose = FALSE){
+paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = c("two.sided", "less", "greater"), digits = 0, trailing_zeros = TRUE, keep_all = TRUE, verbose = FALSE){
 
   #####Checking variables being used
 
@@ -172,9 +173,9 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
         if (any((both_var_here %% 1) != 0)) digits_here = digits else digits_here = 0
       } else digits_here = digits
 
-      pasted_results[[i]] <- paste0(.round_if_numeric(first_var_here, digits = digits_here, trailing_zeros = TRUE),
+      pasted_results[[i]] <- paste0(.round_if_numeric(first_var_here, digits = digits_here, trailing_zeros = trailing_zeros),
                                     sep_val,
-                                    .round_if_numeric(second_var_here, digits = digits_here, trailing_zeros = TRUE)
+                                    .round_if_numeric(second_var_here, digits = digits_here, trailing_zeros = trailing_zeros)
       )
     }
   }
@@ -203,6 +204,7 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
 #' @param stat2 second statistic to be pasted (optional).
 #' @param stat3 third statistic to be pasted (optional).
 #' @param digits positive integer of length 1 between 0 (default) and 14, giving the amount of digits to round to.
+#' @param trailing_zeros logical indicating if trailing zeros should included (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector
 #' @param bound_char the character to be used between stat1 and stat2/stat3. Available options are '(' (default), '[', '\{', and '|'.
 #' @param sep the string to be used between stat2 and stat3. The default is ', '.
 #' @param na_str_out the character to replace missing values with.
@@ -238,7 +240,7 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
 #'      )), by = .(antigen, visit, group)]
 #'
 #' @export
-stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, bound_char = c('(','[','{','|'), sep = ', ', na_str_out = "---"){
+stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_zeros = TRUE, bound_char = c('(','[','{','|'), sep = ', ', na_str_out = "---"){
   bound_char <- match.arg(bound_char)
   end_bound_char <-   switch(bound_char,
                       `(` = ')',
@@ -247,15 +249,15 @@ stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, bound_char 
                       `|` = '|'
   )
 
-  stat1_pasted_obj <-  ifelse(is.na(stat1), na_str_out, as.character(.round_if_numeric(stat1, digits = digits, trailing_zeros = TRUE)))
+  stat1_pasted_obj <-  ifelse(is.na(stat1), na_str_out, as.character(.round_if_numeric(stat1, digits = digits, trailing_zeros = trailing_zeros)))
   if (is.null(stat2)) {
     pasted_output <- stat1_pasted_obj
   } else {
-    stat2_pasted_obj <-  ifelse(is.na(stat2), na_str_out, as.character(.round_if_numeric(stat2, digits = digits, trailing_zeros = TRUE)))
+    stat2_pasted_obj <-  ifelse(is.na(stat2), na_str_out, as.character(.round_if_numeric(stat2, digits = digits, trailing_zeros = trailing_zeros)))
     if (is.null(stat3)) {
       pasted_output <- ifelse(is.na(stat1) & is.na(stat2), na_str_out, paste0(stat1_pasted_obj, " ", bound_char, stat2_pasted_obj, end_bound_char))
     } else {
-      stat3_pasted_obj <-  ifelse(is.na(stat3), na_str_out, as.character(.round_if_numeric(stat3, digits = digits, trailing_zeros = TRUE)))
+      stat3_pasted_obj <-  ifelse(is.na(stat3), na_str_out, as.character(.round_if_numeric(stat3, digits = digits, trailing_zeros = trailing_zeros)))
       pasted_output <- ifelse(is.na(stat1) & is.na(stat2) & is.na(stat3), na_str_out, paste0(stat1_pasted_obj, " ", bound_char, stat2_pasted_obj, sep, stat3_pasted_obj, end_bound_char))
     }
   }

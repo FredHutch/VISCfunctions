@@ -6,7 +6,8 @@
 \usage{
 paste_tbl_grp(data, vars_to_paste = "all", first_name = "Group1",
   second_name = "Group2", sep_val = " vs. ", alternative = c("two.sided",
-  "less", "greater"), digits = 0, keep_all = TRUE, verbose = FALSE)
+  "less", "greater"), digits = 0, trailing_zeros = TRUE, keep_all = TRUE,
+  verbose = FALSE)
 }
 \arguments{
 \item{data}{input dataset. User must use consistent naming throughout, \strong{with an underscore} to separate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be two columns with column names that exactly match the input for \code{first_name} and \code{second_name} (i.e. 'Group1' and 'Group2'), which are used to form the \code{Comparison} variable.}
@@ -22,6 +23,8 @@ paste_tbl_grp(data, vars_to_paste = "all", first_name = "Group1",
 \item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". Will be used to determine the character to be pasted between the group names (\code{Comparison} variable).  Specifying "two.sided" will use the \code{sep_val} input.}
 
 \item{digits}{integer indicating the number of decimal places to round to before pasting for numeric variables. Default is 0.}
+
+\item{trailing_zeros}{logical indicating if trailing zeros should included (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector}
 
 \item{keep_all}{logical indicating if all remaining, unpasted variables in \code{data} should be returned with the pasted variables. Default TRUE.}
 
