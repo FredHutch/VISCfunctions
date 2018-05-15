@@ -4,7 +4,8 @@
 #'
 #' @param x numeric vector (can include NA values).
 #' @param digits positive integer of length 1 between 0 (default) and 14, giving the amount of digits to round to.
-#' @return numeric vector of rounded values.
+#' @param trailing_zeros logical indicating if trailing zeros should included (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector
+#' @return if \code{trailing_zeros = TRUE} returns a character vector of rounded values with trailing zeros, otherwise returns a numeric vector of rounded values.
 #' @details
 #'
 #' \code{round_away_0} is not designed for use at precision levels <= 1e-15
@@ -22,13 +23,26 @@
 #' round_away_0(vals_to_round)
 #' # [1] NA -4 -3 -2 -1  1  2  3  4 NA
 #'
+#' # Can force trailing zeros (will output character vector)
+#' round_away_0(vals_to_round, digits = 2, trailing_zeros = TRUE)
+#'
 #' @export
 
-round_away_0 <- function(x, digits = 0){
+round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
   .check_numeric_input(x)
   .check_numeric_input(digits, lower_bound = 0, upper_bound = 14, scalar = TRUE, whole_num = TRUE)
 
-  sign(x) * round(abs(x) + 1e-15, digits)
+  rounded_vals <- sign(x) * round(abs(x) + 1e-15, digits)
+
+  if (trailing_zeros) {
+    # Need to exclude NAs when doing formatting
+    rounded_vals[!is.na(rounded_vals)] <- formatC(rounded_vals[!is.na(rounded_vals)], digits, format = 'f')
+
+    #Need to change -0.00... to 0.00...
+    neg_to_change <- paste0('-0.',paste0(rep(0,digits), collapse = ''))
+    if (any(rounded_vals == neg_to_change, na.rm = TRUE)) rounded_vals[rounded_vals == neg_to_change] <- substr(neg_to_change, 2, nchar(neg_to_change))
+  }
+  rounded_vals
 }
 
 #' Wrapper for round_away_0 to account for non-numeric values
@@ -37,7 +51,8 @@ round_away_0 <- function(x, digits = 0){
 #'
 #' @param x vector (can include NA values).
 #' @param digits positive integer of length 1 between 0 and 14, giving the amount of digits to round to.
-#' @return numeric vector of rounded values.
+#' @param trailing_zeros logical indicating if trailing zeros should included (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector
+#' @return if \code{x} non-numeric vector returns x, else if \code{trailing_zeros = TRUE} returns a character vector of rounded values with trailing zeros, otherwise returns a numeric vector of rounded values.
 #' @details
 #'
 #' \code{round_away_0} is not designed for use at precision levels <= 1e-15
@@ -49,8 +64,8 @@ round_away_0 <- function(x, digits = 0){
 #'
 #'
 
-.round_if_numeric <- function(x, digits = 0){
-  if (is.numeric(x)) round_away_0(x, digits = digits) else x
+.round_if_numeric <- function(x, digits = 0, trailing_zeros = FALSE){
+  if (is.numeric(x)) round_away_0(x, digits = digits, trailing_zeros = trailing_zeros) else x
 }
 
 
