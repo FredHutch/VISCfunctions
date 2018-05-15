@@ -66,6 +66,104 @@ stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, bound_char 
 }
 
 
+#' Get SAS-Like Formatted Numbers
+#'
+#' Formats numbers with trailing zeros when needed (i.e 0.100 if rounding to three digits)
+#' @param x numeric vector (can include NA values)
+#' @param digits positive integer of length 1 between 1 and 11, giving the amount of digits to format to
+#' @return vector a character vector of formated values
+#' @details
+#'
+#' Uses the formatC function, with extra input checking and features. Takes advantage of round_away_from_0 function to ensure expected rounding method of round away from 0 is being used.
+#'
+#' @examples
+#' vals_to_format = c(NA,runif(5),.1,.01,.001,.0005)
+#' formatC_VISC(vals_to_format, 3)
+#'
 
+
+formatC_VISC <- function(x, digits = 1, format_in = 'f'){
+  if (!is.numeric(x)) {
+    stop('x must be a numeric vector')
+  }
+  if (digits < 0 | digits > 11) {
+    stop('digits must between 1 and 11')
+  }
+  
+  formatted_numbers <- formatC(round_away_0(x, digits = digits), digits = digits, format = format_in)
+  formatted_numbers[is.na(x)] <- NA
+  
+  #Need to change -0.0 to 0.0
+  neg_to_change <- paste0('-0.',paste0(rep(0,digits), collapse = ''))
+  if (any(formatted_numbers == neg_to_change, na.rm = TRUE)) formatted_numbers[formatted_numbers == neg_to_change] <- substr(neg_to_change, 2, nchar(neg_to_change))
+  
+  as.numeric(formatted_numbers)
+}
+
+
+#' Round and highlight (in Latex) p-values
+#'
+#' pretty_pvalues() takes a vector of p-values, rounds them to a specified digit amount,
+#' cuts off at p <0.001 and highlights when below significance level, returns a character for missing.
+#'
+#' @param pvalues vector of p-values
+#' @param digits amount of digits to round to
+#' @param emphasis a character vector specifying the empasis to add, if any, (highlighting, bolding, and italicize), must be one of "none" (default), "highlight", "bold" or "italicize". You can specify just the initial letters.
+#' @param sig_alpha the significance level to highlight values for
+#' @param missing_char the character to replace missing values with
+#' @param include_p TRUE or FALSE. should "p =" be printed in front of p values
+#' @param formatted_p TRUE or FALSE. should p values be formatted (i.e. 0.100 instead of 0.1)
+#' @return vector of transformed p-values for table output
+#' @examples
+#' pvalue_example = c(0.5, 0.06, 0.0005, NA, 1e-6)
+#'
+#' pretty_pvalues(pvalue_example)
+#'
+#' pretty_pvalues(pvalue_example, digits = 4, missing_char = "")
+#'
+#' @export
+
+
+pretty_pvalues = function(pvalues, digits = 3, bold = FALSE, italic = FALSE, background = NULL, sig_alpha = 0.05, missing_char = '---', include_p = FALSE, trailing_zeros = TRUE){
+  # 
+  # emphasis <- match.arg(emphasis, several.ok = TRUE)
+  # #if user didn't specify emphasis (meaning all four options listed) we want to set to 'none'
+  # if (length(emphasis) == 4) emphasis = 'none'
+  # 
+  #Need to set options for no scientific notation, but set back to user preference on exit
+  op <- options()
+  options(scipen = 10)
+  on.exit(options(op))
+  
+  lower_cutoff = 10^(-digits)
+  
+  ## relevant p-value indices for specific assignments
+  missing_p = which(is.na(pvalues))
+  below_cutoff_p = which(pvalues <= lower_cutoff)
+  above_cutoff_p = which(pvalues > lower_cutoff)
+  sig_p = which(pvalues <= sig_alpha)
+  
+  
+  if (formatted_p) pvalue_new = round_away_0(pvalues, digits) else pvalue_new = as.character(round_away_0(pvalues, digits))
+  
+  ## manipulate and assign pvalues as characters to output pvalue vector
+  #pvalues[above_cutoff_p] = round(pvalue_new[above_cutoff_p], digits)
+  pvalues[missing_p] = missing_char
+  pvalues[below_cutoff_p] = paste0("<", lower_cutoff)
+  
+  # the letter 'p' in front of values
+  if (include_p) {
+    pvalues[below_cutoff_p] = paste0('p',  pvalue_new[below_cutoff_p])
+    pvalues[above_cutoff_p] = paste0('p=',  pvalue_new[above_cutoff_p])
+  }
+  
+  # formatting
+  if (bold == TRUE | italic == TRUE | !is.null(background)) pvalue_new[sig_p] = kableExtra::cell_spec(pvalue_new[sig_p], format = "latex", bold = bold, italic = italic, background = background)
+  
+  # error checking
+  if (any(is.na(pvalue_new))) stop("Error in vector assignment.")
+  
+  pvalue_new
+}
 
 
