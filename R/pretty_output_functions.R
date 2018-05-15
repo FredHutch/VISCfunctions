@@ -10,7 +10,7 @@
 #' @param sep_val value to be pasted between the two measures. Default is ' vs. '.
 #' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". Will be used to determine the character to be pasted between the group names (\code{Comparison} variable).  Specifying "two.sided" will use the \code{sep_val} input.
 #' @param digits integer indicating the number of decimal places to round to before pasting for numeric variables. Default is 0.
-#' @param trailing_zeros logical indicating if trailing zeros should included (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector
+#' @param trailing_zeros logical indicating if trailing zeros should be included (i.e. 0.100 instead of 0.1). Note if set to TRUE output is a character vector.
 #' @param keep_all logical indicating if all remaining, unpasted variables in \code{data} should be returned with the pasted variables. Default TRUE.
 #' @param verbose a logical variable indicating if warnings and messages should be displayed. Default FALSE.
 #' @details

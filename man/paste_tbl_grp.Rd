@@ -24,7 +24,7 @@ paste_tbl_grp(data, vars_to_paste = "all", first_name = "Group1",
 
 \item{digits}{integer indicating the number of decimal places to round to before pasting for numeric variables. Default is 0.}
 
-\item{trailing_zeros}{logical indicating if trailing zeros should included (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector}
+\item{trailing_zeros}{logical indicating if trailing zeros should be included (i.e. 0.100 instead of 0.1). Note if set to TRUE output is a character vector.}
 
 \item{keep_all}{logical indicating if all remaining, unpasted variables in \code{data} should be returned with the pasted variables. Default TRUE.}
 
