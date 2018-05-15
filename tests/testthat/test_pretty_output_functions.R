@@ -106,6 +106,11 @@ test_that("paste_tbl_grp testing various options (no errors)", {
   expect_error(object = paste_tbl_grp(data = testing_dataset[, !names(testing_dataset) %like% 'Group1']),
                regexp = 'Expecting one column named "Group1" in input dataset, but there are 0 present'
   )
+  # Duplicate column names
+  expect_error(object = paste_tbl_grp(data = testing_dataset[, .(Group1, Group2, Group1_mean, Group2_mean, Group2_mean)]),
+               regexp = 'Expecting one column named "Group2_mean" in input dataset, but there are 2 present'
+  )
+
 
   # Wrong Measures Given or no matching measures
   expect_error(object = paste_tbl_grp(data = testing_dataset[, c('Group1','Group2','Group1_mean','Group2_mean')], vars_to_paste = 'mean_sd'),
