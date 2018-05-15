@@ -4,15 +4,17 @@
 \alias{round_away_0}
 \title{Rounding Using Round Away From 0 Method}
 \usage{
-round_away_0(x, digits = 0)
+round_away_0(x, digits = 0, trailing_zeros = FALSE)
 }
 \arguments{
 \item{x}{numeric vector (can include NA values).}
 
 \item{digits}{positive integer of length 1 between 0 (default) and 14, giving the amount of digits to round to.}
+
+\item{trailing_zeros}{logical indicating if trailing zeros should included (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector}
 }
 \value{
-numeric vector of rounded values.
+if \code{trailing_zeros = TRUE} returns a character vector of rounded values with trailing zeros, otherwise returns a numeric vector of rounded values.
 }
 \description{
 round_away_0 takes a numeric vector, rounds them to a specified digit amount using the round away from 0 method for ties (i.e. 1.5). This is the SAS method for rounding.
@@ -32,5 +34,8 @@ round(vals_to_round)
 # round_away_0() will round away from 0 when tied at X.5
 round_away_0(vals_to_round)
 # [1] NA -4 -3 -2 -1  1  2  3  4 NA
+
+# Can force trailing zeros (will output character vector)
+round_away_0(vals_to_round, digits = 2, trailing_zeros = TRUE)
 
 }
