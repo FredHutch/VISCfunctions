@@ -101,35 +101,37 @@ formatC_VISC <- function(x, digits = 1, format_in = 'f'){
 }
 
 
-#' Round and highlight (in Latex) p-values
+#' Round and highlight p-values
 #'
 #' pretty_pvalues() takes a vector of p-values, rounds them to a specified digit amount,
-#' cuts off at p <0.001 and highlights when below significance level, returns a character for missing.
+#' allows emphasis when below defined significance level, and returns a character for missing.
 #'
-#' @param pvalues vector of p-values
-#' @param digits amount of digits to round to
-#' @param emphasis a character vector specifying the empasis to add, if any, (highlighting, bolding, and italicize), must be one of "none" (default), "highlight", "bold" or "italicize". You can specify just the initial letters.
-#' @param sig_alpha the significance level to highlight values for
-#' @param missing_char the character to replace missing values with
-#' @param include_p TRUE or FALSE. should "p =" be printed in front of p values
-#' @param formatted_p TRUE or FALSE. should p values be formatted (i.e. 0.100 instead of 0.1)
+#' @param pvalues numeric vector of raw p-values
+#' @param digits number of digits to round to
+#' @param bold TRUE or FALSE: set to TRUE to bold p-values < the defined significance level
+#' @param italic TRUE or FALSE: set to TRUE to italicize p-values < the defined significance level
+#' @param background highlight color for p-values < the defined significance level. Default = NULL (no highlighting)
+#' @param sig_alpha the defined significance level. Default = 0.05
+#' @param missing_char character string that will replace missing values from the p-value vector. Default = "---"
+#' @param include_p TRUE or FALSE: set to TRUE to print "p = " before each p-value
+#' @param trailing_zeros TRUE or FALSE: default = TRUE, p-values are formatted with trailing zeros to the defined number of digits (i.e. 0.100 instead of 0.1 if digits = 3)
 #' @return vector of transformed p-values for table output
 #' @examples
-#' pvalue_example = c(0.5, 0.06, 0.0005, NA, 1e-6)
+#' pvalue_example = c(1, 0.06, 0.0005, NA, 1e-6)
 #'
-#' pretty_pvalues(pvalue_example)
+#' pretty_pvalues(pvalue_example, background = "pink")
 #'
-#' pretty_pvalues(pvalue_example, digits = 4, missing_char = "")
+#' pretty_pvalues(pvalue_example, digits = 4, missing_char = "missing")
 #'
 #' @export
 
 
 pretty_pvalues = function(pvalues, digits = 3, bold = FALSE, italic = FALSE, background = NULL, sig_alpha = 0.05, missing_char = '---', include_p = FALSE, trailing_zeros = TRUE){
-  # 
-  # emphasis <- match.arg(emphasis, several.ok = TRUE)
-  # #if user didn't specify emphasis (meaning all four options listed) we want to set to 'none'
-  # if (length(emphasis) == 4) emphasis = 'none'
-  # 
+  
+  .check_numeric_input(pvalues)
+  .check_numeric_input(sig_alpha)
+  .check_numeric_input(digits, lower_bound = 1, upper_bound = 14, scalar = TRUE, whole_num = TRUE)
+  
   #Need to set options for no scientific notation, but set back to user preference on exit
   op <- options()
   options(scipen = 10)
@@ -144,26 +146,26 @@ pretty_pvalues = function(pvalues, digits = 3, bold = FALSE, italic = FALSE, bac
   sig_p = which(pvalues <= sig_alpha)
   
   
-  if (formatted_p) pvalue_new = round_away_0(pvalues, digits) else pvalue_new = as.character(round_away_0(pvalues, digits))
+  if (trailing_zeros) pvalues_new = round_away_0(pvalues, trailing_zeros = T, digits = digits) else pvalues_new = as.character(round_away_0(pvalues, digits))
   
   ## manipulate and assign pvalues as characters to output pvalue vector
   #pvalues[above_cutoff_p] = round(pvalue_new[above_cutoff_p], digits)
-  pvalues[missing_p] = missing_char
-  pvalues[below_cutoff_p] = paste0("<", lower_cutoff)
+  pvalues_new[missing_p] = missing_char
+  pvalues_new[below_cutoff_p] = paste0("<", lower_cutoff)
   
   # the letter 'p' in front of values
   if (include_p) {
-    pvalues[below_cutoff_p] = paste0('p',  pvalue_new[below_cutoff_p])
-    pvalues[above_cutoff_p] = paste0('p=',  pvalue_new[above_cutoff_p])
+    pvalues_new[below_cutoff_p] = paste0('p',  pvalues_new[below_cutoff_p])
+    pvalues_new[above_cutoff_p] = paste0('p=',  pvalues_new[above_cutoff_p])
   }
   
   # formatting
-  if (bold == TRUE | italic == TRUE | !is.null(background)) pvalue_new[sig_p] = kableExtra::cell_spec(pvalue_new[sig_p], format = "latex", bold = bold, italic = italic, background = background)
+  if (bold == TRUE | italic == TRUE | !is.null(background)) pvalues_new[sig_p] = kableExtra::cell_spec(pvalues_new[sig_p], format = "latex", bold = bold, italic = italic, background = background, escape = FALSE)
   
   # error checking
-  if (any(is.na(pvalue_new))) stop("Error in vector assignment.")
+  if (any(is.na(pvalues_new))) stop("Error in vector assignment.")
   
-  pvalue_new
+  pvalues_new
 }
 
 
