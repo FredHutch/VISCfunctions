@@ -19,32 +19,32 @@ test_that("paste_tbl_grp testing various options (no errors)", {
     Group1_IQR = IQR(magnitude[group == 1])
   ), by = .(visitno,antigen)]
 
-  testing_fun <- function(data_in, first_sep, sep, digits) {
+  testing_fun <- function(data_in, first_sep, sep, digits, trailing_zeros = F) {
     data.frame(visitno = testing_dataset$visitno,
                antigen = testing_dataset$antigen,
                Group1_IQR = testing_dataset$Group1_IQR,
                Comparison = paste0(testing_dataset$Group1, first_sep, testing_dataset$Group2),
                n_comparison = paste0(testing_dataset$Group1_n, sep, testing_dataset$Group1_n),
-               mean_comparison = paste0(round_away_0(testing_dataset$Group1_mean, digits), sep, round_away_0(testing_dataset$Group2_mean, digits)),
-               sd_comparison = paste0(round_away_0(testing_dataset$Group1_sd, digits), sep, round_away_0(testing_dataset$Group2_sd, digits)),
-               median_comparison = paste0(round_away_0(testing_dataset$Group1_median, digits), sep, round_away_0(testing_dataset$Group2_median, digits)),
-               min_comparison = paste0(round_away_0(testing_dataset$Group1_min, digits), sep, round_away_0(testing_dataset$Group2_min, digits)),
-               max_comparison = paste0(round_away_0(testing_dataset$Group1_max, digits), sep, round_away_0(testing_dataset$Group2_max, digits)),
+               mean_comparison = paste0(round_away_0(testing_dataset$Group1_mean, digits, trailing_zeros), sep, round_away_0(testing_dataset$Group2_mean, digits, trailing_zeros)),
+               sd_comparison = paste0(round_away_0(testing_dataset$Group1_sd, digits, trailing_zeros), sep, round_away_0(testing_dataset$Group2_sd, digits, trailing_zeros)),
+               median_comparison = paste0(round_away_0(testing_dataset$Group1_median, digits, trailing_zeros), sep, round_away_0(testing_dataset$Group2_median, digits, trailing_zeros)),
+               min_comparison = paste0(round_away_0(testing_dataset$Group1_min, digits, trailing_zeros), sep, round_away_0(testing_dataset$Group2_min, digits, trailing_zeros)),
+               max_comparison = paste0(round_away_0(testing_dataset$Group1_max, digits, trailing_zeros), sep, round_away_0(testing_dataset$Group2_max, digits, trailing_zeros)),
                median_min_max_comparison = paste0(
-                 paste0(round_away_0(testing_dataset$Group1_median, digits), ' [',
-                        round_away_0(testing_dataset$Group1_min, digits), ', ',
-                        round_away_0(testing_dataset$Group1_max, digits), ']', sep = ''),
+                 paste0(round_away_0(testing_dataset$Group1_median, digits, trailing_zeros), ' [',
+                        round_away_0(testing_dataset$Group1_min, digits, trailing_zeros), ', ',
+                        round_away_0(testing_dataset$Group1_max, digits, trailing_zeros), ']', sep = ''),
                  sep,
-                 paste0(round_away_0(testing_dataset$Group2_median, digits), ' [',
-                        round_away_0(testing_dataset$Group2_min, digits), ', ',
-                        round_away_0(testing_dataset$Group2_max, digits), ']', sep = '')
+                 paste0(round_away_0(testing_dataset$Group2_median, digits, trailing_zeros), ' [',
+                        round_away_0(testing_dataset$Group2_min, digits, trailing_zeros), ', ',
+                        round_away_0(testing_dataset$Group2_max, digits, trailing_zeros), ']', sep = '')
                ),
                mean_sd_comparison = paste0(
-                 paste0(round_away_0(testing_dataset$Group1_mean, digits), ' (',
-                        round_away_0(testing_dataset$Group1_sd, digits), ')', sep = ''),
+                 paste0(round_away_0(testing_dataset$Group1_mean, digits, trailing_zeros), ' (',
+                        round_away_0(testing_dataset$Group1_sd, digits, trailing_zeros), ')', sep = ''),
                  sep,
-                 paste0(round_away_0(testing_dataset$Group2_mean, digits), ' (',
-                        round_away_0(testing_dataset$Group2_sd, digits), ')', sep = '')
+                 paste0(round_away_0(testing_dataset$Group2_mean, digits, trailing_zeros), ' (',
+                        round_away_0(testing_dataset$Group2_sd, digits, trailing_zeros), ')', sep = '')
                ),
                stringsAsFactors = FALSE)
   }
@@ -73,7 +73,7 @@ test_that("paste_tbl_grp testing various options (no errors)", {
   )
   # Different Rounding Digits
   expect_equal(object = paste_tbl_grp(data = testing_dataset, digits = 5),
-               expected =  testing_fun(data_in = testing_dataset,first_sep = ' vs. ', sep = ' vs. ',digits = 5)
+               expected =  testing_fun(data_in = testing_dataset,first_sep = ' vs. ', sep = ' vs. ',digits = 5, trailing_zeros = T)
   )
   # If all selected but no matching gives NULL or data, depening on keep_all, and gives message
   expect_equal(object = paste_tbl_grp(data = testing_dataset[, c('Group1','Group2','Group1_mean','Group2_sd')]),

@@ -69,14 +69,14 @@ library(tidyverse)
 q95_fun = function(x) quantile(x, 0.95)
 N = function(x) length(x)
 
-exampleData_BAMA \%>\% 
+exampleData_BAMA \%>\%
  mutate(group = paste0("Group", group)) \%>\%
  group_by(group, visitno, antigen) \%>\%
- summarise_at("magnitude", funs(N, mean, sd, median, min, max, q95_fun)) \%>\% 
+ summarise_at("magnitude", funs(N, mean, sd, median, min, max, q95_fun)) \%>\%
  gather(variable, value, -(group:antigen)) \%>\% # these three chains create a wide dataset
  unite(temp, group, variable) \%>\%
  spread(temp, value) \%>\%
  mutate(Group1 = "Group 1", Group2 = "Group 2") \%>\%
- paste_tbl_grp() 
+ paste_tbl_grp()
 
 }

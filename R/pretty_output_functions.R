@@ -38,28 +38,28 @@
 #' ), by = .(visitno,antigen)]
 #'
 #' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
-#' 
+#'
 #' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = c("mean", "median_min_max"), alternative= "less", keep_all = FALSE)
 #'
 #' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = 'less', digits = 5, keep_all = FALSE)
 #'
 #'
 #' # Same example wit tidyverse (dplyr+tidyr) with some custom functions
-#' 
+#'
 #' library(tidyverse)
 #'
 #'q95_fun = function(x) quantile(x, 0.95)
 #'N = function(x) length(x)
 #'
-#'exampleData_BAMA %>% 
+#'exampleData_BAMA %>%
 #'  mutate(group = paste0("Group", group)) %>%
 #'  group_by(group, visitno, antigen) %>%
-#'  summarise_at("magnitude", funs(N, mean, sd, median, min, max, q95_fun)) %>% 
+#'  summarise_at("magnitude", funs(N, mean, sd, median, min, max, q95_fun)) %>%
 #'  gather(variable, value, -(group:antigen)) %>% # these three chains create a wide dataset
 #'  unite(temp, group, variable) %>%
 #'  spread(temp, value) %>%
 #'  mutate(Group1 = "Group 1", Group2 = "Group 2") %>%
-#'  paste_tbl_grp() 
+#'  paste_tbl_grp()
 #'
 #' @import data.table
 #' @export
@@ -163,9 +163,18 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
         )
       )
     } else {
-      pasted_results[[i]] <- paste0(.round_if_numeric(data_here[, paste0(first_name, '_', vars_to_paste_here[i])], digits),
+      first_var_here <- data_here[, paste0(first_name, '_', vars_to_paste_here[i])]
+      second_var_here <- data_here[, paste0(second_name, '_', vars_to_paste_here[i])]
+      both_var_here <- c(first_var_here, second_var_here)
+
+      # Want to set digits to 0 if an integer
+      if (is.numeric(both_var_here)) {
+        if (any((both_var_here %% 1) != 0)) digits_here = digits else digits_here = 0
+      } else digits_here = digits
+
+      pasted_results[[i]] <- paste0(.round_if_numeric(first_var_here, digits = digits_here, trailing_zeros = TRUE),
                                     sep_val,
-                                    .round_if_numeric(data_here[, paste0(second_name, '_', vars_to_paste_here[i])], digits)
+                                    .round_if_numeric(second_var_here, digits = digits_here, trailing_zeros = TRUE)
       )
     }
   }
@@ -238,15 +247,15 @@ stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, bound_char 
                       `|` = '|'
   )
 
-  stat1_pasted_obj <-  ifelse(is.na(stat1), na_str_out, as.character(.round_if_numeric(stat1, digits)))
+  stat1_pasted_obj <-  ifelse(is.na(stat1), na_str_out, as.character(.round_if_numeric(stat1, digits = digits, trailing_zeros = TRUE)))
   if (is.null(stat2)) {
     pasted_output <- stat1_pasted_obj
   } else {
-    stat2_pasted_obj <-  ifelse(is.na(stat2), na_str_out, as.character(.round_if_numeric(stat2, digits)))
+    stat2_pasted_obj <-  ifelse(is.na(stat2), na_str_out, as.character(.round_if_numeric(stat2, digits = digits, trailing_zeros = TRUE)))
     if (is.null(stat3)) {
       pasted_output <- ifelse(is.na(stat1) & is.na(stat2), na_str_out, paste0(stat1_pasted_obj, " ", bound_char, stat2_pasted_obj, end_bound_char))
     } else {
-      stat3_pasted_obj <-  ifelse(is.na(stat3), na_str_out, as.character(.round_if_numeric(stat3, digits)))
+      stat3_pasted_obj <-  ifelse(is.na(stat3), na_str_out, as.character(.round_if_numeric(stat3, digits = digits, trailing_zeros = TRUE)))
       pasted_output <- ifelse(is.na(stat1) & is.na(stat2) & is.na(stat3), na_str_out, paste0(stat1_pasted_obj, " ", bound_char, stat2_pasted_obj, sep, stat3_pasted_obj, end_bound_char))
     }
   }
