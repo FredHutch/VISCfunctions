@@ -5,7 +5,8 @@
 \title{Rounds and combines up to three numbers into table friendly presentation}
 \usage{
 stat_paste(stat1, stat2 = NULL, stat3 = NULL, digits = 0,
-  bound_char = c("(", "[", "{", "|"), sep = ", ", na_str_out = "---")
+  trailing_zeros = TRUE, bound_char = c("(", "[", "{", "|"), sep = ", ",
+  na_str_out = "---")
 }
 \arguments{
 \item{stat1}{first statistic to be pasted.}
@@ -15,6 +16,8 @@ stat_paste(stat1, stat2 = NULL, stat3 = NULL, digits = 0,
 \item{stat3}{third statistic to be pasted (optional).}
 
 \item{digits}{positive integer of length 1 between 0 (default) and 14, giving the amount of digits to round to.}
+
+\item{trailing_zeros}{logical indicating if trailing zeros should included (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector}
 
 \item{bound_char}{the character to be used between stat1 and stat2/stat3. Available options are '(' (default), '[', '\{', and '|'.}
 

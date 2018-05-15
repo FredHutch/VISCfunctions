@@ -12,6 +12,9 @@ test_that("round_away_0 testing various options (no errors)", {
   #Note 4.05 goes to 4.1 as expected
   expect_equal(object = round_away_0(x, digits = 1),
                expected = c(0,2.5,2.5,2.5,3.5,4.1,NA))
+  #Testing for trailing zeros
+  expect_equal(object = round_away_0(x, digits = 2, trailing_zeros = TRUE),
+               expected = c("0.00", "2.50", "2.50", "2.50", "3.50", "4.05", NA))
 })
 
 test_that("round_away_0 throwing errors", {
@@ -46,9 +49,11 @@ test_that("round_away_0 testing various options (no errors)", {
   expect_equal(object = .round_if_numeric(x, digits = 1),
                expected = c(0,2.5,2.5,2.5,3.5,4.1,NA))
   #Testing for character
-  #Note 2.5 goes to 3 as expected
   expect_equal(object = .round_if_numeric(c(NA,letters[1:5])),
                expected = c(NA,letters[1:5]))
+  #Testing for trailing zeros
+  expect_equal(object = .round_if_numeric(x, digits = 2, trailing_zeros = TRUE),
+               expected = c("0.00", "2.50", "2.50", "2.50", "3.50", "4.05", NA))
 
 })
 
