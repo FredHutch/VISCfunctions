@@ -142,25 +142,25 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
         stat_paste(stat1 = data_here[, paste0(first_name, '_median')],
                    stat2 = data_here[, paste0(first_name, '_min')],
                    stat3 = data_here[, paste0(first_name, '_max')],
-                   digits = digits, bound_char = '[', sep = ', ', na_str_out = '---'
+                   digits = digits, bound_char = '[', sep = ', ', na_str_out = '---', trailing_zeros = trailing_zeros
         ),
         sep_val,
         stat_paste(stat1 = data_here[, paste0(second_name, '_median')],
                    stat2 = data_here[, paste0(second_name, '_min')],
                    stat3 = data_here[, paste0(second_name, '_max')],
-                   digits = digits, bound_char = '[', sep = ', ', na_str_out = '---'
+                   digits = digits, bound_char = '[', sep = ', ', na_str_out = '---', trailing_zeros = trailing_zeros
         )
       )
     } else if (vars_to_paste_here[i] == 'mean_sd') {
       pasted_results[[i]] <-  paste0(
         stat_paste(stat1 = data_here[, paste0(first_name, '_mean')],
                    stat2 = data_here[, paste0(first_name, '_sd')],
-                   digits = digits, bound_char = '(', na_str_out = '---'
+                   digits = digits, bound_char = '(', na_str_out = '---', trailing_zeros = trailing_zeros
         ),
         sep_val,
         stat_paste(stat1 = data_here[, paste0(second_name, '_mean')],
                    stat2 = data_here[, paste0(second_name, '_sd')],
-                   digits = digits, bound_char = '(', na_str_out = '---'
+                   digits = digits, bound_char = '(', na_str_out = '---', trailing_zeros = trailing_zeros
         )
       )
     } else {
