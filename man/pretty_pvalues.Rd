@@ -34,6 +34,11 @@ Vector of transformed p-values for table output
 pretty_pvalues() takes a vector of p-values, rounds them to a specified digit amount,
 allows options for emphasizing p-values < the defined significance level, and returns a character for missing.
 }
+\details{
+With this function, there are two things to be noted:
+Since the p-value vector formatting uses \code{cell_spec}, which generates raw HTML or LaTeX code, make sure you remember to put \code{escape = FALSE} into your kable code when generating your table. At the same time, you will need to escape special symbols manually.
+Additionally, \code{cell_spec} needs a way to know whether you want HTML or LaTeX output. You can specify it locally in the function or globally using \code{options(knitr.table.format = "latex")}. If you don't provide anything, this function will output as HTML by default.
+}
 \examples{
 
 pvalue_example = c(1, 0.06, 0.0005, NA, 1e-6)
