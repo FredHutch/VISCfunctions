@@ -265,48 +265,13 @@ stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_ze
 }
 
 
-#' Get SAS-Like Formatted Numbers
-#'
-#' Formats numbers with trailing zeros when needed (i.e 0.100 if rounding to three digits)
-#' @param x numeric vector (can include NA values)
-#' @param digits positive integer of length 1 between 1 and 11, giving the amount of digits to format to
-#' @return vector a character vector of formated values
-#' @details
-#'
-#' Uses the formatC function, with extra input checking and features. Takes advantage of round_away_from_0 function to ensure expected rounding method of round away from 0 is being used.
-#'
-#' @examples
-#' vals_to_format = c(NA,runif(5),.1,.01,.001,.0005)
-#' formatC_VISC(vals_to_format, 3)
-#'
-
-
-formatC_VISC <- function(x, digits = 1, format_in = 'f'){
-  if (!is.numeric(x)) {
-    stop('x must be a numeric vector')
-  }
-  if (digits < 0 | digits > 11) {
-    stop('digits must between 1 and 11')
-  }
-  
-  formatted_numbers <- formatC(round_away_0(x, digits = digits), digits = digits, format = format_in)
-  formatted_numbers[is.na(x)] <- NA
-  
-  #Need to change -0.0 to 0.0
-  neg_to_change <- paste0('-0.',paste0(rep(0,digits), collapse = ''))
-  if (any(formatted_numbers == neg_to_change, na.rm = TRUE)) formatted_numbers[formatted_numbers == neg_to_change] <- substr(neg_to_change, 2, nchar(neg_to_change))
-  
-  as.numeric(formatted_numbers)
-}
-
-
-#' Round and highlight p-values
+#' Round and format a vector of p-values
 #'
 #' pretty_pvalues() takes a vector of p-values, rounds them to a specified digit amount,
-#' allows emphasis when below defined significance level, and returns a character for missing.
+#' allows options for emphasizing p-values < the defined significance level, and returns a character for missing.
 #'
-#' @param pvalues numeric vector of raw p-values
-#' @param digits number of digits to round to
+#' @param pvalues numeric vector of raw p-values to be formatted
+#' @param digits number of digits to round to; values with zeros past this number of digits are truncated
 #' @param bold TRUE or FALSE: set to TRUE to bold p-values < the defined significance level
 #' @param italic TRUE or FALSE: set to TRUE to italicize p-values < the defined significance level
 #' @param background highlight color for p-values < the defined significance level. Default = NULL (no highlighting)
@@ -314,13 +279,20 @@ formatC_VISC <- function(x, digits = 1, format_in = 'f'){
 #' @param missing_char character string that will replace missing values from the p-value vector. Default = "---"
 #' @param include_p TRUE or FALSE: set to TRUE to print "p = " before each p-value
 #' @param trailing_zeros TRUE or FALSE: default = TRUE, p-values are formatted with trailing zeros to the defined number of digits (i.e. 0.100 instead of 0.1 if digits = 3)
-#' @return vector of transformed p-values for table output
 #' 
-#'  With this design, there are two things to be noted:
-#'* Since `cell_spec` generates raw `HTML` or `LaTeX` code, make sure you remember to put `escape = FALSE` in `kable`. At the same time, you have to escape special symbols including `%` manually by yourself
-#'* `cell_spec` needs a way to know whether you want `html` or `latex`. You can specify it locally in function or globally via the `options(knitr.table.format = "latex")` method as suggested at the beginning. If you don't provide anything, this function will output as HTML by default. 
+#' @return Vector of transformed p-values for table output
+#' 
+#' @details
+#' 
+#' With this design, there are two things to be noted:
+#' Since \code{cell_spec} generates raw \code{HTML} or \code{LaTeX} code, make sure you remember to put \code{escape = FALSE} 
+#' in \code{kable}. At the same time, you have to escape special symbols including \code{%} manually by yourself.
+#' \code{cell_spec} needs a way to know whether you want \code{html} or \code{latex}. You can specify it locally in function or
+#' globally via the \code{options(knitr.table.format = "latex")} method. If you don't provide anything, this function will output
+#' as HTML by default. 
 #' 
 #' @examples
+#' 
 #' pvalue_example = c(1, 0.06, 0.0005, NA, 1e-6)
 #'
 #' pretty_pvalues(pvalue_example, background = "pink")
@@ -371,6 +343,4 @@ pretty_pvalues = function(pvalues, digits = 3, bold = FALSE, italic = FALSE, bac
   
   pvalues_new
 }
-
-
 
