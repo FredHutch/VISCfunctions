@@ -302,8 +302,8 @@ stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_ze
 
 pretty_pvalues = function(pvalues, digits = 3, bold = FALSE, italic = FALSE, background = NULL, sig_alpha = 0.05, missing_char = '---', include_p = FALSE, trailing_zeros = TRUE){
   
-  .check_numeric_input(pvalues)
-  .check_numeric_input(sig_alpha)
+  .check_numeric_input(pvalues, lower_bound = 0, upper_bound = 1)
+  .check_numeric_input(sig_alpha, lower_bound = 0, upper_bound = 1)
   .check_numeric_input(digits, lower_bound = 1, upper_bound = 14, scalar = TRUE, whole_num = TRUE)
   
   #Need to set options for no scientific notation, but set back to user preference on exit

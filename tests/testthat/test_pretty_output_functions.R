@@ -161,7 +161,7 @@ test_that("pretty_pvalues testing various options (no errors)", {
   
   set.seed(1356353)
   expected_df <- exampleData_BAMA[1:10] %>% mutate(pvals_raw = runif(10, min = 0, max = 1), 
-                                                   pretty_pvals = kableExtra::cell_spec(round_away_0(pvals_raw, digits = 4, trailing_zeros = TRUE), bold = ifelse(pvals_raw <= 0.05, T, F), format = "latex", italic = ifelse(pvals_raw <= 0.05, T, F)))
+                                                   pretty_pvals = cell_spec(round_away_0(pvals_raw, digits = 4, trailing_zeros = TRUE), bold = ifelse(pvals_raw <= 0.05, T, F), format = "latex", italic = ifelse(pvals_raw <= 0.05, T, F)))
 
   
   expect_equal(object = knitr::kable(object_df, escape = FALSE, format = "latex"), 
@@ -179,6 +179,10 @@ test_that("pretty_pvalues testing various options (no errors)", {
   # digits set at 0
   expect_error(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1, .77), digits = 0),
                regexp = '"digits" must be greater than or equal to 1'
+  )
+  # pvalue < 0
+  expect_error(object = pretty_pvalues(c(0.00000001, NA, 0.05, -12, .77), digits = 3),
+               regexp = '"pvalues" must be greater than or equal to 0'
   )
   # no non-missing p-values
   expect_error(object = pretty_pvalues(c(NA, NaN, NA, NA)),
