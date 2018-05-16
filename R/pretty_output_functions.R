@@ -296,6 +296,7 @@ stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_ze
 #'
 #' pretty_pvalues(pvalue_example, digits = 4, missing_char = "missing", bold = TRUE)
 #'
+#' @import kableExtra
 #' @export
 
 
@@ -333,7 +334,7 @@ pretty_pvalues = function(pvalues, digits = 3, bold = FALSE, italic = FALSE, bac
   }
   
   # formatting
-  if (bold == TRUE | italic == TRUE | !is.null(background)) pvalues_new[sig_p] = kableExtra::cell_spec(pvalues_new[sig_p], format = "latex", bold = bold, italic = italic, background = background, escape = FALSE)
+  if (bold == TRUE | italic == TRUE | !is.null(background)) pvalues_new[sig_p] = cell_spec(pvalues_new[sig_p], format = "latex", bold = bold, italic = italic, background = background, escape = FALSE)
   
   # error checking
   if (any(is.na(pvalues_new))) stop("Error in vector assignment.")
