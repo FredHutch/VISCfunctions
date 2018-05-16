@@ -265,7 +265,6 @@ stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_ze
 }
 
 
-<<<<<<< HEAD
 #' Get SAS-Like Formatted Numbers
 #'
 #' Formats numbers with trailing zeros when needed (i.e 0.100 if rounding to three digits)
@@ -316,12 +315,17 @@ formatC_VISC <- function(x, digits = 1, format_in = 'f'){
 #' @param include_p TRUE or FALSE: set to TRUE to print "p = " before each p-value
 #' @param trailing_zeros TRUE or FALSE: default = TRUE, p-values are formatted with trailing zeros to the defined number of digits (i.e. 0.100 instead of 0.1 if digits = 3)
 #' @return vector of transformed p-values for table output
+#' 
+#'  With this design, there are two things to be noted:
+#'* Since `cell_spec` generates raw `HTML` or `LaTeX` code, make sure you remember to put `escape = FALSE` in `kable`. At the same time, you have to escape special symbols including `%` manually by yourself
+#'* `cell_spec` needs a way to know whether you want `html` or `latex`. You can specify it locally in function or globally via the `options(knitr.table.format = "latex")` method as suggested at the beginning. If you don't provide anything, this function will output as HTML by default. 
+#' 
 #' @examples
 #' pvalue_example = c(1, 0.06, 0.0005, NA, 1e-6)
 #'
 #' pretty_pvalues(pvalue_example, background = "pink")
 #'
-#' pretty_pvalues(pvalue_example, digits = 4, missing_char = "missing")
+#' pretty_pvalues(pvalue_example, digits = 4, missing_char = "missing", bold = TRUE)
 #'
 #' @export
 
