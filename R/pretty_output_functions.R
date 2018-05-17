@@ -117,11 +117,11 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
   for (i in 1:length(vars_to_check)) {
     if (sum(group1_vars_to_check[i] == names(data_here)) != 1) stop('Expecting one column named "', group1_vars_to_check[i] , '" in input dataset, but there are ', sum(group1_vars_to_check[i] == names(data_here)), ' present')
     temp_group1_var <- data_here[, group1_vars_to_check[i] == names(data_here)]
-    if (is.numeric(temp_group1_var)) .check_numeric_input(temp_group1_var)
+    if (is.numeric(temp_group1_var) & any(!is.na(temp_group1_var))) .check_numeric_input(temp_group1_var)
 
     if (sum(group2_vars_to_check[i] == names(data_here)) != 1) stop('Expecting one column named "', group2_vars_to_check[i] , '" in input dataset, but there are ', sum(group2_vars_to_check[i] == names(data_here)), ' present')
     temp_group2_var <- data_here[, group2_vars_to_check[i] == names(data_here)]
-    if (is.numeric(temp_group2_var)) .check_numeric_input(temp_group2_var)
+    if (is.numeric(temp_group2_var) & any(!is.na(temp_group2_var))) .check_numeric_input(temp_group2_var)
   }
 
   ##### Pasting variables
