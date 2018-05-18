@@ -8,6 +8,7 @@
 #' @param first_name name of first group (string before '_') . Default is 'Group1'.
 #' @param second_name name of second group (string before '_'). Default is 'Group2'.
 #' @param sep_val value to be pasted between the two measures. Default is ' vs. '.
+#' @param na_str_out the character to replace missing values with.
 #' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". Will be used to determine the character to be pasted between the group names (\code{Comparison} variable).  Specifying "two.sided" will use the \code{sep_val} input.
 #' @param digits integer indicating the number of decimal places to round to before pasting for numeric variables. Default is 0.
 #' @param trailing_zeros logical indicating if trailing zeros should be included (i.e. 0.100 instead of 0.1). Note if set to TRUE output is a character vector.
@@ -66,7 +67,7 @@
 #' @export
 
 
-paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = c("two.sided", "less", "greater"), digits = 0, trailing_zeros = TRUE, keep_all = TRUE, verbose = FALSE){
+paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", na_str_out = "---", alternative = c("two.sided", "less", "greater"), digits = 0, trailing_zeros = TRUE, keep_all = TRUE, verbose = FALSE){
 
   #####Checking variables being used
 
@@ -142,25 +143,25 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
         stat_paste(stat1 = data_here[, paste0(first_name, '_median')],
                    stat2 = data_here[, paste0(first_name, '_min')],
                    stat3 = data_here[, paste0(first_name, '_max')],
-                   digits = digits, bound_char = '[', sep = ', ', na_str_out = '---', trailing_zeros = trailing_zeros
+                   digits = digits, bound_char = '[', sep = ', ', na_str_out = na_str_out, trailing_zeros = trailing_zeros
         ),
         sep_val,
         stat_paste(stat1 = data_here[, paste0(second_name, '_median')],
                    stat2 = data_here[, paste0(second_name, '_min')],
                    stat3 = data_here[, paste0(second_name, '_max')],
-                   digits = digits, bound_char = '[', sep = ', ', na_str_out = '---', trailing_zeros = trailing_zeros
+                   digits = digits, bound_char = '[', sep = ', ', na_str_out = na_str_out, trailing_zeros = trailing_zeros
         )
       )
     } else if (vars_to_paste_here[i] == 'mean_sd') {
       pasted_results[[i]] <-  paste0(
         stat_paste(stat1 = data_here[, paste0(first_name, '_mean')],
                    stat2 = data_here[, paste0(first_name, '_sd')],
-                   digits = digits, bound_char = '(', na_str_out = '---', trailing_zeros = trailing_zeros
+                   digits = digits, bound_char = '(', na_str_out = na_str_out, trailing_zeros = trailing_zeros
         ),
         sep_val,
         stat_paste(stat1 = data_here[, paste0(second_name, '_mean')],
                    stat2 = data_here[, paste0(second_name, '_sd')],
-                   digits = digits, bound_char = '(', na_str_out = '---', trailing_zeros = trailing_zeros
+                   digits = digits, bound_char = '(', na_str_out = na_str_out, trailing_zeros = trailing_zeros
         )
       )
     } else {
@@ -173,9 +174,9 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
         if (any((both_var_here %% 1) != 0)) digits_here = digits else digits_here = 0
       } else digits_here = digits
 
-      pasted_results[[i]] <- paste0(.round_if_numeric(first_var_here, digits = digits_here, trailing_zeros = trailing_zeros),
+      pasted_results[[i]] <- paste0(ifelse(is.na(first_var_here), na_str_out, .round_if_numeric(first_var_here, digits = digits_here, trailing_zeros = trailing_zeros)),
                                     sep_val,
-                                    .round_if_numeric(second_var_here, digits = digits_here, trailing_zeros = trailing_zeros)
+                                    ifelse(is.na(second_var_here), na_str_out, .round_if_numeric(second_var_here, digits = digits_here, trailing_zeros = trailing_zeros))
       )
     }
   }

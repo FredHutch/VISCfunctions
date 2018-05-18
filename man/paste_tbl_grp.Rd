@@ -5,9 +5,9 @@
 \title{Pasting Together Information for Two Groups}
 \usage{
 paste_tbl_grp(data, vars_to_paste = "all", first_name = "Group1",
-  second_name = "Group2", sep_val = " vs. ", alternative = c("two.sided",
-  "less", "greater"), digits = 0, trailing_zeros = TRUE, keep_all = TRUE,
-  verbose = FALSE)
+  second_name = "Group2", sep_val = " vs. ", na_str_out = "---",
+  alternative = c("two.sided", "less", "greater"), digits = 0,
+  trailing_zeros = TRUE, keep_all = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{data}{input dataset. User must use consistent naming throughout, \strong{with an underscore} to separate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be two columns with column names that exactly match the input for \code{first_name} and \code{second_name} (i.e. 'Group1' and 'Group2'), which are used to form the \code{Comparison} variable.}
@@ -19,6 +19,8 @@ paste_tbl_grp(data, vars_to_paste = "all", first_name = "Group1",
 \item{second_name}{name of second group (string before '_'). Default is 'Group2'.}
 
 \item{sep_val}{value to be pasted between the two measures. Default is ' vs. '.}
+
+\item{na_str_out}{the character to replace missing values with.}
 
 \item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". Will be used to determine the character to be pasted between the group names (\code{Comparison} variable).  Specifying "two.sided" will use the \code{sep_val} input.}
 
