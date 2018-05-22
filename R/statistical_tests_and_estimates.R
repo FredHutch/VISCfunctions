@@ -101,7 +101,7 @@ round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
 #' @export
 
 
-two_samp_cont_test <- function(x, y, method = c('wilcox', 't'), paired = FALSE, verbose = FALSE, ...){
+two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FALSE, verbose = FALSE, ...){
   # Input checking
   method <- match.arg(method)
   .check_numeric_input(x)
