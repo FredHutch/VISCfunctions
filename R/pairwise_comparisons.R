@@ -6,25 +6,25 @@
 #' @param group categorical vector of group values.
 #' @param paired a logical variable indicating whether to do a paired test.
 #' @param id vector which contains the id information (so \code{x} values can be linked between groups). Only used and must be present when paired = TRUE.
-#' @param method what test to run ("wilcox" or "t" test).
+#' @param method what test to run ("wilcox" or "t.test").
 #' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.
 #' @param sorted_group a vector listing the group testing order from lowest to highest.
-#' @param num_needed_for_test required sample size (per group) to perform test. Note at least 2 distinct values per group is always needed for testing.
-#' @param digits digits to round for magnitude descriptive statistics (0 is default).
-#' @param trailing_zeros logical indicating if trailing zeros should be included in the desriptive statistics (i.e. 0.100 instead of 0.1). Note if set to TRUE output is a character vector.
+#' @param num_needed_for_test required sample size (per group) to perform test. Note at least 2 distinct values per group are always needed for testing.
+#' @param digits digits to round for magnitude descriptive statistics (default = 0).
+#' @param trailing_zeros logical indicating if trailing zeros should be included in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to TRUE, output is a character vector.
 #' @param sep_val value to be pasted between the two measures. Default is ' vs. '.
-#' @param na_str_out the character to replace missing values with.
+#' @param na_str_out the character string in the output table that replaces missing values.
 #' @param verbose a logical variable indicating if warnings and messages should be displayed.
-#' @return Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median [min, max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcoxon/t p value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
+#' @return Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median [min, max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
 #' @details
 #'
-#' Runs wilcox_test() in the coin package, with "exact" distribution.
+#' Runs \code{wilcox_test()} in the coin package, with "exact" distribution.
 #'
 #' If \code{sorted_group} is not specified then testing order based on factor levels if \code{group} is a factor, and alphabetical order otherwise
 #'
-#' \code{trailing_zeros} does not impact p value column, which will be a numeric column regardless.
+#' \code{trailing_zeros} does not impact p-value column, which will be a numeric column regardless.
 #'
-#' If \code{paired = TRUE} the descriptive statistics are shown for obsevations that have non-missing values for both groups.
+#' If \code{paired = TRUE} the descriptive statistics are shown for observations that have non-missing values for both groups.
 #'
 #' @examples
 #'
@@ -63,7 +63,7 @@
 #'    do(pairwise_test_cont(x = .$magnitude, group = .$group, paired = F, method = 'wilcox', alternative = "less", digits = 3, num_needed_for_test = 3, verbose = TRUE))
 #'
 #' # Confirming both methods are the same
-#' all.equal(group_testing_dt,data.table(group_testing_tibble))
+#' all.equal(group_testing_dt[order(antigen, visitno)],data.table(group_testing_tibble)[order(antigen, visitno)])
 #'
 #'
 #' ## Timepoint Comparison
@@ -191,21 +191,21 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
     }
   }
 
-  restuls <- do.call(base::rbind, results_list)
+  results <- do.call(base::rbind, results_list)
 
   # Pasting together stats
-  pasted_results <- paste_tbl_grp(data = restuls, vars_to_paste = c("n","median_min_max","mean_sd"), first_name = 'Group1', second_name = 'Group2', sep_val = sep_val, alternative = alternative, digits = digits, trailing_zeros = trailing_zeros, keep_all = TRUE, verbose = verbose)
+  pasted_results <- paste_tbl_grp(data = results, vars_to_paste = c("n","median_min_max","mean_sd"), first_name = 'Group1', second_name = 'Group2', sep_val = sep_val, alternative = alternative, digits = digits, trailing_zeros = trailing_zeros, keep_all = TRUE, verbose = verbose)
 
 
   # If paired need to return number of pairs for the sample size (note Group1_n = Group2_n in paired cases)
-  if (paired) pasted_results$n_comparison <- restuls$Group1_n
+  if (paired) pasted_results$n_comparison <- results$Group1_n
 
   data.frame(Comparison = pasted_results$Comparison,
              SampleSizes = pasted_results$n_comparison,
              Median_Min_Max = pasted_results$median_min_max_comparison,
              Mean_SD = pasted_results$mean_sd_comparison,
-             MagnitudeTest = restuls$MagnitudeTest,
-             PerfectSeperation = restuls$PerfectSeperation,
+             MagnitudeTest = results$MagnitudeTest,
+             PerfectSeperation = results$PerfectSeperation,
              stringsAsFactors = FALSE)
 
 }
