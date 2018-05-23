@@ -144,29 +144,29 @@ test_that("stat_paste testing various options (no errors)", {
   # test pretty_pvalues
 
 test_that("pretty_pvalues testing various options (no errors)", {
-  
+
   expect_equal(object = pretty_pvalues(0.00000001), expected = '<0.001')
   expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05), digits = 2, missing_char = "missing"), expected = c("<0.01",   "missing", "0.05"))
-  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, bold = T, background = "pink"), expected = c("\\cellcolor{pink}{\\textbf{<0.001}}", "---", "\\cellcolor{pink}{\\textbf{0.050}}", "1.000"))
-  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, sig_alpha = 0.8, background = "green"), 
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, bold = T, background = "pink"), expected = c("\\cellcolor{pink}{\\textbf{<0.001}}", "---", "0.050", "1.000"))
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, sig_alpha = 0.8, background = "green"),
                expected = c("\\cellcolor{green}{<0.001}", "---", "\\cellcolor{green}{0.050}","1.000"))
-  
+
   # test using data
   require(VISCfunctions.data)
   require(dplyr)
   data(exampleData_BAMA)
-  
+
   set.seed(1356353)
   object_df <- exampleData_BAMA[1:10] %>% mutate(pvals_raw = runif(10, min = 0, max = 1)) %>% mutate(pretty_pvals = pretty_pvalues(pvals_raw, digits = 4, bold = T, italic = T))
-  
-  set.seed(1356353)
-  expected_df <- exampleData_BAMA[1:10] %>% mutate(pvals_raw = runif(10, min = 0, max = 1), 
-                                                   pretty_pvals = cell_spec(round_away_0(pvals_raw, digits = 4, trailing_zeros = TRUE), bold = ifelse(pvals_raw <= 0.05, T, F), format = "latex", italic = ifelse(pvals_raw <= 0.05, T, F)))
 
-  
-  expect_equal(object = knitr::kable(object_df, escape = FALSE, format = "latex"), 
+  set.seed(1356353)
+  expected_df <- exampleData_BAMA[1:10] %>% mutate(pvals_raw = runif(10, min = 0, max = 1),
+                                                   pretty_pvals = cell_spec(round_away_0(pvals_raw, digits = 4, trailing_zeros = TRUE), bold = ifelse(pvals_raw < 0.05, T, F), format = "latex", italic = ifelse(pvals_raw < 0.05, T, F)))
+
+
+  expect_equal(object = knitr::kable(object_df, escape = FALSE, format = "latex"),
                expected = knitr::kable(expected_df, escape = FALSE, format = "latex"))
-  
+
   ### test error messages
   # non-numeric p-value vector
   expect_error(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1, "character")),

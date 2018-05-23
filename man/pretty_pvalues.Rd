@@ -47,4 +47,9 @@ pretty_pvalues(pvalue_example, background = "pink")
 
 pretty_pvalues(pvalue_example, digits = 4, missing_char = "missing", bold = TRUE)
 
+# How to use pretty_pvalues in reports
+raw_pvals <- c(0.00000007, .05000001, NaN, NA, 0.783)
+pretty_pvals <- pretty_pvalues(raw_pvals , digits = 3, background = "green", italic = T, bold = T)
+kableExtra::kable(pretty_pvals , format = "latex", escape = FALSE, col.names = c("P-values"))
+
 }
