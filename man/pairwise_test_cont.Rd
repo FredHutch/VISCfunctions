@@ -19,38 +19,38 @@ pairwise_test_cont(x, group, paired = FALSE, id = NULL,
 
 \item{id}{vector which contains the id information (so \code{x} values can be linked between groups). Only used and must be present when paired = TRUE.}
 
-\item{method}{what test to run ("wilcox" or "t" test).}
+\item{method}{what test to run ("wilcox" or "t.test").}
 
 \item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.}
 
 \item{sorted_group}{a vector listing the group testing order from lowest to highest.}
 
-\item{num_needed_for_test}{required sample size (per group) to perform test. Note at least 2 distinct values per group is always needed for testing.}
+\item{num_needed_for_test}{required sample size (per group) to perform test. Note at least 2 distinct values per group are always needed for testing.}
 
-\item{digits}{digits to round for magnitude descriptive statistics (0 is default).}
+\item{digits}{digits to round for magnitude descriptive statistics (default = 0).}
 
-\item{trailing_zeros}{logical indicating if trailing zeros should be included in the desriptive statistics (i.e. 0.100 instead of 0.1). Note if set to TRUE output is a character vector.}
+\item{trailing_zeros}{logical indicating if trailing zeros should be included in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to TRUE, output is a character vector.}
 
 \item{sep_val}{value to be pasted between the two measures. Default is ' vs. '.}
 
-\item{na_str_out}{the character to replace missing values with.}
+\item{na_str_out}{the character string in the output table that replaces missing values.}
 
 \item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
 }
 \value{
-Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median [min, max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcoxon/t p value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
+Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median [min, max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
 }
 \description{
 Takes a continuous variable and performs pairwise testing (t-test or wilcox test)
 }
 \details{
-Runs wilcox_test() in the coin package, with "exact" distribution.
+Runs \code{wilcox_test()} in the coin package, with "exact" distribution.
 
 If \code{sorted_group} is not specified then testing order based on factor levels if \code{group} is a factor, and alphabetical order otherwise
 
-\code{trailing_zeros} does not impact p value column, which will be a numeric column regardless.
+\code{trailing_zeros} does not impact p-value column, which will be a numeric column regardless.
 
-If \code{paired = TRUE} the descriptive statistics are shown for obsevations that have non-missing values for both groups.
+If \code{paired = TRUE} the descriptive statistics are shown for observations that have non-missing values for both groups.
 }
 \examples{
 
@@ -89,7 +89,7 @@ group_testing_tibble <- exampleData_BAMA \%>\%
    do(pairwise_test_cont(x = .$magnitude, group = .$group, paired = F, method = 'wilcox', alternative = "less", digits = 3, num_needed_for_test = 3, verbose = TRUE))
 
 # Confirming both methods are the same
-all.equal(group_testing_dt,data.table(group_testing_tibble))
+all.equal(group_testing_dt[order(antigen, visitno)],data.table(group_testing_tibble)[order(antigen, visitno)])
 
 
 ## Timepoint Comparison
