@@ -140,3 +140,54 @@ test_that("stat_paste testing various options (no errors)", {
                expected = c("5 [1, 1]", "5 [2, ---]", "5 [3, 2]", "5 [4, ---]", "5 [5, 3]", "---"  ))
 
 })
+
+  # test pretty_pvalues
+
+test_that("pretty_pvalues testing various options (no errors)", {
+
+  expect_equal(object = pretty_pvalues(0.00000001), expected = '<0.001')
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05), digits = 2, missing_char = "missing"), expected = c("<0.01",   "missing", "0.05"))
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, bold = T, background = "pink"), expected = c("\\cellcolor{pink}{\\textbf{<0.001}}", "---", "0.050", "1.000"))
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, sig_alpha = 0.8, background = "green"),
+               expected = c("\\cellcolor{green}{<0.001}", "---", "\\cellcolor{green}{0.050}","1.000"))
+
+  # test using data
+  require(VISCfunctions.data)
+  require(dplyr)
+  data(exampleData_BAMA)
+
+  set.seed(1356353)
+  object_df <- exampleData_BAMA[1:10] %>% mutate(pvals_raw = runif(10, min = 0, max = 1)) %>% mutate(pretty_pvals = pretty_pvalues(pvals_raw, digits = 4, bold = T, italic = T))
+
+  set.seed(1356353)
+  expected_df <- exampleData_BAMA[1:10] %>% mutate(pvals_raw = runif(10, min = 0, max = 1),
+                                                   pretty_pvals = cell_spec(round_away_0(pvals_raw, digits = 4, trailing_zeros = TRUE), bold = ifelse(pvals_raw < 0.05, T, F), format = "latex", italic = ifelse(pvals_raw < 0.05, T, F)))
+
+
+  expect_equal(object = knitr::kable(object_df, escape = FALSE, format = "latex"),
+               expected = knitr::kable(expected_df, escape = FALSE, format = "latex"))
+
+  ### test error messages
+  # non-numeric p-value vector
+  expect_error(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1, "character")),
+               regexp = '"pvalues" must be a numeric vector'
+  )
+  # non-numeric significance level
+  expect_error(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1, .77), digits = "3"),
+               regexp = '"digits" must be a numeric vector'
+  )
+  # digits set at 0
+  expect_error(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1, .77), digits = 0),
+               regexp = '"digits" must be greater than or equal to 1'
+  )
+  # pvalue < 0
+  expect_error(object = pretty_pvalues(c(0.00000001, NA, 0.05, -12, .77), digits = 3),
+               regexp = '"pvalues" must be greater than or equal to 0'
+  )
+  # no non-missing p-values
+  expect_error(object = pretty_pvalues(c(NA, NaN, NA, NA)),
+               regexp = '"pvalues" must have at least one non-NA value'
+  )
+
+})
+
