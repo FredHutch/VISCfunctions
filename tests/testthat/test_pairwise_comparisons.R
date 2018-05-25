@@ -123,6 +123,31 @@ test_that("pairwise_comparisons testing two groups", {
 })
 
 
+test_that("Integration with dplyr and data.table is equivalent", {
+  # Comparing data.tabel and dplyr (BAMA Assay Data Example)
+  library(dplyr)
+  data(exampleData_BAMA)
+
+  ## Group Comparison
+  # using data.table
+  group_testing_dt <- exampleData_BAMA[, pairwise_test_cont(
+    x = magnitude, group = group, paired = FALSE, method = 'wilcox',
+    alternative = 'less', num_needed_for_test = 3, digits = 3,
+    trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
+  ),
+  by = .(antigen, visitno)][order(antigen, visitno)]
+
+  # using dplyr
+  group_testing_tibble <- exampleData_BAMA %>%
+    group_by(antigen, visitno) %>%
+    do(pairwise_test_cont(x = .$magnitude, group = .$group, paired = F, method = 'wilcox', alternative = "less", digits = 3, num_needed_for_test = 3, verbose = TRUE))
+  # Confirming both methods are the same
+  expect_equal(object = group_testing_dt[order(antigen, visitno)],
+               expected = data.table(group_testing_tibble)[order(antigen, visitno)])
+
+})
+
+
 
 
 
@@ -192,10 +217,10 @@ test_that("pairwise_comparisons testing multiple groups", {
 })
 
 test_that("Test example with fixed result", {
-  
+
   source("fixed_data.R")
-  
-  
+
+
   library(VISCfunctions.data)
   data("exampleData_BAMA")
 
@@ -205,10 +230,10 @@ test_that("Test example with fixed result", {
      trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
     ),
     by = .(antigen, visitno)][order(antigen, visitno)]
-      
+
   expect_equal(object = group_testing_dt,
                expected = fixed_bama_group_testing_dt)
 
-  
-  
+
+
   })

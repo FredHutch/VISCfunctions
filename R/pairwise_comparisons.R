@@ -117,7 +117,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 
   #Need to set factor levels so can provide directional one-sided tests if needed
   if (is.null(sorted_group)) group <- droplevels(factor(group)) else group <- droplevels(factor(group, levels = sorted_group[!is.na(match(sorted_group, group))]))
-  if (is.null(sorted_group) & verbose) message('"sorted_group" not specified so testing in following order: ', paste0(levels(group), collapse = ', '))
+  if (is.null(sorted_group) & (alternative != 'two.sided') & verbose) message('"sorted_group" not specified so testing in following order: ', paste0(levels(group), collapse = ', '))
 
   n_levels <- nlevels(group)
   levels_here <- levels(group)
