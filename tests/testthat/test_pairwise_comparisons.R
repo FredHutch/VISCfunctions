@@ -190,3 +190,25 @@ test_that("pairwise_comparisons testing multiple groups", {
 
 
 })
+
+test_that("Test example with fixed result", {
+  
+  source("fixed_data.R")
+  
+  
+  library(VISCfunctions.data)
+  data("exampleData_BAMA")
+
+  group_testing_dt <- exampleData_BAMA[, pairwise_test_cont(
+     x = magnitude, group = group, paired = FALSE, method = 'wilcox',
+     alternative = 'less', num_needed_for_test = 3, digits = 3,
+     trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
+    ),
+    by = .(antigen, visitno)][order(antigen, visitno)]
+      
+  expect_equal(object = group_testing_dt,
+               expected = fixed_bama_group_testing_dt)
+
+  
+  
+  })
