@@ -237,3 +237,73 @@ test_that("Test example with fixed result", {
 
 
   })
+
+test_that("Integration with dplyr and data.table is equivalent", {
+
+  library(VISCfunctions.data)
+  library(data.table)
+  library(dplyr)
+  
+  data(exampleData_BAMA)
+  
+  group_testing_dt <- exampleData_BAMA[, pairwise_test_cont(
+   x = magnitude, group = group, paired = FALSE, method = 'wilcox',
+   alternative = 'less', num_needed_for_test = 3, digits = 3,
+   trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
+  ),
+  by = .(antigen, visitno)][order(antigen, visitno)]
+  
+  # using dplyr
+  group_testing_tibble <- exampleData_BAMA %>%
+     group_by(antigen, visitno) %>%
+     do(pairwise_test_cont(x = .$magnitude, group = .$group, paired = F, method = 'wilcox', alternative = "less", digits = 3, num_needed_for_test = 3, verbose = TRUE))
+
+# Confirming both methods are the same
+expect_equal(object = group_testing_dt[order(antigen, visitno)],
+             expected = data.table(group_testing_tibble)[order(antigen, visitno)])
+
+  
+})
+
+test_that("Paired results with test data"){
+  library(dplyr)
+  
+  data("testData_BAMA")
+  paired_example = subset(testData_BAMA, visit %in% c(1, 2) & antigen == "1086C_D7gp120.avi/293F")
+  
+  paired_example_subset1 = subset(paired_example,  visit == 1, select = -response)
+  paired_example_subset2 = subset(paired_example,  visit == 2, select = -response)
+  paired_data = merge(paired_example_subset1, paired_example_subset2, by = c("pubID", "antigen", "group")) 
+  
+  paired_tests_ls = list()
+  for(i in 1:length(unique(paired_data$group))){
+    temp_dat = subset(paired_data, group == unique(paired_data$group)[i])
+    
+    paired_tests_ls[[i]] = 
+      data.frame(
+        group = unique(paired_data$group)[i],
+        total = nrow(na.omit(temp_dat)),
+        test = pvalue(wilcoxsign_test(temp_dat$magnitude.x ~ temp_dat$magnitude.y, distribution = "exact", zero.method = "Pratt")),
+        est_less =  pvalue(wilcoxsign_test(temp_dat$magnitude.x ~ temp_dat$magnitude.y, distribution = "exact", zero.method = "Pratt", alternative = "less"))
+      )
+
+  }
+  paired_tests = do.call(rbind, paired_tests_ls)
+  
+  group_testing_tibble <- paired_example %>%
+     group_by(group) %>%
+     do(pairwise_test_cont(x = .$magnitude, group = .$visit, paired = T, id = .$pubID, digits = 3, num_needed_for_test = 2, verbose = TRUE)) %>%
+    left_join(paired_tests, by = "group")
+
+  expect_equal(group_testing_tibble$SampleSizes, group_testing_tibble$total)
+  expect_equal(group_testing_tibble$MagnitudeTest, group_testing_tibble$test)
+  
+  group_testing_tibble_less <- paired_example %>%
+     group_by(group) %>%
+     do(pairwise_test_cont(x = .$magnitude, group = .$visit, paired = T, id = .$pubID, digits = 3, alternative = "less",
+                           num_needed_for_test = 2, verbose = TRUE)) %>%
+    left_join(paired_tests, by = "group")
+  expect_equal(group_testing_tibble_less$SampleSizes, group_testing_tibble_less$total)
+  expect_equal(group_testing_tibble_less$MagnitudeTest, group_testing_tibble_less$est_less)  
+  
+}
