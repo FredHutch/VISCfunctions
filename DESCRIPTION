@@ -1,10 +1,15 @@
 Package: VISCfunctions
 Type: Package
 Title: VISC STP/SRA functions
-Version: 0.1
-Date: 2017-12-14
-Author: Bryan Mayer, Jimmy Fulp, Bhavesh Borate, Dora Dong, Celia Eddy, Paul Obrecht
-Maintainer: Paul Obrecht <pobrecht@scharp.org>
+Version: 1.0
+Date: 2018-05-30
+Authors@R: c(person("Bryan", "Mayer", ,"bmayer@fredhutch.org", "aut"),
+             person("Jimmy", "Fulp", ,"wfulp@fredhutch.org", "aut"),
+             person("Bhavesh", "Borate", ,"bborate@fredhutch.org", "aut"),
+             person("Dora", "Dong", ,"ddong@fredhutch.org", "aut"),
+             person("Celia", "Eddy", ,"ceddy@fredhutch.org", "aut"),
+             person("Paul", "Obrecht", ,"pobrecht@fredhutch.org", c("aut", "cre"))
+             )
 Description: Statistical, data processing, and annotation functions for VISC.
 License: GPL-3
 Imports: knitr, devtools, git2r, data.table, kableExtra
