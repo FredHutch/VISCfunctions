@@ -135,57 +135,61 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
 
 #' Binary (Response) Variable Compared to Binary (Group) Variable Test (VISC)
 #'
-#' Either Bernard, Fisher's, or Chi-sq test performed, for unpaired or paired data
+#' Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and McNemar's test for paired data
 #'
 #' @param x numeric vector (can include NA values).
-#' @param y vector with only 2 levels (can include NA values unless \code{paired = TRUE}).
-#' @param method what test to run (wilcox or t-test).
-#' @param paired a logical indicating whether you want a paired test.
+#' @param y vector with only 2 levels (can include NA values unless \code{method = 'mcnemar'}).
+#' @param method what test to run ("barnard", "fisher" ,"chi.sq" , "mcnemar"). No default so user must enter one of the four selections
+#' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter. Only "two.sided" available for \code{method = 'chi.sq' or 'mcnemar'}
 #' @param verbose a logical variable indicating if warnings and messages should be displayed.
 #' @param ... parameters to pass to wilcox_test or t.test functions. For example the testing direction (\code{alternative}) in either call or the \code{var.equal} in the t.test function.
 #' @return p-value for comparing x at the different levels of y.
 #' @details
 #'
-#' Runs \code{wilcox_test()} in the coin package, with "exact" distribution and mid-ranks ties method.
 #'
 #' For one sided tests if \code{y} is a factor variable the level order is respected, otherwise the levels will set to alphabetical order (i.e. if \code{alternative = less} then testing a < b ).
 #'
-#' If \code{paired = TRUE} assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{paired = TRUE} then \code{y} must have the same number of samples for each level.
+#' If \code{method = 'mcnemar'} assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{method = 'mcnemar'} then \code{y} must have the same number of samples for each level.
 #'
 #' @examples
 #'
 #' set.seed(5432322)
 #' x <- c(sample(0:1,10,replace = TRUE, prob = c(.75,.25)), sample(0:1,10,replace = TRUE, prob = c(.25,.75)))
 #' y <- c(rep('a', 10), rep('b', 10))
-#' two_samp_bin_test(x,y)
+#' two_samp_bin_test(x,y, method = 'barnard')
+#' two_samp_bin_test(x,y, 'fisher')
+#' two_samp_bin_test(x,y, 'chi.sq')
+#' two_samp_bin_test(x,y, 'mcnemar')
 #'
 #' @export
 
 
-two_samp_bin_test <- function(x, y, method = c('wilcox', 't.test'), paired = FALSE, verbose = FALSE, ...){
+two_samp_bin_test <- function(x, y, method = NA, alternative = c("two.sided", "less", "greater"), verbose = FALSE){
   # Input checking
-  method <- match.arg(method)
-  .check_numeric_input(x)
-  .check_binary_input(y, paired = paired)
+  if (!method %in% c('barnard', 'fisher' ,'chi.sq' , 'mcnemar')) stop('"method" must be one of these choices: "barnard", "fisher", "chi.sq", "mcnemar"')
+  alternative <- match.arg(alternative)
+  if (method == 'chi.sq' & alternative != 'two.sided') stop('When "method" is chi.sq then "alternative" must be two.sided')
+  if (method == 'mcnemar' & alternative != 'two.sided') stop('When "method" is mcnemar then "alternative" must be two.sided')
+  .check_binary_input(x)
+  .check_binary_input(y, paired = ifelse(method == 'mcnemar', TRUE, FALSE))
   y <- droplevels(factor(y))
 
   # Removing cases where x and y are both NA and returning p-value where no complete cases or only one distinct value
-  rm_na_and_check_output <- .rm_na_and_check(x, y, y_type = 'binary', verbose = verbose)
+  rm_na_and_check_output <- .rm_na_and_check(x, y, x_type = 'binary', y_type = 'binary', verbose = verbose)
   if (is.data.frame(rm_na_and_check_output)) data_here <- rm_na_and_check_output else return(rm_na_and_check_output)
 
-  if (method == 'wilcox') {
-    if (paired) {
-      as.double(coin::pvalue(coin::wilcoxsign_test(data_here$x[data_here$y == levels(data_here$y)[1]] ~ data_here$x[data_here$y == levels(data_here$y)[2]], distribution = "exact", zero.method = "Pratt", ...)))
-    } else {
-      as.double(coin::pvalue(coin::wilcox_test(x ~ y, data = data_here, distribution = "exact", ties.method = "mid-ranks", ...)))
-    }
-  } else {
-    #If both groups have only one distinct value t.test will throw error
-    if (any(by(data_here$x[!is.na(data_here$y)], data_here$y[!is.na(data_here$y)], function(xx) {length(unique(xx[!is.na(xx)])) > 1}))) {
-      as.double(t.test(data_here$x[data_here$y == levels(data_here$y)[1]], data_here$x[data_here$y == levels(data_here$y)[2]], data = data_here, paired = paired, ...)$p.value)
-    } else {
-      if (verbose) message('t.test can not run when both levels of "y" have only 1 unique "x" value, so p=NA returned')
-      NA
-    }
+  if (method == 'barnard') {
+    pval_out <- as.double(Exact::exact.test(table(data_here), method = 'Z-pooled', to.plot = FALSE, alternative = alternative)$p.value)
   }
+  if (method == 'fisher') {
+    pval_out <- as.double(fisher.test(data_here$x, data_here$y, alternative = alternative)$p.value)
+  }
+  if (method == 'chi.sq') {
+    pval_out <- as.double(chisq.test(data_here$x, data_here$y)$p.value)
+  }
+  if (method == 'mcnemar') {
+    pval_out <- as.double(mcnemar.test(data_here$x[data_here$y == levels(data_here$y)[1]], data_here$x[data_here$y == levels(data_here$y)[2]])$p.value)
+  }
+  pval_out
 }
+
