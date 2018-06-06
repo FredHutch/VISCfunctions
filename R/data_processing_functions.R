@@ -2,7 +2,8 @@
 #'
 #' @param x numeric vector (can include NA values).
 #' @param y numeric vector (can include NA values).
-#' @param y_type is y a binary/group variable or continuous variable. This will impact if a p-value of NA or 1 is returned when y has only 1 distinct value.
+#' @param x_type is x a binary/group variable or continuous variable (default). This will impact if a p-value of NA or 1 is returned when x has only 1 distinct value. fixed_binary will set p=1 if all one value (i.e. 100% response rates in both groups)
+#' @param y_type is y a binary/group variable (default) or continuous variable. This will impact if a p-value of NA or 1 is returned when y has only 1 distinct value.fixed_binary will set p=1 if all one value (i.e. 100% response rates in both groups)
 #' @param verbose a logical variable indicating if warnings and messages should be displayed.
 #'
 #' @return A data.frame with all completely NA rows removed or a NA or 1 pvalue if no complete cases or only one distinct value.
@@ -15,10 +16,11 @@
 #' .rm_na_and_check(x, y_cont, y_type = 'continuous')
 #'
 
-.rm_na_and_check = function(x, y, y_type = c('binary', 'continuous'), verbose = FALSE){
+.rm_na_and_check = function(x, y, x_type = c('continuous', 'binary', 'fixed_binary'), y_type = c('binary', 'continuous', 'fixed_binary'), verbose = FALSE){
+  x_type <- match.arg(x_type)
+  if (x_type == 'continuous') .check_numeric_input(x) else .check_binary_input(x)
   y_type <- match.arg(y_type)
-  .check_numeric_input(x)
-  if (y_type == 'binary') .check_binary_input(y) else .check_numeric_input(y)
+  if (y_type == 'continuous') .check_numeric_input(y) else .check_binary_input(y)
 
   if (length(x) != length(y)) stop('"x" and "y" must be the same length')
 
@@ -32,8 +34,14 @@
   }
 
   if (length(unique(data_here$x[!is.na(data_here$y)])) == 1) {
-    if (verbose) message('"x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned')
-    return(1)
+    #if binary/group variable NA should be returned, but if continuous then p=1 returned
+    if (x_type == 'binary') {
+      if (verbose) message('"x" only has 1 level when considering non-missing values of "y", so p=NA returned')
+      return(NA)
+    } else {
+      if (verbose) message('"x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned')
+      return(1)
+    }
   }
 
   if (length(unique(data_here$y[!is.na(data_here$x)])) == 1) {
