@@ -175,7 +175,7 @@ two_samp_bin_test <- function(x, y, method = NA, alternative = c("two.sided", "l
   y <- droplevels(factor(y))
 
   # Removing cases where x and y are both NA and returning p-value where no complete cases or only one distinct value
-  rm_na_and_check_output <- .rm_na_and_check(x, y, x_type = 'binary', y_type = 'binary', verbose = verbose)
+  rm_na_and_check_output <- .rm_na_and_check(x, y, x_type = ifelse(method == 'barnard', 'fixed_binary', 'binary'), y_type = 'binary', verbose = verbose)
   if (is.data.frame(rm_na_and_check_output)) data_here <- rm_na_and_check_output else return(rm_na_and_check_output)
 
   if (method == 'barnard') {
