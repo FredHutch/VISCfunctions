@@ -1,0 +1,177 @@
+---
+title: "Introduction to VISCfunctions"
+author: "Monica Gerber"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to VISCfunctions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+VISCfunctions aims to provide a function for common statistical tests and data manipulation tasks performed at VISC:
+
+
+## Data: exampleData_BAMA
+
+```{r}
+data(exampleData_BAMA)
+str(exampleData_BAMA)
+```
+
+## Get p-values from statistical tests
+
+### Two-sample test for continuous data with `two_samp_cont_test`
+
+The `two_samp_cont_test` function allows you to conduct tests of independence between two continuous variables using, and then returns the p-value for that test. This function uses the `coin` package to implement these tests.
+
+For example, we can test the null hypothesis, *magnitude~group1~* is equal to *magnitude~group2~* at visit 1 for the gp41 antigen.
+
+```{r}
+visitno1_gp41 <- subset(exampleData_BAMA, visitno == 1 & antigen == "gp41")
+
+# using a t.test
+two_samp_cont_test(
+  x = visitno1_gp41$magnitude, 
+  y = visitno1_gp41$group,
+  method = "t.test",
+  paired = FALSE,
+  )
+
+# using a Wilcoxon rank-sum test
+two_samp_cont_test(
+  x = visitno1_gp41$magnitude, 
+  y = visitno1_gp41$group,
+  method = "wilcox",
+  paired = FALSE,
+  )
+
+```
+
+Note that if this was a paired sample, you can use `paired = TRUE` for a paired t-test or a Wilcoxon signed-rank test. Use `verbose = TRUE` to see errors.
+
+### Two-sample test for binary data with `two_samp_bin_test`
+
+The `two_samp_bin_test` allows you to conduct tests of independence between two binary variables, and then returns the p-value for that test. This function uses base R to implement Fisher's, chi-square, and McNemar's tests. It uses the `Exact` package to implement the Barnard's test.
+
+For example, we can test the null hypothesis, the response rate in group 1 is equal to the response rate in group 2 at visit 1 for the gp41 antigen.
+
+```{r}
+# using barnard's test
+# default is two.sided test
+two_samp_bin_test(
+  x = visitno1_gp41$response,
+  y = visitno1_gp41$group,
+  method = "barnard"
+)
+```
+
+
+### Test multiple groups with `pairwise_test_cont`
+
+If there are many groups in a study, it is often necessary to do pairwise comparisons. For continuous data, use the `pairwise_test_cont` function. This function outputs the sample statistics as well as the p-value for each comparison. To make group comparisons for each antigen and visit number, do:
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(purrr)
+
+exampleData_BAMA %>%
+  group_by(antigen, visitno) %>%
+  nest() %>%
+  mutate(
+    pairwise_test = map(
+      data,
+      ~pairwise_test_cont(
+        x = .$magnitude,
+        group = .$group,
+        paired = FALSE, 
+        method = 'wilcox', 
+        alternative = "less", 
+        digits = 3, 
+        num_needed_for_test = 3
+        )
+      )
+  ) %>%
+  select(-data) %>%
+  unnest()
+```
+
+
+## Rounding and formatting data
+
+### `round_away_0`
+
+### `pretty_pvalues`
+
+### `stat_paste`
+
+### `paste_tble_grp`
+
+
+## Other
+
+
+### `update_visc_data`
+
+
+
+
+
+
+Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+
+- Never uses retina figures
+- Has a smaller default figure size
+- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+
+## Vignette Info
+
+Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))
+

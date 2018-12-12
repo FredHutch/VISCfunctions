@@ -1,19 +1,16 @@
+inst/doc
 # History files
 .Rhistory
 
 # Example code in package build process
 *-Ex.R
-
 # R data files from past sessions
 .Rdata
-
 # RStudio files
 .Rproj.user/
 .Rproj.user
 packrat/lib*/
 *.Rproj
-
 # Mac detritus
 .DS_Store
-
 Viscfunction_diagram.png

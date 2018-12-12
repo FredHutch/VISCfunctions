@@ -13,5 +13,8 @@ Authors@R: c(person("Bryan", "Mayer", ,"bmayer@fredhutch.org", "aut"),
 Description: Statistical, data processing, and annotation functions for VISC.
 License: GPL-3
 Imports: knitr, devtools, git2r, data.table, kableExtra, coin, Exact
-Suggests: testthat
+Suggests: 
+    testthat,
+    rmarkdown
 RoxygenNote: 6.0.1
+VignetteBuilder: knitr
