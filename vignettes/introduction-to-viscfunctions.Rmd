@@ -2,7 +2,9 @@
 title: "Introduction to VISCfunctions"
 author: "Monica Gerber"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    fig_caption: yes
 vignette: >
   %\VignetteIndexEntry{Introduction to VISCfunctions}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,21 +19,22 @@ knitr::opts_chunk$set(
 ```
 
 
-VISCfunctions aims to provide a function for common statistical tests and data manipulation tasks performed at VISC:
+VISCfunctions aims to provide a function for common statistical tests and data manipulation tasks performed at VISC.
 
 
 ## Data: exampleData_BAMA
 
 ```{r}
+library(VISCfunctions)
 data(exampleData_BAMA)
 str(exampleData_BAMA)
 ```
 
-## Get p-values from statistical tests
+## Satistical tests
 
-### Two-sample test for continuous data with `two_samp_cont_test`
+### P-values from a two-sample test for continuous data with `two_samp_cont_test`
 
-The `two_samp_cont_test` function allows you to conduct tests of independence between two continuous variables using, and then returns the p-value for that test. This function uses the `coin` package to implement these tests.
+The `two_samp_cont_test` function allows you to conduct tests of independence between two continuous variables, and then returns the p-value for that test. This function uses the `coin` package to implement these tests.
 
 For example, we can test the null hypothesis, *magnitude~group1~* is equal to *magnitude~group2~* at visit 1 for the gp41 antigen.
 
@@ -58,9 +61,9 @@ two_samp_cont_test(
 
 Note that if this was a paired sample, you can use `paired = TRUE` for a paired t-test or a Wilcoxon signed-rank test. Use `verbose = TRUE` to see errors.
 
-### Two-sample test for binary data with `two_samp_bin_test`
+### P-values from a two-sample test for binary data with `two_samp_bin_test`
 
-The `two_samp_bin_test` allows you to conduct tests of independence between two binary variables, and then returns the p-value for that test. This function uses base R to implement Fisher's, chi-square, and McNemar's tests. It uses the `Exact` package to implement the Barnard's test.
+The `two_samp_bin_test` function allows you to conduct tests of independence between two binary variables, and then returns the p-value for that test. This function uses base R to implement Fisher's, chi-square, and McNemar's tests. It uses the `Exact` package to implement the Barnard's test.
 
 For example, we can test the null hypothesis, the response rate in group 1 is equal to the response rate in group 2 at visit 1 for the gp41 antigen.
 
@@ -77,7 +80,7 @@ two_samp_bin_test(
 
 ### Test multiple groups with `pairwise_test_cont`
 
-If there are many groups in a study, it is often necessary to do pairwise comparisons. For continuous data, use the `pairwise_test_cont` function. This function outputs the sample statistics as well as the p-value for each comparison. To make group comparisons for each antigen and visit number, do:
+If there are many groups in a study, it is often necessary to do pairwise comparisons. For continuous data, use the `pairwise_test_cont` function. This function outputs the median (min, max) as well as the p-value for each comparison. To make group comparisons for each antigen and visit number, do:
 
 ```{r}
 library(dplyr)
@@ -108,70 +111,71 @@ exampleData_BAMA %>%
 
 ## Rounding and formatting data
 
-### `round_away_0`
+### Round and format values with `round_away_0`
 
-### `pretty_pvalues`
+For tables in PT reports, rounding is often necessary.
 
-### `stat_paste`
+```{r}
+exampleData_BAMA %>%
+  group_by(antigen, visitno, group) %>%
+  summarise(
+    mean = mean(magnitude, na.rm = TRUE) %>% 
+      round_away_0(., digits = 1, trailing_zeros = TRUE)
+  )
+```
 
-### `paste_tble_grp`
+Note that `round_away_0` will return a character vector if `trailing_zeros = TRUE`
+
+### Round and format p-values with `pretty_pvalues`.
+
+P-values need to be formatted for PT reports. The `pretty_pvalues` function will round a vector of p-values, and use the "<" symbol for p-values below the specified digit. It returns a character vector.
+
+```{r}
+exampleData_BAMA %>%
+  group_by(antigen, visitno) %>%
+  nest() %>%
+  mutate(
+    pval_group_diff = map_chr(
+      data,
+      ~two_samp_cont_test(
+        .$magnitude,
+        .$group,
+        method = "wilcox"
+      ) %>% 
+        pretty_pvalues(., digits = 2)
+    )
+  ) %>%
+  select(-data)
+```
+
+
+### Format results for tables with `stat_paste`
+
+To create presentation-worthy tables, it's often necessary to combine multiple variables in the same column. For example, the median (min, max) for data is often presented:
+
+```{r}
+exampleData_BAMA %>%
+  group_by(antigen, visitno, group) %>%
+  summarise(
+    median = median(magnitude, na.rm = TRUE),
+    min = min(magnitude, na.rm = TRUE),
+    max = max(magnitude, na.rm = TRUE)
+  ) %>%
+  mutate(
+    med_min_max = stat_paste(median, min, max, digits = 1)
+  ) %>%
+  select(antigen:group, med_min_max) %>%
+  spread(key = group, value = med_min_max) %>%
+  rename("Group 1" = `1`, "Group 2" = `2`)
+```
+
+Note that rounding can also be done with this function. You can also specify the "{}", "[]", or "|" symbols instead of "()" with the argument `bound_char = "{"`, etc.
 
 
 ## Other
 
-
-### `update_visc_data`
-
-
+* `update_visc_data` - for updating data packages? I think this needs to be updated now that we're using github.com.
+* `paste_tble_grp` - need to investigate cases in which we'd use this.
 
 
-
-
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
-
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
 
