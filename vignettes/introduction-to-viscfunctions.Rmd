@@ -18,6 +18,9 @@ knitr::opts_chunk$set(
 )
 ```
 
+<!-- I created this vignette with usethis::use_vignette. -->
+<!-- There's also good guidance here: http://r-pkgs.had.co.nz/vignettes.html -->
+
 
 VISCfunctions aims to provide a function for common statistical tests and data manipulation tasks performed at VISC.
 
@@ -108,6 +111,7 @@ exampleData_BAMA %>%
   unnest()
 ```
 
+Note that the `num_needed_for_test` argument is useful for statistical tests that require at least 3 responders. The "Comparison" column will reflect the type of `alternative` hypothesis: two-sided, less than, or greater than. The `digits` and `trailing_zeros` arguements specify rounding and formatting of values. 
 
 ## Rounding and formatting data
 
@@ -124,7 +128,7 @@ exampleData_BAMA %>%
   )
 ```
 
-Note that `round_away_0` will return a character vector if `trailing_zeros = TRUE`
+Note that `round_away_0` will return a character vector if `trailing_zeros = TRUE`.
 
 ### Round and format p-values with `pretty_pvalues`.
 
@@ -164,18 +168,34 @@ exampleData_BAMA %>%
   mutate(
     med_min_max = stat_paste(median, min, max, digits = 1)
   ) %>%
-  select(antigen:group, med_min_max) %>%
-  spread(key = group, value = med_min_max) %>%
-  rename("Group 1" = `1`, "Group 2" = `2`)
+  select(antigen:group, med_min_max)
 ```
 
 Note that rounding can also be done with this function. You can also specify the "{}", "[]", or "|" symbols instead of "()" with the argument `bound_char = "{"`, etc.
 
+### Format results to compare two groups with `paste_tbl_grp`
 
-## Other
+To easily visually compare results from two groups, paste together variables from both groups into a single column with the `paste_tbl_grp` function. By default, `paste_tbl_grp` will paste together data from two groups for median_min_max or mean_sd if this exists in the dataset. 
 
-* `update_visc_data` - for updating data packages? I think this needs to be updated now that we're using github.com.
-* `paste_tble_grp` - need to investigate cases in which we'd use this.
+```{r}
+exampleData_BAMA %>%
+  mutate(group = paste0("Group", group)) %>%
+  group_by(group, visitno, antigen) %>%
+  summarise_at("magnitude", funs(mean, sd, median, min, max)) %>%
+  gather(variable, value, -(group:antigen)) %>% # these three chains create a wide dataset
+  unite(temp, group, variable) %>%
+  spread(temp, value) %>%
+  mutate(Group1 = "Group 1", Group2 = "Group 2") %>%
+  paste_tbl_grp() %>%
+  select(visitno:antigen, median_min_max_comparison) %>%
+  head()
+```
+
+Specify variables to paste with `vars_to_paste` and group names with `first_name` and `second_name`. If you want to replace "vs." with a different character string, use `sep_val`.
+
+
+<!-- note: I didn't include `update_visc_data` - is for updating data packages? I think this needs to be updated now that we're using github.com. -->
+
 
 
 
