@@ -15,6 +15,9 @@ License: GPL-3
 Imports: knitr, devtools, git2r, data.table, kableExtra, coin, Exact
 Suggests: 
     testthat,
-    rmarkdown
+    rmarkdown,
+    dplyr,
+    tidyr,
+    purrr
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
