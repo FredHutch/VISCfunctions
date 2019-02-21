@@ -27,12 +27,12 @@ VISCfunctions Principles
  * Write tests!
  * Take time to consider unexpected user errors. Discuss your function with others.
  * If your function utilizes other functions, make sure there are not new opportunities for bugs.
- * Once the testing framework is implemented (Version 1 release), the package should compile error free.
+ * Use the testing framework (`devtools::test()` or ctrl-shift-t), the package should pass all tests (with no warnings) before you commit a new feature.
  * Modularity of functions greatly aids in error checking and control.
 
 4. Version Control and Stability
  * Utilize the features of git. Use branches to test new code and and ideas without pushing to the master.
  * **Never git force push**
- * Your changes may affect previously written reports (Post version 1 release): be mindful!
+ * Your changes may affect previously written reports: be mindful!
 
 ![Image of Yaktocat](https://github.com/FredHutch/VISCfunctions/blob/master/Viscfunction_diagram.png)
