@@ -8,6 +8,7 @@ test_that(".check_numeric_input error-free when expected", {
   expect_null(.check_numeric_input(my_vals))
   expect_null(.check_numeric_input(1, scalar = TRUE))
   expect_null(.check_numeric_input(-10:10, whole_num = TRUE))
+  expect_null(.check_numeric_input(NA, allow_NA = TRUE))
 
 })
 
