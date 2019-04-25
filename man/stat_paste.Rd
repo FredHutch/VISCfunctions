@@ -48,7 +48,6 @@ stat_paste(NA, NA, NA)
 stat_paste(5.109, "p < 0.001", digits = 3)
 stat_paste(c(rep(5,5),NA),c(1:5,NA),c(1,NA,2,NA,3,NA),bound_char = '[')
 
-library(VISCfunctions.data)
 library(data.table)
 data(testData_BAMA)
 testData_BAMA [, .(

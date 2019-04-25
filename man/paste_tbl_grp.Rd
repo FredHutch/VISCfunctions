@@ -46,8 +46,6 @@ User must use consistant naming throughout, with a underscore to separate the gr
 \examples{
 
 
-# devtools::install_github(repo = "VIDD-VISC/VISCfunctions.data", host="https://github.fhcrc.org/api/v3")
-require(VISCfunctions.data)
 data(exampleData_BAMA)
 
 descriptive_stats_by_group <- exampleData_BAMA[, .(
@@ -60,16 +58,21 @@ descriptive_stats_by_group <- exampleData_BAMA[, .(
      Group1_max = max(magnitude[group == 1]), Group2_max = max(magnitude[group == 2])
 ), by = .(visitno,antigen)]
 
-paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
+paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1',
+              second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
 
-paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = c("mean", "median_min_max"), alternative= "less", keep_all = FALSE)
+paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = c("mean", "median_min_max"),
+              alternative= "less", keep_all = FALSE)
 
-paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = 'less', digits = 5, keep_all = FALSE)
+paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1',
+              second_name = 'Group2', sep_val = " vs. ",
+              alternative = 'less', digits = 5, keep_all = FALSE)
 
 
 # Same example wit tidyverse (dplyr+tidyr) with some custom functions
 
-library(tidyverse)
+library(dplyr)
+library(tidyr)
 
 q95_fun = function(x) quantile(x, 0.95)
 N = function(x) length(x)

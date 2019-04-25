@@ -121,7 +121,7 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
   } else {
     #If both groups have only one distinct value t.test will throw error
     if (any(by(data_here$x[!is.na(data_here$y)], data_here$y[!is.na(data_here$y)], function(xx) {length(unique(xx[!is.na(xx)])) > 1}))) {
-      as.double(t.test(data_here$x[data_here$y == levels(data_here$y)[1]], data_here$x[data_here$y == levels(data_here$y)[2]], data = data_here, paired = paired, ...)$p.value)
+      as.double(stats::t.test(data_here$x[data_here$y == levels(data_here$y)[1]], data_here$x[data_here$y == levels(data_here$y)[2]], data = data_here, paired = paired, ...)$p.value)
     } else {
       if (verbose) message('t.test can not run when both levels of "y" have only 1 unique "x" value, so p=NA returned')
       NA
@@ -154,7 +154,8 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
 #' @examples
 #'
 #' set.seed(5432322)
-#' x <- c(sample(0:1,10,replace = TRUE, prob = c(.75,.25)), sample(0:1,10,replace = TRUE, prob = c(.25,.75)))
+#' x <- c(sample(0:1,10,replace = TRUE, prob = c(.75,.25)),
+#'        sample(0:1,10,replace = TRUE, prob = c(.25,.75)))
 #' y <- c(rep('a', 10), rep('b', 10))
 #' two_samp_bin_test(x,y, method = 'barnard')
 #' two_samp_bin_test(x,y, 'fisher')
