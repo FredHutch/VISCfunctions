@@ -2,8 +2,8 @@
 #'
 #' @param x numeric vector (can include NA values).
 #' @param y numeric vector (can include NA values).
-#' @param x_type is x a binary/group variable or continuous variable (default). This will impact if a p-value of NA or 1 is returned when x has only 1 distinct value. fixed_binary will set p=1 if all one value (i.e. 100% response rates in both groups)
-#' @param y_type is y a binary/group variable (default) or continuous variable. This will impact if a p-value of NA or 1 is returned when y has only 1 distinct value.fixed_binary will set p=1 if all one value (i.e. 100% response rates in both groups)
+#' @param x_type is x a binary/group variable or continuous variable (default). This will impact if a p-value of NA or 1 is returned when x has only 1 distinct value. fixed_binary will set p=1 if all one value (i.e. 100\% response rates in both groups)
+#' @param y_type is y a binary/group variable (default) or continuous variable. This will impact if a p-value of NA or 1 is returned when y has only 1 distinct value.fixed_binary will set p=1 if all one value (i.e. 100\% response rates in both groups)
 #' @param verbose a logical variable indicating if warnings and messages should be displayed.
 #'
 #' @return A data.frame with all completely NA rows removed or a NA or 1 pvalue if no complete cases or only one distinct value.
