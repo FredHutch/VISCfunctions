@@ -281,8 +281,8 @@ test_that("Paired results with test data", {
       data.frame(
         group = unique(paired_data$group)[i],
         total = nrow(na.omit(temp_dat)),
-        test = coin::pvalue(coin::wilcoxsign_test(temp_dat$magnitude.x ~ temp_dat$magnitude.y, distribution = "exact", zero.method = "Pratt")),
-        est_less =  coin::pvalue(coin::wilcoxsign_test(temp_dat$magnitude.x ~ temp_dat$magnitude.y, distribution = "exact", zero.method = "Pratt", alternative = "less"))
+        test = as.numeric(coin::pvalue(coin::wilcoxsign_test(temp_dat$magnitude.x ~ temp_dat$magnitude.y, distribution = "exact", zero.method = "Pratt"))),
+        est_less =  as.numeric(coin::pvalue(coin::wilcoxsign_test(temp_dat$magnitude.x ~ temp_dat$magnitude.y, distribution = "exact", zero.method = "Pratt", alternative = "less")))
       )
 
   }
