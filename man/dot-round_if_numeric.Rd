@@ -24,8 +24,8 @@ Internal wrapper for round_away_0
 }
 \examples{
 
-.round_if_numeric(c(NA,-3.5:3.5,NA))
-.round_if_numeric(c(NA,letters[1:5],NA))
+VISCfunctions:::.round_if_numeric(c(NA,-3.5:3.5,NA))
+VISCfunctions:::.round_if_numeric(c(NA,letters[1:5],NA))
 
 
 }

@@ -12,8 +12,8 @@
 #' x <- c(1:10,NA,100)
 #' y_bin <- c(rep(1:2,6))
 #' y_cont <- c(1:10,NA,100)
-#' .rm_na_and_check(x, y_bin)
-#' .rm_na_and_check(x, y_cont, y_type = 'continuous')
+#' VISCfunctions:::.rm_na_and_check(x, y_bin)
+#' VISCfunctions:::.rm_na_and_check(x, y_cont, y_type = 'continuous')
 #'
 
 .rm_na_and_check = function(x, y, x_type = c('continuous', 'binary', 'fixed_binary'), y_type = c('binary', 'continuous', 'fixed_binary'), verbose = FALSE){
