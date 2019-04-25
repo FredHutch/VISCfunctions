@@ -221,8 +221,7 @@ test_that("Test example with fixed result", {
   source("fixed_data.R")
 
 
-  library(VISCfunctions.data)
-  data("exampleData_BAMA")
+  data(exampleData_BAMA)
 
   group_testing_dt <- exampleData_BAMA[, pairwise_test_cont(
      x = magnitude, group = group, paired = FALSE, method = 'wilcox',
@@ -240,7 +239,6 @@ test_that("Test example with fixed result", {
 
 test_that("Integration with dplyr and data.table is equivalent", {
 
-  library(VISCfunctions.data)
   library(data.table)
   library(dplyr)
 
