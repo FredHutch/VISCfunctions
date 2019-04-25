@@ -59,8 +59,8 @@ round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
 #'
 #' @examples
 #'
-#' .round_if_numeric(c(NA,-3.5:3.5,NA))
-#' .round_if_numeric(c(NA,letters[1:5],NA))
+#' VISCfunctions:::.round_if_numeric(c(NA,-3.5:3.5,NA))
+#' VISCfunctions:::.round_if_numeric(c(NA,letters[1:5],NA))
 #'
 #'
 
@@ -182,13 +182,13 @@ two_samp_bin_test <- function(x, y, method = NA, alternative = c("two.sided", "l
     pval_out <- as.double(Exact::exact.test(table(data_here), method = 'Z-pooled', to.plot = FALSE, alternative = alternative)$p.value)
   }
   if (method == 'fisher') {
-    pval_out <- as.double(fisher.test(data_here$x, data_here$y, alternative = alternative)$p.value)
+    pval_out <- as.double(stats::fisher.test(data_here$x, data_here$y, alternative = alternative)$p.value)
   }
   if (method == 'chi.sq') {
-    pval_out <- as.double(chisq.test(data_here$x, data_here$y)$p.value)
+    pval_out <- as.double(stats::chisq.test(data_here$x, data_here$y)$p.value)
   }
   if (method == 'mcnemar') {
-    pval_out <- as.double(mcnemar.test(data_here$x[data_here$y == levels(data_here$y)[1]], data_here$x[data_here$y == levels(data_here$y)[2]])$p.value)
+    pval_out <- as.double(stats::mcnemar.test(data_here$x[data_here$y == levels(data_here$y)[1]], data_here$x[data_here$y == levels(data_here$y)[2]])$p.value)
   }
   pval_out
 }

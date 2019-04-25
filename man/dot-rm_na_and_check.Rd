@@ -29,7 +29,7 @@ Combining Two Vectors, Removing Completely Missing Rows, with P Value Returns in
 x <- c(1:10,NA,100)
 y_bin <- c(rep(1:2,6))
 y_cont <- c(1:10,NA,100)
-.rm_na_and_check(x, y_bin)
-.rm_na_and_check(x, y_cont, y_type = 'continuous')
+VISCfunctions:::.rm_na_and_check(x, y_bin)
+VISCfunctions:::.rm_na_and_check(x, y_cont, y_type = 'continuous')
 
 }

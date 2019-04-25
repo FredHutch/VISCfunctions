@@ -23,7 +23,8 @@ Checking Numeric Vector Input
 }
 \examples{
 example_vals <- c(1:10,NA,100)
-.check_numeric_input(example_vals)
-.check_numeric_input(letters[1:10])
+# If everything checks out correctly nothing is returned
+VISCfunctions:::.check_numeric_input(example_vals)
+VISCfunctions:::.check_numeric_input(c(NA,1))
 
 }

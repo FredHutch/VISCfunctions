@@ -16,7 +16,8 @@ Checking Binary Vector Input
 }
 \examples{
 example_vals <- c(rep(0:1,10), NA)
-.check_binary_input(example_vals)
-.check_binary_input(letters[1:10])
+# If everything checks out correctly nothing is returned
+VISCfunctions:::.check_binary_input(example_vals)
+VISCfunctions:::.check_binary_input(letters[1:2])
 
 }

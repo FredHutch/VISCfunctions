@@ -8,8 +8,9 @@
 #'
 #' @examples
 #' example_vals <- c(1:10,NA,100)
-#' .check_numeric_input(example_vals)
-#' .check_numeric_input(letters[1:10])
+#' # If everything checks out correctly nothing is returned
+#' VISCfunctions:::.check_numeric_input(example_vals)
+#' VISCfunctions:::.check_numeric_input(c(NA,1))
 #'
 
 .check_numeric_input = function(x, lower_bound = NULL, upper_bound = NULL, scalar = FALSE, whole_num = FALSE){
@@ -33,8 +34,9 @@
 #'
 #' @examples
 #' example_vals <- c(rep(0:1,10), NA)
-#' .check_binary_input(example_vals)
-#' .check_binary_input(letters[1:10])
+#' # If everything checks out correctly nothing is returned
+#' VISCfunctions:::.check_binary_input(example_vals)
+#' VISCfunctions:::.check_binary_input(letters[1:2])
 #'
 
 .check_binary_input = function(x, paired = FALSE){
@@ -55,8 +57,10 @@
 #'
 #' @examples
 #' example_vals <- c(rep(0:1,10), NA)
-#' .check_response_input(example_vals)
-#' .check_response_input(letters[1:10])
+#' # If everything checks out correctly nothing is returned
+#' VISCfunctions:::.check_response_input(example_vals)
+#' VISCfunctions:::.check_response_input(c(TRUE,FALSE))
+#' VISCfunctions:::.check_response_input(0:1)
 #'
 
 .check_response_input = function(x){
