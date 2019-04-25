@@ -4,8 +4,8 @@
 \alias{two_samp_bin_test}
 \title{Binary (Response) Variable Compared to Binary (Group) Variable Test (VISC)}
 \usage{
-two_samp_bin_test(x, y, method = NA, alternative = c("two.sided", "less",
-  "greater"), verbose = FALSE)
+two_samp_bin_test(x, y, method = NA, alternative = c("two.sided",
+  "less", "greater"), verbose = FALSE)
 }
 \arguments{
 \item{x}{numeric vector (can include NA values).}

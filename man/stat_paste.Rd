@@ -5,8 +5,8 @@
 \title{Rounds and combines up to three numbers into table friendly presentation}
 \usage{
 stat_paste(stat1, stat2 = NULL, stat3 = NULL, digits = 0,
-  trailing_zeros = TRUE, bound_char = c("(", "[", "{", "|"), sep = ", ",
-  na_str_out = "---")
+  trailing_zeros = TRUE, bound_char = c("(", "[", "{", "|"),
+  sep = ", ", na_str_out = "---")
 }
 \arguments{
 \item{stat1}{first statistic to be pasted.}
