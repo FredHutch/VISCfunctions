@@ -156,8 +156,6 @@ test_that("Integration with dplyr and data.table is equivalent", {
 # test paste_tbl_grp. Using paste_tbl_grp and pairwise_test_cont in testing since these functions are testing elsewhere
 test_that("pairwise_comparisons testing multiple groups", {
 
-   data("testData_BAMA")
-
   test_single_comp <- function(x, group, Group1, Group2) {
     test_data <- data.table(x = x, group = group)
 
@@ -266,7 +264,6 @@ expect_equal(object = group_testing_dt[order(antigen, visitno)],
 test_that("Paired results with test data", {
   library(dplyr)
 
-  data("testData_BAMA")
   paired_example = subset(testData_BAMA, visit %in% c(1, 2) & antigen == "1086C_D7gp120.avi/293F")
 
   paired_example_subset1 = subset(paired_example,  visit == 1, select = -response)
