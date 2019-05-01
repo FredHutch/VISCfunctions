@@ -15,7 +15,7 @@ Authors:
 \itemize{
   \item Bryan Mayer \email{bmayer@fredhutch.org}
   \item Monica Gerber \email{mgerber@fredhutch.org}
-  \item Celia Eddy \email{ceddy@fredhutch.org}
+  \item Celia Mahoney \email{cmahoney@fredhutch.org}
 }
 
 }

@@ -240,7 +240,7 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
 #'      median(magnitude, na.rm = TRUE),
 #'      min(magnitude, na.rm = TRUE),
 #'      max(magnitude, na.rm = TRUE)
-#'      )), by = .(antigen, visit, group)]
+#'      )), by = .(antigen, visitno, group)]
 #'
 #' @export
 stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_zeros = TRUE, bound_char = c('(','[','{','|'), sep = ', ', na_str_out = "---"){

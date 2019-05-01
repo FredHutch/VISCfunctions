@@ -49,12 +49,12 @@ stat_paste(5.109, "p < 0.001", digits = 3)
 stat_paste(c(rep(5,5),NA),c(1:5,NA),c(1,NA,2,NA,3,NA),bound_char = '[')
 
 library(data.table)
-data(testData_BAMA)
-testData_BAMA [, .(
+data(exampleData_BAMA)
+exampleData_BAMA [, .(
   median_min_max = stat_paste(
      median(magnitude, na.rm = TRUE),
      min(magnitude, na.rm = TRUE),
      max(magnitude, na.rm = TRUE)
-     )), by = .(antigen, visit, group)]
+     )), by = .(antigen, visitno, group)]
 
 }
