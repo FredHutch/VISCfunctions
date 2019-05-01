@@ -234,13 +234,13 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
 #' stat_paste(c(rep(5,5),NA),c(1:5,NA),c(1,NA,2,NA,3,NA),bound_char = '[')
 #'
 #' library(data.table)
-#' data(testData_BAMA)
-#' testData_BAMA [, .(
+#' data(exampleData_BAMA)
+#' exampleData_BAMA [, .(
 #'   median_min_max = stat_paste(
 #'      median(magnitude, na.rm = TRUE),
 #'      min(magnitude, na.rm = TRUE),
 #'      max(magnitude, na.rm = TRUE)
-#'      )), by = .(antigen, visit, group)]
+#'      )), by = .(antigen, visitno, group)]
 #'
 #' @export
 stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_zeros = TRUE, bound_char = c('(','[','{','|'), sep = ', ', na_str_out = "---"){
