@@ -10,7 +10,7 @@
   \item{group}{study group}
   \item{visitno}{visit number}
   \item{celltype}{cell type}
-  \item{isolate}{isolate}
+  \item{isolate}{isolate tested}
   \item{titer_mod_50}{truncated response magnitude value, ID50 titer (min. 10)}
   \item{titer_mod_80}{truncated response magnitude value, ID80 titer (min. 10)}
   \item{response_50}{response call for ID50 titer (0/1)}

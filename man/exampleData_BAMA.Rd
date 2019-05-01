@@ -9,7 +9,7 @@
   \item{pubID}{randomized subject ID}
   \item{group}{study group}
   \item{visitno}{visit number: baseline, 1, and 2}
-  \item{antigen}{antigen}
+  \item{antigen}{antigen tested}
   \item{magnitude}{magnitude of response, continuous, MFI*}
   \item{response}{response call for MFI* (0/1, NA at baseline)}
   ...

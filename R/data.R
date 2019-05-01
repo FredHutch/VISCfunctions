@@ -8,7 +8,7 @@
 #'   \item{pubID}{randomized subject ID}
 #'   \item{group}{study group}
 #'   \item{visitno}{visit number: baseline, 1, and 2}
-#'   \item{antigen}{antigen}
+#'   \item{antigen}{antigen tested}
 #'   \item{magnitude}{magnitude of response, continuous, MFI*}
 #'   \item{response}{response call for MFI* (0/1, NA at baseline)}
 #'   ...
@@ -52,7 +52,7 @@
 #'   \item{group}{study group}
 #'   \item{visitno}{visit number}
 #'   \item{celltype}{cell type}
-#'   \item{isolate}{isolate}
+#'   \item{isolate}{isolate tested}
 #'   \item{titer_mod_50}{truncated response magnitude value, ID50 titer (min. 10)}
 #'   \item{titer_mod_80}{truncated response magnitude value, ID80 titer (min. 10)}
 #'   \item{response_50}{response call for ID50 titer (0/1)}
