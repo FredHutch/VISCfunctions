@@ -1,17 +1,16 @@
 Package: VISCfunctions
 Type: Package
 Title: VISC STP/SRA functions
-Version: 1.1
+Version: 1.1.1
 Date: 2018-05-30
 Authors@R: c(person("Bryan", "Mayer", ,"bmayer@fredhutch.org", "aut"),
-             person("Jimmy", "Fulp", ,"wfulp@fredhutch.org", "aut"),
-             person("Bhavesh", "Borate", ,"bborate@fredhutch.org", "aut"),
-             person("Dora", "Dong", ,"ddong@fredhutch.org", "aut"),
-             person("Celia", "Eddy", ,"ceddy@fredhutch.org", "aut"),
-             person("Paul", "Obrecht", ,"pobrecht@fredhutch.org", c("aut", "cre"))
+             person("Monica", "Gerber", ,"mgerber@fredhutch.org", "aut"),
+             person("Celia", "Mahoney", ,"cmahoney@fredhutch.org", "aut"),
+             person("Jimmy", "Fulp", ,"wfulp@fredhutch.org", c("aut", "cre"))
              )
 Description: Statistical, data processing, and annotation functions for VISC.
 License: GPL-3
+Depends: R (>= 2.10)
 Imports: 
     broom (>= 0.5.0),
     car,

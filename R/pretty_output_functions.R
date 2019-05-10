@@ -25,8 +25,6 @@
 #' @examples
 #'
 #'
-#' # devtools::install_github(repo = "VIDD-VISC/VISCfunctions.data", host="https://github.fhcrc.org/api/v3")
-#' require(VISCfunctions.data)
 #' data(exampleData_BAMA)
 #'
 #' descriptive_stats_by_group <- exampleData_BAMA[, .(
@@ -39,16 +37,21 @@
 #'      Group1_max = max(magnitude[group == 1]), Group2_max = max(magnitude[group == 2])
 #' ), by = .(visitno,antigen)]
 #'
-#' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
+#' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1',
+#'               second_name = 'Group2', sep_val = " vs. ", digits = 0, keep_all = TRUE)
 #'
-#' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = c("mean", "median_min_max"), alternative= "less", keep_all = FALSE)
+#' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = c("mean", "median_min_max"),
+#'               alternative= "less", keep_all = FALSE)
 #'
-#' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1', second_name = 'Group2', sep_val = " vs. ", alternative = 'less', digits = 5, keep_all = FALSE)
+#' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1',
+#'               second_name = 'Group2', sep_val = " vs. ",
+#'               alternative = 'less', digits = 5, keep_all = FALSE)
 #'
 #'
 #' # Same example wit tidyverse (dplyr+tidyr) with some custom functions
 #'
-#' library(tidyverse)
+#' library(dplyr)
+#' library(tidyr)
 #'
 #'q95_fun = function(x) quantile(x, 0.95)
 #'N = function(x) length(x)
@@ -89,8 +92,8 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
                                               (nchar(first_name) > nchar(second_name) | substr(names(data_here), 0, nchar(second_name)) != second_name)]
       temp_group2_names <- names(data_here)[(substr(names(data_here), 0, nchar(second_name)) == second_name) &
                                               (nchar(second_name) > nchar(first_name) | substr(names(data_here), 0, nchar(first_name)) != first_name)]
-      temp_group1_measures <- gsub(paste0(first_name,'_'), '', temp_group1_names, fixed = T)
-      temp_group2_measures <- gsub(paste0(second_name,'_'), '', temp_group2_names, fixed = T)
+      temp_group1_measures <- gsub(paste0(first_name,'_'), '', temp_group1_names, fixed = TRUE)
+      temp_group2_measures <- gsub(paste0(second_name,'_'), '', temp_group2_names, fixed = TRUE)
       vars_to_paste_here <- unique(intersect(temp_group1_measures, temp_group2_measures))
 
       # Adding speacial cases
@@ -230,15 +233,14 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
 #' stat_paste(5.109, "p < 0.001", digits = 3)
 #' stat_paste(c(rep(5,5),NA),c(1:5,NA),c(1,NA,2,NA,3,NA),bound_char = '[')
 #'
-#' library(VISCfunctions.data)
 #' library(data.table)
-#' data(testData_BAMA)
-#' testData_BAMA [, .(
+#' data(exampleData_BAMA)
+#' exampleData_BAMA [, .(
 #'   median_min_max = stat_paste(
 #'      median(magnitude, na.rm = TRUE),
 #'      min(magnitude, na.rm = TRUE),
 #'      max(magnitude, na.rm = TRUE)
-#'      )), by = .(antigen, visit, group)]
+#'      )), by = .(antigen, visitno, group)]
 #'
 #' @export
 stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_zeros = TRUE, bound_char = c('(','[','{','|'), sep = ', ', na_str_out = "---"){
@@ -299,7 +301,8 @@ stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_ze
 #'
 #' # How to use pretty_pvalues in reports
 #' raw_pvals <- c(0.00000007, .05000001, NaN, NA, 0.783)
-#' pretty_pvals <- pretty_pvalues(raw_pvals , digits = 3, background = "green", italic = T, bold = T)
+#' pretty_pvals <- pretty_pvalues(raw_pvals , digits = 3, background = "green",
+#'                                italic = TRUE, bold = TRUE)
 #' kableExtra::kable(pretty_pvals , format = "latex", escape = FALSE, col.names = c("P-values"))
 #'
 #' @import kableExtra
@@ -324,7 +327,7 @@ pretty_pvalues = function(pvalues, digits = 3, bold = FALSE, italic = FALSE, bac
   below_cutoff_p = which(pvalues < lower_cutoff)
   sig_p = which(pvalues < sig_alpha)
 
-  if (trailing_zeros) pvalues_new = round_away_0(pvalues, trailing_zeros = T, digits = digits) else pvalues_new = as.character(round_away_0(pvalues, trailing_zeros = F, digits))
+  if (trailing_zeros) pvalues_new = round_away_0(pvalues, trailing_zeros = TRUE, digits = digits) else pvalues_new = as.character(round_away_0(pvalues, trailing_zeros = FALSE, digits))
 
   ## manipulate and assign pvalues as characters to output pvalue vector
   pvalues_new[missing_p] = missing_char
