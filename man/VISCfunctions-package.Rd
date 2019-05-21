@@ -9,15 +9,13 @@
 Statistical, data processing, and annotation functions for VISC.
 }
 \author{
-\strong{Maintainer}: Paul Obrecht \email{pobrecht@fredhutch.org}
+\strong{Maintainer}: Jimmy Fulp \email{wfulp@fredhutch.org}
 
 Authors:
 \itemize{
   \item Bryan Mayer \email{bmayer@fredhutch.org}
-  \item Jimmy Fulp \email{wfulp@fredhutch.org}
-  \item Bhavesh Borate \email{bborate@fredhutch.org}
-  \item Dora Dong \email{ddong@fredhutch.org}
-  \item Celia Eddy \email{ceddy@fredhutch.org}
+  \item Monica Gerber \email{mgerber@fredhutch.org}
+  \item Celia Mahoney \email{cmahoney@fredhutch.org}
 }
 
 }

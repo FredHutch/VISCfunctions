@@ -6,7 +6,6 @@ test_that("paste_tbl_grp testing various options (no errors)", {
 
 
   ## Creating Testing Dataset for Pasting
-  require(VISCfunctions.data)
   data(exampleData_BAMA)
   testing_dataset <- exampleData_BAMA[, .(
     Group1 = unique(group[group == 1]), Group2 = unique(group[group == 2]),
@@ -152,7 +151,6 @@ test_that("pretty_pvalues testing various options (no errors)", {
                expected = c("\\cellcolor{green}{<0.001}", "---", "\\cellcolor{green}{0.050}","1.000"))
 
   # test using data
-  require(VISCfunctions.data)
   require(dplyr)
   data(exampleData_BAMA)
 

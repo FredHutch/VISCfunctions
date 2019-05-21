@@ -70,11 +70,11 @@ test_that("two_samp_cont_test testing various options (no errors)", {
 
   # Wilcox Unpaired
   expect_equal(object = two_samp_cont_test(x = x, y = y, method = 'wilcox', paired = FALSE, verbose = T),
-               expected = coin::pvalue(coin::wilcox_test(x~factor(y),distribution = "exact", ties.method = "mid-ranks"))
+               expected = as.numeric(coin::pvalue(coin::wilcox_test(x~factor(y),distribution = "exact", ties.method = "mid-ranks")))
                , tolerance = 1e-8)
   # Wilcox Paired
   expect_equal(object = two_samp_cont_test(x = x[-(11:12)], y = y[-(11:12)], method = 'wilcox', paired = TRUE, verbose = T),
-               expected = coin::pvalue(coin::wilcoxsign_test(x[1:10]~x[13:22],distribution = "exact"))
+               expected = as.numeric(coin::pvalue(coin::wilcoxsign_test(x[1:10]~x[13:22],distribution = "exact")))
                , tolerance = 1e-8)
   # T-Test Unpaired
   #t.test(x[1:10], x[13:22], paired=F, var.equal = F)$p.value
@@ -160,8 +160,8 @@ test_that("two_samp_bin_test testing various options (no errors)", {
 
   ###Testing all four options (wilcox/t and paired/unpaired)###
   set.seed(5432322)
-  x <- c(NA, sample(0:1,10,replace = TRUE, prob = c(.65,.25)), sample(0:1,10,replace = TRUE, prob = c(.25,.65)), NA)
-  y <- c(rep('a', 10), NA, NA, rep('b', 10))
+  x <- c(NA, sample(0:1,20,replace = TRUE, prob = c(.65,.25)), sample(0:1,20,replace = TRUE, prob = c(.25,.65)), NA)
+  y <- c(rep('a', 20), NA, NA, rep('b', 20))
 
   paired_data_here <- na.omit(data.frame(a = x[which(y == levels(factor(y))[1])], b = x[which(y == levels(factor(y))[2])]))
 
