@@ -47,6 +47,8 @@ round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
 
 #' Wrapper for round_away_0 to account for non-numeric values
 #'
+#' @noRd
+#'
 #' Internal wrapper for round_away_0
 #'
 #' @param x vector (can include NA values).
