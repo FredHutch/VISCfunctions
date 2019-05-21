@@ -15,6 +15,9 @@ test_that("round_away_0 testing various options (no errors)", {
   #Testing for trailing zeros
   expect_equal(object = round_away_0(x, digits = 2, trailing_zeros = TRUE),
                expected = c("0.00", "2.50", "2.50", "2.50", "3.50", "4.05", NA))
+  # Allowing all NAs
+  expect_equal(object = round_away_0(x = c(NA,NA,NA)),
+               expected = c(NA_integer_,NA_integer_,NA_integer_))
 })
 
 test_that("round_away_0 throwing errors", {
@@ -26,7 +29,6 @@ test_that("round_away_0 throwing errors", {
   expect_error(round_away_0(x = my_matrix), '"x" must be a vector \\(one-dimensional object\\)')
   expect_error(round_away_0(x = numeric(0)), '"x" length must be > 0')
   expect_error(round_away_0(x = NULL), '"x" length must be > 0')
-  expect_error(round_away_0(x = c(NA,NA,NA)), '"x" must have at least one non-NA value')
   expect_error(round_away_0(x = letters[1:5]), '"x" must be a numeric vector')
 
   #Checking rounding_digits
