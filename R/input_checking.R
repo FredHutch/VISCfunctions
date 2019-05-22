@@ -5,7 +5,7 @@
 #' @param x numeric vector (can include NA values).
 #' @param lower_bound numeric value indicating the lowest allowed value.
 #' @param upper_bound numeric value indicating the highest allowed value.
-#' @param scalar logical value indicating if the checked value should only had an length of 1
+#' @param scalar logical value indicating if the checked value should only have aa length of 1
 #' @param whole_num logical value indicating if the checked value should be a whole number
 #' @param allow_NA logical value indicating if allowing all NA
 #'
