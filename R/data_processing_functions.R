@@ -1,5 +1,7 @@
 #' Combining Two Vectors, Removing Completely Missing Rows, with P Value Returns in Certain Cases
 #'
+#' @noRd
+#'
 #' @param x numeric vector (can include NA values).
 #' @param y numeric vector (can include NA values).
 #' @param x_type is x a binary/group variable or continuous variable (default). This will impact if a p-value of NA or 1 is returned when x has only 1 distinct value. fixed_binary will set p=1 if all one value (i.e. 100\% response rates in both groups)

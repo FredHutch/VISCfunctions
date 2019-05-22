@@ -29,7 +29,7 @@
 #' @export
 
 round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
-  .check_numeric_input(x)
+  .check_numeric_input(x, allow_NA = TRUE)
   .check_numeric_input(digits, lower_bound = 0, upper_bound = 14, scalar = TRUE, whole_num = TRUE)
 
   rounded_vals <- sign(x) * round(abs(x) + 1e-15, digits)
@@ -48,6 +48,8 @@ round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
 #' Wrapper for round_away_0 to account for non-numeric values
 #'
 #' Internal wrapper for round_away_0
+#'
+#' @noRd
 #'
 #' @param x vector (can include NA values).
 #' @param digits positive integer of length 1 between 0 and 14, giving the amount of digits to round to.
