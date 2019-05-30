@@ -152,17 +152,21 @@ test_that("pretty_pvalues testing various options (no errors)", {
 
 
   # testing different outputs
-  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, bold = T, output_type = "pandoc"),
-               expected = c("**<0.001**", "---", "0.050", "1.000"))
-  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, bold = T, output_type = "no_markup"),
-               expected = c("<0.001", "---", "0.050", "1.000"))
 
   expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, italic = T, output_type = "html"),
                expected = c("<span style=\"  font-style: italic;   \" ><0.001</span>", "---", "0.050", "1.000"))
   expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, bold = T, italic = T, output_type = "html"),
                expected = c("<span style=\" font-weight: bold; font-style: italic;   \" ><0.001</span>", "---", "0.050", "1.000"))
+
   expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, italic = T, output_type = "pandoc"),
                expected = c("*<0.001*", "---", "0.050", "1.000"))
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, bold = T, output_type = "pandoc"),
+               expected = c("**<0.001**", "---", "0.050", "1.000"))
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, italic = T, bold = T, output_type = "pandoc"),
+               expected = c("***<0.001***", "---", "0.050", "1.000"))
+
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, bold = T, output_type = "no_markup"),
+               expected = c("<0.001", "---", "0.050", "1.000"))
 
 
   ### test error messages

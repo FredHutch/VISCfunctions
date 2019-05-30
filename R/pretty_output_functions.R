@@ -292,7 +292,7 @@ stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_ze
 #' Since the p-value vector formatting uses \code{cell_spec}, which generates raw HTML or LaTeX code, make sure you remember to put \code{escape = FALSE} into your kable code when generating your table. At the same time, you will need to escape special symbols manually.
 #' Additionally, \code{cell_spec} needs a way to know whether you want HTML or LaTeX output. You can specify it locally in the function or globally using \code{options(knitr.table.format = "latex")}. If you don't provide anything, this function will output as HTML by default.
 #'
-#' For pandoc markup only bold and italic can be specified, and it both are specified then bolding is performed (both can't be done simultaneously)
+#' For pandoc markup only bold and italic can be specified. Both can jointly be specified for bold italics.
 #'
 #' @examples
 #'
@@ -344,7 +344,7 @@ pretty_pvalues = function(pvalues, digits = 3, bold = FALSE, italic = FALSE, bac
     pvalues_new[sig_p] = kableExtra::cell_spec(pvalues_new[sig_p], format = output_type, bold = bold, italic = italic, background = background, escape = FALSE)
   } else if (output_type == 'pandoc') {
     if (bold) pvalues_new[sig_p] = paste0('**', pvalues_new[sig_p], '**')
-    else if (italic) pvalues_new[sig_p] = paste0('*', pvalues_new[sig_p], '*')
+    if (italic) pvalues_new[sig_p] = paste0('*', pvalues_new[sig_p], '*')
   }
 
   pvalues_new
