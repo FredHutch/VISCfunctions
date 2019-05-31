@@ -16,6 +16,8 @@ Creating tables used at the end of reports, for reproducibility. Most of the inf
 Both tables usually printing with \code{kable()} at the end of a report.
 
 If any loaded packages have a \code{DataVersion} field then the Software Package Version Information will contain a \code{data.version} column.
+
+Full Name is found in Windows via the \code{net} command, and via ldap search in Linux and MACs. The ldap search will only work on SCHARPs network at Fred Hutching Cancer Research Center. If there is an error attempting to get the Full Name, the system usernam will be displayed instead.
 }
 \examples{
 
