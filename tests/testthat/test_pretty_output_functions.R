@@ -150,20 +150,24 @@ test_that("pretty_pvalues testing various options (no errors)", {
   expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, sig_alpha = 0.8, background = "green"),
                expected = c("\\cellcolor{green}{<0.001}", "---", "\\cellcolor{green}{0.050}","1.000"))
 
-  # test using data
-  require(dplyr)
-  data(exampleData_BAMA)
 
-  set.seed(1356353)
-  object_df <- exampleData_BAMA[1:10] %>% mutate(pvals_raw = runif(10, min = 0, max = 1)) %>% mutate(pretty_pvals = pretty_pvalues(pvals_raw, digits = 4, bold = T, italic = T))
+  # testing different outputs
 
-  set.seed(1356353)
-  expected_df <- exampleData_BAMA[1:10] %>% mutate(pvals_raw = runif(10, min = 0, max = 1),
-                                                   pretty_pvals = cell_spec(round_away_0(pvals_raw, digits = 4, trailing_zeros = TRUE), bold = ifelse(pvals_raw < 0.05, T, F), format = "latex", italic = ifelse(pvals_raw < 0.05, T, F)))
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, italic = T, output_type = "html"),
+               expected = c("<span style=\"  font-style: italic;   \" ><0.001</span>", "---", "0.050", "1.000"))
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, bold = T, italic = T, output_type = "html"),
+               expected = c("<span style=\" font-weight: bold; font-style: italic;   \" ><0.001</span>", "---", "0.050", "1.000"))
 
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, italic = T, output_type = "pandoc"),
+               expected = c("*<0.001*", "---", "0.050", "1.000"))
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, bold = T, output_type = "pandoc"),
+               expected = c("**<0.001**", "---", "0.050", "1.000"))
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, italic = T, bold = T, output_type = "pandoc"),
+               expected = c("***<0.001***", "---", "0.050", "1.000"))
 
-  expect_equal(object = knitr::kable(object_df, escape = FALSE, format = "latex"),
-               expected = knitr::kable(expected_df, escape = FALSE, format = "latex"))
+  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3, trailing_zeros = T, bold = T, output_type = "no_markup"),
+               expected = c("<0.001", "---", "0.050", "1.000"))
+
 
   ### test error messages
   # non-numeric p-value vector
