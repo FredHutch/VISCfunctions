@@ -289,8 +289,8 @@ stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_ze
 #' @details
 #'
 #' With this function, there are two things to be noted:
-#' Since the p-value vector formatting uses \code{cell_spec}, which generates raw HTML or LaTeX code, make sure you remember to put \code{escape = FALSE} into your kable code when generating your table. At the same time, you will need to escape special symbols manually.
-#' Additionally, \code{cell_spec} needs a way to know whether you want HTML or LaTeX output. You can specify it locally in the function or globally using \code{options(knitr.table.format = "latex")}. If you don't provide anything, this function will output as HTML by default.
+#' Since the p-value vector formatting uses \code{cell_spec}, which generates raw HTML or LaTeX, or uses custom markdown syntax for the pandoc option, make sure you remember to put \code{escape = FALSE} into your kable code when generating your table. At the same time, you will need to escape special symbols manually.
+#' Additionally, \code{cell_spec} needs a way to know whether you want HTML, LaTeX, or Markdown (pandoc) output. You can specify it locally in the function or globally using \code{options(knitr.table.format = "latex")}. If you don't provide anything, this function will output as HTML by default.
 #'
 #' For pandoc markup only bold and italic can be specified. Both can jointly be specified for bold italics.
 #'
