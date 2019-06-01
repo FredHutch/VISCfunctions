@@ -22,7 +22,7 @@ get_full_name <- function(id = NULL){
          Windows = {
            if (is.null(id)) {id <- Sys.getenv("USERNAME")}
            myargs <- paste("user /domain", id)
-           user <- tryCatch({system2(command = "net", args = myargs, stdout = TRUE)},
+           user <- tryCatch({system2(command = "net", args = myargs, stdout = TRUE, stderr = FALSE)},
                             warning = function(w){NULL},
                             error = function(e){NULL})
            user <- gsub("Full Name\ *", "", user[grepl("FULL NAME", toupper(user))])
