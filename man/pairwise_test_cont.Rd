@@ -6,9 +6,9 @@
 \usage{
 pairwise_test_cont(x, group, paired = FALSE, id = NULL,
   method = c("wilcox", "t.test"), alternative = c("two.sided", "less",
-  "greater"), sorted_group = NULL, num_needed_for_test = 3, digits = 0,
-  trailing_zeros = TRUE, sep_val = " vs. ", na_str_out = "---",
-  verbose = FALSE)
+  "greater"), sorted_group = NULL, num_needed_for_test = 3,
+  digits = 0, trailing_zeros = TRUE, sep_val = " vs. ",
+  na_str_out = "---", verbose = FALSE)
 }
 \arguments{
 \item{x}{numeric vector (can include NA values).}

@@ -167,7 +167,7 @@ test_that("two_samp_bin_test testing various options (no errors)", {
 
   # Barnard
   expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', alternative = 'two.sided'),
-               expected = Exact::exact.test(table(data.frame(x,y)), method = 'Z-pooled', to.plot = FALSE, alternative = 'two.sided')$p.value
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'two.sided')$p.value
                , tolerance = 1e-8)
   # Fisher
   expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'fisher', alternative = 'two.sided'),
@@ -184,16 +184,16 @@ test_that("two_samp_bin_test testing various options (no errors)", {
 
   # Directional, along with factor values
   expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', alternative = 'less'),
-               expected = Exact::exact.test(table(data.frame(x,y)), method = 'Z-pooled', to.plot = FALSE, alternative = 'less')$p.value
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'less')$p.value
                , tolerance = 1e-8)
   expect_equal(object = two_samp_bin_test(x = factor(x), y = y, method = 'barnard', alternative = 'less'),
-               expected = Exact::exact.test(table(data.frame(x,y)), method = 'Z-pooled', to.plot = FALSE, alternative = 'less')$p.value
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'less')$p.value
                , tolerance = 1e-8)
   expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', alternative = 'greater'),
-               expected = Exact::exact.test(table(data.frame(x,y)), method = 'Z-pooled', to.plot = FALSE, alternative = 'greater')$p.value
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'greater')$p.value
                , tolerance = 1e-8)
   expect_equal(object = two_samp_bin_test(x = factor(x, levels = 1:0), y = y, method = 'barnard', alternative = 'less'),
-               expected = Exact::exact.test(table(data.frame(x,y)), method = 'Z-pooled', to.plot = FALSE, alternative = 'greater')$p.value
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'greater')$p.value
                , tolerance = 1e-8)
 })
 

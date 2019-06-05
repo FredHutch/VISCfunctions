@@ -4,8 +4,8 @@
 \alias{two_samp_bin_test}
 \title{Binary (Response) Variable Compared to Binary (Group) Variable Test (VISC)}
 \usage{
-two_samp_bin_test(x, y, method = NA, alternative = c("two.sided", "less",
-  "greater"), verbose = FALSE)
+two_samp_bin_test(x, y, method = NA, alternative = c("two.sided",
+  "less", "greater"), verbose = FALSE)
 }
 \arguments{
 \item{x}{numeric vector (can include NA values).}
@@ -34,11 +34,11 @@ If \code{method = 'mcnemar'} assumes the first observations of the first group m
 \examples{
 
 set.seed(5432322)
-x <- c(sample(0:1,10,replace = TRUE, prob = c(.75,.25)), sample(0:1,10,replace = TRUE, prob = c(.25,.75)))
-y <- c(rep('a', 10), rep('b', 10))
-two_samp_bin_test(x,y, method = 'barnard')
-two_samp_bin_test(x,y, 'fisher')
-two_samp_bin_test(x,y, 'chi.sq')
-two_samp_bin_test(x,y, 'mcnemar')
+outcome <- c(sample(0:1,10,replace = TRUE, prob = c(.75,.25)), sample(0:1,10,replace = TRUE, prob = c(.25,.75)))
+grp <- c(rep('a', 10), rep('b', 10))
+two_samp_bin_test(outcome, grp, method = 'barnard')
+two_samp_bin_test(outcome, grp, 'fisher')
+two_samp_bin_test(outcome, grp, 'chi.sq')
+two_samp_bin_test(outcome, grp, 'mcnemar')
 
 }
