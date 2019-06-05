@@ -66,12 +66,11 @@ x_example,group_example, alternative = "less",
 
 
 # Examples with Real World Data
-library(VISCfunctions.data)
 library(data.table)
 library(dplyr)
 
 
-BAMA Assay Data Example
+# BAMA Assay Data Example
 data(exampleData_BAMA)
 
 ## Group Comparison
@@ -86,10 +85,12 @@ by = .(antigen, visitno)][order(antigen, visitno)]
 # using dplyr
 group_testing_tibble <- exampleData_BAMA \%>\%
    group_by(antigen, visitno) \%>\%
-   do(pairwise_test_cont(x = .$magnitude, group = .$group, paired = F, method = 'wilcox', alternative = "less", digits = 3, num_needed_for_test = 3, verbose = TRUE))
+   do(pairwise_test_cont(x = .$magnitude, group = .$group, paired = FALSE, method = 'wilcox',
+                         alternative = "less", digits = 3, num_needed_for_test = 3, verbose = TRUE))
 
 # Confirming both methods are the same
-all.equal(group_testing_dt[order(antigen, visitno)],data.table(group_testing_tibble)[order(antigen, visitno)])
+all.equal(group_testing_dt[order(antigen, visitno)],
+          data.table(group_testing_tibble)[order(antigen, visitno)])
 
 
 ## Timepoint Comparison
@@ -101,7 +102,7 @@ trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
 by = .(antigen, group)]
 
 
-ICS Assay Data Example
+# ICS Assay Data Example
 data(exampleData_ICS)
 
 ## Group Comparison

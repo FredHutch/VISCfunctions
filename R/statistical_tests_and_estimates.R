@@ -29,7 +29,7 @@
 #' @export
 
 round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
-  .check_numeric_input(x)
+  .check_numeric_input(x, allow_NA = TRUE)
   .check_numeric_input(digits, lower_bound = 0, upper_bound = 14, scalar = TRUE, whole_num = TRUE)
 
   rounded_vals <- sign(x) * round(abs(x) + 1e-15, digits)
@@ -49,6 +49,8 @@ round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
 #'
 #' Internal wrapper for round_away_0
 #'
+#' @noRd
+#'
 #' @param x vector (can include NA values).
 #' @param digits positive integer of length 1 between 0 and 14, giving the amount of digits to round to.
 #' @param trailing_zeros logical indicating if trailing zeros should included (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector
@@ -59,8 +61,8 @@ round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
 #'
 #' @examples
 #'
-#' .round_if_numeric(c(NA,-3.5:3.5,NA))
-#' .round_if_numeric(c(NA,letters[1:5],NA))
+#' VISCfunctions:::.round_if_numeric(c(NA,-3.5:3.5,NA))
+#' VISCfunctions:::.round_if_numeric(c(NA,letters[1:5],NA))
 #'
 #'
 
@@ -91,12 +93,12 @@ round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
 #' @examples
 #'
 #' set.seed(5432322)
-#' x <- c(rnorm(10,0,3), rnorm(10,3,3))
-#' y <- c(rep('a', 10), rep('b', 10))
-#' two_samp_cont_test(x = x, y = y, method = 'wilcox', paired = FALSE)
-#' two_samp_cont_test(x = x, y = y, method = 'wilcox', paired = TRUE)
-#' two_samp_cont_test(x = x, y = y, method = 't', paired = FALSE)
-#' two_samp_cont_test(x = x, y = y, method = 't', paired = TRUE)
+#' outcome <- c(rnorm(10,0,3), rnorm(10,3,3))
+#' grp <- c(rep('a', 10), rep('b', 10))
+#' two_samp_cont_test(x = outcome, y = grp, method = 'wilcox', paired = FALSE)
+#' two_samp_cont_test(x = outcome, y = grp, method = 'wilcox', paired = TRUE)
+#' two_samp_cont_test(x = outcome, y = grp, method = 't', paired = FALSE)
+#' two_samp_cont_test(x = outcome, y = grp, method = 't', paired = TRUE)
 #'
 #' @export
 
@@ -121,7 +123,7 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
   } else {
     #If both groups have only one distinct value t.test will throw error
     if (any(by(data_here$x[!is.na(data_here$y)], data_here$y[!is.na(data_here$y)], function(xx) {length(unique(xx[!is.na(xx)])) > 1}))) {
-      as.double(t.test(data_here$x[data_here$y == levels(data_here$y)[1]], data_here$x[data_here$y == levels(data_here$y)[2]], data = data_here, paired = paired, ...)$p.value)
+      as.double(stats::t.test(data_here$x[data_here$y == levels(data_here$y)[1]], data_here$x[data_here$y == levels(data_here$y)[2]], data = data_here, paired = paired, ...)$p.value)
     } else {
       if (verbose) message('t.test can not run when both levels of "y" have only 1 unique "x" value, so p=NA returned')
       NA
@@ -183,13 +185,13 @@ two_samp_bin_test <- function(x, y, method = NA, alternative = c("two.sided", "l
     pval_out <- as.double(Exact::exact.test(table(data_here[, c('y', 'x')]), method = 'Z-pooled', to.plot = FALSE, alternative = alternative)$p.value)
   }
   if (method == 'fisher') {
-    pval_out <- as.double(fisher.test(data_here$x, data_here$y, alternative = alternative)$p.value)
+    pval_out <- as.double(stats::fisher.test(data_here$x, data_here$y, alternative = alternative)$p.value)
   }
   if (method == 'chi.sq') {
-    pval_out <- as.double(chisq.test(data_here$x, data_here$y)$p.value)
+    pval_out <- as.double(stats::chisq.test(data_here$x, data_here$y)$p.value)
   }
   if (method == 'mcnemar') {
-    pval_out <- as.double(mcnemar.test(data_here$x[data_here$y == levels(data_here$y)[1]], data_here$x[data_here$y == levels(data_here$y)[2]])$p.value)
+    pval_out <- as.double(stats::mcnemar.test(data_here$x[data_here$y == levels(data_here$y)[1]], data_here$x[data_here$y == levels(data_here$y)[2]])$p.value)
   }
   pval_out
 }

@@ -36,11 +36,11 @@ If \code{paired = TRUE} assumes the first observations of the first group matche
 \examples{
 
 set.seed(5432322)
-x <- c(rnorm(10,0,3), rnorm(10,3,3))
-y <- c(rep('a', 10), rep('b', 10))
-two_samp_cont_test(x = x, y = y, method = 'wilcox', paired = FALSE)
-two_samp_cont_test(x = x, y = y, method = 'wilcox', paired = TRUE)
-two_samp_cont_test(x = x, y = y, method = 't', paired = FALSE)
-two_samp_cont_test(x = x, y = y, method = 't', paired = TRUE)
+outcome <- c(rnorm(10,0,3), rnorm(10,3,3))
+grp <- c(rep('a', 10), rep('b', 10))
+two_samp_cont_test(x = outcome, y = grp, method = 'wilcox', paired = FALSE)
+two_samp_cont_test(x = outcome, y = grp, method = 'wilcox', paired = TRUE)
+two_samp_cont_test(x = outcome, y = grp, method = 't', paired = FALSE)
+two_samp_cont_test(x = outcome, y = grp, method = 't', paired = TRUE)
 
 }
