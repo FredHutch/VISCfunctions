@@ -156,8 +156,6 @@ test_that("Integration with dplyr and data.table is equivalent", {
 # test paste_tbl_grp. Using paste_tbl_grp and pairwise_test_cont in testing since these functions are testing elsewhere
 test_that("pairwise_comparisons testing multiple groups", {
 
-   data("testData_BAMA")
-
   test_single_comp <- function(x, group, Group1, Group2) {
     test_data <- data.table(x = x, group = group)
 
@@ -221,8 +219,7 @@ test_that("Test example with fixed result", {
   source("fixed_data.R")
 
 
-  library(VISCfunctions.data)
-  data("exampleData_BAMA")
+  data(exampleData_BAMA)
 
   group_testing_dt <- exampleData_BAMA[, pairwise_test_cont(
      x = magnitude, group = group, paired = FALSE, method = 'wilcox',
@@ -240,7 +237,6 @@ test_that("Test example with fixed result", {
 
 test_that("Integration with dplyr and data.table is equivalent", {
 
-  library(VISCfunctions.data)
   library(data.table)
   library(dplyr)
 
@@ -268,7 +264,6 @@ expect_equal(object = group_testing_dt[order(antigen, visitno)],
 test_that("Paired results with test data", {
   library(dplyr)
 
-  data("testData_BAMA")
   paired_example = subset(testData_BAMA, visit %in% c(1, 2) & antigen == "1086C_D7gp120.avi/293F")
 
   paired_example_subset1 = subset(paired_example,  visit == 1, select = -response)
@@ -283,8 +278,8 @@ test_that("Paired results with test data", {
       data.frame(
         group = unique(paired_data$group)[i],
         total = nrow(na.omit(temp_dat)),
-        test = coin::pvalue(coin::wilcoxsign_test(temp_dat$magnitude.x ~ temp_dat$magnitude.y, distribution = "exact", zero.method = "Pratt")),
-        est_less =  coin::pvalue(coin::wilcoxsign_test(temp_dat$magnitude.x ~ temp_dat$magnitude.y, distribution = "exact", zero.method = "Pratt", alternative = "less"))
+        test = as.numeric(coin::pvalue(coin::wilcoxsign_test(temp_dat$magnitude.x ~ temp_dat$magnitude.y, distribution = "exact", zero.method = "Pratt"))),
+        est_less =  as.numeric(coin::pvalue(coin::wilcoxsign_test(temp_dat$magnitude.x ~ temp_dat$magnitude.y, distribution = "exact", zero.method = "Pratt", alternative = "less")))
       )
 
   }

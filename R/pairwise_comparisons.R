@@ -40,12 +40,11 @@
 #'
 #'
 #' # Examples with Real World Data
-#' library(VISCfunctions.data)
 #' library(data.table)
 #' library(dplyr)
 #'
 #'
-#' BAMA Assay Data Example
+#' # BAMA Assay Data Example
 #' data(exampleData_BAMA)
 #'
 #' ## Group Comparison
@@ -60,10 +59,12 @@
 #' # using dplyr
 #'group_testing_tibble <- exampleData_BAMA %>%
 #'    group_by(antigen, visitno) %>%
-#'    do(pairwise_test_cont(x = .$magnitude, group = .$group, paired = F, method = 'wilcox', alternative = "less", digits = 3, num_needed_for_test = 3, verbose = TRUE))
+#'    do(pairwise_test_cont(x = .$magnitude, group = .$group, paired = FALSE, method = 'wilcox',
+#'                          alternative = "less", digits = 3, num_needed_for_test = 3, verbose = TRUE))
 #'
 #' # Confirming both methods are the same
-#' all.equal(group_testing_dt[order(antigen, visitno)],data.table(group_testing_tibble)[order(antigen, visitno)])
+#' all.equal(group_testing_dt[order(antigen, visitno)],
+#'           data.table(group_testing_tibble)[order(antigen, visitno)])
 #'
 #'
 #' ## Timepoint Comparison
@@ -75,7 +76,7 @@
 #'by = .(antigen, group)]
 #'
 #'
-#' ICS Assay Data Example
+#' # ICS Assay Data Example
 #' data(exampleData_ICS)
 #'
 #' ## Group Comparison
@@ -142,7 +143,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
         #For paired testing only using non-missing values in both groups
         i_data <- data.frame(x = x[group == i_group], id = id[group == i_group])
         j_data <- data.frame(y = x[group == j_group], id = id[group == j_group])
-        data_here <- na.omit(merge(i_data, j_data, by = 'id'))
+        data_here <- stats::na.omit(merge(i_data, j_data, by = 'id'))
         i_vals <- data_here$x
         j_vals <- data_here$y
         vals_here <-  c(i_vals, j_vals)
@@ -161,10 +162,10 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
       stats_by_group <- data.frame(Group1 = i_group, Group2 = j_group,
                                    Group1_n = sum(!is.na(i_vals)), Group2_n = sum(!is.na(j_vals)),
                                    Group1_min = min(i_vals, na.rm = T), Group2_min = min(j_vals, na.rm = T),
-                                   Group1_median = median(i_vals, na.rm = T), Group2_median = median(j_vals, na.rm = T),
+                                   Group1_median = stats::median(i_vals, na.rm = T), Group2_median = stats::median(j_vals, na.rm = T),
                                    Group1_max = max(i_vals, na.rm = T), Group2_max = max(j_vals, na.rm = T),
                                    Group1_mean = mean(i_vals, na.rm = T), Group2_mean = mean(j_vals, na.rm = T),
-                                   Group1_sd = sd(i_vals, na.rm = T), Group2_sd = sd(j_vals, na.rm = T)
+                                   Group1_sd = stats::sd(i_vals, na.rm = T), Group2_sd = stats::sd(j_vals, na.rm = T)
                                    )
 
       #Getting perfect seperation flag

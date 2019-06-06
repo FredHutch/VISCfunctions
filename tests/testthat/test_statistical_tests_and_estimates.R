@@ -15,6 +15,9 @@ test_that("round_away_0 testing various options (no errors)", {
   #Testing for trailing zeros
   expect_equal(object = round_away_0(x, digits = 2, trailing_zeros = TRUE),
                expected = c("0.00", "2.50", "2.50", "2.50", "3.50", "4.05", NA))
+  # Allowing all NAs
+  expect_equal(object = round_away_0(x = c(NA,NA,NA)),
+               expected = c(NA_integer_,NA_integer_,NA_integer_))
 })
 
 test_that("round_away_0 throwing errors", {
@@ -26,7 +29,6 @@ test_that("round_away_0 throwing errors", {
   expect_error(round_away_0(x = my_matrix), '"x" must be a vector \\(one-dimensional object\\)')
   expect_error(round_away_0(x = numeric(0)), '"x" length must be > 0')
   expect_error(round_away_0(x = NULL), '"x" length must be > 0')
-  expect_error(round_away_0(x = c(NA,NA,NA)), '"x" must have at least one non-NA value')
   expect_error(round_away_0(x = letters[1:5]), '"x" must be a numeric vector')
 
   #Checking rounding_digits
@@ -70,11 +72,11 @@ test_that("two_samp_cont_test testing various options (no errors)", {
 
   # Wilcox Unpaired
   expect_equal(object = two_samp_cont_test(x = x, y = y, method = 'wilcox', paired = FALSE, verbose = T),
-               expected = coin::pvalue(coin::wilcox_test(x~factor(y),distribution = "exact", ties.method = "mid-ranks"))
+               expected = as.numeric(coin::pvalue(coin::wilcox_test(x~factor(y),distribution = "exact", ties.method = "mid-ranks")))
                , tolerance = 1e-8)
   # Wilcox Paired
   expect_equal(object = two_samp_cont_test(x = x[-(11:12)], y = y[-(11:12)], method = 'wilcox', paired = TRUE, verbose = T),
-               expected = coin::pvalue(coin::wilcoxsign_test(x[1:10]~x[13:22],distribution = "exact"))
+               expected = as.numeric(coin::pvalue(coin::wilcoxsign_test(x[1:10]~x[13:22],distribution = "exact")))
                , tolerance = 1e-8)
   # T-Test Unpaired
   #t.test(x[1:10], x[13:22], paired=F, var.equal = F)$p.value
@@ -160,14 +162,14 @@ test_that("two_samp_bin_test testing various options (no errors)", {
 
   ###Testing all four options (wilcox/t and paired/unpaired)###
   set.seed(5432322)
-  x <- c(NA, sample(0:1,10,replace = TRUE, prob = c(.65,.25)), sample(0:1,10,replace = TRUE, prob = c(.25,.65)), NA)
-  y <- c(rep('a', 10), NA, NA, rep('b', 10))
+  x <- c(NA, sample(0:1,20,replace = TRUE, prob = c(.65,.25)), sample(0:1,20,replace = TRUE, prob = c(.25,.65)), NA)
+  y <- c(rep('a', 20), NA, NA, rep('b', 20))
 
   paired_data_here <- na.omit(data.frame(a = x[which(y == levels(factor(y))[1])], b = x[which(y == levels(factor(y))[2])]))
 
   # Barnard
   expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', alternative = 'two.sided'),
-               expected = Exact::exact.test(table(data.frame(x,y)), method = 'Z-pooled', to.plot = FALSE, alternative = 'two.sided')$p.value
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'two.sided')$p.value
                , tolerance = 1e-8)
   # Fisher
   expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'fisher', alternative = 'two.sided'),
@@ -184,16 +186,16 @@ test_that("two_samp_bin_test testing various options (no errors)", {
 
   # Directional, along with factor values
   expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', alternative = 'less'),
-               expected = Exact::exact.test(table(data.frame(x,y)), method = 'Z-pooled', to.plot = FALSE, alternative = 'less')$p.value
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'less')$p.value
                , tolerance = 1e-8)
   expect_equal(object = two_samp_bin_test(x = factor(x), y = y, method = 'barnard', alternative = 'less'),
-               expected = Exact::exact.test(table(data.frame(x,y)), method = 'Z-pooled', to.plot = FALSE, alternative = 'less')$p.value
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'less')$p.value
                , tolerance = 1e-8)
   expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', alternative = 'greater'),
-               expected = Exact::exact.test(table(data.frame(x,y)), method = 'Z-pooled', to.plot = FALSE, alternative = 'greater')$p.value
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'greater')$p.value
                , tolerance = 1e-8)
   expect_equal(object = two_samp_bin_test(x = factor(x, levels = 1:0), y = y, method = 'barnard', alternative = 'less'),
-               expected = Exact::exact.test(table(data.frame(x,y)), method = 'Z-pooled', to.plot = FALSE, alternative = 'greater')$p.value
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'greater')$p.value
                , tolerance = 1e-8)
 })
 
