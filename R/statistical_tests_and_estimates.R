@@ -156,7 +156,8 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
 #' @examples
 #'
 #' set.seed(5432322)
-#' outcome <- c(sample(0:1,10,replace = TRUE, prob = c(.75,.25)), sample(0:1,10,replace = TRUE, prob = c(.25,.75)))
+#' outcome <- c(sample(0:1,10,replace = TRUE, prob = c(.75,.25)),
+#'              sample(0:1,10,replace = TRUE, prob = c(.25,.75)))
 #' grp <- c(rep('a', 10), rep('b', 10))
 #' two_samp_bin_test(outcome, grp, method = 'barnard')
 #' two_samp_bin_test(outcome, grp, 'fisher')

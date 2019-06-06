@@ -16,10 +16,11 @@ test_that("get_session_info() testing", {
   temp_session_info <- get_session_info()
 
   # testing dimension
-  expect_equal(object = dim(temp_session_info$platform_table), expected = c(13,2))
+  nrow_expected <- ifelse(any(temp_session_info$platform_table$name == "repo"), 13, 12)
+  expect_equal(object = dim(temp_session_info$platform_table), expected = c(nrow_expected,2))
 
-  dim_expected <- ifelse(any(colnames(temp_session_info$packages_table) == "data.version"), 5, 4)
-  expect_equal(object = ncol(temp_session_info$packages_table), expected = dim_expected)
+  ncol_expected <- ifelse(any(colnames(temp_session_info$packages_table) == "data.version"), 5, 4)
+  expect_equal(object = ncol(temp_session_info$packages_table), expected = ncol_expected)
 
 
   ## testing some outputs from sessioninfo::session_info()

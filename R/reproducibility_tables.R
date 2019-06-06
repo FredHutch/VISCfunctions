@@ -137,7 +137,8 @@ get_session_info <- function(){
     value = username,
     stringsAsFactors = FALSE)
 
-  gitremoteorg <- tryCatch(system("git remote -v", intern = TRUE)[1], error = function(c) '', warning = function(c) '')
+  gitremoteorg <- tryCatch(system2("git" ,"remote -v", stdout = TRUE, stderr = FALSE)[1],
+                           error = function(c) '', warning = function(c) '')
   gitremote <-  substr(gitremoteorg,
                        regexpr("\t", gitremoteorg) + 1,
                        regexpr(" ", gitremoteorg) - 1)
@@ -152,7 +153,7 @@ get_session_info <- function(){
   } else{
     if (my_current_input_w_dir != 'No Input File Detected') {
 
-      all_git_files <- system('git ls-files -co --no-empty-directory --full-name', intern = TRUE)
+      all_git_files <- system2("git" ,"ls-files -co --no-empty-directory --full-name", stdout = TRUE, stderr = FALSE)
       folder_info_in <- dirname(all_git_files[unlist(lapply(all_git_files, function(xx) grepl(xx, my_current_input_w_dir)))])
 
     } else {
@@ -180,7 +181,7 @@ get_session_info <- function(){
   my_session_info2 <- data.frame(package = my_session_info2$package,
                                  version = my_session_info2$loadedversion,
                                  # Pulling in Data Version numbers
-                                 data.version = purrr::map_chr(my_session_info2$package, packageDescription, fields = 'DataVersion'),
+                                 data.version = purrr::map_chr(my_session_info2$package, utils::packageDescription, fields = 'DataVersion'),
                                  date = my_session_info2$date,
                                  source = my_session_info2$source,
                                  stringsAsFactors = FALSE)
