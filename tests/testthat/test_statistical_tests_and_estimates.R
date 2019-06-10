@@ -248,7 +248,32 @@ test_that("two_samp_bin_test throwing internal input checking errors", {
 })
 
 
+test_that("test-wilson_ci", {
 
+  # check x
+  expect_error(wilson_ci(c(NA, NA, NA)), '"x" must have at least one non-NA value')
+  expect_error(wilson_ci(c()), '"x" length must be > 0')
+  expect_error(wilson_ci(c(NA, NA, NA)), '"x" must have at least one non-NA value')
+  expect_error(wilson_ci(x = c("F", "T", "F", "T")),
+               '"x" must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
+  expect_error(wilson_ci(x = factor(c("F", "T", "F", "T"))),
+               '"x" must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
+
+  x <- c(1, 1, 1, 0, 0)
+  expect_equal(wilson_ci(x)$mean, binom::binom.confint(3, 5, method = "wilson")$mean)
+  expect_equal(wilson_ci(x)$lower, binom::binom.confint(3, 5, method = "wilson")$lower)
+  expect_equal(wilson_ci(x)$upper, binom::binom.confint(3, 5, method = "wilson")$upper)
+
+  # check conf.level
+  x <- c(rep(0, 200), rep(1, 400))
+  expect_error(wilson_ci(x, conf.level = 1), '"conf.level" must be > 0 and < 1')
+  expect_error(wilson_ci(x, conf.level = 0), '"conf.level" must be > 0 and < 1')
+  expect_error(wilson_ci(x, conf.level = -.95), '"conf.level" must be > 0 and < 1')
+  expect_error(wilson_ci(x, conf.level = 2), '"conf.level" must be > 0 and < 1')
+  expect_error(wilson_ci(x, conf.level = ".95"), '"conf.level" must be a numeric vector')
+  expect_error(wilson_ci(x, conf.level = TRUE), '"conf.level" must be a numeric vector')
+
+})
 
 
 

@@ -31,7 +31,8 @@ Imports:
     tidyr
 Suggests: 
     rmarkdown,
-    testthat
+    testthat,
+    binom
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
