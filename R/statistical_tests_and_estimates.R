@@ -197,3 +197,35 @@ two_samp_bin_test <- function(x, y, method = NA, alternative = c("two.sided", "l
   pval_out
 }
 
+#' Wilson Confidence Interval
+#'
+#' @param x vector of type integer (0/1) or logical (TRUE/FALSE)
+#' @param conf.level confidence level (between 0 and 1)
+#'
+#' @return data.frame with with mean (`mean`), and bounds of confidence interval (`lower`, `upper`)
+#' @examples
+#'
+#' x <- c(rep(0, 500), rep(1, 500))
+#' wilson_ci(x, conf.level = .90)
+#'
+#' @export
+wilson_ci <- function(x, conf.level = .95){
+
+  .check_response_input(x)
+  .check_numeric_input(conf.level, lower_bound = 0, upper_bound = 1 - 1E-12,
+                       scalar = TRUE, whole_num = FALSE, allow_NA = FALSE)
+
+  x <- stats::na.omit(x)
+
+  npos <- sum(x);
+  n <- length(x);
+
+  z <- abs(stats::qnorm(1 - (1 - conf.level )/2))
+  p <- npos/n
+  denom <- 1 + z*z/n
+  t1 <- p + z*z/2/n
+  t2 <- z * sqrt(p*(1 - p)/n + z*z/4/n/n)
+  data.frame(mean = p, lower = (t1 - t2)/denom, upper = (t1 + t2)/denom)
+
+}
+
