@@ -212,10 +212,8 @@ two_samp_bin_test <- function(x, y, method = NA, alternative = c("two.sided", "l
 wilson_ci <- function(x, conf.level = .95){
 
   .check_response_input(x)
-  .check_numeric_input(conf.level, scalar = TRUE, whole_num = FALSE, allow_NA = FALSE)
-
-  # check_numeric_input() still allows for conf.int == 0 or conf.int == 1.
-  if (!(conf.level > 0 & conf.level < 1)) stop('"conf.level" must be > 0 and < 1')
+  .check_numeric_input(conf.level, lower_bound = 0, upper_bound = 1 - 1E-12,
+                       scalar = TRUE, whole_num = FALSE, allow_NA = FALSE)
 
   x <- stats::na.omit(x)
 
