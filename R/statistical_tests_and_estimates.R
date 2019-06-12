@@ -141,10 +141,11 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
 #'
 #' @param x numeric vector (can include NA values).
 #' @param y vector with only 2 levels (can include NA values unless \code{method = 'mcnemar'}).
-#' @param method what test to run ("barnard", "fisher" ,"chi.sq" , "mcnemar"). No default so user must enter one of the four selections
+#' @param method what test to run, "barnard" (default), "fisher" ,"chi.sq" , or "mcnemar")
+#' @param barnard_method 	indicates the Barnard method for finding tables as or more extreme than the observed table: must be either "Z-pooled", "Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate", or "CSM modified". Only used when \code{method = 'barnard'}
 #' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter. Only "two.sided" available for \code{method = 'chi.sq' or 'mcnemar'}
 #' @param verbose a logical variable indicating if warnings and messages should be displayed.
-#' @param ... parameters to pass to wilcox_test or t.test functions. For example the testing direction (\code{alternative}) in either call or the \code{var.equal} in the t.test function.
+#' @param ... other parameters to pass to Exact::exact.test when running Barnard test
 #' @return p-value for comparing x at the different levels of y.
 #' @details
 #'
@@ -167,9 +168,11 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
 #' @export
 
 
-two_samp_bin_test <- function(x, y, method = NA, alternative = c("two.sided", "less", "greater"), verbose = FALSE){
-  # Input checking
-  if (!method %in% c('barnard', 'fisher' ,'chi.sq' , 'mcnemar')) stop('"method" must be one of these choices: "barnard", "fisher", "chi.sq", "mcnemar"')
+two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , 'mcnemar'),
+                              barnard_method = c("z-pooled", "z-unpooled", "boschloo", "santner and snell", "csm", "csm approximate", "csm modified"),
+                              alternative = c("two.sided", "less", "greater"), verbose = FALSE, ...){
+  method <- match.arg(method)
+  barnard_method <- match.arg(barnard_method)
   alternative <- match.arg(alternative)
   if (method == 'chi.sq' & alternative != 'two.sided') stop('When "method" is chi.sq then "alternative" must be two.sided')
   if (method == 'mcnemar' & alternative != 'two.sided') stop('When "method" is mcnemar then "alternative" must be two.sided')
@@ -183,7 +186,7 @@ two_samp_bin_test <- function(x, y, method = NA, alternative = c("two.sided", "l
 
   if (method == 'barnard') {
     # table needs to have grp variable (y) first
-    pval_out <- as.double(Exact::exact.test(table(data_here[, c('y', 'x')]), method = 'Z-pooled', to.plot = FALSE, alternative = alternative)$p.value)
+    pval_out <- as.double(Exact::exact.test(table(data_here[, c('y', 'x')]), method = barnard_method, to.plot = FALSE, alternative = alternative, ...)$p.value)
   }
   if (method == 'fisher') {
     pval_out <- as.double(stats::fisher.test(data_here$x, data_here$y, alternative = alternative)$p.value)

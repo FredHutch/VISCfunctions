@@ -171,6 +171,14 @@ test_that("two_samp_bin_test testing various options (no errors)", {
   expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', alternative = 'two.sided'),
                expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'two.sided')$p.value
                , tolerance = 1e-8)
+     # Testing barnard_method
+  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', barnard_method = 'csm', alternative = 'two.sided'),
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'csm', to.plot = FALSE, alternative = 'two.sided')$p.value
+               , tolerance = 1e-8)
+     # Testing ... (i.e. npNumbers)
+  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', barnard_method = 'csm', alternative = 'two.sided', npNumbers = 3),
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'csm', to.plot = FALSE, alternative = 'two.sided', npNumbers = 3)$p.value
+               , tolerance = 1e-8)
   # Fisher
   expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'fisher', alternative = 'two.sided'),
                expected = fisher.test(x, y, alternative = 'two.sided')$p.value
