@@ -229,7 +229,7 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
       )
   }
   if (method == 'mcnemar') {
-    if (length(unique(na.omit(data_here)$x)) == 2)
+    if (length(unique(stats::na.omit(data_here)$x)) == 2)
         pval_out <- as.double(
           stats::mcnemar.test(data_here$x[which(data_here$y == levels(data_here$y)[1])],
                               data_here$x[which(data_here$y == levels(data_here$y)[2])])$p.value
