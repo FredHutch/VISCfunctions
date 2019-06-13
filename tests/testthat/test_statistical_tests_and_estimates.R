@@ -223,7 +223,8 @@ test_that("two_samp_bin_test testing various options (no errors)", {
                tolerance = 1e-8)
   expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard',
                                           alternative = 'greater'),
-               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'greater')$p.value
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled',
+                                            to.plot = FALSE, alternative = 'greater')$p.value
                , tolerance = 1e-8)
   expect_equal(object = two_samp_bin_test(x = factor(x, levels = 1:0), y = y,
                                           method = 'barnard', alternative = 'less'),
@@ -231,6 +232,24 @@ test_that("two_samp_bin_test testing various options (no errors)", {
                                             method = 'Z-pooled', to.plot = FALSE,
                                             alternative = 'greater')$p.value,
                tolerance = 1e-8)
+
+  # Making sure edge cases work (0 or 100% response rate in a group)
+  expect_equal(object = two_samp_bin_test(x = c(1, 1, 0, 1, 0, 0, 0, 0, 0, 0),
+                                          y = c(rep('1',5), rep('2',5)),
+                                          method = 'barnard', alternative = 'two.sided'),
+               expected = Exact::exact.test(table(data.frame(c(rep('1',5), rep('2',5)),
+                                                             c(1, 1, 0, 1, 0, 0, 0, 0, 0, 0))),
+                                            method = 'Z-pooled', to.plot = FALSE,
+                                            alternative = 'two.sided')$p.value,
+               tolerance = 1e-8)
+  # McNemar(paired data)
+  expect_equal(object = two_samp_bin_test(x = c(1, 1, 0, 1, 0, 1, 1, 1, 1, 1),
+                                          y = c(rep('1',5), rep('2',5)),
+                                          method = 'mcnemar', alternative = 'two.sided'),
+               expected = mcnemar.test(c(1, 1, 0, 1, 0),
+                                       factor(c( 1, 1, 1, 1, 1), levels = 0:1))$p.value,
+               tolerance = 1e-8)
+
 })
 
 
