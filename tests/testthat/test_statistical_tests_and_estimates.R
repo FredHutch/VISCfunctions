@@ -162,97 +162,150 @@ test_that("two_samp_bin_test testing various options (no errors)", {
 
   ###Testing all four options (wilcox/t and paired/unpaired)###
   set.seed(5432322)
-  x <- c(NA, sample(0:1,20,replace = TRUE, prob = c(.65,.25)), sample(0:1,20,replace = TRUE, prob = c(.25,.65)), NA)
+  x <- c(NA, sample(0:1,20,replace = TRUE, prob = c(.65,.25)),
+         sample(0:1,20,replace = TRUE, prob = c(.25,.65)), NA)
   y <- c(rep('a', 20), NA, NA, rep('b', 20))
 
-  paired_data_here <- na.omit(data.frame(a = x[which(y == levels(factor(y))[1])], b = x[which(y == levels(factor(y))[2])]))
+  paired_data_here <- na.omit(
+    data.frame(a = x[which(y == levels(factor(y))[1])],
+               b = x[which(y == levels(factor(y))[2])])
+    )
 
   # Barnard
-  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', alternative = 'two.sided'),
-               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'two.sided')$p.value
-               , tolerance = 1e-8)
-     # Testing barnard_method
-  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', barnard_method = 'csm', alternative = 'two.sided'),
-               expected = Exact::exact.test(table(data.frame(y,x)), method = 'csm', to.plot = FALSE, alternative = 'two.sided')$p.value
-               , tolerance = 1e-8)
+  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard',
+                                          alternative = 'two.sided'),
+               expected = Exact::exact.test(table(data.frame(y,x)),
+                                            method = 'Z-pooled', to.plot = FALSE,
+                                            alternative = 'two.sided')$p.value,
+               tolerance = 1e-8)
+  # Testing barnard_method
+  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard',
+                                          barnard_method = 'csm',
+                                          alternative = 'two.sided'),
+               expected = Exact::exact.test(table(data.frame(y,x)),
+                                            method = 'csm', to.plot = FALSE,
+                                            alternative = 'two.sided')$p.value,
+               tolerance = 1e-8)
      # Testing ... (i.e. npNumbers)
-  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', barnard_method = 'csm', alternative = 'two.sided', npNumbers = 3),
-               expected = Exact::exact.test(table(data.frame(y,x)), method = 'csm', to.plot = FALSE, alternative = 'two.sided', npNumbers = 3)$p.value
-               , tolerance = 1e-8)
+  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard',
+                                          barnard_method = 'csm',
+                                          alternative = 'two.sided', npNumbers = 3),
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'csm',
+                                            to.plot = FALSE, alternative = 'two.sided',
+                                            npNumbers = 3)$p.value,
+               tolerance = 1e-8)
   # Fisher
-  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'fisher', alternative = 'two.sided'),
-               expected = fisher.test(x, y, alternative = 'two.sided')$p.value
-               , tolerance = 1e-8)
+  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'fisher',
+                                          alternative = 'two.sided'),
+               expected = fisher.test(x, y, alternative = 'two.sided')$p.value,
+               tolerance = 1e-8)
   # Chi-sq
-  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'chi.sq', alternative = 'two.sided'),
-               expected = chisq.test(x, y)$p.value
-               , tolerance = 1e-8)
+  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'chi.sq',
+                                          alternative = 'two.sided'),
+               expected = chisq.test(x, y)$p.value,
+               tolerance = 1e-8)
   # McNemar(paired data)
-  expect_equal(object = two_samp_bin_test(x = x[!is.na(y)], y = y[!is.na(y)], method = 'mcnemar', alternative = 'two.sided'),
-               expected = mcnemar.test(paired_data_here$a, paired_data_here$b)$p.value
-               , tolerance = 1e-8)
+  expect_equal(object = two_samp_bin_test(x = x[!is.na(y)], y = y[!is.na(y)],
+                                          method = 'mcnemar', alternative = 'two.sided'),
+               expected = mcnemar.test(paired_data_here$a, paired_data_here$b)$p.value,
+               tolerance = 1e-8)
 
   # Directional, along with factor values
-  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', alternative = 'less'),
-               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'less')$p.value
-               , tolerance = 1e-8)
-  expect_equal(object = two_samp_bin_test(x = factor(x), y = y, method = 'barnard', alternative = 'less'),
-               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'less')$p.value
-               , tolerance = 1e-8)
-  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard', alternative = 'greater'),
+  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard',
+                                          alternative = 'less'),
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled',
+                                            to.plot = FALSE, alternative = 'less')$p.value,
+               tolerance = 1e-8)
+  expect_equal(object = two_samp_bin_test(x = factor(x), y = y, method = 'barnard',
+                                          alternative = 'less'),
+               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled',
+                                            to.plot = FALSE, alternative = 'less')$p.value,
+               tolerance = 1e-8)
+  expect_equal(object = two_samp_bin_test(x = x, y = y, method = 'barnard',
+                                          alternative = 'greater'),
                expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'greater')$p.value
                , tolerance = 1e-8)
-  expect_equal(object = two_samp_bin_test(x = factor(x, levels = 1:0), y = y, method = 'barnard', alternative = 'less'),
-               expected = Exact::exact.test(table(data.frame(y,x)), method = 'Z-pooled', to.plot = FALSE, alternative = 'greater')$p.value
-               , tolerance = 1e-8)
+  expect_equal(object = two_samp_bin_test(x = factor(x, levels = 1:0), y = y,
+                                          method = 'barnard', alternative = 'less'),
+               expected = Exact::exact.test(table(data.frame(y,x)),
+                                            method = 'Z-pooled', to.plot = FALSE,
+                                            alternative = 'greater')$p.value,
+               tolerance = 1e-8)
 })
 
 
 test_that("two_samp_bin_test throwing internal .rm_na_and_check checking errors", {
   set.seed(5432322)
-  x <- c(NA, sample(0:1,10,replace = TRUE, prob = c(.65,.25)), sample(0:1,10,replace = TRUE, prob = c(.25,.65)), NA)
+  x <- c(NA, sample(0:1,10,replace = TRUE, prob = c(.65,.25)),
+         sample(0:1,10,replace = TRUE, prob = c(.25,.65)), NA)
   y <- c(rep('a', 10), NA, NA, rep('b', 10))
 
   #Testing if x and y are different lengths
-  expect_error(two_samp_bin_test(x = rep(0:1,6), y = rep(0:1,5), method = 'barnard'), '"x" and "y" must be the same length')
+  expect_error(two_samp_bin_test(x = rep(0:1,6), y = rep(0:1,5),
+                                 method = 'barnard'),
+               '"x" and "y" must be the same length')
 
   #Testing case where no non-missing pairs
-  expect_equal(object = two_samp_bin_test(x = c(rep(1,20),rep(NA,20)), y = c(rep(NA,20),rep(1,20)), method = 'barnard'), expected = NA)
-  expect_message(object = two_samp_bin_test(x = c(rep(1,20),rep(NA,20)), y = c(rep(NA,20),rep(1,20)), method = 'barnard', verbose = T),
+  expect_equal(object = two_samp_bin_test(x = c(rep(1,20),rep(NA,20)),
+                                          y = c(rep(NA,20),rep(1,20)),
+                                          method = 'barnard'),
+               expected = NA)
+  expect_message(object = two_samp_bin_test(x = c(rep(1,20),rep(NA,20)),
+                                            y = c(rep(NA,20),rep(1,20)),
+                                            method = 'barnard', verbose = T),
                  regexp = 'There are no observations with non-missing values of both "x" and "y", so p=NA returned')
 
   #Testing case where all x have same value
-  expect_equal(object = two_samp_bin_test(x = rep(1,22), y = y, method = 'barnard'), expected = 1)
-  expect_message(object = two_samp_bin_test(x = rep(1,22), y = y, method = 'barnard', verbose = T),
+  expect_equal(object = two_samp_bin_test(x = rep(1,22), y = y,
+                                          method = 'barnard'),
+               expected = 1)
+  expect_message(object = two_samp_bin_test(x = rep(1,22), y = y,
+                                            method = 'barnard', verbose = T),
                  regexp = '"x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned')
 
   #Testing case where all y have same value
-  expect_equal(object = two_samp_bin_test(x = x, y = rep(1,22), method = 'barnard'), expected = NA)
-  expect_message(object = two_samp_bin_test(x = x, y = rep(1,22), method = 'barnard', verbose = T),
+  expect_equal(object = two_samp_bin_test(x = x, y = rep(1,22),
+                                          method = 'barnard'),
+               expected = NA)
+  expect_message(object = two_samp_bin_test(x = x, y = rep(1,22),
+                                            method = 'barnard', verbose = T),
                  regexp = '"y" only has 1 level when considering non-missing values of "x", so p=NA returned')
 })
 
 test_that("two_samp_bin_test throwing internal input checking errors", {
   set.seed(5432322)
-  x <- c(sample(0:1,10,replace = TRUE, prob = c(.65,.25)), sample(0:1,10,replace = TRUE, prob = c(.25,.65)))
+  x <- c(sample(0:1,10,replace = TRUE, prob = c(.65,.25)),
+         sample(0:1,10,replace = TRUE, prob = c(.25,.65)))
   y <- c(rep('a', 10), rep('b', 10))
   my_matrix <- matrix(1:10,nrow = 2)
 
   #Checking x
-  expect_error(two_samp_bin_test(my_matrix, y = y, method = 'barnard'), '"x" must be a vector \\(one-dimensional object\\)')
-  expect_error(two_samp_bin_test(x = numeric(0), y = y, method = 'barnard'), '"x" length must be > 0')
-  expect_error(two_samp_bin_test(c(NA,NA,NA), y, method = 'barnard'), '"x" must have at least one non-NA value')
-  expect_error(two_samp_bin_test(letters[1:5],y, method = 'barnard'), '"x" cannot have more than 2 distinct values')
+  expect_error(two_samp_bin_test(my_matrix, y = y, method = 'barnard'),
+               '"x" must be a vector \\(one-dimensional object\\)')
+  expect_error(two_samp_bin_test(x = numeric(0), y = y, method = 'barnard'),
+               '"x" length must be > 0')
+  expect_error(two_samp_bin_test(c(NA,NA,NA), y, method = 'barnard'),
+               '"x" must have at least one non-NA value')
+  expect_error(two_samp_bin_test(letters[1:5],y, method = 'barnard'),
+               '"x" cannot have more than 2 distinct values')
 
   #Checking y
-  expect_error(two_samp_bin_test(x, my_matrix, method = 'barnard'), '"y" must be a vector \\(one-dimensional object\\)')
-  expect_error(two_samp_bin_test(x,numeric(0), method = 'barnard'), '"y" length must be > 0')
-  expect_error(two_samp_bin_test(x,c(NA,NA,NA), method = 'barnard'), '"y" must have at least one non-NA value')
-  expect_error(two_samp_bin_test(x,1:10, method = 'barnard'), '"y" cannot have more than 2 distinct values')
+  expect_error(two_samp_bin_test(x, my_matrix, method = 'barnard'),
+               '"y" must be a vector \\(one-dimensional object\\)')
+  expect_error(two_samp_bin_test(x,numeric(0), method = 'barnard'),
+               '"y" length must be > 0')
+  expect_error(two_samp_bin_test(x,c(NA,NA,NA), method = 'barnard'),
+               '"y" must have at least one non-NA value')
+  expect_error(two_samp_bin_test(x,1:10, method = 'barnard'),
+               '"y" cannot have more than 2 distinct values')
 
   #Testing paired errors
-  expect_error(two_samp_bin_test(x = c(NA,rep(0:1,4),0), y = c(rep(0:1,4),0,NA), method = 'mcnemar'), 'When "paired" = TRUE "y" cannot have missing values')
-  expect_error(two_samp_bin_test(x = c(NA,rep(0:1,4),0), y = c(rep(0:1,5),1), method = 'mcnemar'), 'When "paired" = TRUE "y" must have the same number of samples for each level')
+  expect_error(two_samp_bin_test(x = c(NA,rep(0:1,4),0),
+                                 y = c(rep(0:1,4),0,NA), method = 'mcnemar'),
+               'When "paired" = TRUE "y" cannot have missing values')
+  expect_error(two_samp_bin_test(x = c(NA,rep(0:1,4),0),
+                                 y = c(rep(0:1,5),1), method = 'mcnemar'),
+               'When "paired" = TRUE "y" must have the same number of samples for each level')
 })
 
 

@@ -13,28 +13,44 @@ two_samp_bin_test(x, y, method = c("barnard", "fisher", "chi.sq",
 \arguments{
 \item{x}{numeric vector (can include NA values).}
 
-\item{y}{vector with only 2 levels (can include NA values unless \code{method = 'mcnemar'}).}
+\item{y}{vector with only 2 levels (can include NA values unless
+\code{method = 'mcnemar'}).}
 
-\item{method}{what test to run, "barnard" (default), "fisher" ,"chi.sq" , or "mcnemar")}
+\item{method}{what test to run, "barnard" (default), "fisher" ,
+"chi.sq" , or "mcnemar")}
 
-\item{barnard_method}{indicates the Barnard method for finding tables as or more extreme than the observed table: must be either "Z-pooled", "Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate", or "CSM modified". Only used when \code{method = 'barnard'}}
+\item{barnard_method}{indicates the Barnard method for finding tables as or
+ more extreme than the observed table: must be either "Z-pooled",
+"Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate", or
+"CSM modified". Only used when \code{method = 'barnard'}}
 
-\item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter. Only "two.sided" available for \code{method = 'chi.sq' or 'mcnemar'}}
+\item{alternative}{a character string specifying the alternative hypothesis,
+must be one of "two.sided" (default), "greater" or "less". You can specify
+just the initial letter. Only "two.sided" available for
+\code{method = 'chi.sq' or 'mcnemar'}}
 
-\item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
+\item{verbose}{a logical variable indicating if warnings and messages should
+be displayed.}
 
-\item{...}{other parameters to pass to Exact::exact.test when running Barnard test}
+\item{...}{other parameters to pass to Exact::exact.test when running
+Barnard test}
 }
 \value{
 p-value for comparing x at the different levels of y.
 }
 \description{
-Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and McNemar's test for paired data
+Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and
+  McNemar's test for paired data
 }
 \details{
-For one sided tests if \code{y} is a factor variable the level order is respected, otherwise the levels will set to alphabetical order (i.e. if \code{alternative = less} then testing a < b ).
+For one sided tests if \code{y} is a factor variable the level order is ]
+respected, otherwise the levels will set to alphabetical order (i.e. if
+\code{alternative = less} then testing a < b ).
 
-If \code{method = 'mcnemar'} assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{method = 'mcnemar'} then \code{y} must have the same number of samples for each level.
+If \code{method = 'mcnemar'} assumes the first observations of the first
+group matches the first observation of the second group, and so on. Also if
+\code{method = 'mcnemar'} then \code{y} must have the same number of samples
+for each level.
 }
 \examples{
 
