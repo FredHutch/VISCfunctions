@@ -198,6 +198,7 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
   if (method == 'mcnemar' & alternative != 'two.sided')
     stop('When "method" is mcnemar then "alternative" must be two.sided')
   .check_binary_input(x)
+  x <- droplevels(factor(x))
   .check_binary_input(y, paired = ifelse(method == 'mcnemar', TRUE, FALSE))
   y <- droplevels(factor(y))
 
@@ -228,10 +229,14 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
       )
   }
   if (method == 'mcnemar') {
-    pval_out <- as.double(
-      stats::mcnemar.test(data_here$x[data_here$y == levels(data_here$y)[1]],
-                          data_here$x[data_here$y == levels(data_here$y)[2]])$p.value
-      )
+    if (length(unique(stats::na.omit(data_here)$x)) == 2)
+        pval_out <- as.double(
+          stats::mcnemar.test(data_here$x[which(data_here$y == levels(data_here$y)[1])],
+                              data_here$x[which(data_here$y == levels(data_here$y)[2])])$p.value
+        ) else
+          # setting p to 1 when only 1 level of x (i.e. all 0 or all 1)
+          pval_out <- 1
+
   }
   pval_out
 }
