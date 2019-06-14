@@ -212,6 +212,8 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
 #' @param bound_char the character to be used between stat1 and stat2/stat3. Available options are '(' (default), '[', '\{', and '|'.
 #' @param sep the string to be used between stat2 and stat3. The default is ', '.
 #' @param na_str_out the character to replace missing values with.
+#' @param suffix a character string to at at the end of each stat (i.e. \code{\%} if doing response rates)
+#'
 #' @return string of combined values
 #'
 #' @details
@@ -243,7 +245,7 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
 #'      )), by = .(antigen, visitno, group)]
 #'
 #' @export
-stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_zeros = TRUE, bound_char = c('(','[','{','|'), sep = ', ', na_str_out = "---"){
+stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_zeros = TRUE, bound_char = c('(','[','{','|'), sep = ', ', na_str_out = "---", suffix = NULL){
   bound_char <- match.arg(bound_char)
   end_bound_char <-   switch(bound_char,
                       `(` = ')',
@@ -253,14 +255,20 @@ stat_paste = function(stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_ze
   )
 
   stat1_pasted_obj <-  ifelse(is.na(stat1), na_str_out, as.character(.round_if_numeric(stat1, digits = digits, trailing_zeros = trailing_zeros)))
+  if (!is.null(suffix)) stat1_pasted_obj <- paste0(stat1_pasted_obj, suffix)
+
   if (is.null(stat2)) {
     pasted_output <- stat1_pasted_obj
   } else {
     stat2_pasted_obj <-  ifelse(is.na(stat2), na_str_out, as.character(.round_if_numeric(stat2, digits = digits, trailing_zeros = trailing_zeros)))
+    if (!is.null(suffix)) stat2_pasted_obj <- paste0(stat2_pasted_obj, suffix)
+
     if (is.null(stat3)) {
       pasted_output <- ifelse(is.na(stat1) & is.na(stat2), na_str_out, paste0(stat1_pasted_obj, " ", bound_char, stat2_pasted_obj, end_bound_char))
     } else {
       stat3_pasted_obj <-  ifelse(is.na(stat3), na_str_out, as.character(.round_if_numeric(stat3, digits = digits, trailing_zeros = trailing_zeros)))
+      if (!is.null(suffix)) stat3_pasted_obj <- paste0(stat3_pasted_obj, suffix)
+
       pasted_output <- ifelse(is.na(stat1) & is.na(stat2) & is.na(stat3), na_str_out, paste0(stat1_pasted_obj, " ", bound_char, stat2_pasted_obj, sep, stat3_pasted_obj, end_bound_char))
     }
   }
