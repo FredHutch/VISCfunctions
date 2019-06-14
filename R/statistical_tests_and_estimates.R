@@ -205,8 +205,7 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
   # Removing cases where x and y are both NA and returning p-value where no complete cases or only one distinct value
   rm_na_and_check_output <-
     .rm_na_and_check(x, y,
-                     x_type = ifelse(method == 'barnard', 'fixed_binary', 'binary'),
-                     y_type = 'binary', verbose = verbose)
+                     x_type = 'fixed_binary', y_type = 'binary', verbose = verbose)
   if (is.data.frame(rm_na_and_check_output))
     data_here <- rm_na_and_check_output else
       return(rm_na_and_check_output)

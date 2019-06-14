@@ -2,6 +2,7 @@
 
 export(get_full_name)
 export(get_session_info)
+export(pairwise_test_binary)
 export(pairwise_test_cont)
 export(paste_tbl_grp)
 export(pretty_pvalues)
