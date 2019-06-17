@@ -25,7 +25,7 @@ Only used and must be present when \code{method = 'mcnemar'}.}
 \item{method}{what test to run, "barnard" (default), "fisher" ,"chi.sq" ,
 or "mcnemar")}
 
-\item{barnard_method}{Indicates the Barnard method for finding tables as
+\item{barnard_method}{indicates the Barnard method for finding tables as
 or more extreme than the observed table: must be either "Z-pooled",
 "Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate",
 or "CSM modified". Only used when \code{method = 'barnard'}}
@@ -78,6 +78,10 @@ Takes a binary variable (response status) and performs pairwise testing.
 \details{
 If attempting to run with \code{x} completely NA will return NULL. This is to allow for nice
 return when looping through function with dplyr \code{group_by} and \code{group_modify}
+
+For one sided tests if \code{sorted_group = NULL} than the factor level order of \code{group}
+is respected, otherwise the levels will set to alphabetical order (i.e. if
+\code{alternative = less} then testing a < b ).
 
 If planning on using the table in a latex document then set \code{latex_output = TRUE}.
 This will set the \code{\%} symbol to \code{\\\\\%} in the binary percentages

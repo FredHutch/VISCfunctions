@@ -322,8 +322,11 @@ test_that("pairwise_comparisons_bin testing two groups", {
   testing_stats_pre <- test_data %>%
     filter(!is.na(x)) %>%
     group_by(group) %>%
-    group_modify( ~ wilson_ci(.$x, .95)) %>%
-    mutate(rr = stat_paste(mean * 100, lower * 100, upper * 100, digits = 1, suffix = '%'))
+    mutate(num_pos = sum(x), n = n()) %>%
+    group_by(group,num_pos, n) %>%
+    group_modify( ~ wilson_ci(.$x, .95)) %>% ungroup() %>%
+    mutate(rr = paste0(num_pos, '/', n, ' = ',
+                       stat_paste(mean * 100, lower * 100, upper * 100, digits = 1, suffix = '%')))
 
   testing_stats <- bind_cols(
     testing_stats_pre %>% filter(group == 'a') %>% select(Group1 = group, Group1_rr = rr),
@@ -350,8 +353,11 @@ test_that("pairwise_comparisons_bin testing two groups", {
   testing_stats_pre_3digits <- test_data %>%
     filter(!is.na(x)) %>%
     group_by(group) %>%
-    group_modify( ~ wilson_ci(.$x, .95)) %>%
-    mutate(rr = stat_paste(mean * 100, lower * 100, upper * 100, digits = 3, suffix = '%'))
+    mutate(num_pos = sum(x), n = n()) %>%
+    group_by(group,num_pos, n) %>%
+    group_modify( ~ wilson_ci(.$x, .95)) %>% ungroup() %>%
+    mutate(rr = paste0(num_pos, '/', n, ' = ',
+                       stat_paste(mean * 100, lower * 100, upper * 100, digits = 3, suffix = '%')))
 
   testing_stats_3digits <- bind_cols(
     testing_stats_pre_3digits %>% filter(group == 'a') %>% select(Group1 = group, Group1_rr = rr),
@@ -418,8 +424,11 @@ test_that("pairwise_comparisons_bin testing two groups", {
   paired_stats_pre <- test_data %>%
     filter(id %in% paired_ids) %>%
     group_by(group) %>%
-    group_modify( ~ wilson_ci(.$x, .95)) %>%
-    mutate(rr = stat_paste(mean * 100, lower * 100, upper * 100, digits = 1, suffix = '%'))
+    mutate(num_pos = sum(x), n = n()) %>%
+    group_by(group,num_pos, n) %>%
+    group_modify( ~ wilson_ci(.$x, .95)) %>% ungroup() %>%
+    mutate(rr = paste0(num_pos, '/', n, ' = ',
+                       stat_paste(mean * 100, lower * 100, upper * 100, digits = 1, suffix = '%')))
 
   paired_stats <- bind_cols(
     paired_stats_pre %>% filter(group == 'a') %>% select(Group1 = group, Group1_rr = rr),
@@ -451,8 +460,11 @@ test_that("pairwise_test_bin testing 3+ groups", {
     testing_stats_pre <- test_data %>%
       filter(!is.na(x)) %>%
       group_by(group) %>%
-      group_modify( ~ wilson_ci(.$x, .95)) %>%
-      mutate(rr = stat_paste(mean * 100, lower * 100, upper * 100, digits = 1, suffix = '%'))
+      mutate(num_pos = sum(x), n = n()) %>%
+      group_by(group,num_pos, n) %>%
+      group_modify( ~ wilson_ci(.$x, .95)) %>% ungroup() %>%
+      mutate(rr = paste0(num_pos, '/', n, ' = ',
+                         stat_paste(mean * 100, lower * 100, upper * 100, digits = 1, suffix = '%')))
 
     testing_stats <- bind_cols(
       testing_stats_pre %>% filter(group == Group1) %>% select(Group1 = group, Group1_rr = rr),

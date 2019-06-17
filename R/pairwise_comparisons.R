@@ -230,7 +230,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'   Only used and must be present when \code{method = 'mcnemar'}.
 #' @param method what test to run, "barnard" (default), "fisher" ,"chi.sq" ,
 #'   or "mcnemar")
-#' @param barnard_method 	Indicates the Barnard method for finding tables as
+#' @param barnard_method 	indicates the Barnard method for finding tables as
 #'   or more extreme than the observed table: must be either "Z-pooled",
 #'   "Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate",
 #'   or "CSM modified". Only used when \code{method = 'barnard'}
@@ -265,6 +265,10 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'
 #' If attempting to run with \code{x} completely NA will return NULL. This is to allow for nice
 #' return when looping through function with dplyr \code{group_by} and \code{group_modify}
+#'
+#' For one sided tests if \code{sorted_group = NULL} than the factor level order of \code{group}
+#' is respected, otherwise the levels will set to alphabetical order (i.e. if
+#' \code{alternative = less} then testing a < b ).
 #'
 #' If planning on using the table in a latex document then set \code{latex_output = TRUE}.
 #' This will set the \code{\%} symbol to \code{\\\\\%} in the binary percentages
@@ -435,8 +439,10 @@ pairwise_test_bin <- function(x, group, id = NULL,
       response_info_here_by_group <- by(vals_here, groups_here, function(xx)
       {
         wilson_est <- wilson_ci(xx, conf_level)
-        stat_paste(wilson_est$mean * 100, wilson_est$lower * 100, wilson_est$upper * 100,
+        paste0(sum(xx), '/', length(xx), ' = ',
+          stat_paste(wilson_est$mean * 100, wilson_est$lower * 100, wilson_est$upper * 100,
                    digits = digits, trailing_zeros = trailing_zeros, suffix = suffix)
+        )
       })
 
       stats_by_group <- data.frame(Group1 = i_group,
@@ -485,7 +491,7 @@ pairwise_test_bin <- function(x, group, id = NULL,
                                   alternative = alternative,
                                   digits = digits,
                                   trailing_zeros = trailing_zeros,
-                                  keep_all = TRUE, verbose = verbose)
+                                  keep_all = TRUE, verbose = FALSE)
 
 
   data.frame(Comparison = pasted_results$Comparison,
