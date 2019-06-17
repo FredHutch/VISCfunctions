@@ -11,7 +11,7 @@ two_samp_bin_test(x, y, method = c("barnard", "fisher", "chi.sq",
   ...)
 }
 \arguments{
-\item{x}{numeric vector (can include NA values).}
+\item{x}{vector with only 2 levels (can include NA values).}
 
 \item{y}{vector with only 2 levels (can include NA values unless
 \code{method = 'mcnemar'}).}
@@ -51,6 +51,11 @@ If \code{method = 'mcnemar'} assumes the first observations of the first
 group matches the first observation of the second group, and so on. Also if
 \code{method = 'mcnemar'} then \code{y} must have the same number of samples
 for each level.
+
+If only one value of \code{x} than \code{p=1} is returned, however if only one value of \code{y}
+than \code{p=NA} is returned. This is to match expactations since normally y is a group variable
+and x is the outcome (i.e. if both group response rates are 0\% or 100\% we want \code{p=1}
+returned)
 }
 \examples{
 
