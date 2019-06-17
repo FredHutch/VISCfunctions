@@ -276,9 +276,9 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'   sample(0:1,50,replace = TRUE, prob = c(.25,.75)),0,0,1,1)
 #' group_example = c(rep(1,25),NA,rep(2,25),rep(3,25),rep(4,25),'a','a','b','b')
 #'
-#'pairwise_test_binary(x_example,group_example, num_needed_for_test = 2)
+#'pairwise_test_bin(x_example,group_example, num_needed_for_test = 2)
 #'
-#'pairwise_test_binary(
+#'pairwise_test_bin(
 #'x_example,group_example, alternative = "less",
 #'   sorted_group = c(1:4, 'a','b'),num_needed_for_test = 2)
 #'
@@ -292,7 +292,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'group_testing <- exampleData_BAMA %>%
 #'    group_by(antigen, visitno) %>%
 #'    group_modify(~ as.data.frame(
-#'        pairwise_test_binary(x = .$response, group = .$group,
+#'        pairwise_test_bin(x = .$response, group = .$group,
 #'                method = 'barnard', alternative = 'less',
 #'                num_needed_for_test = 3, digits = 1,
 #'                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
@@ -302,7 +302,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'timepoint_testing <- exampleData_BAMA %>%
 #'    group_by(antigen, group) %>%
 #'    group_modify(~ as.data.frame(
-#'        pairwise_test_binary(x = .$response, group = .$visitno, id = .$pubID,
+#'        pairwise_test_bin(x = .$response, group = .$visitno, id = .$pubID,
 #'                method = 'mcnemar', num_needed_for_test = 3, digits = 1,
 #'                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
 #'
@@ -313,7 +313,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'group_testing <- exampleData_ICS %>%
 #'    group_by(Stim, Parent, Population, Visit) %>%
 #'    group_modify(~ as.data.frame(
-#'        pairwise_test_binary(x = .$response, group = .$Group , alternative = 'greater',
+#'        pairwise_test_bin(x = .$response, group = .$Group , alternative = 'greater',
 #'                method = 'barnard', num_needed_for_test = 3, digits = 1,
 #'                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
 #'
@@ -321,24 +321,20 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'timepoint_testing <- exampleData_ICS %>%
 #'    group_by(Stim, Parent, Population, Group) %>%
 #'    group_modify(~ as.data.frame(
-#'        pairwise_test_binary(x = .$response, group = .$Visit, id = .$pubID,
+#'        pairwise_test_bin(x = .$response, group = .$Visit, id = .$pubID,
 #'                method = 'mcnemar', num_needed_for_test = 3, digits = 1,
 #'                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
 #'
 #' @export
 
 
-pairwise_test_binary <- function(x, group, id = NULL,
+pairwise_test_bin <- function(x, group, id = NULL,
                                  method = c('barnard', 'fisher' ,'chi.sq' , 'mcnemar'),
-                                 barnard_method =
-                                   c("z-pooled", "z-unpooled", "boschloo",
-                                     "santner and snell", "csm",
-                                     "csm approximate", "csm modified"),
-                                 alternative =
-                                   c("two.sided", "less", "greater"),
-                                 sorted_group = NULL, num_needed_for_test = 3,
-                                 conf_level = 0.95, digits = 1,
-                                 trailing_zeros = TRUE, sep_val = " vs. ",
+                                 barnard_method = c("z-pooled", "z-unpooled", "boschloo",
+                                     "santner and snell", "csm", "csm approximate", "csm modified"),
+                                 alternative = c("two.sided", "less", "greater"),
+                                 sorted_group = NULL, num_needed_for_test = 3, conf_level = 0.95,
+                                 digits = 1, trailing_zeros = TRUE, sep_val = " vs. ",
                                  na_str_out = "---", latex_output = FALSE, verbose = FALSE, ...){
   #Input Checking
   method <- match.arg(method)
@@ -441,10 +437,6 @@ pairwise_test_binary <- function(x, group, id = NULL,
         wilson_est <- wilson_ci(xx, conf_level)
         stat_paste(wilson_est$mean * 100, wilson_est$lower * 100, wilson_est$upper * 100,
                    digits = digits, trailing_zeros = trailing_zeros, suffix = suffix)
-        # paste0(sum(xx), '/', length(xx), ' = ',
-        #        round_away_0(wilson_est$mean * 100, digits), '%; (',
-        #        round_away_0(wilson_est$lower * 100, digits), '%, ',
-        #        round_away_0(wilson_est$upper * 100, digits),'%)')
       })
 
       stats_by_group <- data.frame(Group1 = i_group,
