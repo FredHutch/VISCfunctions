@@ -161,7 +161,7 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
 #' @details
 #'
 #'
-#' For one sided tests if \code{y} is a factor variable the level order is ]
+#' For one sided tests if \code{y} is a factor variable the level order is
 #' respected, otherwise the levels will set to alphabetical order (i.e. if
 #' \code{alternative = less} then testing a < b ).
 #'
