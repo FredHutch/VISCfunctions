@@ -248,7 +248,7 @@ pretty_pvalues(pvalue_example, digits = 3, output_type = 'no_markup')
 
 # For display in report
 table_p_Values <- pretty_pvalues(pvalue_example, digits = 3, 
-                                 background = "yellow", include_p = TRUE)
+                                 background = "yellow")
 kableExtra::kable(table_p_Values, format = 'latex', escape = FALSE, 
                   col.names = c("P-values"), caption = 'Fancy P Values') %>% 
   kableExtra::kable_styling(font_size = 8.5, latex_options = "hold_position")  
