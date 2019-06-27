@@ -134,7 +134,7 @@ Once installed, in RStudio go to **File -> New File -> R Markdown -> From Templa
 
 ## Example Datasets
 
-The `exampleData_ICS`, `exampleData_ICS`, and `exampleData_ICS` datasets are assay example datasets used throughout this vignette and most examples in the `VISCfunctions` documentation. All example datasets have associated documentation that can be viewed using `?` (i.e `?exampleData_BAMA`).
+The `exampleData_BAMA`, `exampleData_NAb`, and `exampleData_ICS` datasets are assay example datasets used throughout this vignette and most examples in the `VISCfunctions` documentation. All example datasets have associated documentation that can be viewed using `?` (i.e `?exampleData_BAMA`).
 
 
 ```{r, echo=TRUE}
@@ -235,7 +235,7 @@ cor_test(x = testing_data$magnitude1, y = testing_data$magnitude2,
 # Fancy Output Functions
 
 
-There are currently three completed functions, and four in development, designed to produce professional output that can easily printed in reports.
+There are currently three completed functions designed to produce professional output that can easily be printed in reports.
 
 ## P Values
 
@@ -247,7 +247,8 @@ pvalue_example = c(1, 0.06753, 0.004435, NA, 1e-16, 0.563533)
 pretty_pvalues(pvalue_example, digits = 3, output_type = 'no_markup')
 
 # For display in report
-table_p_Values <- pretty_pvalues(pvalue_example, digits = 3, background = "yellow")
+table_p_Values <- pretty_pvalues(pvalue_example, digits = 3, 
+                                 background = "yellow", include_p = TRUE)
 kableExtra::kable(table_p_Values, format = 'latex', escape = FALSE, 
                   col.names = c("P-values"), caption = 'Fancy P Values') %>% 
   kableExtra::kable_styling(font_size = 8.5, latex_options = "hold_position")  
@@ -300,7 +301,7 @@ exampleData_BAMA %>% filter(visitno == 1) %>%
 
 `paste_tbl_grp()` paste together information, often statistics, from two groups. There are two predefined combinations: mean(sd) and median[min,max], but user may also paste any single measure together. 
 
-Example of summary information to be pasted together:
+Example of summary information to be pasted together (partial output):
 
 ```{r, echo=FALSE, warning=FALSE, size='tiny'}
 
@@ -344,7 +345,7 @@ kableExtra::kable(summary_table, format = 'latex', escape = TRUE, booktabs = TRU
 
 ## Pairwise Comparison of Multiple Groups for a Binary Variable 
 
-Simple Example using `pairwise_test_bin()`:
+Simple example using `pairwise_test_bin()`:
 
 ```{r, echo=TRUE, warning=FALSE}
 
@@ -360,7 +361,7 @@ pairwise_test_bin(x_example,group_example)
 
 \clearpage
 
-Group Comparison Example using `pairwise_test_bin()`:
+Group comparison example using `pairwise_test_bin()`:
 
 ```{r, echo=TRUE, warning=FALSE, results='asis'}
 
@@ -387,7 +388,7 @@ kableExtra::kable(group_testing, format = 'latex', escape = FALSE, booktabs = TR
 
 \clearpage
 
-Time Point Comparison Example (Paired) using `pairwise_test_bin()`:
+Time point comparison example (paired) using `pairwise_test_bin()`:
 
 
 ```{r, echo=TRUE, warning=FALSE, results='asis'}
@@ -421,7 +422,7 @@ kableExtra::kable(timepoint_testing, format = 'latex', escape = FALSE, booktabs 
 ## Pairwise Comparison of Multiple Groups for a Continuous Variable 
 
 
-Simple Example using `pairwise_test_cont()`:
+Simple example using `pairwise_test_cont()`:
 
 ```{r, echo=TRUE, warning=FALSE, size='tiny'}
 
@@ -436,7 +437,7 @@ pairwise_test_cont(x_example,group_example, digits = 1)
 
 \clearpage
 
-Group Comparison Example:
+Group comparison Example using `pairwise_test_cont()`:
 
 ```{r, echo=TRUE, warning=FALSE, results='asis'}
 
@@ -463,7 +464,7 @@ kableExtra::kable(group_testing, format = 'latex', escape = FALSE, booktabs = TR
 
 \clearpage
 
-Time Point Comparison Example:
+Time point comparison example (paired) using `pairwise_test_cont()`:
 
 
 ```{r, echo=TRUE, warning=FALSE, results='asis'}
