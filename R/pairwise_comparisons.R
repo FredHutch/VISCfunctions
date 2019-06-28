@@ -218,13 +218,13 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 
 #' Binary Variable Pairwise Testing
 #'
-#' Takes a binary variable (response status) and performs pairwise testing.
-#'   Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and
-#'   McNemar's test for paired data
+#' Takes a binary variable (e.g., response status) and performs pairwise testing.
+#'   Performs either Barnard, Fisher's, or Chi-sq test for unpaired data and
+#'   McNemar's test for paired data.
 #'
 #' @param x numeric vector (0/1) or logical vector or (F/T)
 #'   (can include NA values)
-#' @param group categorical vector of group values
+#' @param group vector of group values.
 #' @param id vector which contains the id information
 #'   (so \code{x} values can be linked between groups).
 #'   Only used and must be present when \code{method = 'mcnemar'}.
@@ -263,7 +263,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'  other 100%)
 #' @details
 #'
-#' If attempting to run with \code{x} completely NA will return NULL. This is to allow for nice
+#' If all values of \code{x} are NA, the function will return NULL. This is to allow for nice
 #' return when looping through function with dplyr \code{group_by} and \code{group_modify}
 #'
 #' For one sided tests if \code{sorted_group = NULL} than the factor level order of \code{group}

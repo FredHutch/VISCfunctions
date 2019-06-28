@@ -16,7 +16,7 @@ pairwise_test_bin(x, group, id = NULL, method = c("barnard", "fisher",
 \item{x}{numeric vector (0/1) or logical vector or (F/T)
 (can include NA values)}
 
-\item{group}{categorical vector of group values}
+\item{group}{vector of group values.}
 
 \item{id}{vector which contains the id information
 (so \code{x} values can be linked between groups).
@@ -71,12 +71,12 @@ Returns a data frame with all possible pairwise comparisons.
  other 100%)
 }
 \description{
-Takes a binary variable (response status) and performs pairwise testing.
-  Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and
-  McNemar's test for paired data
+Takes a binary variable (e.g., response status) and performs pairwise testing.
+  Performs either Barnard, Fisher's, or Chi-sq test for unpaired data and
+  McNemar's test for paired data.
 }
 \details{
-If attempting to run with \code{x} completely NA will return NULL. This is to allow for nice
+If all values of \code{x} are NA, the function will return NULL. This is to allow for nice
 return when looping through function with dplyr \code{group_by} and \code{group_modify}
 
 For one sided tests if \code{sorted_group = NULL} than the factor level order of \code{group}
