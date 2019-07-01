@@ -6,6 +6,7 @@ Date: 2019-06-05
 Authors@R: c(person("Bryan", "Mayer", ,"bmayer@fredhutch.org", "aut"),
              person("Monica", "Gerber", ,"mgerber@fredhutch.org", "aut"),
              person("Celia", "Mahoney", ,"cmahoney@fredhutch.org", "aut"),
+             person("Ellis", "Hughes", ,"ehhughes@fredhutch.org", "aut"),
              person("Jimmy", "Fulp", ,"wfulp@fredhutch.org", c("aut", "cre"))
              )
 Description: Statistical, data processing, and annotation functions for VISC.

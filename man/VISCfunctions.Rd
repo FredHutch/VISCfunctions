@@ -16,6 +16,7 @@ Authors:
   \item Bryan Mayer \email{bmayer@fredhutch.org}
   \item Monica Gerber \email{mgerber@fredhutch.org}
   \item Celia Mahoney \email{cmahoney@fredhutch.org}
+  \item Ellis Hughes \email{ehhughes@fredhutch.org}
 }
 
 }
