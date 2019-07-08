@@ -182,12 +182,18 @@ testing_data <- exampleData_BAMA %>%
 
 table(testing_data$response, testing_data$group)
 
+# Barnard Method
 two_samp_bin_test(x = testing_data$response, y = testing_data$group, 
                   method = 'barnard', alternative = 'two.sided')
 
+# Santner and Snell Variation
+two_samp_bin_test(x = testing_data$response, y = testing_data$group, 
+                  method = 'barnard', barnard_method = 'santner and snell', alternative = 'two.sided')
+
 # Calling test multiple times
 exampleData_BAMA %>% 
-  group_by(antigen, visitno) %>% filter(visitno != 0) %>% 
+  group_by(antigen, visitno) %>% 
+  filter(visitno != 0) %>% 
   summarise(p_val = two_samp_bin_test(response, group, method = 'barnard'))
 ```
 
@@ -210,14 +216,17 @@ two_samp_cont_test(x = testing_data$magnitude, y = testing_data$group,
 
 # Calling test multiple times
 exampleData_BAMA %>% 
-  group_by(antigen, visitno) %>% filter(visitno != 0) %>% 
+  group_by(antigen, visitno) %>% 
+  filter(visitno != 0) %>% 
   summarise(p_val = two_samp_cont_test(magnitude, group, method = 'wilcox'))
 ```
 
 
 ## Comparing Two Continuous Variables (Correlation) \textcolor{red}{[Coming Soon]}
 
-`cor_test()` is used for comparing two continuous variables, with Pearson, Kendall, and Spearman methods. If Spearman method is chosen and either variable has a tie the approximate distribution is use in the `coin::spreaman_test()` function. This is usually the preferred method over the asymptotic approximation, which is the method `stats:cor.test()` uses in cases of ties.
+`cor_test()` is used for comparing two continuous variables, with Pearson, Kendall, and Spearman methods. 
+
+If Spearman method is chosen and either variable has a tie the approximate distribution is use in the `coin::spreaman_test()` function. This is usually the preferred method over the asymptotic approximation, which is the method `stats:cor.test()` uses in cases of ties. If the Spearman method is chosen and there are no ties, the exact method is used from `stats:cor.test()`.
 
 
 ```{r, echo=TRUE, eval=FALSE, warning=FALSE}
@@ -278,7 +287,8 @@ stat_paste(stat1 = 6.4864, stat2 = pretty_pvalues(0.0004, digits = 3),
            digits = 3, bound_char = '(')
 
 
-exampleData_BAMA %>% filter(visitno == 1) %>%  
+exampleData_BAMA %>% 
+  filter(visitno == 1) %>%  
   group_by(antigen, group) %>% 
   summarise(`Magnitude Info (Median [Range])` = 
               stat_paste(stat1 = median(magnitude), 
@@ -305,7 +315,8 @@ Example of summary information to be pasted together (partial output):
 
 ```{r, echo=FALSE, warning=FALSE, size='tiny'}
 
-summary_info <- exampleData_BAMA %>% filter(visitno == 1) %>%  
+summary_info <- exampleData_BAMA %>% 
+  filter(visitno == 1) %>%  
   mutate(group = paste0("Group", group)) %>% 
   group_by(antigen, group) %>%
   summarise_at("magnitude", list(n = length, mean = mean, sd = sd, 
@@ -315,7 +326,8 @@ summary_info <- exampleData_BAMA %>% filter(visitno == 1) %>%
   tidyr::spread(var, value) %>%
   mutate(Group1 = "Group 1", Group2 = "Group 2") 
 
-summary_info %>% select(antigen, Group1_max, Group1_mean, Group1_median, Group1_min, Group1_n)
+summary_info %>% 
+  select(antigen, Group1_max, Group1_mean, Group1_median, Group1_min, Group1_n)
 
 ```
 
@@ -373,7 +385,8 @@ group_testing <- exampleData_ICS %>%
     pairwise_test_bin(x = .$response, group = .$Group,
                       method = 'barnard', alternative = 'less',
                       num_needed_for_test = 3, digits = 1,
-                      latex_output = TRUE, verbose = FALSE))) %>%  ungroup() %>% 
+                      latex_output = TRUE, verbose = FALSE))) %>%  
+  ungroup() %>% 
   # Getting fancy p values
   mutate(ResponseTest = pretty_pvalues(ResponseTest, output_type = 'latex', 
                                        sig_alpha = .1, background = 'yellow'))
@@ -400,7 +413,8 @@ timepoint_testing <- exampleData_ICS %>%
   group_modify(~ as.data.frame(
     pairwise_test_bin(x = .$response, group = .$Visit, id = .$pubID,
                       method = 'mcnemar', num_needed_for_test = 3, digits = 1,
-                      latex_output = TRUE, verbose = FALSE))) %>% ungroup() %>% 
+                      latex_output = TRUE, verbose = FALSE))) %>% 
+  ungroup() %>% 
   # Getting fancy p values
   mutate(ResponseTest = pretty_pvalues(ResponseTest, output_type = 'latex', 
                                        sig_alpha = .1, background = 'yellow'))
