@@ -146,9 +146,9 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
 #' @param method what test to run, "barnard" (default), "fisher" ,
 #'   "chi.sq" , or "mcnemar")
 #' @param barnard_method 	indicates the Barnard method for finding tables as or
-#'   more extreme than the observed table: must be either "Z-pooled",
-#'  "Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate", or
-#'  "CSM modified". Only used when \code{method = 'barnard'}
+#'   more extreme than the observed table: must be either "z-pooled",
+#'  "z-unpooled", "santner and snell", "boschloo", "csm", "csm approximate", or
+#'  "csm modified". Only used when \code{method = 'barnard'}
 #' @param alternative a character string specifying the alternative hypothesis,
 #'   must be one of "two.sided" (default), "greater" or "less". You can specify
 #'   just the initial letter. Only "two.sided" available for
