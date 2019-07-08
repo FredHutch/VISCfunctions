@@ -202,7 +202,7 @@ exampleData_BAMA %>%
 
 ## Comparing Two Groups (Binary Variable) for a Continuous Variable 
 
-`two_samp_cont_test()` is used for comparing a continuous variable to a binary (two group) variable, with parametric (t.test) and non-parametric (Wilcox Rank-Sum) options. Also pair data is allowed, where there are parametric (paired t.test) and non-parametric (Wilcox Signed-Rank) options. 
+`two_samp_cont_test()` is used for comparing a continuous variable to a binary (two group) variable, with parametric (t.test) and non-parametric (Wilcox Rank-Sum) options. Also paired data is allowed, where there are parametric (paired t.test) and non-parametric (Wilcox Signed-Rank) options. 
 
 
 
@@ -224,7 +224,7 @@ exampleData_BAMA %>%
 
 ## Comparing Two Continuous Variables (Correlation) \textcolor{red}{[Coming Soon]}
 
-`cor_test()` is used for comparing two continuous variables, with Pearson, Kendall, and Spearman methods. 
+`cor_test()` is used for comparing two continuous variables, with Pearson, Kendall, or Spearman methods. 
 
 If Spearman method is chosen and either variable has a tie the approximate distribution is use in the `coin::spreaman_test()` function. This is usually the preferred method over the asymptotic approximation, which is the method `stats:cor.test()` uses in cases of ties. If the Spearman method is chosen and there are no ties, the exact method is used from `stats:cor.test()`.
 
@@ -362,11 +362,11 @@ Simple example using `pairwise_test_bin()`:
 ```{r, echo=TRUE, warning=FALSE}
 
 set.seed(1)
-x_example <- c(NA,sample(0:1,50,replace = TRUE, prob = c(.75,.25)),
-  sample(0:1,50,replace = TRUE, prob = c(.25,.75)))
-group_example <- c(rep(1,25),NA,rep(2,25),rep(3,25),rep(4,25))
+x_example <- c(NA, sample(0:1, 50, replace = TRUE, prob = c(.75, .25)),
+  sample(0:1, 50, replace = TRUE, prob = c(.25, .75)))
+group_example <- c(rep(1, 25), NA, rep(2, 25), rep(3, 25), rep(4, 25))
 
-pairwise_test_bin(x_example,group_example)
+pairwise_test_bin(x_example, group_example)
 
 
 ```
@@ -441,10 +441,10 @@ Simple example using `pairwise_test_cont()`:
 ```{r, echo=TRUE, warning=FALSE, size='tiny'}
 
 set.seed(1)
-x_example <- c(NA,rnorm(50), rnorm(50, mean = 5))
-group_example <- c(rep(1,25),rep(2,25),rep(3,25),rep(4,25),NA)
+x_example <- c(NA, rnorm(50), rnorm(50, mean = 5))
+group_example <- c(rep(1, 25), rep(2, 25), rep(3, 25), rep(4, 25), NA)
 
-pairwise_test_cont(x_example,group_example, digits = 1)
+pairwise_test_cont(x_example, group_example, digits = 1)
 
 
 ```
@@ -513,11 +513,11 @@ kableExtra::kable(timepoint_testing, format = 'latex', escape = FALSE, booktabs 
 
 ## Linear, Logistic, and Cox Model Output \textcolor{red}{[Coming Soon]}
 
-`pretty_model_output()` and `run_pretty_model_output()` are used to produce professional tables for single or multiple Linear, Logistic, or Cox Proportional-Hazards Regression Models, calculating estimates, odds ratios, or hazard ratios, respectively, with confidence intervals. P values are also produced. For categorical variables with 3+ levels overall Type 3 p values are calculated (matches SAS's default overall p values), in addition to p values comparing to the first level (reference).
+`pretty_model_output()` and `run_pretty_model_output()` are used to produce professional tables for single or multiple linear, logistic, or Cox proportional hazards regression models, and for calculating estimates, odds ratios, or hazard ratios, respectively, with confidence intervals. P values are also produced. For categorical variables with 3+ levels overall Type 3 p values are calculated (matches SAS's default overall p values), in addition to p values comparing to the first level (reference).
 
 `pretty_model_output()` uses the model fits, while `run_pretty_model_output()` uses the variables and dataset, running the desired model. The `run_pretty_model_output()` will use variable labels if they exist (created by the `Hmisc::label()` function). Many details can be adjusted, such as overall test method ("Wald" or "LR"), title (will be added as column), confidence level, estimate and p value rounded digits, significant alpha level for highlighting along with color, italic, and bolding p value options, and latex or non-latex desired output.
 
-In `run_pretty_model_output()`, `y_in`, `event_in`, and `event_level` are used defined differently, depending on the type of model. For Linear Regression `y_in` is the dependent variable, and `event_in` and `event_level` are left NULL. For Logistic Regression `y_in` is the dependent variable, `event_level` is the event level of the variable (i.e. "1" or "Response"), and `event_in` is left NULL. For Cox Regression `y_in` is the time component, `event_in` is the event status variable, and `event_level` is the event level of the `event_in` variable (i.e. "1" or "Dead"). 
+In `run_pretty_model_output()`, `y_in`, `event_in`, and `event_level` are used defined differently, depending on the type of model. For linear regression `y_in` is the dependent variable, and `event_in` and `event_level` are left NULL. For logistic regression `y_in` is the dependent variable, `event_level` is the event level of the variable (i.e. "1" or "Response"), and `event_in` is left NULL. For Cox regression `y_in` is the time component, `event_in` is the event status variable, and `event_level` is the event level of the `event_in` variable (i.e. "1" or "Dead"). 
 
 
 ## Kaplan–Meier Output Functions \textcolor{red}{[Coming Soon]}
