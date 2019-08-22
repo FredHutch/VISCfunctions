@@ -489,7 +489,7 @@ timepoint_testing <- exampleData_ICS %>%
   group_by(Stim, Group) %>%
   group_modify(~ as.data.frame(
     pairwise_test_cont(x = .$PercentCellNet, group = .$Visit, id = .$pubID,
-                       method = 'wilcox', paired = FALSE, num_needed_for_test = 3, 
+                       method = 'wilcox', paired = TRUE, num_needed_for_test = 3, 
                        digits = 3, verbose = FALSE))) %>% 
    ungroup() %>% 
   # Getting fancy p values
