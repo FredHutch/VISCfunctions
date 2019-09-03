@@ -22,6 +22,7 @@ group_row_collapse <- function(.data,...){
   stopifnot(is.data.frame(.data))
 
   fields<-as.character(as.list(substitute(substitute(...)))[-1])
+  fields<-gsub("`","",fields)
 
   alt_fields<-setdiff(colnames(.data),fields)
 
@@ -29,7 +30,8 @@ group_row_collapse <- function(.data,...){
   stopifnot(all(fields%in%names(.data)))
 
   #sort row order of fields
-  .data<-.data[eval(parse(text=paste0("with(.data,order(",paste(fields,collapse=","),"))"))),]
+  nice_fields<-ifelse(grepl(" ",fields),paste0("`",fields,"`"),fields)
+  .data<-.data[eval(parse(text=paste0("with(.data,order(",paste(nice_fields,collapse=","),"))"))),]
 
   #create "new" fields containing the result of collapsing rows
   for(i in 0:(length(fields)-1)){
