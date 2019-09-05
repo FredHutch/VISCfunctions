@@ -6,7 +6,7 @@
 \usage{
 stat_paste(stat1, stat2 = NULL, stat3 = NULL, digits = 0,
   trailing_zeros = TRUE, bound_char = c("(", "[", "{", "|"),
-  sep = ", ", na_str_out = "---")
+  sep = ", ", na_str_out = "---", suffix = NULL)
 }
 \arguments{
 \item{stat1}{first statistic to be pasted.}
@@ -24,6 +24,8 @@ stat_paste(stat1, stat2 = NULL, stat3 = NULL, digits = 0,
 \item{sep}{the string to be used between stat2 and stat3. The default is ', '.}
 
 \item{na_str_out}{the character to replace missing values with.}
+
+\item{suffix}{a character string to at at the end of each stat (i.e. \code{\%} if doing response rates)}
 }
 \value{
 string of combined values

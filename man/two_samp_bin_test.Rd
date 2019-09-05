@@ -4,32 +4,58 @@
 \alias{two_samp_bin_test}
 \title{Binary (Response) Variable Compared to Binary (Group) Variable Test (VISC)}
 \usage{
-two_samp_bin_test(x, y, method = NA, alternative = c("two.sided",
-  "less", "greater"), verbose = FALSE)
+two_samp_bin_test(x, y, method = c("barnard", "fisher", "chi.sq",
+  "mcnemar"), barnard_method = c("z-pooled", "z-unpooled", "boschloo",
+  "santner and snell", "csm", "csm approximate", "csm modified"),
+  alternative = c("two.sided", "less", "greater"), verbose = FALSE,
+  ...)
 }
 \arguments{
-\item{x}{numeric vector (can include NA values).}
+\item{x}{vector with only 2 levels (can include NA values).}
 
-\item{y}{vector with only 2 levels (can include NA values unless \code{method = 'mcnemar'}).}
+\item{y}{vector with only 2 levels (can include NA values unless
+\code{method = 'mcnemar'}).}
 
-\item{method}{what test to run ("barnard", "fisher" ,"chi.sq" , "mcnemar"). No default so user must enter one of the four selections}
+\item{method}{what test to run, "barnard" (default), "fisher" ,
+"chi.sq" , or "mcnemar")}
 
-\item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter. Only "two.sided" available for \code{method = 'chi.sq' or 'mcnemar'}}
+\item{barnard_method}{indicates the Barnard method for finding tables as or
+ more extreme than the observed table: must be either "z-pooled",
+"z-unpooled", "santner and snell", "boschloo", "csm", "csm approximate", or
+"csm modified". Only used when \code{method = 'barnard'}}
 
-\item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
+\item{alternative}{a character string specifying the alternative hypothesis,
+must be one of "two.sided" (default), "greater" or "less". You can specify
+just the initial letter. Only "two.sided" available for
+\code{method = 'chi.sq' or 'mcnemar'}}
 
-\item{...}{parameters to pass to wilcox_test or t.test functions. For example the testing direction (\code{alternative}) in either call or the \code{var.equal} in the t.test function.}
+\item{verbose}{a logical variable indicating if warnings and messages should
+be displayed.}
+
+\item{...}{other parameters to pass to Exact::exact.test when running
+Barnard test}
 }
 \value{
 p-value for comparing x at the different levels of y.
 }
 \description{
-Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and McNemar's test for paired data
+Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and
+  McNemar's test for paired data
 }
 \details{
-For one sided tests if \code{y} is a factor variable the level order is respected, otherwise the levels will set to alphabetical order (i.e. if \code{alternative = less} then testing a < b ).
+For one sided tests if \code{y} is a factor variable the level order is
+respected, otherwise the levels will set to alphabetical order (i.e. if
+\code{alternative = less} then testing a < b ).
 
-If \code{method = 'mcnemar'} assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{method = 'mcnemar'} then \code{y} must have the same number of samples for each level.
+If \code{method = 'mcnemar'} assumes the first observations of the first
+group matches the first observation of the second group, and so on. Also if
+\code{method = 'mcnemar'} then \code{y} must have the same number of samples
+for each level.
+
+If only one value of \code{x} than \code{p=1} is returned, however if only one value of \code{y}
+than \code{p=NA} is returned. This is to match expactations since normally y is a group variable
+and x is the outcome (i.e. if both group response rates are 0\% or 100\% we want \code{p=1}
+returned)
 }
 \examples{
 

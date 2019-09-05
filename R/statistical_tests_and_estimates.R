@@ -137,21 +137,43 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
 
 #' Binary (Response) Variable Compared to Binary (Group) Variable Test (VISC)
 #'
-#' Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and McNemar's test for paired data
+#' Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and
+#'   McNemar's test for paired data
 #'
-#' @param x numeric vector (can include NA values).
-#' @param y vector with only 2 levels (can include NA values unless \code{method = 'mcnemar'}).
-#' @param method what test to run ("barnard", "fisher" ,"chi.sq" , "mcnemar"). No default so user must enter one of the four selections
-#' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter. Only "two.sided" available for \code{method = 'chi.sq' or 'mcnemar'}
-#' @param verbose a logical variable indicating if warnings and messages should be displayed.
-#' @param ... parameters to pass to wilcox_test or t.test functions. For example the testing direction (\code{alternative}) in either call or the \code{var.equal} in the t.test function.
+#' @param x  vector with only 2 levels (can include NA values).
+#' @param y vector with only 2 levels (can include NA values unless
+#'   \code{method = 'mcnemar'}).
+#' @param method what test to run, "barnard" (default), "fisher" ,
+#'   "chi.sq" , or "mcnemar")
+#' @param barnard_method 	indicates the Barnard method for finding tables as or
+#'   more extreme than the observed table: must be either "z-pooled",
+#'  "z-unpooled", "santner and snell", "boschloo", "csm", "csm approximate", or
+#'  "csm modified". Only used when \code{method = 'barnard'}
+#' @param alternative a character string specifying the alternative hypothesis,
+#'   must be one of "two.sided" (default), "greater" or "less". You can specify
+#'   just the initial letter. Only "two.sided" available for
+#'   \code{method = 'chi.sq' or 'mcnemar'}
+#' @param verbose a logical variable indicating if warnings and messages should
+#'   be displayed.
+#' @param ... other parameters to pass to Exact::exact.test when running
+#'   Barnard test
 #' @return p-value for comparing x at the different levels of y.
 #' @details
 #'
 #'
-#' For one sided tests if \code{y} is a factor variable the level order is respected, otherwise the levels will set to alphabetical order (i.e. if \code{alternative = less} then testing a < b ).
+#' For one sided tests if \code{y} is a factor variable the level order is
+#' respected, otherwise the levels will set to alphabetical order (i.e. if
+#' \code{alternative = less} then testing a < b ).
 #'
-#' If \code{method = 'mcnemar'} assumes the first observations of the first group matches the first observation of the second group, and so on. Also if \code{method = 'mcnemar'} then \code{y} must have the same number of samples for each level.
+#' If \code{method = 'mcnemar'} assumes the first observations of the first
+#' group matches the first observation of the second group, and so on. Also if
+#' \code{method = 'mcnemar'} then \code{y} must have the same number of samples
+#' for each level.
+#'
+#' If only one value of \code{x} than \code{p=1} is returned, however if only one value of \code{y}
+#' than \code{p=NA} is returned. This is to match expactations since normally y is a group variable
+#' and x is the outcome (i.e. if both group response rates are 0\% or 100\% we want \code{p=1}
+#' returned)
 #'
 #' @examples
 #'
@@ -167,33 +189,91 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
 #' @export
 
 
-two_samp_bin_test <- function(x, y, method = NA, alternative = c("two.sided", "less", "greater"), verbose = FALSE){
-  # Input checking
-  if (!method %in% c('barnard', 'fisher' ,'chi.sq' , 'mcnemar')) stop('"method" must be one of these choices: "barnard", "fisher", "chi.sq", "mcnemar"')
+two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , 'mcnemar'),
+                              barnard_method = c("z-pooled", "z-unpooled", "boschloo",
+                                                 "santner and snell", "csm",
+                                                 "csm approximate", "csm modified"),
+                              alternative = c("two.sided", "less", "greater"),
+                              verbose = FALSE, ...){
+  method <- match.arg(method)
+  barnard_method <- match.arg(barnard_method)
   alternative <- match.arg(alternative)
-  if (method == 'chi.sq' & alternative != 'two.sided') stop('When "method" is chi.sq then "alternative" must be two.sided')
-  if (method == 'mcnemar' & alternative != 'two.sided') stop('When "method" is mcnemar then "alternative" must be two.sided')
+  if (method == 'chi.sq' & alternative != 'two.sided')
+    stop('When "method" is chi.sq then "alternative" must be two.sided')
+  if (method == 'mcnemar' & alternative != 'two.sided')
+    stop('When "method" is mcnemar then "alternative" must be two.sided')
   .check_binary_input(x)
+  x <- droplevels(factor(x))
   .check_binary_input(y, paired = ifelse(method == 'mcnemar', TRUE, FALSE))
   y <- droplevels(factor(y))
 
   # Removing cases where x and y are both NA and returning p-value where no complete cases or only one distinct value
-  rm_na_and_check_output <- .rm_na_and_check(x, y, x_type = ifelse(method == 'barnard', 'fixed_binary', 'binary'), y_type = 'binary', verbose = verbose)
-  if (is.data.frame(rm_na_and_check_output)) data_here <- rm_na_and_check_output else return(rm_na_and_check_output)
+  rm_na_and_check_output <-
+    .rm_na_and_check(x, y,
+                     x_type = 'fixed_binary', y_type = 'binary', verbose = verbose)
+  if (is.data.frame(rm_na_and_check_output))
+    data_here <- rm_na_and_check_output else
+      return(rm_na_and_check_output)
 
   if (method == 'barnard') {
     # table needs to have grp variable (y) first
-    pval_out <- as.double(Exact::exact.test(table(data_here[, c('y', 'x')]), method = 'Z-pooled', to.plot = FALSE, alternative = alternative)$p.value)
+    pval_out <- as.double(
+      Exact::exact.test(table(data_here[, c('y', 'x')]),
+                        method = barnard_method, to.plot = FALSE,
+                        alternative = alternative, ...)$p.value)
   }
   if (method == 'fisher') {
-    pval_out <- as.double(stats::fisher.test(data_here$x, data_here$y, alternative = alternative)$p.value)
+    pval_out <- as.double(
+      stats::fisher.test(data_here$x, data_here$y, alternative = alternative)$p.value
+      )
   }
   if (method == 'chi.sq') {
-    pval_out <- as.double(stats::chisq.test(data_here$x, data_here$y)$p.value)
+    pval_out <- as.double(
+      stats::chisq.test(data_here$x, data_here$y)$p.value
+      )
   }
   if (method == 'mcnemar') {
-    pval_out <- as.double(stats::mcnemar.test(data_here$x[data_here$y == levels(data_here$y)[1]], data_here$x[data_here$y == levels(data_here$y)[2]])$p.value)
+    if (length(unique(stats::na.omit(data_here)$x)) == 2)
+        pval_out <- as.double(
+          stats::mcnemar.test(data_here$x[which(data_here$y == levels(data_here$y)[1])],
+                              data_here$x[which(data_here$y == levels(data_here$y)[2])])$p.value
+        ) else
+          # setting p to 1 when only 1 level of x (i.e. all 0 or all 1)
+          pval_out <- 1
+
   }
   pval_out
+}
+
+#' Wilson Confidence Interval
+#'
+#' @param x vector of type integer (0/1) or logical (TRUE/FALSE)
+#' @param conf.level confidence level (between 0 and 1)
+#'
+#' @return data.frame with with mean (`mean`), and bounds of confidence interval (`lower`, `upper`)
+#' @examples
+#'
+#' x <- c(rep(0, 500), rep(1, 500))
+#' wilson_ci(x, conf.level = .90)
+#'
+#' @export
+wilson_ci <- function(x, conf.level = .95){
+
+  .check_response_input(x)
+  .check_numeric_input(conf.level, lower_bound = 0, upper_bound = 1 - 1E-12,
+                       scalar = TRUE, whole_num = FALSE, allow_NA = FALSE)
+
+  x <- stats::na.omit(x)
+
+  npos <- sum(x);
+  n <- length(x);
+
+  z <- abs(stats::qnorm(1 - (1 - conf.level )/2))
+  p <- npos/n
+  denom <- 1 + z*z/n
+  t1 <- p + z*z/2/n
+  t2 <- z * sqrt(p*(1 - p)/n + z*z/4/n/n)
+  data.frame(mean = p, lower = (t1 - t2)/denom, upper = (t1 + t2)/denom)
+
 }
 

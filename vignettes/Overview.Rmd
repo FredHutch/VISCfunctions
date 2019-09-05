@@ -1,0 +1,561 @@
+---
+title: "Overview and Introduction to VISCfunctions Package"
+author: "Jimmy Fulp & Monica Gerber"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    df_print: kable
+    highlight: tango
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    keep_tex: true
+header-includes:
+  - \hypersetup{colorlinks=true, linkcolor=blue}
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{colortbl}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage{makecell}
+vignette: >
+  %\VignetteIndexEntry{Overview and Introduction to VISCfunctions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+\listoftables
+
+\clearpage
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+options(xtable.comment = FALSE, datatable.verbose = FALSE, scipen = 10, knitr.kable.NA = '', knitr.table.format = 'latex', kableExtra.latex.load_packages = FALSE)   
+
+```
+
+
+
+# Overview
+
+VISCfunctions is a collection of useful functions designed to assist in analysis and creation of professional reports. The current VISCfunctions package can be broken down to the following sections:
+
+- Testing and Estimate Functions
+  - two_samp_bin_test
+  - two_samp_cont_test
+  - cor_test \textcolor{red}{[Coming Soon]}
+  - wilson_ci
+- Fancy Output Functions
+  - pretty_pvalues
+  - stat_paste
+  - paste_tbl_grp
+- Pairwise Comparison Functions
+  - pairwise_test_bin
+  - pairwise_test_cont
+  - pairwise_test_cor \textcolor{red}{[Coming Soon]}
+- Model Output Function\textcolor{red}{[Coming Soon]}
+  - pretty_model_output \textcolor{red}{[Coming Soon]}
+  - run_pretty_model_output \textcolor{red}{[Coming Soon]}
+  - pretty_km_output \textcolor{red}{[Coming Soon]}
+  - run_pretty_km_output \textcolor{red}{[Coming Soon]}
+- Utility Functions
+  - round_away_0
+  - get_session_info
+  - get_full_name
+- Example Datasets
+  - exampleData_BAMA
+  - exampleData_NAb
+  - exampleData_ICS
+
+
+## Getting Started
+
+
+Code to initially install the VISCfunctions package:
+
+```{r, echo=TRUE, eval=FALSE}
+# Creating ssh key credential object
+cred = git2r::cred_ssh_key(
+	publickey = "MYPATH/.ssh/id_rsa.pub", 
+	privatekey = "MYPATH/.ssh/id_rsa")
+
+# Installing VISCfunctions from GitHub
+devtools::install_git(
+  "https://github.com/FredHutch/VISCfunctions.git", 
+  credentials = cred)
+```
+
+In RStudio you can go to **Global Options -> Git/SVN** to see the ssh path, and to make a ssh key if needed.
+
+
+Code to load in VISCfunctions and start using:
+
+```{r, echo=TRUE, results='hide', message=FALSE}
+# Loading VISCfunctions
+library(VISCfunctions)
+
+# Loading dplyr for this vignette code
+library(dplyr)
+```
+
+## scharpTemplates Package
+
+The [scharpTemplates](https://github.com/FredHutch/scharpTemplates) package (soon to be called VISCtemplates) makes extensive use of the `VISCfunctions` package, and is a great way get started making professional statistical reports.
+
+Code to initially download scharpTemplates package:
+
+```{r, echo=TRUE, eval=FALSE}
+cred = git2r::cred_ssh_key(
+	publickey = "MYPATH/.ssh/id_rsa.pub", 
+	privatekey = "MYPATH/.ssh/id_rsa")
+
+devtools::install_git(
+  "https://github.com/FredHutch/scharpTemplates.git", 
+  credentials = cred)
+```
+
+Once installed, in RStudio go to **File -> New File -> R Markdown -> From Template -> VISC Report (PDF Output)** to start a new Markdown report using the template. Within the template there is code to load and make use of most of the `VISCfunctions` functionality. 
+
+ - \textcolor{red}{Combo PDF/Word output Coming Soon}
+
+
+## Example Datasets
+
+The `exampleData_BAMA`, `exampleData_NAb`, and `exampleData_ICS` datasets are assay example datasets used throughout this vignette and most examples in the `VISCfunctions` documentation. All example datasets have associated documentation that can be viewed using `?` (i.e `?exampleData_BAMA`).
+
+
+```{r, echo=TRUE}
+# Loading in example datasets
+data("exampleData_BAMA", 'exampleData_NAb', 'exampleData_ICS')
+
+# Quick view of dataset
+tibble::glimpse(exampleData_BAMA)
+
+```
+
+
+```{r, echo=FALSE}
+# Loading in example datasets
+exampleData_BAMA <- 
+  exampleData_BAMA %>% 
+  mutate(antigen = stringr::str_replace_all(antigen, '_', ' '))
+
+```
+
+\clearpage
+
+# Testing and Estimate Functions{#testing-and-estimate-functions}
+
+There are currently two testing functions, with another in development, performing the appropriate statistical tests depending on the data and options, returning a p value.
+
+There is also an estimate function for getting Wilson Confidence Intervals
+
+
+```{r, echo=TRUE}
+
+# Making Testing Dataset
+testing_data <- exampleData_BAMA %>% 
+  dplyr::filter(antigen == 'A1.con.env03 140 CF' & visitno == 1)
+
+```
+
+
+## Comparing Two Groups (Binary Variable) for a Binary Variable 
+
+ `two_samp_bin_test()` is used for comparing a binary variable to a binary (two group) variable, with options for Barnard, Fisher's Exact, Chi-Sq, and McNemar tests. For the Barnard test specifically, there are many model options that can be set that get passed to the `Exact::exact.test` function.
+
+
+```{r, echo=TRUE, warning=FALSE}
+
+table(testing_data$response, testing_data$group)
+
+# Barnard Method
+two_samp_bin_test(x = testing_data$response, y = testing_data$group, 
+                  method = 'barnard', alternative = 'two.sided')
+
+# Santner and Snell Variation
+two_samp_bin_test(x = testing_data$response, y = testing_data$group, 
+                  method = 'barnard', barnard_method = 'santner and snell', alternative = 'two.sided')
+
+# Calling test multiple times
+exampleData_BAMA %>% 
+  group_by(antigen, visitno) %>% 
+  filter(visitno != 0) %>% 
+  summarise(p_val = two_samp_bin_test(response, group, method = 'barnard'))
+```
+
+
+\clearpage
+
+## Comparing Two Groups (Binary Variable) for a Continuous Variable 
+
+`two_samp_cont_test()` is used for comparing a continuous variable to a binary (two group) variable, with parametric (t.test) and non-parametric (Wilcox Rank-Sum) options. Also paired data is allowed, where there are parametric (paired t.test) and non-parametric (Wilcox Signed-Rank) options. 
+
+
+
+```{r, echo=TRUE, warning=FALSE}
+
+by(testing_data$magnitude, testing_data$group, summary)
+
+two_samp_cont_test(x = testing_data$magnitude, y = testing_data$group, 
+                   method = 'wilcox', alternative = 'two.sided')
+
+
+# Calling test multiple times
+exampleData_BAMA %>% 
+  group_by(antigen, visitno) %>% 
+  filter(visitno != 0) %>% 
+  summarise(p_val = two_samp_cont_test(magnitude, group, method = 'wilcox'))
+```
+
+
+## Comparing Two Continuous Variables (Correlation) \textcolor{red}{[Coming Soon]}
+
+`cor_test()` is used for comparing two continuous variables, with Pearson, Kendall, or Spearman methods. 
+
+If Spearman method is chosen and either variable has a tie the approximate distribution is use in the `coin::spreaman_test()` function. This is usually the preferred method over the asymptotic approximation, which is the method `stats:cor.test()` uses in cases of ties. If the Spearman method is chosen and there are no ties, the exact method is used from `stats:cor.test()`.
+
+
+```{r, echo=TRUE, eval=FALSE, warning=FALSE}
+
+cor(testing_data$magnitude1, testing_data$magnitude2, 
+    method = 'spearman')
+
+cor_test(x = testing_data$magnitude1, y = testing_data$magnitude2,
+         method = 'spearman')
+
+```
+
+
+
+# Fancy Output Functions
+
+
+There are currently three completed functions designed to produce professional output that can easily be printed in reports.
+
+## P Values
+
+`pretty_pvalues()` can be used on p values, rounding them to a specified digit amount and using < for low p values, as opposed to scientific notation (i.e. "p < 0.0001" if rounding to 4 digits), allows options for emphasizing p-values and specific characters for missing. Currently latex, html, and pandoc (Word), and markups are supported.
+
+```{r, echo=TRUE}
+pvalue_example = c(1, 0.06753, 0.004435, NA, 1e-16, 0.563533)
+# For simple p value display
+pretty_pvalues(pvalue_example, digits = 3, output_type = 'no_markup')
+
+# For display in report
+table_p_Values <- pretty_pvalues(pvalue_example, digits = 3, 
+                                 background = "yellow")
+kableExtra::kable(table_p_Values, format = 'latex', escape = FALSE, 
+                  col.names = c("P-values"), caption = 'Fancy P Values') %>% 
+  kableExtra::kable_styling(font_size = 8.5, latex_options = "hold_position")  
+
+
+```
+
+You can also specify if you want `p=` pasted on the front of the p values, using the `include_p` parameter.
+
+\clearpage
+
+## Basic Combining of Variables
+
+` stat_paste()` is used to combine two or three statistics together, allowing for different rounding and bound character specifications. Common uses for this function are for:
+
+- Mean (sd)
+- Median [min, max]
+- Estimate (SE of Estimate)
+- Estimate (95% CI Lower Bound, Upper Bound)
+- Estimate/Statistic (p value)
+
+```{r, echo=TRUE}
+# Simple Examples
+stat_paste(stat1 = 2.45, stat2 = 0.214, stat3 = 55.3, 
+           digits = 2, bound_char = '[')
+stat_paste(stat1 = 6.4864, stat2 = pretty_pvalues(0.0004, digits = 3), 
+           digits = 3, bound_char = '(')
+
+
+exampleData_BAMA %>% 
+  filter(visitno == 1) %>%  
+  group_by(antigen, group) %>% 
+  summarise(`Magnitude Info (Median [Range])` = 
+              stat_paste(stat1 = median(magnitude), 
+                         stat2 = min(magnitude),
+                         stat3 = max(magnitude),
+                         digits = 2, bound_char = '['),
+            `Magnitude Info (Mean (SD))` = 
+              stat_paste(stat1 = mean(magnitude), 
+                         stat2 = sd(magnitude),
+                         digits = 2, bound_char = '('))
+
+
+
+```
+
+\clearpage
+
+
+## Advanced Combining of Variables
+
+`paste_tbl_grp()` paste together information, often statistics, from two groups. There are two predefined combinations: mean(sd) and median[min,max], but user may also paste any single measure together. 
+
+Example of summary information to be pasted together (partial output):
+
+```{r, echo=FALSE, warning=FALSE, size='tiny'}
+
+summary_info <- exampleData_BAMA %>% 
+  filter(visitno == 1) %>%  
+  mutate(group = paste0("Group", group)) %>% 
+  group_by(antigen, group) %>%
+  summarise_at("magnitude", list(n = length, mean = mean, sd = sd, 
+                                 median = median, min = min, max = max)) %>%
+  tidyr::gather(variable, value, -antigen, -group) %>%
+  tidyr::unite(var, group, variable) %>% 
+  tidyr::spread(var, value) %>%
+  mutate(Group1 = "Group 1", Group2 = "Group 2") 
+
+summary_info %>% 
+  select(antigen, Group1_max, Group1_mean, Group1_median, Group1_min, Group1_n)
+
+```
+
+
+```{r, echo=TRUE, warning=FALSE}
+
+summary_table <-  summary_info %>% 
+  paste_tbl_grp(vars_to_paste = c('n', 'mean_sd', 'median_min_max'), 
+                first_name = 'Group1', second_name = 'Group2')
+
+kableExtra::kable(summary_table, format = 'latex', escape = TRUE, booktabs = TRUE, 
+                  caption = 'Summary Information Comparison') %>% 
+  kableExtra::kable_styling(font_size = 6.5, latex_options = "hold_position") %>% 
+  kableExtra::footnote(
+    'Summary Information for Group 1 vs. Group 2, by Antigen and for Visit 1')
+
+```
+
+
+
+\clearpage
+
+
+# Pairwise Comparison Functions
+
+`pairwise_test_bin()`, `pairwise_test_cont()`, `pairwise_test_cor()`, are functions take will perform pairwise group (or any categorical variable) comparisons. The function will goes through all pairwise comparisons and output descriptive statistics and relevant p values, calling the appropriate testing functions from the [Testing and Estimate Functions](#testing-and-estimate-functions) section.
+
+## Pairwise Comparison of Multiple Groups for a Binary Variable 
+
+Simple example using `pairwise_test_bin()`:
+
+```{r, echo=TRUE, warning=FALSE}
+
+set.seed(1)
+x_example <- c(NA, sample(0:1, 50, replace = TRUE, prob = c(.75, .25)),
+  sample(0:1, 50, replace = TRUE, prob = c(.25, .75)))
+group_example <- c(rep(1, 25), NA, rep(2, 25), rep(3, 25), rep(4, 25))
+
+pairwise_test_bin(x_example, group_example)
+
+
+```
+
+\clearpage
+
+Group comparison example using `pairwise_test_bin()`:
+
+```{r, echo=TRUE, warning=FALSE, results='asis'}
+
+## Group Comparison
+group_testing <- exampleData_ICS %>%
+  filter(Population == 'IFNg Or IL2' & Group != 4) %>% 
+  group_by(Stim, Visit) %>%
+  group_modify(~ as.data.frame(
+    pairwise_test_bin(x = .$response, group = .$Group,
+                      method = 'barnard', alternative = 'less',
+                      num_needed_for_test = 3, digits = 1,
+                      latex_output = TRUE, verbose = FALSE))) %>%  
+  ungroup() %>% 
+  # Getting fancy p values
+  mutate(ResponseTest = pretty_pvalues(ResponseTest, output_type = 'latex', 
+                                       sig_alpha = .1, background = 'yellow'))
+
+kableExtra::kable(group_testing, format = 'latex', escape = FALSE, booktabs = TRUE, 
+                  caption = 'Response Rate Comparisons Across Groups') %>% 
+  kableExtra::kable_styling(font_size = 6.5, 
+                            latex_options = c("hold_position","scale_down")) %>% 
+  kableExtra::collapse_rows(c(1:2), row_group_label_position = 'identity', 
+                            latex_hline = 'full')
+```
+
+\clearpage
+
+Time point comparison example (paired) using `pairwise_test_bin()`:
+
+
+```{r, echo=TRUE, warning=FALSE, results='asis'}
+
+## Timepoint Comparison
+timepoint_testing <- exampleData_ICS %>%
+  filter(Population == 'IFNg Or IL2' & Group != 4) %>% 
+  group_by(Stim, Group) %>%
+  group_modify(~ as.data.frame(
+    pairwise_test_bin(x = .$response, group = .$Visit, id = .$pubID,
+                      method = 'mcnemar', num_needed_for_test = 3, digits = 1,
+                      latex_output = TRUE, verbose = FALSE))) %>% 
+  ungroup() %>% 
+  # Getting fancy p values
+  mutate(ResponseTest = pretty_pvalues(ResponseTest, output_type = 'latex', 
+                                       sig_alpha = .1, background = 'yellow'))
+
+
+kableExtra::kable(timepoint_testing, format = 'latex', escape = FALSE, booktabs = TRUE, 
+                  caption = 'Response Rate Comparisons Across Visits') %>% 
+  kableExtra::kable_styling(font_size = 6.5, 
+                            latex_options = c("hold_position","scale_down")) %>% 
+  kableExtra::collapse_rows(c(1:2), row_group_label_position = 'identity', 
+                            latex_hline = 'full')
+
+```
+
+
+
+\clearpage
+
+## Pairwise Comparison of Multiple Groups for a Continuous Variable 
+
+
+Simple example using `pairwise_test_cont()`:
+
+```{r, echo=TRUE, warning=FALSE, size='tiny'}
+
+set.seed(1)
+x_example <- c(NA, rnorm(50), rnorm(50, mean = 5))
+group_example <- c(rep(1, 25), rep(2, 25), rep(3, 25), rep(4, 25), NA)
+
+pairwise_test_cont(x_example, group_example, digits = 1)
+
+
+```
+
+\clearpage
+
+Group comparison Example using `pairwise_test_cont()`:
+
+```{r, echo=TRUE, warning=FALSE, results='asis'}
+
+## Group Comparison
+group_testing <- exampleData_ICS %>%
+  filter(Population == 'IFNg Or IL2' & Group != 4) %>% 
+  group_by(Stim, Visit) %>%
+  group_modify(~ as.data.frame(
+    pairwise_test_cont(x = .$PercentCellNet, group = .$Group,
+                      method = 'wilcox', paired = FALSE, alternative = 'greater', 
+                      num_needed_for_test = 3, digits = 3, verbose = FALSE))) %>% 
+   ungroup() %>% 
+  # Getting fancy p values
+  mutate(MagnitudeTest = pretty_pvalues(MagnitudeTest, output_type = 'latex', 
+                                       sig_alpha = .1, background = 'yellow')) %>% 
+  rename("Median (Range)" = Median_Min_Max, 'Mean (SD)' = Mean_SD)
+
+kableExtra::kable(group_testing, format = 'latex', escape = FALSE, booktabs = TRUE, 
+                  caption = 'Magnitude Comparisons Across Groups') %>% 
+  kableExtra::kable_styling(font_size = 6.5, 
+                            latex_options = c("hold_position","scale_down")) %>% 
+  kableExtra::collapse_rows(c(1:2), row_group_label_position = 'identity', latex_hline = 'full')
+```
+
+\clearpage
+
+Time point comparison example (paired) using `pairwise_test_cont()`:
+
+
+```{r, echo=TRUE, warning=FALSE, results='asis'}
+
+## Timepoint Comparison
+timepoint_testing <- exampleData_ICS %>%
+  filter(Population == 'IFNg Or IL2' & Group != 4) %>% 
+  group_by(Stim, Group) %>%
+  group_modify(~ as.data.frame(
+    pairwise_test_cont(x = .$PercentCellNet, group = .$Visit, id = .$pubID,
+                       method = 'wilcox', paired = TRUE, num_needed_for_test = 3, 
+                       digits = 3, verbose = FALSE))) %>% 
+   ungroup() %>% 
+  # Getting fancy p values
+  mutate(MagnitudeTest = pretty_pvalues(MagnitudeTest, output_type = 'latex', 
+                                        sig_alpha = .1, background = 'yellow')) %>% 
+  rename("Median (Range)" = Median_Min_Max, 'Mean (SD)' = Mean_SD)
+
+
+kableExtra::kable(timepoint_testing, format = 'latex', escape = FALSE, booktabs = TRUE, 
+                  caption = 'Magnitude Comparisons Across Visits') %>% 
+  kableExtra::kable_styling(font_size = 6.5, 
+                            latex_options = c("hold_position","scale_down")) %>% 
+  kableExtra::collapse_rows(c(1:2), row_group_label_position = 'identity', latex_hline = 'full')
+
+```
+
+
+\clearpage
+
+# Model Output Functions \textcolor{red}{[Coming Soon]}
+
+## Linear, Logistic, and Cox Model Output \textcolor{red}{[Coming Soon]}
+
+`pretty_model_output()` and `run_pretty_model_output()` are used to produce professional tables for single or multiple linear, logistic, or Cox proportional hazards regression models, and for calculating estimates, odds ratios, or hazard ratios, respectively, with confidence intervals. P values are also produced. For categorical variables with 3+ levels overall Type 3 p values are calculated (matches SAS's default overall p values), in addition to p values comparing to the first level (reference).
+
+`pretty_model_output()` uses the model fits, while `run_pretty_model_output()` uses the variables and dataset, running the desired model. The `run_pretty_model_output()` will use variable labels if they exist (created by the `Hmisc::label()` function). Many details can be adjusted, such as overall test method ("Wald" or "LR"), title (will be added as column), confidence level, estimate and p value rounded digits, significant alpha level for highlighting along with color, italic, and bolding p value options, and latex or non-latex desired output.
+
+In `run_pretty_model_output()`, `y_in`, `event_in`, and `event_level` are used defined differently, depending on the type of model. For linear regression `y_in` is the dependent variable, and `event_in` and `event_level` are left NULL. For logistic regression `y_in` is the dependent variable, `event_level` is the event level of the variable (i.e. "1" or "Response"), and `event_in` is left NULL. For Cox regression `y_in` is the time component, `event_in` is the event status variable, and `event_level` is the event level of the `event_in` variable (i.e. "1" or "Dead"). 
+
+
+## Kaplan–Meier Output Functions \textcolor{red}{[Coming Soon]}
+
+`pretty_km_output()` and `run_pretty_km_output()` are used to produce professional tables with Kaplan–Meier median survival estimates, and the estimates at given time points, if listed. `pretty_km_output()` uses a survfit object, while `run_pretty_km_output()` uses the variables, and strata if applicable, and runs creates the survfit objects, also calculating the log-rank p value, if applicable.
+
+ Many details can be adjusted, such as title (will be added as column), strata name, confidence level, survival estimate prefix (default is "Time"), survival estimate, median estimate, and p value rounded digits, significant alpha level for highlighting along with color, italic, and bolding p value options, and latex or non-latex desired output.
+
+
+# Utility Functions
+
+
+`round_away_0()` is a function to properly perform mathematical rounding (i.e. rounding away from 0 when tied), as opposed to the `round()` function, which rounds to the nearest even number when tied. Also `round_away_0()` allows for trailing zeros (i.e. 0.100 if rounding to 3 digits). 
+
+```{r}
+vals_to_round = c(NA,-3.5:3.5)
+vals_to_round
+round(vals_to_round)
+round_away_0(vals_to_round)
+round_away_0(vals_to_round, digits = 2, trailing_zeros = TRUE)
+```
+
+\clearpage
+
+`get_session_info()` produces reproducible tables, which are great to add to the end of reports. The first table gives Software Session Information and the second table gives Software Package Version Information `get_full_name()` is a function used by `get_session_info()` to get the user's name, based on user's ID.
+
+```{r}
+my_session_info <- get_session_info()
+
+kableExtra::kable(my_session_info$platform_table, 'latex', booktabs = TRUE, 
+      linesep = '', caption = "Reproducibility Software Session Information") %>% 
+      kableExtra::kable_styling(font_size = 8, latex_options = "hold_position")
+
+kableExtra::kable(my_session_info$packages_table, 'latex', booktabs = TRUE, 
+      linesep = '', caption = "Reproducibility Software Package Version Information") %>% 
+      kableExtra::kable_styling(font_size = 8, latex_options = "hold_position")
+
+```
+
+
+
