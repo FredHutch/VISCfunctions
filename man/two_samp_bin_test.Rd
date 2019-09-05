@@ -20,9 +20,9 @@ two_samp_bin_test(x, y, method = c("barnard", "fisher", "chi.sq",
 "chi.sq" , or "mcnemar")}
 
 \item{barnard_method}{indicates the Barnard method for finding tables as or
- more extreme than the observed table: must be either "Z-pooled",
-"Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate", or
-"CSM modified". Only used when \code{method = 'barnard'}}
+ more extreme than the observed table: must be either "z-pooled",
+"z-unpooled", "santner and snell", "boschloo", "csm", "csm approximate", or
+"csm modified". Only used when \code{method = 'barnard'}}
 
 \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of "two.sided" (default), "greater" or "less". You can specify
