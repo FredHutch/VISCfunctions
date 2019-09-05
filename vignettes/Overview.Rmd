@@ -551,6 +551,11 @@ kableExtra::kable(my_session_info$platform_table, 'latex', booktabs = TRUE,
       linesep = '', caption = "Reproducibility Software Session Information") %>% 
       kableExtra::kable_styling(font_size = 8, latex_options = "hold_position")
 
+```
+
+
+```{r}
+
 kableExtra::kable(my_session_info$packages_table, 'latex', booktabs = TRUE, 
       linesep = '', caption = "Reproducibility Software Package Version Information") %>% 
       kableExtra::kable_styling(font_size = 8, latex_options = "hold_position")
