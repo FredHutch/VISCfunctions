@@ -3,6 +3,10 @@
 # Arguments:
 #    id (default arg works except when Mac login id is different from LDAP id)
 # Returns: User's first and last names as a string
+#' @title gets user's real name from either Windows local or LDAP (for Mac and linux)
+#' @param id default arg works except when Mac login id is different from LDAP id
+#' @return User's first and last names as a string
+#' @export
 getUsername <- function(id = Sys.getenv("USER")) {
   switch(Sys.info()[['sysname']],
          Windows = {
