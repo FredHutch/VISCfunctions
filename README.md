@@ -26,7 +26,7 @@ devtools::install_github("FredHutch/VISCfunctions", build_vignettes = TRUE)
 
 # Overview
 
-Below is an overview of the currently availble functions in
+Below is an overview of the currently available functions in
 VISCfunctions.
 
 ## Statistical testing and estimates
