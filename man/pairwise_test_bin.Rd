@@ -4,13 +4,25 @@
 \alias{pairwise_test_bin}
 \title{Binary Variable Pairwise Testing}
 \usage{
-pairwise_test_bin(x, group, id = NULL, method = c("barnard", "fisher",
-  "chi.sq", "mcnemar"), barnard_method = c("z-pooled", "z-unpooled",
-  "boschloo", "santner and snell", "csm", "csm approximate",
-  "csm modified"), alternative = c("two.sided", "less", "greater"),
-  sorted_group = NULL, num_needed_for_test = 3, conf_level = 0.95,
-  digits = 1, trailing_zeros = TRUE, sep_val = " vs. ",
-  na_str_out = "---", latex_output = FALSE, verbose = FALSE, ...)
+pairwise_test_bin(
+  x,
+  group,
+  id = NULL,
+  method = c("barnard", "fisher", "chi.sq", "mcnemar"),
+  barnard_method = c("z-pooled", "z-unpooled", "boschloo", "santner and snell", "csm",
+    "csm approximate", "csm modified"),
+  alternative = c("two.sided", "less", "greater"),
+  sorted_group = NULL,
+  num_needed_for_test = 3,
+  conf_level = 0.95,
+  digits = 1,
+  trailing_zeros = TRUE,
+  sep_val = " vs. ",
+  na_str_out = "---",
+  latex_output = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{numeric vector (0/1) or logical vector or (F/T)

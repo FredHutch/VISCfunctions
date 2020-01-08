@@ -4,10 +4,18 @@
 \alias{pretty_pvalues}
 \title{Round and format a vector of p-values}
 \usage{
-pretty_pvalues(pvalues, digits = 3, bold = FALSE, italic = FALSE,
-  background = NULL, sig_alpha = 0.05, missing_char = "---",
-  include_p = FALSE, trailing_zeros = TRUE, output_type = c("latex",
-  "html", "pandoc", "no_markup"))
+pretty_pvalues(
+  pvalues,
+  digits = 3,
+  bold = FALSE,
+  italic = FALSE,
+  background = NULL,
+  sig_alpha = 0.05,
+  missing_char = "---",
+  include_p = FALSE,
+  trailing_zeros = TRUE,
+  output_type = c("latex", "html", "pandoc", "no_markup")
+)
 }
 \arguments{
 \item{pvalues}{numeric vector of raw p-values to be formatted}

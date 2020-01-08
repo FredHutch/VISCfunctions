@@ -4,10 +4,19 @@
 \alias{paste_tbl_grp}
 \title{Pasting Together Information for Two Groups}
 \usage{
-paste_tbl_grp(data, vars_to_paste = "all", first_name = "Group1",
-  second_name = "Group2", sep_val = " vs. ", na_str_out = "---",
-  alternative = c("two.sided", "less", "greater"), digits = 0,
-  trailing_zeros = TRUE, keep_all = TRUE, verbose = FALSE)
+paste_tbl_grp(
+  data,
+  vars_to_paste = "all",
+  first_name = "Group1",
+  second_name = "Group2",
+  sep_val = " vs. ",
+  na_str_out = "---",
+  alternative = c("two.sided", "less", "greater"),
+  digits = 0,
+  trailing_zeros = TRUE,
+  keep_all = TRUE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{data}{input dataset. User must use consistent naming throughout, \strong{with an underscore} to separate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be two columns with column names that exactly match the input for \code{first_name} and \code{second_name} (i.e. 'Group1' and 'Group2'), which are used to form the \code{Comparison} variable.}
