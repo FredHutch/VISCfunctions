@@ -291,12 +291,24 @@ test_that("two_samp_bin_test throwing internal .rm_na_and_check checking errors"
                  regexp = '"y" only has 1 level when considering non-missing values of "x", so p=NA returned')
 })
 
+# Testing case where p-value equals 1, that machine estimation doesn't add error to values at 1
+test_that("two_samp_bin_test doesn't return p-values greater than one", {
+  x <- c(rep(1,37),rep(4,2),rep(4,2))
+  y <- c(rep(1,21),rep(2,16), rep(1,2),rep(2,2))
+  expect_equal(object = two_samp_bin_test(x = x,
+                                          y = y,
+                                          method = 'fisher',
+                                          alternative = 'two.sided'),
+               expected = 1,
+               tolerance = 0)
+})
+
 test_that("two_samp_bin_test throwing internal input checking errors", {
   set.seed(5432322)
   x <- c(sample(0:1,10,replace = TRUE, prob = c(.65,.25)),
          sample(0:1,10,replace = TRUE, prob = c(.25,.65)))
   y <- c(rep('a', 10), rep('b', 10))
-  my_matrix <- matrix(1:10,nrow = 2)
+  my_matrix <- matrix(1:10, nrow = 2)
 
   #Checking x
   expect_error(two_samp_bin_test(my_matrix, y = y, method = 'barnard'),
