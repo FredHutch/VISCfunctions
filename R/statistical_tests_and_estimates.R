@@ -224,7 +224,11 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
   }
   if (method == 'fisher') {
     pval_out <- as.double(
-      stats::fisher.test(data_here$x, data_here$y, alternative = alternative)$p.value
+      # Wrapping fisher's test in a pmin function to prevent machine error from
+      # giving values greater than 1
+      pmin(stats::fisher.test(data_here$x,
+                              data_here$y,
+                              alternative = alternative), 1)$p.value
       )
   }
   if (method == 'chi.sq') {
