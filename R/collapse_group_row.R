@@ -16,7 +16,11 @@
 #'   outputVal = runif(7)
 #' )
 #'
-#' group_row_collapse(sample_df, x, y, z)
+#' library(dplyr)
+#' options(knitr.kable.NA = '')
+#' collapse_group_row(sample_df, x, y, z) %>%
+#'  kableExtra::kable() %>%
+#'  kableExtra::kable_styling()
 #' @export
 collapse_group_row <- function(.data, ...) {
     stopifnot(is.data.frame(.data))
