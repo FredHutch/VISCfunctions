@@ -4,11 +4,16 @@
 \alias{two_samp_bin_test}
 \title{Binary (Response) Variable Compared to Binary (Group) Variable Test (VISC)}
 \usage{
-two_samp_bin_test(x, y, method = c("barnard", "fisher", "chi.sq",
-  "mcnemar"), barnard_method = c("z-pooled", "z-unpooled", "boschloo",
-  "santner and snell", "csm", "csm approximate", "csm modified"),
-  alternative = c("two.sided", "less", "greater"), verbose = FALSE,
-  ...)
+two_samp_bin_test(
+  x,
+  y,
+  method = c("barnard", "fisher", "chi.sq", "mcnemar"),
+  barnard_method = c("z-pooled", "z-unpooled", "boschloo", "santner and snell", "csm",
+    "csm approximate", "csm modified"),
+  alternative = c("two.sided", "less", "greater"),
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{vector with only 2 levels (can include NA values).}

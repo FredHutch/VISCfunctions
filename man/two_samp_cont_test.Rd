@@ -4,8 +4,14 @@
 \alias{two_samp_cont_test}
 \title{Continuous Variable Compared to Binary Variable Test (VISC)}
 \usage{
-two_samp_cont_test(x, y, method = c("wilcox", "t.test"),
-  paired = FALSE, verbose = FALSE, ...)
+two_samp_cont_test(
+  x,
+  y,
+  method = c("wilcox", "t.test"),
+  paired = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{numeric vector (can include NA values).}
