@@ -21,7 +21,7 @@ The package provides functions for common tasks for creating statistical reports
 * help format output for PDF and Word reports, and
 * provide frequently used utility functions
 
-for Vaccine Immunology Statistical Center (VISC) statisticians and programmers at Fred Hutch.
+for VISC statisticians and programmers at Fred Hutch.
 
 # Installation
 
