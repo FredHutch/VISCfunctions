@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # VISCfunctions
 
-The package provides functions for common tasks for creating statistical reports at VISC.  The goal of VISCfunctions is to:
+The package provides functions for common tasks for creating statistical reports at Vaccine Immunology Statistical Center (VISC).  The goal of VISCfunctions is to:
 
 * provide standard statistical testing and estimating functions
 * help format output for PDF and Word reports
