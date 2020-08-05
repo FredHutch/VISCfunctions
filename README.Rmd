@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 The package provides functions for common tasks for creating statistical reports at VISC.  The goal of VISCfunctions is to:
 
-* provide standard statistical testing and estimating functions,
+* provide standard statistical testing and estimating functions
 * help format output for PDF and Word reports
 * provide frequently used utility functions
 
