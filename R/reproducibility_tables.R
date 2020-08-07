@@ -141,7 +141,7 @@ get_session_info <- function(){
                            error = function(c) '', warning = function(c) '')
   gitremote <-  substr(gitremoteorg,
                        regexpr("\t", gitremoteorg) + 1,
-                       regexpr(" ", gitremoteorg) - 1)
+                       regexpr(" \\(", gitremoteorg) - 1)
 
   if (is.na(gitremote) || gitremote == "" || grepl('fatal', gitremote)) {
     # No Remote Connection, so just give absolute path
@@ -188,6 +188,9 @@ get_session_info <- function(){
   if (any(!is.na(my_session_info2$data.version)))
     my_session_info2$data.version[is.na(my_session_info2$data.version)] <- '' else
       my_session_info2 <- my_session_info2[, -match('data.version', colnames(my_session_info2))]
+
+  # Replacing @ with # in source
+  my_session_info2$source <- gsub('\\(@', '(', my_session_info2$source)
 
   list(platform_table = my_session_info1, packages_table = my_session_info2)
 }
