@@ -5,6 +5,7 @@
 #'
 #' @param .data a data.frame
 #' @param ... Columns to use to identify which to rows to replace with NA's
+#' @param reorder_cols if \code{TRUE} will order columns listed in \code{...} first
 #'
 #' @return a data.frame where repeated rows in the columns identified by ... are replaced with NA
 #
@@ -22,7 +23,7 @@
 #'  kableExtra::kable() %>%
 #'  kableExtra::kable_styling()
 #' @export
-collapse_group_row <- function(.data, ...) {
+collapse_group_row <- function(.data, ..., reorder_cols = TRUE) {
     stopifnot(is.data.frame(.data))
 
     # This bit allows for non-standard evaluation. We can choose to not use this and
@@ -48,6 +49,10 @@ collapse_group_row <- function(.data, ...) {
         .data[duplicated_rows, field_of_interest] <- NA
     }
 
-    .data[, c(paste0(fields), alt_fields)]
+    if (reorder_cols) {
+        .data[, c(paste0(fields), alt_fields)]
+    } else {
+        .data
+    }
 
 }

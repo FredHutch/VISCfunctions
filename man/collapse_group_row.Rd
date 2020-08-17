@@ -4,12 +4,14 @@
 \alias{collapse_group_row}
 \title{Replace repeated rows in a data.frame with NA}
 \usage{
-collapse_group_row(.data, ...)
+collapse_group_row(.data, ..., reorder_cols = TRUE)
 }
 \arguments{
 \item{.data}{a data.frame}
 
 \item{...}{Columns to use to identify which to rows to replace with NA's}
+
+\item{reorder_cols}{if \code{TRUE} will order columns listed in \code{...} first}
 }
 \value{
 a data.frame where repeated rows in the columns identified by ... are replaced with NA
@@ -26,5 +28,9 @@ sample_df <- data.frame(
   outputVal = runif(7)
 )
 
-group_row_collapse(sample_df, x, y, z)
+library(dplyr)
+options(knitr.kable.NA = '')
+collapse_group_row(sample_df, x, y, z) \%>\%
+ kableExtra::kable() \%>\%
+ kableExtra::kable_styling()
 }
