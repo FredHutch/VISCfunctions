@@ -324,6 +324,7 @@ cor_test <- function(x,
 
   # if spearman with ties calling coin::spearman_test, otherwise cor.test
   if (method == "spearman" &
+      exact == TRUE &
       (any(duplicated(data_here$x)) |
        any(duplicated(data_here$y)))) {
     if (verbose) message('Either "x" or "y" has ties, so using approximate method.')

@@ -389,6 +389,16 @@ test_that("cor_test testing various options (no errors)", {
                                  method = 'spearman', verbose = TRUE),
                regexp = 'Either "x" or "y" has ties, so using approximate method.'
   )
+  # spearman ties but not exact
+  expect_equal(object = cor_test(x = c(x,x), y = c(y,y),
+                                 method = 'spearman', exact = FALSE),
+               expected = as.double(cor.test(c(x,x),
+                                             c(y,y),
+                                             method = 'spearman',
+                                             exact = FALSE)$p.value),
+               tolerance = 1e-8
+  )
+
 })
 
 

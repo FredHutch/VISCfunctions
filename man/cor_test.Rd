@@ -42,9 +42,6 @@ A wrapper for cor.test function, except if spearman selected and ties in at
   least one variable, in which case this is a wrapper for
   \code{coin::spearman_test} in with approximate method.
 }
-\details{
-
-}
 \examples{
 
 set.seed(5432322)
