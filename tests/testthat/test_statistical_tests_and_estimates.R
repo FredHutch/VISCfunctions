@@ -340,6 +340,110 @@ test_that("two_samp_bin_test throwing internal input checking errors", {
 })
 
 
+
+
+
+
+
+# test cor_test
+test_that("cor_test testing various options (no errors)", {
+  ###Testing three methods
+  set.seed(47813458)
+  x <- c(NA,rnorm(5,0,3), rnorm(5,3,3),NA)
+  y <- c(rnorm(5,0,1),NA, rnorm(5,2,1),NA)
+
+  # pearson
+  expect_equal(object = cor_test(x = x, y = y, method = 'pearson'),
+               expected = as.double(cor.test(x,
+                                             y,
+                                             method = 'pearson')$p.value),
+               tolerance = 1e-8
+  )
+  # kendall
+  expect_equal(object = cor_test(x = x, y = y, method = 'kendall'),
+               expected = as.double(cor.test(x,
+                                             y,
+                                             method = 'kendall')$p.value),
+               tolerance = 1e-8
+  )
+  # spearman no ties
+  expect_equal(object = cor_test(x = x, y = y, method = 'spearman'),
+               expected = as.double(cor.test(x,
+                                             y,
+                                             method = 'spearman')$p.value),
+               tolerance = 1e-8
+  )
+  # spearman ties
+  set.seed(4312)
+  tmp_expected <- as.double(coin::pvalue(
+    coin::spearman_test(x~y,
+                        data = data.frame(x = c(x,x), y = c(y,y)),
+                        distribution = coin::approximate(10000)
+    )))
+  expect_equal(object = cor_test(x = c(x,x), y = c(y,y),
+                                 method = 'spearman', seed = 4312, B = 10000),
+               expected = tmp_expected,
+               tolerance = 1e-8
+  )
+  expect_message(object = cor_test(x = c(x,x), y = c(y,y),
+                                 method = 'spearman', verbose = TRUE),
+               regexp = 'Either "x" or "y" has ties, so using approximate method.'
+  )
+})
+
+
+test_that("cor_test throwing internal .rm_na_and_check checking errors", {
+  set.seed(47813458)
+  x <- c(NA,rnorm(5,0,3), rnorm(5,3,3),NA)
+  y <- c(rnorm(5,0,1),NA, rnorm(5,2,1),NA)
+
+  #Testing if x and y are different lengths
+  expect_error(cor_test(x = 1:9, y = 1:10), '"x" and "y" must be the same length')
+
+  #Testing case where no non-missing pairs
+  expect_equal(object = cor_test(x = c(1:20,rep(NA,20)), y = c(rep(NA,20),1:20)), expected = NA)
+  expect_message(object = cor_test(x = c(1:20,rep(NA,20)), y = c(rep(NA,20),1:20), verbose = T),
+                 regexp = 'There are no observations with non-missing values of both "x" and "y", so p=NA returned')
+
+  #Testing case where all x have same value
+  expect_equal(object = cor_test(x = rep(1,12), y = y), expected = 1)
+  expect_message(object = cor_test(x = rep(1,12), y = y, verbose = T),
+                 regexp = '"x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned')
+
+  #Testing case where all y have same value
+  expect_equal(object = cor_test(x = x, y = rep(1,12)), expected = 1)
+  expect_message(object = cor_test(x = x, y = rep(1,12), verbose = T),
+                 regexp = '"y" only has 1 distinct value when considering non-missing values of "x", so p=1 returned')
+})
+
+test_that("cor_test throwing internal input checking errors", {
+  set.seed(47813458)
+  x <- c(NA,rnorm(5,0,3), rnorm(5,3,3),NA)
+  y <- c(rnorm(5,0,1),NA, rnorm(5,2,1),NA)
+  my_matrix <- matrix(1:10,nrow = 2)
+
+  #Checking x
+  expect_error(cor_test(my_matrix, y = y),
+               regexp = '"x" must be a vector \\(one-dimensional object\\)')
+  expect_error(cor_test(x = numeric(0), y = y),
+               regexp = '"x" length must be > 0')
+  expect_error(cor_test(c(NA,NA,NA), y),
+               regexp = '"x" must have at least one non-NA value')
+  expect_error(cor_test(letters[1:5],y),
+               regexp = '"x" must be a numeric vector')
+
+  #Checking y
+  expect_error(cor_test(x, my_matrix),
+               regexp = '"y" must be a vector \\(one-dimensional object\\)')
+  expect_error(cor_test(x,numeric(0)),
+               regexp = '"y" length must be > 0')
+  expect_error(cor_test(x,c(NA,NA,NA)),
+               regexp = '"y" must have at least one non-NA value')
+  expect_error(cor_test(x,letters[1:5]),
+               regexp = '"y" must be a numeric vector')
+})
+
+
 test_that("test-wilson_ci", {
 
   # check x

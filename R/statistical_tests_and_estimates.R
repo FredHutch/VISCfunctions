@@ -249,6 +249,104 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
   pval_out
 }
 
+
+
+
+#' Correlation Test for Two Continuous Variables
+#'
+#' A wrapper for cor.test function, except if spearman selected and ties in at
+#'   least one variable, in which case this is a wrapper for
+#'   \code{coin::spreaman_test} in with approximate method.
+#'
+#'
+#' @param x numeric vector (can include NA values).
+#' @param y numeric vector (can include NA values).
+#' @param method a character string indicating which correlation coefficient
+#'   is to be used for the test. One of "pearson", "kendall", or "spearman",
+#'   can be abbreviated.
+#' @param seed seed (only used if \code{method = "spearman"}).
+#' @param B number of reps (only used if \code{method = "spearman"}).
+#' @param exact Should exact method be used. Ignored if
+#'   \code{method = "pearson"} or if \code{method = "spearman"} and there are
+#'   ties in x or y.
+#' @param verbose a logical variable indicating if warnings and messages
+#'   should be displayed.
+#' @return correlation p value.
+#' @details
+#'
+#' To always get reproducible results when using approximate method we need to
+#'   set seed inside of the call, and order the data
+#'
+#' @examples
+#'
+#' set.seed(5432322)
+#' x <- rnorm(20,0,3)
+#' y <- x + rnorm(20,0,5)
+#' cor_test(x,y, method = 'pearson')
+#' cor_test(x,y, method = 'kendall')
+#' cor_test(x,y, method = 'spearman')
+#' # Adding ties
+#' cor_test(c(x,x), c(y,y), method = 'spearman',
+#'          seed = 1, B = 10000, verbose = TRUE)
+#'
+#' @export
+
+
+cor_test <- function(x,
+                     y,
+                     method = c("pearson", "kendall", "spearman"),
+                     seed = 68954857,
+                     B = 10000,
+                     exact = TRUE,
+                     verbose = FALSE){
+  method <- match.arg(method)
+  .check_numeric_input(x)
+  .check_numeric_input(y)
+  if (method == "spearman") {
+    .check_numeric_input(seed,
+                         lower_bound = -2^30,
+                         upper_bound = 2^30,
+                         scalar = TRUE,
+                         whole_num = TRUE)
+    .check_numeric_input(B,
+                         lower_bound = 1,
+                         upper_bound = 2^20,
+                         scalar = TRUE,
+                         whole_num = TRUE)
+  }
+
+  rm_na_and_check_output <- .rm_na_and_check(x,
+                                             y,
+                                             x_type = 'continuous',
+                                             y_type = 'continuous',
+                                             verbose = verbose)
+  if (is.data.frame(rm_na_and_check_output)) {
+    data_here <- rm_na_and_check_output
+  } else {
+    return(rm_na_and_check_output)
+  }
+
+  # if spearman with ties calling coin::spearman_test, otherwise cor.test
+  if (method == "spearman" &
+      (any(duplicated(data_here$x)) |
+       any(duplicated(data_here$y)))) {
+    if (verbose) message('Either "x" or "y" has ties, so using approximate method.')
+    set.seed(seed)
+    as.double(coin::pvalue(
+      coin::spearman_test(x~y,
+                          data = data_here,
+                          distribution = coin::approximate(B)
+      )))
+  } else {
+    as.double(stats::cor.test(data_here$x,
+                       data_here$y,
+                       method = method,
+                       exact = exact)$p.value)
+  }
+}
+
+
+
 #' Wilson Confidence Interval
 #'
 #' @param x vector of type integer (0/1) or logical (TRUE/FALSE)
