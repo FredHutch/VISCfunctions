@@ -256,7 +256,7 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 #'
 #' A wrapper for cor.test function, except if spearman selected and ties in at
 #'   least one variable, in which case this is a wrapper for
-#'   \code{coin::spreaman_test} in with approximate method.
+#'   \code{coin::spearman_test} in with approximate method.
 #'
 #'
 #' @param x numeric vector (can include NA values).
@@ -271,11 +271,7 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 #'   ties in x or y.
 #' @param verbose a logical variable indicating if warnings and messages
 #'   should be displayed.
-#' @return correlation p value.
-#' @details
-#'
-#' To always get reproducible results when using approximate method we need to
-#'   set seed inside of the call, and order the data
+#' @return correlation estimate p value.
 #'
 #' @examples
 #'

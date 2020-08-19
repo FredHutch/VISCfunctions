@@ -35,16 +35,15 @@ ties in x or y.}
 should be displayed.}
 }
 \value{
-correlation p value.
+correlation estimate p value.
 }
 \description{
 A wrapper for cor.test function, except if spearman selected and ties in at
   least one variable, in which case this is a wrapper for
-  \code{coin::spreaman_test} in with approximate method.
+  \code{coin::spearman_test} in with approximate method.
 }
 \details{
-To always get reproducible results when using approximate method we need to
-  set seed inside of the call, and order the data
+
 }
 \examples{
 
