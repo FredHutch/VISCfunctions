@@ -4,7 +4,8 @@
 \name{exampleData_NAb}
 \alias{exampleData_NAb}
 \title{Example NAb dataset}
-\format{A data frame with 210 rows and 9 variables:
+\format{
+A data frame with 210 rows and 9 variables:
 \describe{
   \item{pubID}{randomized subject ID}
   \item{group}{study group}
@@ -16,7 +17,8 @@
   \item{response_50}{response call for ID50 titer (0/1)}
   \item{response_80}{response call for ID80 titer (0/1)}
   ...
-}}
+}
+}
 \usage{
 exampleData_NAb
 }
