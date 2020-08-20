@@ -4,14 +4,14 @@
 # VISCfunctions
 
 The package provides functions for common tasks for creating statistical
-reports at VISC. The goal of VISCfunctions is to:
+reports at Vaccine Immunology Statistical Center (VISC). The goal of
+VISCfunctions is to:
 
-  - provide standard statistical testing and estimating functions,
-  - help format output for PDF and Word reports, and
+  - provide standard statistical testing and estimating functions
+  - help format output for PDF and Word reports
   - provide frequently used utility functions
 
-for Vaccine Immunology Statistical Center (VISC) statisticians and
-programmers at Fred Hutch.
+for VISC statisticians and programmers at Fred Hutch.
 
 # Installation
 
@@ -20,8 +20,9 @@ The package is available on the Fred Hutch organization GitHub page.
 ``` r
 remotes::install_github("FredHutch/VISCfunctions")
 
-# to access the vignette, use devtools:
-devtools::install_github("FredHutch/VISCfunctions", build_vignettes = TRUE)
+# Use the build_vignettes parameter to access the vignette:
+remotes::install_github("FredHutch/VISCfunctions", build_vignettes = TRUE)
+vignette("Overview")
 ```
 
 # Overview
