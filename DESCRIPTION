@@ -29,7 +29,8 @@ Imports:
     sessioninfo,
     survival,
     tibble,
-    tidyr
+    tidyr,
+    withr
 Suggests: 
     binom,
     rmarkdown,

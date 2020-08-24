@@ -328,12 +328,14 @@ cor_test <- function(x,
       (any(duplicated(data_here$x)) |
        any(duplicated(data_here$y)))) {
     if (verbose) message('Either "x" or "y" has ties, so using approximate method.')
-    set.seed(seed)
-    as.double(coin::pvalue(
-      coin::spearman_test(x~y,
-                          data = data_here,
-                          distribution = coin::approximate(B)
-      )))
+    withr::with_seed(seed = seed,
+                     as.double(coin::pvalue(
+                       coin::spearman_test(x~y,
+                                           data = data_here,
+                                           distribution = coin::approximate(B)
+                       )))
+
+                     )
   } else {
     as.double(stats::cor.test(data_here$x,
                        data_here$y,

@@ -353,25 +353,22 @@ test_that("cor_test testing various options (no errors)", {
   y <- c(rnorm(5,0,1),NA, rnorm(5,2,1),NA)
 
   # pearson
-  expect_equal(object = cor_test(x = x, y = y, method = 'pearson'),
+  expect_identical(object = cor_test(x = x, y = y, method = 'pearson'),
                expected = as.double(cor.test(x,
                                              y,
-                                             method = 'pearson')$p.value),
-               tolerance = 1e-8
+                                             method = 'pearson')$p.value)
   )
   # kendall
-  expect_equal(object = cor_test(x = x, y = y, method = 'kendall'),
+  expect_identical(object = cor_test(x = x, y = y, method = 'kendall'),
                expected = as.double(cor.test(x,
                                              y,
-                                             method = 'kendall')$p.value),
-               tolerance = 1e-8
+                                             method = 'kendall')$p.value)
   )
   # spearman no ties
-  expect_equal(object = cor_test(x = x, y = y, method = 'spearman'),
+  expect_identical(object = cor_test(x = x, y = y, method = 'spearman'),
                expected = as.double(cor.test(x,
                                              y,
-                                             method = 'spearman')$p.value),
-               tolerance = 1e-8
+                                             method = 'spearman')$p.value)
   )
   # spearman ties
   set.seed(4312)
@@ -380,23 +377,31 @@ test_that("cor_test testing various options (no errors)", {
                         data = data.frame(x = c(x,x), y = c(y,y)),
                         distribution = coin::approximate(10000)
     )))
-  expect_equal(object = cor_test(x = c(x,x), y = c(y,y),
+  expect_identical(object = cor_test(x = c(x,x), y = c(y,y),
                                  method = 'spearman', seed = 4312, B = 10000),
-               expected = tmp_expected,
-               tolerance = 1e-8
+               expected = tmp_expected
   )
   expect_message(object = cor_test(x = c(x,x), y = c(y,y),
                                  method = 'spearman', verbose = TRUE),
                regexp = 'Either "x" or "y" has ties, so using approximate method.'
   )
   # spearman ties but not exact
-  expect_equal(object = cor_test(x = c(x,x), y = c(y,y),
+  expect_identical(object = cor_test(x = c(x,x), y = c(y,y),
                                  method = 'spearman', exact = FALSE),
                expected = as.double(cor.test(c(x,x),
                                              c(y,y),
                                              method = 'spearman',
-                                             exact = FALSE)$p.value),
-               tolerance = 1e-8
+                                             exact = FALSE)$p.value)
+  )
+
+  #confirming seed is restored
+  old_seed <- get(".Random.seed", globalenv(), mode = "integer",
+                  inherits = FALSE)
+  xx <- cor_test(x = c(x,x), y = c(y,y),
+                 method = 'spearman', seed = 47861684, B = 10000)
+  expect_identical(object = get(".Random.seed", globalenv(), mode = "integer",
+                                inherits = FALSE),
+                   expected = old_seed
   )
 
 })
@@ -411,17 +416,17 @@ test_that("cor_test throwing internal .rm_na_and_check checking errors", {
   expect_error(cor_test(x = 1:9, y = 1:10), '"x" and "y" must be the same length')
 
   #Testing case where no non-missing pairs
-  expect_equal(object = cor_test(x = c(1:20,rep(NA,20)), y = c(rep(NA,20),1:20)), expected = NA)
+  expect_identical(object = cor_test(x = c(1:20,rep(NA,20)), y = c(rep(NA,20),1:20)), expected = NA)
   expect_message(object = cor_test(x = c(1:20,rep(NA,20)), y = c(rep(NA,20),1:20), verbose = T),
                  regexp = 'There are no observations with non-missing values of both "x" and "y", so p=NA returned')
 
   #Testing case where all x have same value
-  expect_equal(object = cor_test(x = rep(1,12), y = y), expected = 1)
+  expect_identical(object = cor_test(x = rep(1,12), y = y), expected = 1)
   expect_message(object = cor_test(x = rep(1,12), y = y, verbose = T),
                  regexp = '"x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned')
 
   #Testing case where all y have same value
-  expect_equal(object = cor_test(x = x, y = rep(1,12)), expected = 1)
+  expect_identical(object = cor_test(x = x, y = rep(1,12)), expected = 1)
   expect_message(object = cor_test(x = x, y = rep(1,12), verbose = T),
                  regexp = '"y" only has 1 distinct value when considering non-missing values of "x", so p=1 returned')
 })
