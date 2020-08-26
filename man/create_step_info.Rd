@@ -21,10 +21,10 @@ Returns a data frame with time, \code{surv}, \code{n.risk},
 Creates step curve info for survival KM plots and magnitude breath (MB) plots
 }
 \details{
-The output can be used for plotting to create area under the curve AUC
-  values, with \code{time} on the x axis, \code{surv} on the y axis, and
+The output can be used for plotting step function curves,
+  with \code{time} on the x axis, \code{surv} on the y axis, and
   \code{n.censor == 1} subset can be used for a \code{ggplot2::geom_point()}
-  layer
+  layer.
 }
 \examples{
 
