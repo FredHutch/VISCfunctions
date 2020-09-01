@@ -64,9 +64,7 @@ test_that("mb_results testing", {
   data(exampleData_BAMA)
 
   # testing AUC
-  data_here <-
-   exampleData_BAMA %>%
-   filter(visitno == 2)
+  data_here <- exampleData_BAMA[exampleData_BAMA$visitno == 2, ]
 
   # Testing raw no truncation
   expect_equal(
@@ -135,7 +133,8 @@ test_that("mb_results testing", {
   auc_here = 10^mean(
     log10(pmin(pmax(100, data_here$magnitude * data_here$response), 22000))
     )
-  step_info_here <- create_step_info(pmin(pmax(100, data_here$magnitude * data_here$response), 22000))
+  step_info_here <- create_step_info(pmin(pmax(
+    100, data_here$magnitude * data_here$response), 22000))[,-5]
   step_info_here$time[step_info_here$time == 0] <- 1
 
   expect_equal(

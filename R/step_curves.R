@@ -1,6 +1,7 @@
 #' Creating Points for Step Lines
 #'
-#' Creates step curve info for survival KM plots and magnitude breath (MB) plots
+#' Creates step curve info for survival Kaplan-Meier (KM) plots and magnitude
+#'  breath (MB) plots
 #'
 #' @param x values to create step curve for (numeric vector)
 #' @param event event status, 0=censor and 1=event (numeric vector).
@@ -75,7 +76,7 @@ create_step_info <- function(x, event = NULL){
 #' @param x_transform a character vector specifying the transformation for AUC
 #'   calculation, if any. Must be one of "log10" (default) or "raw".
 #' @return Returns a data frame with \code{time}, \code{surv}, \code{n.risk},
-#'   \code{n.event}, and \code{n.censor} (\code{survival::summary.survfit}
+#'   and \code{n.event} (\code{survival::summary.survfit}
 #'   output format), and \code{aucMB}.
 #'
 #' @details
@@ -90,9 +91,8 @@ create_step_info <- function(x, event = NULL){
 #'
 #'
 #' The output can be used for plotting step function curves,
-#'   with \code{time} on the x axis, \code{surv} on the y axis, and
-#'   \code{n.censor == 1} subset can be used for a \code{ggplot2::geom_point()}
-#'   layer. Note if \code{x_transform = 'log10'} the resulting plot is best
+#'   with \code{time} on the x axis and \code{surv} on the y axis.
+#'   Note if \code{x_transform = 'log10'} the resulting plot is best
 #'   displayed on the log10 scale (\code{ggplot2::scale_x_log10}).
 #'
 #' \code{aucMB} can be used for boxplots and group comparisons. Note
@@ -101,8 +101,10 @@ create_step_info <- function(x, event = NULL){
 #' @examples
 #'
 #'
-#' mb_results(96:105, c(rep(0,5), rep(1,5)), x_transform = 'log10')
-#' mb_results(96:105, c(rep(0,5), rep(1,5)), x_transform = 'raw')
+#' mb_results(x = 96:105, response = c(rep(0,5), rep(1,5)),
+#'            lower_trunc = 100, x_transform = 'log10')
+#' mb_results(x = 96:105, response = c(rep(0,5), rep(1,5)),
+#'            lower_trunc = 100, x_transform = 'raw')
 #'
 #' # Simple Example
 #' library(dplyr)
@@ -202,6 +204,8 @@ mb_results <- function(x,
   x <- pmin(pmax(lower_trunc, x), upper_trunc)
 
   surv_results <- create_step_info(x)
+  #dropping n.censor since it's always 0
+  surv_results <- surv_results[, colnames(surv_results) != 'n.censor']
 
   if (x_transform == 'raw') {
     auc_results <- sum(diff(surv_results$time) *

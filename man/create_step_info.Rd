@@ -18,7 +18,8 @@ Returns a data frame with time, \code{surv}, \code{n.risk},
   output format)
 }
 \description{
-Creates step curve info for survival KM plots and magnitude breath (MB) plots
+Creates step curve info for survival Kaplan-Meier (KM) plots and magnitude
+ breath (MB) plots
 }
 \details{
 The output can be used for plotting step function curves,
