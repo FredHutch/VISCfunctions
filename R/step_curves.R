@@ -1,9 +1,9 @@
-#' Creating Points for Step Lines
+#' Create a data.frame to plot step lines
 #'
-#' Creates step curve info for survival Kaplan-Meier (KM) plots and magnitude
+#' Creates a data.frame used to plot step line outcomes such as time-to-event (Kaplan-Meier curves) and magnitude breadth (MB) curves. 
 #'  breath (MB) plots
 #'
-#' @param x values to create step curve for (numeric vector)
+#' @param x values over which to create step curve (numeric vector)
 #' @param event event status, 0=censor and 1=event (numeric vector).
 #'   If NULL assumes no censoring
 #' @return Returns a data frame with time, \code{surv}, \code{n.risk},
@@ -61,7 +61,7 @@ create_step_info <- function(x, event = NULL){
 
 
 
-#' Magnitude Breath (MB) Curves and Area Under the Curve (AUC)
+#' Create a data.frame to plot MB curves and AUC
 #'
 #' Creates step curve info for magnitude breath (MB) plots, with option to
 #'  include response status and have logged transformation for AUC calculation.
@@ -219,5 +219,4 @@ mb_results <- function(x,
   surv_results$aucMB <- auc_results
   return(surv_results)
 }
-
 
