@@ -40,7 +40,7 @@
 #'
 #'
 #' # Examples with Real World Data
-#' library(data.table)
+#'
 #' library(dplyr)
 #'
 #'
@@ -48,39 +48,45 @@
 #' data(exampleData_BAMA)
 #'
 #' ## Group Comparison
-#' # using data.table
-#'group_testing_dt <- exampleData_BAMA[, pairwise_test_cont(
-#'  x = magnitude, group = group, paired = FALSE, method = 'wilcox',
-#'  alternative = 'less', num_needed_for_test = 3, digits = 3,
-#'  trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
-#'),
-#'by = .(antigen, visitno)][order(antigen, visitno)]
 #'
-#' # using dplyr
 #'group_testing_tibble <- exampleData_BAMA %>%
 #'    group_by(antigen, visitno) %>%
-#'    do(pairwise_test_cont(x = .$magnitude, group = .$group, paired = FALSE, method = 'wilcox',
-#'                          alternative = "less", digits = 3, num_needed_for_test = 3, verbose = TRUE))
-#'
-#' # Confirming both methods are the same
-#' all.equal(group_testing_dt[order(antigen, visitno)],
-#'           data.table(group_testing_tibble)[order(antigen, visitno)])
+#'    summarise(pairwise_test_cont(x = magnitude,
+#'                                 group = group,
+#'                                 paired = FALSE,
+#'                                 method = 'wilcox',
+#'                                 alternative = "less",
+#'                                 sorted_group = c(1,2),
+#'                                 digits = 3,
+#'                                 num_needed_for_test = 3,
+#'                                 verbose = TRUE),
+#'             .groups = "keep")
 #'
 #'
 #' ## Timepoint Comparison
-#'timepoint_testing_dt <- exampleData_BAMA[, pairwise_test_cont(
-#'x = magnitude, group = visitno, paired = TRUE,id = pubID, method = 'wilcox',
-#'alternative = 'less', num_needed_for_test = 3, digits = 3,
-#'trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
-#'),
-#'by = .(antigen, group)]
+#'
+#'timepoint_testing_dt <- exampleData_BAMA %>%
+#'                        group_by(antigen, group) %>%
+#'                        summarise(pairwise_test_cont(x = magnitude,
+#'                                                    group = visitno,
+#'                                                    paired = TRUE,
+#'                                                    id = pubID,
+#'                                                    method = 'wilcox',
+#'                                                    sorted_group = c(0,1,2),
+#'                                                    alternative = 'less',
+#'                                                    num_needed_for_test = 3,
+#'                                                    digits = 3,
+#'                                                    trailing_zeros = TRUE,
+#'                                                    sep_val = ' vs. ',
+#'                                                    verbose = TRUE),
+#'                                  .groups = "keep")
 #'
 #'
 #' # ICS Assay Data Example
 #' data(exampleData_ICS)
 #'
 #' ## Group Comparison
-#' # using data.table
+#' # using dplyr
 #'group_testing_dt <- exampleData_ICS[, pairwise_test_cont(
 #'  x = PercentCellNet, group = Group, paired = FALSE, method = 'wilcox',
 #'  alternative = 'less', num_needed_for_test = 3, digits = 4,
@@ -89,12 +95,21 @@
 #'by = .(Stim, Parent, Population, Visit)][order(Stim, Parent, Population, Visit)]
 #'
 #' # Timepoint Comparison
-#'timepoint_testing_dt <- exampleData_ICS[, pairwise_test_cont(
-#'x = PercentCellNet, group = Visit, paired = TRUE,id = pubID, method = 'wilcox',
-#'alternative = 'less', num_needed_for_test = 3, digits = 4,
-#'trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
-#'),
-#'by = .(Stim, Parent, Population, Group)]
+#'timepoint_testing_dt <- exampleData_ICS %>%
+#'                        group_by(Stim, Parent, Population, Group) %>%
+#'                        summarise(pairwise_test_cont(x = PercentCellNet,
+#'                                                     group = Visit,
+#'                                                     paired = TRUE,
+#'                                                     id = pubID,
+#'                                                     method = 'wilcox',
+#'                                                     sorted_group = c(0,1,2),
+#'                                                     alternative = 'less',
+#'                                                     num_needed_for_test = 3,
+#'                                                     digits = 4,
+#'                                                     trailing_zeros = TRUE,
+#'                                                     sep_val = ' vs. ',
+#'                                                     verbose = TRUE),
+#'                        .groups = "keep")
 #'
 #'
 
