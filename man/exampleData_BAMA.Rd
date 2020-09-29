@@ -4,7 +4,8 @@
 \name{exampleData_BAMA}
 \alias{exampleData_BAMA}
 \title{Example BAMA dataset}
-\format{A data frame with 252 rows and 6 variables:
+\format{
+A data frame with 252 rows and 6 variables:
 \describe{
   \item{pubID}{randomized subject ID}
   \item{group}{study group}
@@ -13,7 +14,8 @@
   \item{magnitude}{magnitude of response, continuous, MFI*}
   \item{response}{response call for MFI* (0/1, NA at baseline)}
   ...
-}}
+}
+}
 \usage{
 exampleData_BAMA
 }

@@ -4,7 +4,8 @@
 \name{exampleData_ICS}
 \alias{exampleData_ICS}
 \title{Example ICS dataset}
-\format{A data frame with 306 rows and 15 variables:
+\format{
+A data frame with 306 rows and 15 variables:
 \describe{
   \item{pubID}{randomized subject ID}
   \item{Group}{study group}
@@ -22,7 +23,8 @@
   \item{response_fdr_P}{FDR-adjusted p-value}
   \item{response}{response call for percent cell net (0/1)}
   ...
-}}
+}
+}
 \usage{
 exampleData_ICS
 }
