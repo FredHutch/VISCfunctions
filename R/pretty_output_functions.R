@@ -235,7 +235,7 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
 #' stat_paste(5.109, "p < 0.001", digits = 3)
 #' stat_paste(c(rep(5,5),NA),c(1:5,NA),c(1,NA,2,NA,3,NA),bound_char = '[')
 #'
-#' library(tidyverse)
+#' library(dplyr)
 #' exampleData_BAMA %>%
 #' group_by(antigen, visitno, group) %>%
 #' summarise(median_min_max = stat_paste(median(magnitude, na.rm = TRUE),

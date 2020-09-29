@@ -28,8 +28,8 @@
 #'
 #' @examples
 #'
-#' x_example = c(NA, sample(1:50, 50), sample(51:99, 49), 1111,2222)
-#' group_example = c(rep(1:4,25),'a','a')
+#'x_example <- c(NA, sample(1:50, 50), sample(51:99, 49), 1111,2222)
+#'group_example <- c(rep(1:4,25),'a','a')
 #'
 #'pairwise_test_cont(x_example,group_example, num_needed_for_test = 2)
 #'
@@ -40,15 +40,12 @@
 #'
 #'
 #' # Examples with Real World Data
-#'
 #' library(dplyr)
-#'
 #'
 #' # BAMA Assay Data Example
 #' data(exampleData_BAMA)
 #'
 #' ## Group Comparison
-#'
 #'group_testing_tibble <- exampleData_BAMA %>%
 #'    group_by(antigen, visitno) %>%
 #'    summarise(pairwise_test_cont(x = magnitude,
@@ -64,7 +61,6 @@
 #'
 #'
 #' ## Timepoint Comparison
-#'
 #'timepoint_testing_dt <- exampleData_BAMA %>%
 #'                        group_by(antigen, group) %>%
 #'                        summarise(pairwise_test_cont(x = magnitude,
@@ -87,12 +83,20 @@
 #'
 #' ## Group Comparison
 #' # using dplyr
-#'group_testing_dt <- exampleData_ICS[, pairwise_test_cont(
-#'  x = PercentCellNet, group = Group, paired = FALSE, method = 'wilcox',
-#'  alternative = 'less', num_needed_for_test = 3, digits = 4,
-#'  trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
-#'),
-#'by = .(Stim, Parent, Population, Visit)][order(Stim, Parent, Population, Visit)]
+#'exampleData_ICS %>%
+#'group_by(Stim, Parent, Population, Visit) %>%
+#'summarise(pairwise_test_cont(x = PercentCellNet,
+#'                             group = Group,
+#'                             paired = FALSE,
+#'                             method = 'wilcox',
+#'                             alternative = 'less',
+#'                             sorted_group = c(1,2,3,4),
+#'                             num_needed_for_test = 3,
+#'                             digits = 4,
+#'                             trailing_zeros = TRUE,
+#'                             sep_val = ' vs. ',
+#'                             verbose = TRUE),
+#'          .groups = "keep")
 #'
 #' # Timepoint Comparison
 #'timepoint_testing_dt <- exampleData_ICS %>%
