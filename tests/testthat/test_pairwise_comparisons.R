@@ -7,92 +7,212 @@ test_that("pairwise_comparisons_bin testing two groups", {
   x = c(NA, rnorm(25, 0, 1), rnorm(25, 1, 1),NA)
   group = c(rep('a', 26),rep('b', 26))
   id = c(1:26, 1:26)
-  test_data <- data.table(x, group)
 
-  testing_stats <- test_data[!is.na(x), .(
-    Group1 = unique(group[group == 'a']), Group2 = unique(group[group == 'b']),
-    Group1_n = length(x[group == 'a']), Group2_n = length(x[group == 'b']),
-    Group1_mean = mean(x[group == 'a']), Group2_mean = mean(x[group == 'b']),
-    Group1_sd = sd(x[group == 'a']), Group2_sd = sd(x[group == 'b']),
-    Group1_median = median(x[group == 'a']), Group2_median = median(x[group == 'b']),
-    Group1_min = min(x[group == 'a']), Group2_min = min(x[group == 'b']),
-    Group1_max = max(x[group == 'a']), Group2_max = max(x[group == 'b']),
-    Group1_IQR = IQR(x[group == 'a'])
-  )]
+  test_data <- data.frame(x, group)
+
+  testing_stats <- test_data %>%
+    group_by(group) %>%
+    summarise(n = n(),
+              mean = mean(x, na.rm = TRUE),
+              sd = sd(x, na.rm = TRUE),
+              median = median(x, na.rm = TRUE),
+              min = min(x, na.rm = TRUE),
+              max = max(x, na.rm = TRUE),
+              IQR = IQR(x, na.rm = TRUE),
+              .groups = "keep")
+
+  testing_stats <- testing_stats %>%
+    pivot_wider(names_from = group,
+                values_from = c(n, mean, sd, median, min, max, IQR))
+
+  colnames(testing_stats) <- c("Group1_n", "Group2_n", "Group1_mean",
+                                "Group2_mean", "Group1_sd", "Group2_sd",
+                                "Group1_median", "Group2_median",
+                                "Group1_min", "Group2_min", "Group1_max",
+                                "Group2_max", "Group1_IQR", "Group2_IQR")
+
+  testing_stats <- testing_stats %>%
+    mutate(Group1 = "a", Group2 = "b") %>%
+    select(Group1, Group2, Group1_n, Group2_n,
+           Group1_mean, Group2_mean, Group1_sd, Group2_sd,
+           Group1_median, Group2_median, Group1_min, Group2_min,
+           Group1_max, Group2_max, Group1_IQR, Group2_IQR)
 
   # Defaults
-  test_pasting <- paste_tbl_grp(data = testing_stats, vars_to_paste = c('n','median_min_max', 'mean_sd'), sep_val = " vs. ", digits = 0, keep_all = FALSE, trailing_zeros = TRUE)
+  test_pasting <- paste_tbl_grp(data = testing_stats,
+                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                sep_val = " vs. ",
+                                digits = 0,
+                                keep_all = FALSE,
+                                trailing_zeros = TRUE)
+
   names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
-                                MagnitudeTest = two_samp_cont_test(x = x, y = group, method = 'wilcox', paired = FALSE),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) | (testing_stats$Group2_min >  testing_stats$Group1_max), TRUE, FALSE)
-)
-  expect_equal(object = pairwise_test_cont(x = x, group = group, paired = FALSE, method = 'wilcox', alternative = 'two.sided', num_needed_for_test = 3, digits = 0, trailing_zeros = TRUE, sep_val = ' vs. ', verbose = FALSE),
+                                MagnitudeTest = two_samp_cont_test(x = x,
+                                                                   y = group,
+                                                                   method = 'wilcox',
+                                                                   paired = FALSE),
+                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                                             (testing_stats$Group2_min >  testing_stats$Group1_max),
+                                                           TRUE, FALSE))
+
+  expect_equal(object = pairwise_test_cont(x = x,
+                                           group = group, paired = FALSE,
+                                           method = 'wilcox',
+                                           alternative = 'two.sided',
+                                           num_needed_for_test = 3,
+                                           digits = 0, trailing_zeros = TRUE,
+                                           sep_val = ' vs. ', verbose = FALSE),
                expected = testing_results)
 
   # Digits to 3
-  test_pasting <- paste_tbl_grp(data = testing_stats, vars_to_paste = c('n','median_min_max', 'mean_sd'), sep_val = " vs. ", digits = 3, keep_all = FALSE, trailing_zeros = TRUE)
+  test_pasting <- paste_tbl_grp(data = testing_stats,
+                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                sep_val = " vs. ",
+                                digits = 3,
+                                keep_all = FALSE,
+                                trailing_zeros = TRUE)
   names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
-                                MagnitudeTest = two_samp_cont_test(x = x, y = group, method = 'wilcox', paired = FALSE),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) | (testing_stats$Group2_min >  testing_stats$Group1_max), TRUE, FALSE)
-  )
-  expect_equal(object = pairwise_test_cont(x = x, group = group, paired = FALSE, method = 'wilcox', alternative = 'two.sided', num_needed_for_test = 3, digits = 3, trailing_zeros = TRUE, sep_val = ' vs. ', verbose = FALSE),
+                                MagnitudeTest = two_samp_cont_test(x = x,
+                                                                   y = group,
+                                                                   method = 'wilcox',
+                                                                   paired = FALSE),
+                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                                             (testing_stats$Group2_min >  testing_stats$Group1_max),
+                                                           TRUE, FALSE))
+
+  expect_equal(object = pairwise_test_cont(x = x,
+                                           group = group,
+                                           paired = FALSE,
+                                           method = 'wilcox',
+                                           alternative = 'two.sided',
+                                           num_needed_for_test = 3,
+                                           digits = 3, trailing_zeros = TRUE,
+                                           sep_val = ' vs. ', verbose = FALSE),
                expected = testing_results)
 
-  # less than comparison
-  test_pasting <- paste_tbl_grp(data = testing_stats, vars_to_paste = c('n','median_min_max', 'mean_sd'), sep_val = " vs. ", digits = 3, keep_all = FALSE, trailing_zeros = TRUE, alternative = 'less')
+  # Less than comparison
+  test_pasting <- paste_tbl_grp(data = testing_stats,
+                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                sep_val = " vs. ",
+                                digits = 3,
+                                keep_all = FALSE,
+                                trailing_zeros = TRUE,
+                                alternative = 'less')
   names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
-                                MagnitudeTest = two_samp_cont_test(x = x, y = group, method = 'wilcox', paired = FALSE, alternative = 'less'),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) | (testing_stats$Group2_min >  testing_stats$Group1_max), TRUE, FALSE)
-  )
-  expect_equal(object = pairwise_test_cont(x = x, group = group, paired = FALSE, method = 'wilcox', alternative = 'less', num_needed_for_test = 3, digits = 3, trailing_zeros = TRUE, sep_val = ' vs. ', verbose = FALSE),
+                                MagnitudeTest = two_samp_cont_test(x = x,
+                                                                   y = group,
+                                                                   method = 'wilcox',
+                                                                   paired = FALSE,
+                                                                   alternative = 'less'),
+                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                                             (testing_stats$Group2_min >  testing_stats$Group1_max),
+                                                           TRUE, FALSE))
+  expect_equal(object = pairwise_test_cont(x = x,
+                                           group = group,
+                                           paired = FALSE,
+                                           method = 'wilcox',
+                                           alternative = 'less',
+                                           num_needed_for_test = 3,
+                                           digits = 3, trailing_zeros = TRUE,
+                                           sep_val = ' vs. ', verbose = FALSE),
                expected = testing_results)
 
-  # greater than comparison
-  test_pasting <- paste_tbl_grp(data = testing_stats, vars_to_paste = c('n','median_min_max', 'mean_sd'), sep_val = " vs. ", digits = 3, keep_all = FALSE, trailing_zeros = TRUE, alternative = 'greater')
+  # Greater than comparison
+  test_pasting <- paste_tbl_grp(data = testing_stats,
+                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                sep_val = " vs. ", digits = 3,
+                                keep_all = FALSE, trailing_zeros = TRUE,
+                                alternative = 'greater')
   names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
-                                MagnitudeTest = two_samp_cont_test(x = x, y = group, method = 'wilcox', paired = FALSE, alternative = 'greater'),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) | (testing_stats$Group2_min >  testing_stats$Group1_max), TRUE, FALSE)
-  )
-  expect_equal(object = pairwise_test_cont(x = x, group = group, paired = FALSE, method = 'wilcox', alternative = 'greater', num_needed_for_test = 3, digits = 3, trailing_zeros = TRUE, sep_val = ' vs. ', verbose = FALSE),
+                                MagnitudeTest = two_samp_cont_test(x = x,
+                                                                   y = group,
+                                                                   method = 'wilcox',
+                                                                   paired = FALSE,
+                                                                   alternative = 'greater'),
+                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                                             (testing_stats$Group2_min >  testing_stats$Group1_max),
+                                                           TRUE, FALSE))
+  expect_equal(object = pairwise_test_cont(x = x,
+                                           group = group,
+                                           paired = FALSE,
+                                           method = 'wilcox',
+                                           alternative = 'greater',
+                                           num_needed_for_test = 3,
+                                           digits = 3, trailing_zeros = TRUE,
+                                           sep_val = ' vs. ', verbose = FALSE),
                expected = testing_results)
 
 
-  # sorted group less than comparison
-  test_pasting <- paste_tbl_grp(data = testing_stats, vars_to_paste = c('n','median_min_max', 'mean_sd'), sep_val = " vs. ", digits = 3, keep_all = FALSE, trailing_zeros = TRUE, first_name = 'Group2', second_name = 'Group1', alternative = 'less')
+  # Sorted group, less than comparison
+  test_pasting <- paste_tbl_grp(data = testing_stats,
+                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                sep_val = " vs. ", digits = 3,
+                                keep_all = FALSE, trailing_zeros = TRUE,
+                                first_name = 'Group2', second_name = 'Group1',
+                                alternative = 'less')
   names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
-                                MagnitudeTest = two_samp_cont_test(x = x, y = factor(group, levels = c('b','a')), method = 'wilcox', paired = FALSE, alternative = 'less'),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) | (testing_stats$Group2_min >  testing_stats$Group1_max), TRUE, FALSE)
-  )
-  expect_equal(object = pairwise_test_cont(x = x, group = group, paired = FALSE, method = 'wilcox', alternative = 'less', num_needed_for_test = 3, digits = 3, trailing_zeros = TRUE, sep_val = ' vs. ', verbose = FALSE, sorted_group = c('b','a')),
+                                MagnitudeTest = two_samp_cont_test(x = x,
+                                                                   y = factor(group, levels = c('b','a')),
+                                                                   method = 'wilcox',
+                                                                   paired = FALSE,
+                                                                   alternative = 'less'),
+                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                                             (testing_stats$Group2_min >  testing_stats$Group1_max),
+                                                           TRUE, FALSE))
+  expect_equal(object = pairwise_test_cont(x = x, group = group,
+                                           paired = FALSE, method = 'wilcox',
+                                           alternative = 'less',
+                                           num_needed_for_test = 3, digits = 3,
+                                           trailing_zeros = TRUE, sep_val = ' vs. ',
+                                           verbose = FALSE,  sorted_group = c('b','a')),
                expected = testing_results)
-
 
   # t.test
-  test_pasting <- paste_tbl_grp(data = testing_stats, vars_to_paste = c('n','median_min_max', 'mean_sd'), sep_val = " vs. ", digits = 3, keep_all = FALSE, trailing_zeros = TRUE)
+  test_pasting <- paste_tbl_grp(data = testing_stats,
+                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                sep_val = " vs. ",
+                                digits = 3,
+                                keep_all = FALSE,
+                                trailing_zeros = TRUE)
   names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
-                                MagnitudeTest = two_samp_cont_test(x = x, y = group, method = 't.test', paired = FALSE),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) | (testing_stats$Group2_min >  testing_stats$Group1_max), TRUE, FALSE)
-  )
-  expect_equal(object = pairwise_test_cont(x = x, group = group, paired = FALSE, method = 't.test', alternative = 'two.sided', num_needed_for_test = 3, digits = 3, trailing_zeros = TRUE, sep_val = ' vs. ', verbose = FALSE),
+                                MagnitudeTest = two_samp_cont_test(x = x,
+                                                                   y = group,
+                                                                   method = 't.test',
+                                                                   paired = FALSE),
+                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                                             (testing_stats$Group2_min >  testing_stats$Group1_max),
+                                                           TRUE, FALSE))
+
+  expect_equal(object = pairwise_test_cont(x = x, group = group, paired = FALSE,
+                                           method = 't.test', alternative = 'two.sided',
+                                           num_needed_for_test = 3, digits = 3,
+                                           trailing_zeros = TRUE, sep_val = ' vs. ', verbose = FALSE),
                expected = testing_results)
 
 
   # High number needed for testing
-  test_pasting <- paste_tbl_grp(data = testing_stats, vars_to_paste = c('n','median_min_max', 'mean_sd'), sep_val = " vs. ", digits = 3, keep_all = FALSE, trailing_zeros = TRUE)
+  test_pasting <- paste_tbl_grp(data = testing_stats,
+                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                sep_val = " vs. ", digits = 3,
+                                keep_all = FALSE, trailing_zeros = TRUE)
   names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
                                 MagnitudeTest = NA_integer_,
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) | (testing_stats$Group2_min >  testing_stats$Group1_max), TRUE, FALSE)
-  )
-  expect_equal(object = pairwise_test_cont(x = x, group = group, paired = FALSE, method = 'wilcox', alternative = 'two.sided', num_needed_for_test = 100, digits = 3, trailing_zeros = TRUE, sep_val = ' vs. ', verbose = FALSE),
+                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                                             (testing_stats$Group2_min >  testing_stats$Group1_max),
+                                                           TRUE, FALSE))
+  expect_equal(object = pairwise_test_cont(x = x, group = group,
+                                           paired = FALSE, method = 'wilcox',
+                                           alternative = 'two.sided', num_needed_for_test = 100,
+                                           digits = 3, trailing_zeros = TRUE,
+                                           sep_val = ' vs. ', verbose = FALSE),
                expected = testing_results)
-
 
 
   # Paired data
@@ -108,16 +228,27 @@ test_that("pairwise_comparisons_bin testing two groups", {
     Group1_IQR = IQR(x[group == 'a'])
   )]
 
-  test_pasting <- paste_tbl_grp(data = testing_stats_paired, vars_to_paste = c('median_min_max', 'mean_sd'), sep_val = " vs. ", digits = 3, keep_all = FALSE, trailing_zeros = TRUE)
+  test_pasting <- paste_tbl_grp(data = testing_stats_paired,
+                                vars_to_paste = c('median_min_max', 'mean_sd'),
+                                sep_val = " vs. ", digits = 3, keep_all = FALSE,
+                                trailing_zeros = TRUE)
   testing_results <- data.frame(Comparison = test_pasting$Comparison,
                                 SampleSizes =  sum(duplicated(na.omit(data.frame(x, group, id))$id)),
                                 Median_Min_Max = test_pasting$median_min_max_comparison,
                                 Mean_SD = test_pasting$mean_sd_comparison,
                                 MagnitudeTest = two_samp_cont_test(x = x, y = group, method = 'wilcox', paired = TRUE),
-                                PerfectSeperation = ifelse((testing_stats_paired$Group1_min >  testing_stats_paired$Group2_max) | (testing_stats_paired$Group2_min >  testing_stats_paired$Group1_max), TRUE, FALSE),
+                                PerfectSeperation = ifelse((testing_stats_paired$Group1_min >
+                                                              testing_stats_paired$Group2_max) |
+                                                             (testing_stats_paired$Group2_min >
+                                                                testing_stats_paired$Group1_max), TRUE, FALSE),
                                 stringsAsFactors = FALSE
   )
-  expect_equal(object = pairwise_test_cont(x = x, group = group, paired = TRUE, id = id, method = 'wilcox', alternative = 'two.sided', num_needed_for_test = 3, digits = 3, trailing_zeros = TRUE, sep_val = ' vs. ', verbose = FALSE),
+  expect_equal(object = pairwise_test_cont(x = x, group = group,
+                                           paired = TRUE, id = id,
+                                           method = 'wilcox', alternative = 'two.sided',
+                                           num_needed_for_test = 3, digits = 3,
+                                           trailing_zeros = TRUE, sep_val = ' vs. ',
+                                           verbose = FALSE),
                expected = testing_results)
 
 })
@@ -140,7 +271,10 @@ test_that("Integration with dplyr and data.table is equivalent", {
   # using dplyr
   group_testing_tibble <- exampleData_BAMA %>%
     group_by(antigen, visitno) %>%
-    do(pairwise_test_cont(x = .$magnitude, group = .$group, paired = F, method = 'wilcox', alternative = "less", digits = 3, num_needed_for_test = 3, verbose = TRUE))
+    do(pairwise_test_cont(x = .$magnitude, group = .$group,
+                          paired = F, method = 'wilcox',
+                          alternative = "less", digits = 3,
+                          num_needed_for_test = 3, verbose = TRUE))
   # Confirming both methods are the same
   expect_equal(object = group_testing_dt[order(antigen, visitno)],
                expected = data.table(group_testing_tibble)[order(antigen, visitno)])
