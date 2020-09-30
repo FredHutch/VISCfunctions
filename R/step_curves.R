@@ -1,6 +1,6 @@
 #' Create a data.frame to plot step lines
 #'
-#' Creates a data.frame used to plot step line outcomes such as time-to-event (Kaplan-Meier curves) and magnitude breadth (MB) curves. 
+#' Creates a data.frame used to plot step line outcomes such as time-to-event (Kaplan-Meier curves) and magnitude breadth (MB) curves.
 #'  breath (MB) plots
 #'
 #' @param x values over which to create step curve (numeric vector)
@@ -18,8 +18,8 @@
 #'
 #' @examples
 #'
-#' create_step_info(x = 1:10)
-#' create_step_info(x = 1:10, event = rep(0:1, 5))
+#' create_step_curve(x = 1:10)
+#' create_step_curve(x = 1:10, event = rep(0:1, 5))
 #'
 #' library(dplyr)
 #' dat = data.frame(x = c(1:10),
@@ -28,7 +28,7 @@
 #' plot_data <-
 #'  dat %>%
 #'   dplyr::group_by(ptid) %>%
-#'   dplyr::group_modify(~ create_step_info(x = .x$x, event = .x$event))
+#'   dplyr::group_modify(~ create_step_curve(x = .x$x, event = .x$event))
 #'
 #' ggplot2::ggplot(data = plot_data,
 #'                 ggplot2::aes(x = time, y = surv, color = factor(ptid))) +
@@ -38,7 +38,7 @@
 #'
 #' @export
 
-create_step_info <- function(x, event = NULL){
+create_step_curve <- function(x, event = NULL){
   .check_numeric_input(x, lower_bound = 0)
   if (is.null(event)) {
     surv_obj_here <- survival::Surv(x)
@@ -203,7 +203,7 @@ mb_results <- function(x,
   #Truncation
   x <- pmin(pmax(lower_trunc, x), upper_trunc)
 
-  surv_results <- create_step_info(x)
+  surv_results <- create_step_curve(x)
   #dropping n.censor since it's always 0
   surv_results <- surv_results[, colnames(surv_results) != 'n.censor']
 

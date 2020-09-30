@@ -2,7 +2,7 @@
 % Please edit documentation in R/step_curves.R
 \name{mb_results}
 \alias{mb_results}
-\title{Magnitude Breath (MB) Curves and Area Under the Curve (AUC)}
+\title{Create a data.frame to plot MB curves and AUC}
 \usage{
 mb_results(
   x,

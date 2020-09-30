@@ -1,8 +1,8 @@
-context("create_step_info and mb_results")
+context("create_step_curve and mb_results")
 
 
 
-test_that("create_step_info testing", {
+test_that("create_step_curve testing", {
   get_output <- function(xx) {
     data.frame(time = c(0, as.double(xx$time)),
                surv = c(1, xx$surv),
@@ -15,13 +15,13 @@ test_that("create_step_info testing", {
   x = 1:10
   event = rep(0:1, 5)
   expect_identical(
-    object = create_step_info(x),
+    object = create_step_curve(x),
     expected = get_output(
       survival::survfit(survival::Surv(x) ~ 1)
     )
   )
   expect_identical(
-    object = create_step_info(x, event),
+    object = create_step_curve(x, event),
     expected = get_output(
       survival::survfit(survival::Surv(x, event) ~ 1)
     )
@@ -48,7 +48,7 @@ test_that("create_step_info testing", {
   expect_identical(
     object = dat %>%
       dplyr::group_by(ptid) %>%
-      dplyr::group_modify(~ create_step_info(x = .x$x, event = .x$event)) %>%
+      dplyr::group_modify(~ create_step_curve(x = .x$x, event = .x$event)) %>%
       dplyr::ungroup(),
     expected = expected_output
   )
@@ -133,7 +133,7 @@ test_that("mb_results testing", {
   auc_here = 10^mean(
     log10(pmin(pmax(100, data_here$magnitude * data_here$response), 22000))
     )
-  step_info_here <- create_step_info(pmin(pmax(
+  step_info_here <- create_step_curve(pmin(pmax(
     100, data_here$magnitude * data_here$response), 22000))[,-5]
   step_info_here$time[step_info_here$time == 0] <- 1
 
