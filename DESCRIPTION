@@ -34,7 +34,8 @@ Suggests:
     binom,
     rmarkdown,
     testthat,
-    stringr
+    stringr,
+    pracma
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

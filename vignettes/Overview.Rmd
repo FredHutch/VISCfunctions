@@ -58,6 +58,7 @@ VISCfunctions is a collection of useful functions designed to assist in analysis
   - two_samp_cont_test
   - cor_test \textcolor{red}{[Coming Soon]}
   - wilson_ci
+  - trapz_sorted
 - Fancy Output Functions
   - pretty_pvalues
   - stat_paste
@@ -107,8 +108,9 @@ Code to load in VISCfunctions and start using:
 # Loading VISCfunctions
 library(VISCfunctions)
 
-# Loading dplyr for this vignette code
+# Loading libraries for this vignette code
 library(dplyr)
+library(pracma)
 ```
 
 ## scharpTemplates Package
@@ -236,6 +238,41 @@ cor(testing_data$magnitude1, testing_data$magnitude2,
 
 cor_test(x = testing_data$magnitude1, y = testing_data$magnitude2,
          method = 'spearman')
+
+```
+
+## Computing Wilson's Confidence Intervals
+
+\clearpage()
+## Computing the Area Under a Curve (Integration Estimate) for Messy Data
+
+`trapz_sorted()` is used to when you are not presorting your data so that it is strictly increasing along the x-axis, or there are 'NA' values that are not removed prior to estimating the area under a curve.
+
+```{r, echo=TRUE, warning=FALSE}
+set.seed(93)
+n <- 10
+# unsorted data
+x <- runif(n, 0, 42)
+y <- runif(n, 0, 42)
+pracma::trapz(x, y)
+# [1] 290.286
+trapz_sorted(x,y)
+# [1] 964.1797
+
+# x axis is decreasing
+x <- n:1
+pracma::trapz(x, y)
+# [1] -254.4134
+trapz_sorted(x,y)
+#[1] 254.4134
+
+# NA in data
+x <- runif(n, 0, 42)
+y[2] <- NA
+pracma::trapz(x, y)
+# [1] NA
+trapz_sorted(x,y, na.rm = TRUE)
+# [1] 1034.763
 
 ```
 
