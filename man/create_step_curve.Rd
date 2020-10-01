@@ -7,7 +7,7 @@
 create_step_curve(x, event = NULL)
 }
 \arguments{
-\item{x}{values over which to create step curve (numeric vector)}
+\item{x}{Time values used to create the x-axis in step curves (numeric vector)}
 
 \item{event}{event status, 0=censor and 1=event (numeric vector).
 If NULL assumes no censoring}
@@ -18,12 +18,15 @@ Returns a data frame with time, \code{surv}, \code{n.risk},
   output format)
 }
 \description{
-Creates a data.frame used to plot step line outcomes such as time-to-event (Kaplan-Meier curves) and magnitude breadth (MB) curves.
- breath (MB) plots
+Creates survival probabilities from time and censoring information and
+generates a risk table that includes the survival probabilities and number
+at risk in addition to the data provided. This data.frame can be used to
+plot step line outcomes such as time-to-event (Kaplan-Meier curves) and
+magnitude breadth (MB) curves.
 }
 \details{
-The output can be used for plotting step function curves,
-  with \code{time} on the x axis, \code{surv} on the y axis, and
+The output of survival probabilities can be used for plotting step function
+  curves, with \code{time} on the x axis, \code{surv} on the y axis, and
   \code{n.censor == 1} subset can be used for a \code{ggplot2::geom_point()}
   layer.
 }

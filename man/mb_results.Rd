@@ -5,7 +5,7 @@
 \title{Create a data.frame to plot MB curves and AUC}
 \usage{
 mb_results(
-  x,
+  magnitude,
   response = NULL,
   lower_trunc = 100,
   upper_trunc = 22000,
@@ -13,7 +13,7 @@ mb_results(
 )
 }
 \arguments{
-\item{x}{values to create step curve and AUC for (numeric vector)}
+\item{magnitude}{values to create step curve and AUC for (numeric vector)}
 
 \item{response}{response status, vector of type integer (0/1) or logical
 (TRUE/FALSE). If NULL assumes no response information considered.}
@@ -28,54 +28,58 @@ higher than \code{lower_trunc}). Set to Inf for no upper truncation}
 calculation, if any. Must be one of "log10" (default) or "raw".}
 }
 \value{
-Returns a data frame with \code{time}, \code{surv}, \code{n.risk},
-  and \code{n.event} (\code{survival::summary.survfit}
-  output format), and \code{aucMB}.
+Returns a data frame with the following columns:
+\itemize{
+\item \code{magnitude} - magnitude values (similar to times in a survival analysis)
+\item \code{breadth} - percent of antigens greater or equal to the \code{magnitude} value
+\item \code{n_remaining} - number of antigens remaining greater or equal to the \code{magnitude} value
+\item \code{n_here} - number of antigens at the exact \code{magnitude} value
+\item \code{aucMB} - area under the magnitude breadth curve
+}
 }
 \description{
-Creates step curve info for magnitude breath (MB) plots, with option to
- include response status and have logged transformation for AUC calculation.
+Creates step curve info for magnitude breadth (MB) plots, with option to
+include response status and have logged transformation for AUC calculation.
 }
 \details{
 AUC is calculated from 0 (or 1 if \code{x_transform = "log10"}) to the
- \code{x} values (after \code{lower_trunc}/\code{upper_trunc} \code{x}
- value truncation).
+\code{x} values (after \code{lower_trunc}/\code{upper_trunc} \code{x}
+value truncation).
 
 If \code{response} is given, non-responding values (\code{response} = 0 or
- FALSE) will have their values set to the \code{lower_trunc} for MB curves
- and AUC calculations.
-
+FALSE) will have their values set to the \code{lower_trunc} for MB curves
+and AUC calculations.
 
 The output can be used for plotting step function curves,
-  with \code{time} on the x axis and \code{surv} on the y axis.
-  Note if \code{x_transform = 'log10'} the resulting plot is best
-  displayed on the log10 scale (\code{ggplot2::scale_x_log10}).
+with \code{magnitude} on the x axis and \code{breadth} on the y axis.
+Note if \code{x_transform = 'log10'} the resulting plot is best
+displayed on the log10 scale (\code{ggplot2::scale_x_log10}).
 
 \code{aucMB} can be used for boxplots and group comparisons. Note
- \code{aucMB} is repeated for values of \code{time} and \code{surv}.
+\code{aucMB} is repeated for values of \code{magnitude} and \code{breadth}.
 }
 \examples{
 
 
-mb_results(x = 96:105, response = c(rep(0,5), rep(1,5)),
+mb_results(magnitude = 96:105, response = c(rep(0,5), rep(1,5)),
            lower_trunc = 100, x_transform = 'log10')
-mb_results(x = 96:105, response = c(rep(0,5), rep(1,5)),
+mb_results(magnitude = 96:105, response = c(rep(0,5), rep(1,5)),
            lower_trunc = 100, x_transform = 'raw')
 
 # Simple Example
 library(dplyr)
-dat = data.frame(x = c(500,800,20,150,30000,10,1,2000,10000,900),
+dat = data.frame(magnitude = c(500,800,20,150,30000,10,1,2000,10000,900),
                  response = c(1,1,0,1,1,0,0,1,1,1),
                  ptid = c(1,1,2,2,3,3,3,3,3,3))
 ind_results <-
  dat \%>\%
   dplyr::group_by(ptid) \%>\%
-  dplyr::group_modify(~ mb_results(x = .x$x, response = .x$response))
+  dplyr::group_modify(~ mb_results(magnitude = .x$magnitude, response = .x$response))
 
 overall_results <-
- mb_results(x = dat$x, response = dat$response)
+ mb_results(magnitude = dat$magnitude, response = dat$response)
 
-ggplot2::ggplot(data = overall_results, ggplot2::aes(x = time, y = surv)) +
+ggplot2::ggplot(data = overall_results, ggplot2::aes(x = magnitude, y = breadth)) +
   ggplot2::geom_step(data = ind_results, ggplot2::aes(group = ptid),
           linetype = "dashed", direction = 'hv', lwd = .35, alpha = .7) +
   ggplot2::geom_step(direction = 'hv', lwd = .65) +
@@ -93,15 +97,15 @@ data_here <-
 group_results <-
   data_here \%>\%
   dplyr::group_by(group) \%>\%
-  dplyr::group_modify(~ mb_results(x = .x$magnitude , response = .x$response))
+  dplyr::group_modify(~ mb_results(magnitude = .x$magnitude , response = .x$response))
 
 ind_results <-
   data_here \%>\%
   dplyr::group_by(group, pubID) \%>\%
-  dplyr::group_modify(~ mb_results(x = .x$magnitude , response = .x$response))
+  dplyr::group_modify(~ mb_results(magnitude = .x$magnitude , response = .x$response))
 
 ggplot2::ggplot(data = group_results,
-                ggplot2::aes(x = time, y = surv, color = factor(group))) +
+                ggplot2::aes(x = magnitude, y = breadth, color = factor(group))) +
   ggplot2::geom_step(data = ind_results, ggplot2::aes(group = pubID),
           linetype = "dashed", direction = 'hv', lwd = .35, alpha = .7) +
   ggplot2::geom_step(direction = 'hv', lwd = .65) +

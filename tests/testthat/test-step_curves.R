@@ -136,6 +136,7 @@ test_that("mb_results testing", {
   step_info_here <- create_step_curve(pmin(pmax(
     100, data_here$magnitude * data_here$response), 22000))[,-5]
   step_info_here$time[step_info_here$time == 0] <- 1
+  names(step_info_here) <- c('magnitude', 'breadth', 'n_left', 'n_here')
 
   expect_equal(
     object = mb_results(data_here$magnitude, data_here$response, lower_trunc = 100,
