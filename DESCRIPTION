@@ -32,6 +32,7 @@ Imports:
     tidyr
 Suggests: 
     binom,
+    ggplot2,
     rmarkdown,
     testthat,
     stringr
