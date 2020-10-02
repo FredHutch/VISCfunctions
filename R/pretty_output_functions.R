@@ -1,6 +1,6 @@
 #' Pasting Together Information for Two Groups
 #'
-#' Paste together information, often statistics, from two groups. There are two predefined combinations: mean(sd) and median[min,max], but user may also paste any single measure together.
+#' Paste together information, often statistics, from two groups. There are two predefined combinations: mean(sd) and median\[min,max\], but user may also paste any single measure together.
 #'
 #'
 #' @param data input dataset. User must use consistent naming throughout, \strong{with an underscore} to separate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be two columns with column names that exactly match the input for \code{first_name} and \code{second_name} (i.e. 'Group1' and 'Group2'), which are used to form the \code{Comparison} variable.
@@ -220,7 +220,7 @@ paste_tbl_grp <- function(data, vars_to_paste = 'all', first_name = 'Group1', se
 #'
 #' One value provided - returns a rounded value or the missing character.
 #' Two values - returns stat1 (stat2). e.g., mean (sd)
-#' Three values - returns stat1 (stat2, stat3). e.g., estimate (95\% lower, 95\% upper) or median [min, max]
+#' Three values - returns stat1 (stat2, stat3). e.g., estimate (95\% lower, 95\% upper) or median \[min, max\]
 #'
 #' Currently the method does work with string variables, but of course rounding would not be relevant for strings.
 #'
