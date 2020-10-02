@@ -4,16 +4,18 @@
 \name{exampleData_BAMA}
 \alias{exampleData_BAMA}
 \title{Example BAMA dataset}
-\format{A data frame with 252 rows and 6 variables:
+\format{
+A data frame with 252 rows and 6 variables:
 \describe{
-  \item{pubID}{randomized subject ID}
-  \item{group}{study group}
-  \item{visitno}{visit number: baseline, 1, and 2}
-  \item{antigen}{antigen tested}
-  \item{magnitude}{magnitude of response, continuous, MFI*}
-  \item{response}{response call for MFI* (0/1, NA at baseline)}
-  ...
-}}
+\item{pubID}{randomized subject ID}
+\item{group}{study group}
+\item{visitno}{visit number: baseline, 1, and 2}
+\item{antigen}{antigen tested}
+\item{magnitude}{magnitude of response, continuous, MFI*}
+\item{response}{response call for MFI* (0/1, NA at baseline)}
+...
+}
+}
 \usage{
 exampleData_BAMA
 }
