@@ -33,6 +33,7 @@ Imports:
     withr
 Suggests: 
     binom,
+    ggplot2,
     rmarkdown,
     testthat,
     stringr
