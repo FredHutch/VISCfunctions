@@ -419,17 +419,17 @@ test_that("cor_test throwing internal .rm_na_and_check checking errors", {
   #Testing case where no non-missing pairs
   expect_identical(object = cor_test(x = c(1:20,rep(NA,20)), y = c(rep(NA,20),1:20)), expected = NA)
   expect_message(object = cor_test(x = c(1:20,rep(NA,20)), y = c(rep(NA,20),1:20), verbose = T),
-                 regexp = 'There are no observations with non-missing values of both "x" and "y", so p=NA returned')
+                 regexp = 'There are <2 observations with non-missing values of both "x" and "y", so p=NA returned')
 
   #Testing case where all x have same value
-  expect_identical(object = cor_test(x = rep(1,12), y = y), expected = 1)
+  expect_identical(object = cor_test(x = rep(1,12), y = y), expected = NA)
   expect_message(object = cor_test(x = rep(1,12), y = y, verbose = T),
-                 regexp = '"x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned')
+                 regexp = 'There are <2 observations with non-missing values of both "x" and "y", so p=NA returned')
 
   #Testing case where all y have same value
-  expect_identical(object = cor_test(x = x, y = rep(1,12)), expected = 1)
+  expect_identical(object = cor_test(x = x, y = rep(1,12)), expected = NA)
   expect_message(object = cor_test(x = x, y = rep(1,12), verbose = T),
-                 regexp = '"y" only has 1 distinct value when considering non-missing values of "x", so p=1 returned')
+                 regexp = 'There are <2 observations with non-missing values of both "x" and "y", so p=NA returned')
 })
 
 test_that("cor_test throwing internal input checking errors", {

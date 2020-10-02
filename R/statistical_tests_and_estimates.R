@@ -254,9 +254,9 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 
 #' Correlation Test for Two Continuous Variables
 #'
-#' This function is a wrapper for \code{stats::cor.test function}, except if
-#' \code{method = "spearman"} is selected and there are ties in at least one
-#' variable, in which case this is a wrapper for \code{coin::spearman_test}
+#' This function is a wrapper for `stats::cor.test` function, except if
+#' `method = "spearman"` is selected and there are ties in at least one
+#' variable, in which case this is a wrapper for `coin::spearman_test`
 #' employing the approximate method.
 #'
 #'
@@ -265,16 +265,46 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 #' @param method a character string indicating which correlation coefficient
 #'   is to be used for the test. One of "pearson", "kendall", or "spearman",
 #'   can be abbreviated to "p", "k", or "s".
-#' @param seed seed (only used if \code{method = "spearman"}).
+#' @param seed seed (only used if `method = "spearman"`).
 #' @param nresample a positive integer, the number of Monte Carlo replicates
 #'   used for the computation of the approximative reference distribution.
-#'   Defaults to 10000. (only used if \code{method = "spearman"}).
-#' @param exact Should exact method be used. Ignored if
-#'   \code{method = "pearson"} or if \code{method = "spearman"} and there are
+#'   Defaults to 10000. (only used if `method = "spearman"`).
+#' @param exact should exact method be used. Ignored if
+#'   `method = "pearson"` or if `method = "spearman"` and there are
 #'   ties in x or y.
 #' @param verbose a logical variable indicating if warnings and messages
 #'   should be displayed.
+#' @param ... parameters passed to `stats::cor.test` or `coin:spearman_test`
 #' @return correlation estimate p value.
+#'
+#' @details
+#'
+#' The three methods each estimate the association between paired samples and
+#' compute a test of the value being zero. They use different measures of
+#' association, all in the range \[-1, 1\] with 0 indicating no association.
+#' These are sometimes referred to as tests of no correlation,
+#' but that term is often confined to the default method.
+#'
+#' If method is "pearson", the test statistic is based on Pearson's product
+#' moment correlation coefficient cor(x, y) and follows a t distribution with
+#' length(x)-2 degrees of freedom if the samples follow independent normal
+#' distributions. If there are at least 4 complete pairs of observation, an
+#' asymptotic confidence interval is given based on Fisher's Z transform.
+#'
+#' If method is "kendall" or "spearman", Kendall's tau or Spearman's rho
+#' statistic is used to estimate a rank-based measure of association. These
+#' tests may be used if the data do not necessarily come from a bivariate
+#' normal distribution.
+#'
+#' The preferred method for a Spearman test is using the exact method, unless
+#' computation time is too high. This
+#' preferred method is obtained though `stats::cor.test` with `exact = TRUE`.
+#' When there are ties in either variable there is no exact method possible.
+#' Unfortunately if there are any ties the `stats::cor.test` function switches
+#' to the asymptotic method, which is especially troubling with small sample
+#' sizes. If there are ties `cor_test` will switch to the approximate
+#' method available in the `coin::spearman_test`.
+#'
 #'
 #' @examples
 #'
@@ -297,7 +327,8 @@ cor_test <- function(x,
                      seed = 68954857,
                      nresample = 10000,
                      exact = TRUE,
-                     verbose = FALSE){
+                     verbose = FALSE,
+                     ...){
   method <- match.arg(method)
   .check_numeric_input(x)
   .check_numeric_input(y)
@@ -318,11 +349,13 @@ cor_test <- function(x,
                                              y,
                                              x_type = 'continuous',
                                              y_type = 'continuous',
-                                             verbose = verbose)
-  if (is.data.frame(rm_na_and_check_output)) {
+                                             verbose = FALSE)
+  if (is.data.frame(rm_na_and_check_output) &&  nrow(rm_na_and_check_output) > 2) {
     data_here <- rm_na_and_check_output
   } else {
-    return(rm_na_and_check_output)
+    if (verbose)
+      message('There are <2 observations with non-missing values of both "x" and "y", so p=NA returned')
+    return(NA)
   }
 
   # if spearman with ties calling coin::spearman_test, otherwise cor.test
@@ -335,7 +368,8 @@ cor_test <- function(x,
                      as.double(coin::pvalue(
                        coin::spearman_test(x~y,
                                            data = data_here,
-                                           distribution = coin::approximate(nresample)
+                                           distribution = coin::approximate(nresample),
+                                           ...
                        )))
 
                      )
@@ -343,7 +377,8 @@ cor_test <- function(x,
     as.double(stats::cor.test(data_here$x,
                        data_here$y,
                        method = method,
-                       exact = exact)$p.value)
+                       exact = exact,
+                       ...)$p.value)
   }
 }
 
