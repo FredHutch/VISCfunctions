@@ -254,18 +254,21 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 
 #' Correlation Test for Two Continuous Variables
 #'
-#' A wrapper for cor.test function, except if spearman selected and ties in at
-#'   least one variable, in which case this is a wrapper for
-#'   \code{coin::spearman_test} in with approximate method.
+#' This function is a wrapper for \code{stats::cor.test function}, except if
+#' \code{method = "spearman"} is selected and there are ties in at least one
+#' variable, in which case this is a wrapper for \code{coin::spearman_test}
+#' employing the approximate method.
 #'
 #'
 #' @param x numeric vector (can include NA values).
 #' @param y numeric vector (can include NA values).
 #' @param method a character string indicating which correlation coefficient
 #'   is to be used for the test. One of "pearson", "kendall", or "spearman",
-#'   can be abbreviated.
+#'   can be abbreviated to "p", "k", or "s".
 #' @param seed seed (only used if \code{method = "spearman"}).
-#' @param B number of reps (only used if \code{method = "spearman"}).
+#' @param nresample a positive integer, the number of Monte Carlo replicates
+#'   used for the computation of the approximative reference distribution.
+#'   Defaults to 10000. (only used if \code{method = "spearman"}).
 #' @param exact Should exact method be used. Ignored if
 #'   \code{method = "pearson"} or if \code{method = "spearman"} and there are
 #'   ties in x or y.
@@ -283,7 +286,7 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 #' cor_test(x,y, method = 'spearman')
 #' # Adding ties
 #' cor_test(c(x,x), c(y,y), method = 'spearman',
-#'          seed = 1, B = 10000, verbose = TRUE)
+#'          seed = 1, nresample = 10000, verbose = TRUE)
 #'
 #' @export
 
@@ -292,7 +295,7 @@ cor_test <- function(x,
                      y,
                      method = c("pearson", "kendall", "spearman"),
                      seed = 68954857,
-                     B = 10000,
+                     nresample = 10000,
                      exact = TRUE,
                      verbose = FALSE){
   method <- match.arg(method)
@@ -304,7 +307,7 @@ cor_test <- function(x,
                          upper_bound = 2^30,
                          scalar = TRUE,
                          whole_num = TRUE)
-    .check_numeric_input(B,
+    .check_numeric_input(nresample,
                          lower_bound = 1,
                          upper_bound = 2^20,
                          scalar = TRUE,
@@ -332,7 +335,7 @@ cor_test <- function(x,
                      as.double(coin::pvalue(
                        coin::spearman_test(x~y,
                                            data = data_here,
-                                           distribution = coin::approximate(B)
+                                           distribution = coin::approximate(nresample)
                        )))
 
                      )

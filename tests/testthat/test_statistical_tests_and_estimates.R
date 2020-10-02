@@ -378,7 +378,8 @@ test_that("cor_test testing various options (no errors)", {
                         distribution = coin::approximate(10000)
     )))
   expect_identical(object = cor_test(x = c(x,x), y = c(y,y),
-                                 method = 'spearman', seed = 4312, B = 10000),
+                                 method = 'spearman', seed = 4312,
+                                 nresample = 10000),
                expected = tmp_expected
   )
   expect_message(object = cor_test(x = c(x,x), y = c(y,y),
@@ -398,7 +399,7 @@ test_that("cor_test testing various options (no errors)", {
   old_seed <- get(".Random.seed", globalenv(), mode = "integer",
                   inherits = FALSE)
   xx <- cor_test(x = c(x,x), y = c(y,y),
-                 method = 'spearman', seed = 47861684, B = 10000)
+                 method = 'spearman', seed = 47861684, nresample = 10000)
   expect_identical(object = get(".Random.seed", globalenv(), mode = "integer",
                                 inherits = FALSE),
                    expected = old_seed

@@ -9,7 +9,7 @@ cor_test(
   y,
   method = c("pearson", "kendall", "spearman"),
   seed = 68954857,
-  B = 10000,
+  nresample = 10000,
   exact = TRUE,
   verbose = FALSE
 )
@@ -21,11 +21,13 @@ cor_test(
 
 \item{method}{a character string indicating which correlation coefficient
 is to be used for the test. One of "pearson", "kendall", or "spearman",
-can be abbreviated.}
+can be abbreviated to "p", "k", or "s".}
 
 \item{seed}{seed (only used if \code{method = "spearman"}).}
 
-\item{B}{number of reps (only used if \code{method = "spearman"}).}
+\item{nresample}{a positive integer, the number of Monte Carlo replicates
+used for the computation of the approximative reference distribution.
+Defaults to 10000. (only used if \code{method = "spearman"}).}
 
 \item{exact}{Should exact method be used. Ignored if
 \code{method = "pearson"} or if \code{method = "spearman"} and there are
@@ -38,9 +40,10 @@ should be displayed.}
 correlation estimate p value.
 }
 \description{
-A wrapper for cor.test function, except if spearman selected and ties in at
-  least one variable, in which case this is a wrapper for
-  \code{coin::spearman_test} in with approximate method.
+This function is a wrapper for \code{stats::cor.test function}, except if
+\code{method = "spearman"} is selected and there are ties in at least one
+variable, in which case this is a wrapper for \code{coin::spearman_test}
+employing the approximate method.
 }
 \examples{
 
@@ -52,6 +55,6 @@ cor_test(x,y, method = 'kendall')
 cor_test(x,y, method = 'spearman')
 # Adding ties
 cor_test(c(x,x), c(y,y), method = 'spearman',
-         seed = 1, B = 10000, verbose = TRUE)
+         seed = 1, nresample = 10000, verbose = TRUE)
 
 }
