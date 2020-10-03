@@ -53,6 +53,6 @@ fixed_bama_group_testing_dt  = structure(list(antigen = c("A1.con.env03 140 CF",
     0.91017316017316), PerfectSeperation = c(FALSE, FALSE, FALSE,
     FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
     FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
-    )), class = c("data.table", "data.frame"), row.names = c(NA,
+    )), class = c("data.frame"), row.names = c(NA,
 -21L))
 
