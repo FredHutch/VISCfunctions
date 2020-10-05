@@ -18,11 +18,11 @@ Approximated integral of the function, discretized through the points
 x, y, from \code{min(x)} to \code{max(x)}.
 }
 \description{
-This function is a wrapper for the `trapz` function. It sorts the x and y values
+This function is a wrapper for the \code{trapz} function. It sorts the x and y values
 so that it is monotonically increasing along the x values.  Then computes the
-area of a function with values `y` and points `x`. There is an optional
+area of a function with values \code{y} and points \code{x}. There is an optional
 parameter to remove any NA values so that integration can proceed by
-omitting the `x` and `y` values where the NA occurred.
+omitting the \code{x} and \code{y} values where the NA occurred.
 }
 \details{
 The points (x, 0) and (x, y) are taken as vertices of a polygon. The area is computed using the trapezoid rule for approximation the definite integral of the function.

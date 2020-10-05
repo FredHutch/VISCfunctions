@@ -14,8 +14,8 @@ If NULL assumes no censoring}
 }
 \value{
 Returns a data frame with time, \code{surv}, \code{n.risk},
-  \code{n.event}, and \code{n.censor} (\code{survival::summary.survfit}
-  output format)
+\code{n.event}, and \code{n.censor} (\code{survival::summary.survfit}
+output format)
 }
 \description{
 Creates survival probabilities from time and censoring information and
@@ -26,9 +26,9 @@ magnitude breadth (MB) curves.
 }
 \details{
 The output of survival probabilities can be used for plotting step function
-  curves, with \code{time} on the x axis, \code{surv} on the y axis, and
-  \code{n.censor == 1} subset can be used for a \code{ggplot2::geom_point()}
-  layer.
+curves, with \code{time} on the x axis, \code{surv} on the y axis, and
+\code{n.censor == 1} subset can be used for a \code{ggplot2::geom_point()}
+layer.
 }
 \examples{
 
