@@ -77,15 +77,15 @@ Barnard test}
 }
 \value{
 Returns a data frame with all possible pairwise comparisons.
-  Variables include Comparison, ResponseStats (group stats; number positive /
- number = rate (Wilson CI Bounds)), ResponseTest (fisher/chisq p value),
- PerfectSeperation (a logical flag indicating if one group if 0% and the
- other 100%)
+Variables include Comparison, ResponseStats (group stats; number positive /
+number = rate (Wilson CI Bounds)), ResponseTest (fisher/chisq p value),
+PerfectSeperation (a logical flag indicating if one group if 0\% and the
+other 100\%)
 }
 \description{
 Takes a binary variable (e.g., response status) and performs pairwise testing.
-  Performs either Barnard, Fisher's, or Chi-sq test for unpaired data and
-  McNemar's test for paired data.
+Performs either Barnard, Fisher's, or Chi-sq test for unpaired data and
+McNemar's test for paired data.
 }
 \details{
 If all values of \code{x} are NA, the function will return NULL. This is to allow for nice

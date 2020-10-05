@@ -7,6 +7,7 @@ Authors@R: c(person("Bryan", "Mayer", ,"bmayer@fredhutch.org", "aut"),
              person("Monica", "Gerber", ,"mgerber@fredhutch.org", "aut"),
              person("Celia", "Mahoney", ,"cmahoney@fredhutch.org", "aut"),
              person("Ellis", "Hughes", ,"ehhughes@fredhutch.org", "aut"),
+             person("Heather", "Bouzek", ,"hbouzek@fredhutch.org", "aut"),
              person("Jimmy", "Fulp", ,"wfulp@fredhutch.org", c("aut", "cre"))
              )
 Description: Statistical, data processing, and annotation functions for VISC.
@@ -15,7 +16,7 @@ Depends: R (>= 2.10)
 Imports: 
     broom (>= 0.5.0),
     car,
-    coin,
+    coin (>= 1.3-1),
     data.table,
     devtools (>= 2.0.0),
     dplyr (>= 0.8.1),
@@ -29,15 +30,18 @@ Imports:
     sessioninfo,
     survival,
     tibble,
-    tidyr
+    tidyr,
+    withr
 Suggests: 
     binom,
+    ggplot2,
+    pracma,
     rmarkdown,
     testthat,
-    stringr,
-    pracma
+    stringr
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Roxygen: list(markdown = TRUE)
