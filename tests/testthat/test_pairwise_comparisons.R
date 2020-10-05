@@ -576,25 +576,82 @@ test_that("pairwise_comparisons_bin testing two groups", {
 # Using paste_tbl_grp and two_samp_cont_test in testing since these functions are testing elsewhere
 test_that("pairwise_test_bin testing 3+ groups", {
 
-  testing_pre <- exampleData_BAMA %>%
+  #barnard test function - the guts of barnard.test in Barnard pkg only returns 2-sided pval
+  barnard <- function (n1, n2, n3, n4, dp = 0.001, pooled = TRUE) {
+    n1 <- abs(as.integer(n1))
+    n2 <- abs(as.integer(n2))
+    n3 <- abs(as.integer(n3))
+    n4 <- abs(as.integer(n4))
+    conmat <- matrix(c(n1, n2, n3, n4), ncol = 2, byrow = TRUE,
+                     dimnames = list(c("Outcome I", "Outcome II"),
+                                     c("Treatment I", "Treatment II")))
+    alternative <- c("One sided", "Two sided")
+    if (any(rowSums(conmat) == 0) || any(colSums(conmat) == 0)) {
+      return(p.value = 1)
+    }
+    vec.size <- 1 + 1/dp
+    mat.size <- 4 * (n1 + n3 + 1) * (n2 + n4 + 1) - 4 * 2
+    #statSW <- c("WaldS", "ScoreS")[1 + pooled]
+    ret1 = .Call("ScoreS", as.integer(n1), as.integer(n2), as.integer(n3),
+              as.integer(n4), as.numeric(dp), mat.size = as.integer(0),
+              statistic.table = as.double(vector("double", mat.size)),
+              statistic = as.double(0))
+    xr <- seq(1, ret1$mat.size, 4) + 2
+    ret1$statistic.table[xr + 1][(ret1$statistic <= 0 & ret1$statistic.table[xr] <=
+                                    ret1$statistic) | (ret1$statistic >= 0 & ret1$statistic.table[xr] >=
+                                                         ret1$statistic)] <- 1
+    ret1$statistic.table[xr + 1][(ret1$statistic <= 0 & ret1$statistic.table[xr] >=
+                                    -ret1$statistic) | (ret1$statistic >= 0 & ret1$statistic.table[xr] <=
+                                                          -ret1$statistic)] <- 2
+    ret2 = .C("Barnard", as.integer(n1), as.integer(n2),
+              as.integer(n3), as.integer(n4),
+              as.numeric(dp), as.integer(ret1$mat.size),
+              nuisance.vector.x = as.double(vector("double", vec.size)),
+              nuisance.vector.y0 = as.double(vector("double", vec.size)),
+              nuisance.vector.y1 = as.double(vector("double", vec.size)),
+              statistic.table = as.double(ret1$statistic.table), NAOK = TRUE)
+    np0 <- which.max(ret2$nuisance.vector.y0)
+    np1 <- which.max(ret2$nuisance.vector.y1)
+    nuisance.matrix <- matrix(cbind(ret2$nuisance.vector.x, ret2$nuisance.vector.y0,
+                                    ret2$nuisance.vector.y1), ncol = 3)
+    statistic.table <- matrix(ret1$statistic.table, ncol = 4,
+                              byrow = TRUE,
+                              dimnames = list(c(), c("n1", "n2", "statistic", "include.in.p.value")))
+    return(ret2$nuisance.vector.y1[np1])
+  }
+
+  testing_results <- exampleData_BAMA %>%
     filter(visitno != 0) %>%
     group_by(antigen, visitno, group) %>%
     summarise(rfraction =paste0(sum(response), "/", n()),
               ci = wilson_ci(response),
               r1 = sum(response),
               r0 = abs(sum(response - 1)),
-              .groups = "keep")
-
-  pval <- exampleData_BAMA %>%
-    filter(visitno != 0) %>%
+              .groups = "keep")  %>%
     pivot_wider(id_cols = c(antigen, visitno),
                 names_from = group,
-                names_prefix = "grp_",
-                values_from = c(response),
-                values_fn = list) %>%
-    map2(.x = .$grp_1, .y = .$grp_2, .f = ~two_samp_bin_test(x=.x, y=.y))
-  # %>%   mutate(PerfectSeperation = ifelse())
-
+                names_prefix = "grp",
+                values_from = c(rfraction, ci, r0, r1)) %>%
+    mutate(pval = barnard(r1_grp1, r1_grp2, r0_grp1, r0_grp2),
+           PerfectSeperation = FALSE,
+           Comparison = "1 vs. 2",
+           ResponseStats = paste0(rfraction_grp1,
+                                  " = ",
+                                  round_away_0(ci_grp1$mean*100, 1, trailing_zeros = TRUE),
+                                  "% (",
+                                  round_away_0(ci_grp1$lower*100, 1, trailing_zeros = TRUE),
+                                  "%, ",
+                                  round_away_0(ci_grp1$upper*100, 1, trailing_zeros = TRUE),
+                                  "%) vs. ",
+                                  rfraction_grp2,
+                                  " = ",
+                                  round_away_0(ci_grp2$mean*100, 1, trailing_zeros = TRUE),
+                                  "% (",
+                                  round_away_0(ci_grp2$lower*100, 1, trailing_zeros = TRUE),
+                                  "%, ",
+                                  round_away_0(ci_grp2$upper*100, 1, trailing_zeros = TRUE),
+                                  "%)"))  %>%
+    select(antigen, visitno, Comparison, ResponseStats, ResponseTest = pval, PerfectSeperation)
 
   function_obj <- exampleData_BAMA %>%
     group_by(antigen, visitno) %>%
@@ -608,7 +665,7 @@ test_that("pairwise_test_bin testing 3+ groups", {
                                                    verbose = TRUE)))
 
   expect_equal(object = function_obj,
-               expected = testing_results)
+               expected = testing_results, tolerance = 1e-3)
 
 })
 
