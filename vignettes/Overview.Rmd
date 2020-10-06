@@ -252,7 +252,6 @@ n <- 10
 x <- runif(n, 0, 42)
 y <- runif(n, 0, 42)
 pracma::trapz(x, y)
-# [1] 290.286
 trapz_sorted(x,y)
 # [1] 964.1797
 
@@ -592,4 +591,3 @@ kableExtra::kable(my_session_info$packages_table, 'latex', booktabs = TRUE,
       kableExtra::kable_styling(font_size = 8, latex_options = "hold_position")
       
 ```
-
