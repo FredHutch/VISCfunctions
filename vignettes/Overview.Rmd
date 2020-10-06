@@ -241,9 +241,6 @@ cor_test(x = testing_data$magnitude1, y = testing_data$magnitude2,
 
 ```
 
-## Computing Wilson's Confidence Intervals
-
-\clearpage()
 ## Computing the Area Under a Curve (Integration Estimate) for Messy Data
 
 `trapz_sorted()` is used to when you are not presorting your data so that it is strictly increasing along the x-axis, or there are 'NA' values that are not removed prior to estimating the area under a curve.
@@ -595,5 +592,4 @@ kableExtra::kable(my_session_info$packages_table, 'latex', booktabs = TRUE,
       kableExtra::kable_styling(font_size = 8, latex_options = "hold_position")
       
 ```
-
 
