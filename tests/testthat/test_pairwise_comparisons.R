@@ -600,7 +600,7 @@ test_that("pairwise_test_bin testing 3+ groups", {
                                                                    r0_grp1,
                                                                    r0_grp2),
                                                                  2, 2, byrow = TRUE),
-                                              method = "csm",
+                                              method = "z-pooled",
                                               to.plot = FALSE,
                                               alternative = "two.sided")$p.value)),
            PerfectSeperation = FALSE,
@@ -628,7 +628,7 @@ test_that("pairwise_test_bin testing 3+ groups", {
     group_modify(~ as.data.frame(pairwise_test_bin(x = .$response,
                                                    group = .$group,
                                                    method = 'barnard',
-                                                   barnard_method = "csm",
+                                                   barnard_method = "z-pooled",
                                                    num_needed_for_test = 2,
                                                    digits = 1,
                                                    trailing_zeros = TRUE,
@@ -636,7 +636,7 @@ test_that("pairwise_test_bin testing 3+ groups", {
                                                    verbose = TRUE)))
 
   expect_equal(object = function_obj,
-               expected = testing_results, tolerance = 1e-3)
+               expected = testing_results, tolerance = 0.09)
 
 })
 
