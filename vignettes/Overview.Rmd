@@ -263,7 +263,7 @@ trapz_sorted(x,y)
 #[1] 254.4134
 
 # NA in data
-x <- runif(n, 0, 42)
+x <- c(1:6, NA, 8:10)
 y[2] <- NA
 pracma::trapz(x, y)
 # [1] NA
