@@ -44,6 +44,13 @@ trapz_sorted <- function(x, y, na.rm = TRUE){
   # Input Checking
   .check_numeric_input(x)
   .check_numeric_input(y)
+  # Check whether there are different values of y for a single x value.
+  if (any(duplicated(x))) {
+    dups <- x[duplicated(x)]
+    e <- simpleError("There are duplicate x values in your data.
+                     Please check your data and remove.")
+        stop(e)
+    }
   m <- length(x)
   if (length(y) != m) stop("Arguments 'x', 'y' must be vectors of the same length.")
   if (na.rm == TRUE) {
