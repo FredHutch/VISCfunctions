@@ -25,7 +25,7 @@
 #' trapz_sorted(x, y)
 #'
 #' # Calculate area under the curve for unsorted data:
-#' x <- runif(n, 1,42)
+#' x <- sample(1:n, n, replace = F)
 #' y <- runif(n, 0, 33)
 #' trapz_sorted(x, y)
 #'
@@ -74,7 +74,6 @@ trapz_sorted <- function(x, y, na.rm = TRUE){
     return(0.5 * (p1 - p2))
     }
 }
-
 
 
 
