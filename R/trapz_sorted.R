@@ -55,8 +55,8 @@ trapz_sorted <- function(x, y, na.rm = TRUE){
     y <- y[!is.na(y)]
   } else{
     # Warn that data points will be removed if NA
-    if(anyNA(x)) warning("NA values are present in the 'x' values. Returns NA.")
-    if(anyNA(y)) warning("NA values are present in the 'y' values. Returns NA.")
+    if (anyNA(x)) warning("NA values are present in the 'x' values. Returns NA.")
+    if (anyNA(y)) warning("NA values are present in the 'y' values. Returns NA.")
     # Sort by increasing values, NA are not removed
     x <- x[order(x, decreasing = FALSE, method = "auto")]
     y <- y[order(x, decreasing = FALSE, method = "auto")]
@@ -76,6 +76,5 @@ trapz_sorted <- function(x, y, na.rm = TRUE){
     return(0.5 * (p1 - p2))
     }
 }
-
 
 
