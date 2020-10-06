@@ -23,30 +23,37 @@ stat_paste(
 
 \item{stat3}{third statistic to be pasted (optional).}
 
-\item{digits}{positive integer of length 1 between 0 (default) and 14, giving the amount of digits to round to.}
+\item{digits}{positive integer of length 1 between 0 (default) and 14,
+giving the amount of digits to round to.}
 
-\item{trailing_zeros}{logical indicating if trailing zeros should included (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector}
+\item{trailing_zeros}{logical indicating if trailing zeros should included
+(i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector}
 
-\item{bound_char}{the character to be used between stat1 and stat2/stat3. Available options are '(' (default), '[', '\{', and '|'.}
+\item{bound_char}{the character to be used between stat1 and stat2/stat3.
+Available options are '(' (default), '[', '\{', and '|'.}
 
 \item{sep}{the string to be used between stat2 and stat3. The default is ', '.}
 
 \item{na_str_out}{the character to replace missing values with.}
 
-\item{suffix}{a character string to at at the end of each stat (i.e. \code{\%} if doing response rates)}
+\item{suffix}{a character string to at at the end of each stat
+(i.e. `\%` if doing response rates)}
 }
 \value{
 string of combined values
 }
 \description{
-Takes in up to 3 numeric values, rounds each to a specified digit amount (if numeric), and then combines them accordingly.
+Takes in up to 3 numeric values, rounds each to a specified digit amount
+(if numeric), and then combines them accordingly.
 }
 \details{
 One value provided - returns a rounded value or the missing character.
 Two values - returns stat1 (stat2). e.g., mean (sd)
-Three values - returns stat1 (stat2, stat3). e.g., estimate (95\% lower, 95\% upper) or median [min, max]
+Three values - returns stat1 (stat2, stat3). e.g., estimate (95\% lower,
+95\% upper) or median [min, max]
 
-Currently the method does work with string variables, but of course rounding would not be relevant for strings.
+Currently the method does work with string variables, but of course rounding
+would not be relevant for strings.
 }
 \examples{
 
