@@ -249,7 +249,7 @@ cor_test(x = testing_data$magnitude1, y = testing_data$magnitude2,
 set.seed(93)
 n <- 10
 # unsorted data
-x <- runif(n, 0, 42)
+x <- sample(1:n, n, replace = FALSE)
 y <- runif(n, 0, 42)
 pracma::trapz(x, y)
 trapz_sorted(x,y)
