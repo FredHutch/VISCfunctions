@@ -30,6 +30,7 @@
 #' trapz_sorted(x, y)
 #'
 #' # Calculate the area without NA removal
+#' x[10] <- NA
 #' y[3] <- NA
 #' # Will fail to produce a result
 #' trapz_sorted(x, y, na.rm=FALSE)
@@ -75,7 +76,6 @@ trapz_sorted <- function(x, y, na.rm = TRUE){
     return(0.5 * (p1 - p2))
     }
 }
-
 
 
 
