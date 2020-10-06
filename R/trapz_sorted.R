@@ -46,7 +46,7 @@ trapz_sorted <- function(x, y, na.rm = TRUE){
   .check_numeric_input(y)
   m <- length(x)
   if (length(y) != m) stop("Arguments 'x', 'y' must be vectors of the same length.")
-  if (na.rm == TRUE){
+  if (na.rm == TRUE) {
     # Sort by increasing values, NA are removed from x
     x <- x[order(x, decreasing = FALSE, method = "auto", na.last = NA)]
     y <- y[order(x, decreasing = FALSE, method = "auto", na.last = NA)]
@@ -76,5 +76,4 @@ trapz_sorted <- function(x, y, na.rm = TRUE){
     return(0.5 * (p1 - p2))
     }
 }
-
 
