@@ -36,8 +36,8 @@ Available options are '(' (default), '[', '\{', and '|'.}
 
 \item{na_str_out}{the character to replace missing values with.}
 
-\item{suffix}{a character string to at at the end of each stat
-(i.e. `\%` if doing response rates)}
+\item{suffix}{a character string to add at the end of each stat
+(i.e. \verb{\%} if doing response rates)}
 }
 \value{
 string of combined values
@@ -49,8 +49,8 @@ Takes in up to 3 numeric values, rounds each to a specified digit amount
 \details{
 One value provided - returns a rounded value or the missing character.
 Two values - returns stat1 (stat2). e.g., mean (sd)
-Three values - returns stat1 (stat2, stat3). e.g., estimate (95\\% lower,
-95\\% upper) or median [min, max]
+Three values - returns stat1 (stat2, stat3). e.g., estimate (95\% lower,
+95\% upper) or median [min, max]
 
 Currently the method does work with string variables, but of course rounding
 would not be relevant for strings.

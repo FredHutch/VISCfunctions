@@ -6,7 +6,8 @@
 \title{Example NAb dataset}
 \format{
 A data frame with 210 rows and 9 variables:
-\describe{\item{pubID}{randomized subject ID}
+\describe{
+\item{pubID}{randomized subject ID}
 \item{group}{study group}
 \item{visitno}{visit number}
 \item{celltype}{cell type}

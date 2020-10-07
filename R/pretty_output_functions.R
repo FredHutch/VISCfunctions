@@ -285,8 +285,8 @@ paste_tbl_grp <- function(
 #' Available options are '(' (default), '[', '\{', and '|'.
 #' @param sep the string to be used between stat2 and stat3. The default is ', '.
 #' @param na_str_out the character to replace missing values with.
-#' @param suffix a character string to at at the end of each stat
-#' (i.e. `\%` if doing response rates)
+#' @param suffix a character string to add at the end of each stat
+#' (i.e. `%` if doing response rates)
 #'
 #' @return string of combined values
 #'
@@ -294,8 +294,8 @@ paste_tbl_grp <- function(
 #'
 #' One value provided - returns a rounded value or the missing character.
 #' Two values - returns stat1 (stat2). e.g., mean (sd)
-#' Three values - returns stat1 (stat2, stat3). e.g., estimate (95\% lower,
-#' 95\% upper) or median \[min, max\]
+#' Three values - returns stat1 (stat2, stat3). e.g., estimate (95% lower,
+#' 95% upper) or median \[min, max\]
 #'
 #' Currently the method does work with string variables, but of course rounding
 #' would not be relevant for strings.

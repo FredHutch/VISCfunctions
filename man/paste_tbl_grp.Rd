@@ -21,10 +21,10 @@ paste_tbl_grp(
 \arguments{
 \item{data}{input dataset. User must use consistent naming throughout,
 \strong{with an underscore} to separate the group names from the measures
-(i.e. `Group1_mean` and `Group2_mean`). There also must be two
-columns with column names that exactly match the input for `first_name`
-and `second_name` (i.e. 'Group1' and 'Group2'), which are used to form
-the `Comparison` variable.}
+(i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be two
+columns with column names that exactly match the input for \code{first_name}
+and \code{second_name} (i.e. 'Group1' and 'Group2'), which are used to form
+the \code{Comparison} variable.}
 
 \item{vars_to_paste}{vector of names of common measures to paste together.
 Can be the predefined 'median_min_max' or 'mean_sd', or any variable as long
@@ -44,14 +44,14 @@ proper format.}
 \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of "two.sided" (default), "greater" or "less". Will be used to
 determine the character to be pasted between the group names
-(`Comparison` variable).  Specifying "two.sided" will use the
-`sep_val` input.}
+(\code{Comparison} variable).  Specifying "two.sided" will use the
+\code{sep_val} input.}
 
 \item{digits}{integer indicating the number of decimal places to round to before pasting for numeric variables. Default is 0.}
 
 \item{trailing_zeros}{logical indicating if trailing zeros should be included (i.e. 0.100 instead of 0.1). Note if set to TRUE output is a character vector.}
 
-\item{keep_all}{logical indicating if all remaining, unpasted variables in `data` should be returned with the pasted variables. Default TRUE.}
+\item{keep_all}{logical indicating if all remaining, unpasted variables in \code{data} should be returned with the pasted variables. Default TRUE.}
 
 \item{verbose}{a logical variable indicating if warnings and messages should be displayed. Default FALSE.}
 }
@@ -60,13 +60,13 @@ data.frame with all the pasted values requested. Each name will have '_compariso
 }
 \description{
 Paste together information, often statistics, from two groups. There are two
-predefined combinations: mean(sd) and median[min,max], but user may also
+predefined combinations: mean(sd) and median[min, max], but user may also
 paste any single measure together.
 }
 \details{
-User must use consistant naming throughout, with a underscore to separate the group names from the measures (i.e. `Group1_mean` and `Group2_mean`). There also must be columns defining the group names (i.e. `Group1` and `Group2`), which are used to form the `Comparison` variable.
+User must use consistant naming throughout, with a underscore to separate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be columns defining the group names (i.e. \code{Group1} and \code{Group2}), which are used to form the \code{Comparison} variable.
 
-`alternative` included as a parameter so the direction can easily be seen in one-sided test. If "two.sided" is selected the value to be pasted between the two group names will be set to `sep_val`, where "greater" will use " > " and "less" with use " < " as the pasting value.
+\code{alternative} included as a parameter so the direction can easily be seen in one-sided test. If "two.sided" is selected the value to be pasted between the two group names will be set to \code{sep_val}, where "greater" will use " > " and "less" with use " < " as the pasting value.
 }
 \examples{
 
