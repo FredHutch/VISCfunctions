@@ -13,7 +13,9 @@
 #' x, y, from \code{min(x)} to \code{max(x)}.
 #'
 #' @details
-#'The points (x, 0) and (x, y) are taken as vertices of a polygon. The area is computed using the trapezoid rule for approximation the definite integral of the function.
+#'The points (x, 0) and (x, y) are taken as vertices of a polygon. The area is
+#'computed using the trapezoid rule for approximation the definite integral of
+#'the function.
 #'
 #' @examples
 #' set.seed(93)
@@ -25,7 +27,7 @@
 #' trapz_sorted(x, y)
 #'
 #' # Calculate area under the curve for unsorted data:
-#' x <- sample(1:n, n, replace = F)
+#' x <- sample(1:n, n, replace = FALSE)
 #' y <- runif(n, 0, 33)
 #' trapz_sorted(x, y)
 #'
@@ -42,15 +44,8 @@
 #'
 trapz_sorted <- function(x, y, na.rm = TRUE){
   # Input Checking
-  .check_numeric_input(x)
+  .check_numeric_input(x, allow_dup = FALSE)
   .check_numeric_input(y)
-  # Check whether there are different values of y for a single x value.
-  if (any(duplicated(x))) {
-    dups <- x[duplicated(x)]
-    e <- simpleError("There are duplicate x values in your data.
-                     Please check your data and remove.")
-        stop(e)
-    }
   m <- length(x)
   if (length(y) != m) stop("Arguments 'x', 'y' must be vectors of the same length.")
   if (na.rm == TRUE) {

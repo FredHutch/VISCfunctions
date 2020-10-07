@@ -25,7 +25,9 @@ parameter to remove any NA values so that integration can proceed by
 omitting the \code{x} and \code{y} values where the NA occurred.
 }
 \details{
-The points (x, 0) and (x, y) are taken as vertices of a polygon. The area is computed using the trapezoid rule for approximation the definite integral of the function.
+The points (x, 0) and (x, y) are taken as vertices of a polygon. The area is
+computed using the trapezoid rule for approximation the definite integral of
+the function.
 }
 \examples{
 set.seed(93)
@@ -37,14 +39,16 @@ y <- sin(x)
 trapz_sorted(x, y)
 
 # Calculate area under the curve for unsorted data:
-x <- runif(n, 1,42)
+x <- sample(1:n, n, replace = FALSE)
 y <- runif(n, 0, 33)
 trapz_sorted(x, y)
 
 # Calculate the area without NA removal
+x[10] <- NA
 y[3] <- NA
 # Will fail to produce a result
 trapz_sorted(x, y, na.rm=FALSE)
+trapz_sorted(x, y, na.rm=TRUE)
 
 
 
