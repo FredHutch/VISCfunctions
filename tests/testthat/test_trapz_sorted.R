@@ -64,7 +64,7 @@ test_that("trapz_sorted produces errors or warnings when there are problems with
   expect_warning(trapz_sorted(x,y),
                  "There are less than 2 observations with non-missing values of both 'x' and 'y', so NA returned.")
   # na.rm is false and there are NA values in the y vector
-  x <-1:10
+  x <- 1:10
   y <- runif(10, 0, 42)
   y[7] <- NA
   expect_warning(trapz_sorted(x,y, na.rm = FALSE),
