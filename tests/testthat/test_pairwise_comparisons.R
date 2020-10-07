@@ -398,7 +398,7 @@ test_that("Paired results with test data", {
                            digits = 3,
                            num_needed_for_test = 2,
                            verbose = TRUE),
-               .groups ="keep") %>%
+               .groups = "keep") %>%
     left_join(paired_tests, by = "group")
 
   expect_equal(group_testing_tibble$SampleSizes,
@@ -584,7 +584,7 @@ test_that("pairwise_test_bin testing 3+ groups", {
   testing_results <- exampleData_BAMA %>%
     filter(visitno != 0) %>%
     group_by(antigen, visitno, group) %>%
-    summarise(rfraction =paste0(sum(response), "/", n()),
+    summarise(rfraction = paste0(sum(response), "/", n()),
               ci = wilson_ci(response),
               r1 = sum(response),
               r0 = abs(sum(response - 1)),
