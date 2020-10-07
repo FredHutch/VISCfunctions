@@ -1,7 +1,7 @@
 #' Pasting Together Information for Two Groups
 #'
 #' Paste together information, often statistics, from two groups. There are two
-#' predefined combinations: mean(sd) and median[min,max], but user may also
+#' predefined combinations: mean(sd) and median\[min, max\], but user may also
 #' paste any single measure together.
 #'
 #'
@@ -295,7 +295,7 @@ paste_tbl_grp <- function(
 #' One value provided - returns a rounded value or the missing character.
 #' Two values - returns stat1 (stat2). e.g., mean (sd)
 #' Three values - returns stat1 (stat2, stat3). e.g., estimate (95\% lower,
-#' 95\% upper) or median [min, max]
+#' 95\% upper) or median \[min, max\]
 #'
 #' Currently the method does work with string variables, but of course rounding
 #' would not be relevant for strings.
@@ -491,4 +491,3 @@ pretty_pvalues = function(
 
   pvalues_new
 }
-

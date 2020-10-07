@@ -340,6 +340,126 @@ test_that("two_samp_bin_test throwing internal input checking errors", {
 })
 
 
+
+
+
+
+
+# test cor_test
+test_that("cor_test testing various options (no errors)", {
+  ###Testing three methods
+  set.seed(47813458)
+  x <- c(NA,rnorm(5,0,3), rnorm(5,3,3),NA)
+  y <- c(rnorm(5,0,1),NA, rnorm(5,2,1),NA)
+
+  # pearson
+  expect_identical(object = cor_test(x = x, y = y, method = 'pearson'),
+               expected = as.double(cor.test(x,
+                                             y,
+                                             method = 'pearson')$p.value)
+  )
+  # kendall
+  expect_identical(object = cor_test(x = x, y = y, method = 'kendall'),
+               expected = as.double(cor.test(x,
+                                             y,
+                                             method = 'kendall')$p.value)
+  )
+  # spearman no ties
+  expect_identical(object = cor_test(x = x, y = y, method = 'spearman'),
+               expected = as.double(cor.test(x,
+                                             y,
+                                             method = 'spearman')$p.value)
+  )
+  # spearman ties
+  set.seed(4312)
+  tmp_expected <- as.double(coin::pvalue(
+    coin::spearman_test(x~y,
+                        data = data.frame(x = c(x,x), y = c(y,y)),
+                        distribution = coin::approximate(10000)
+    )))
+  expect_identical(object = cor_test(x = c(x,x), y = c(y,y),
+                                 method = 'spearman', seed = 4312,
+                                 nresample = 10000),
+               expected = tmp_expected
+  )
+  expect_message(object = cor_test(x = c(x,x), y = c(y,y),
+                                 method = 'spearman', verbose = TRUE),
+               regexp = 'Either "x" or "y" has ties, so using approximate method.'
+  )
+  # spearman ties but not exact
+  expect_identical(object = cor_test(x = c(x,x), y = c(y,y),
+                                 method = 'spearman', exact = FALSE),
+               expected = as.double(cor.test(c(x,x),
+                                             c(y,y),
+                                             method = 'spearman',
+                                             exact = FALSE)$p.value)
+  )
+
+  #confirming seed is restored
+  old_seed <- get(".Random.seed", globalenv(), mode = "integer",
+                  inherits = FALSE)
+  xx <- cor_test(x = c(x,x), y = c(y,y),
+                 method = 'spearman', seed = 47861684, nresample = 10000)
+  expect_identical(object = get(".Random.seed", globalenv(), mode = "integer",
+                                inherits = FALSE),
+                   expected = old_seed
+  )
+
+})
+
+
+test_that("cor_test throwing internal .rm_na_and_check checking errors", {
+  set.seed(47813458)
+  x <- c(NA,rnorm(5,0,3), rnorm(5,3,3),NA)
+  y <- c(rnorm(5,0,1),NA, rnorm(5,2,1),NA)
+
+  #Testing if x and y are different lengths
+  expect_error(cor_test(x = 1:9, y = 1:10), '"x" and "y" must be the same length')
+
+  #Testing case where no non-missing pairs
+  expect_identical(object = cor_test(x = c(1:20,rep(NA,20)), y = c(rep(NA,20),1:20)), expected = NA)
+  expect_message(object = cor_test(x = c(1:20,rep(NA,20)), y = c(rep(NA,20),1:20), verbose = T),
+                 regexp = 'There are <2 observations with non-missing values of both "x" and "y", so p=NA returned')
+
+  #Testing case where all x have same value
+  expect_identical(object = cor_test(x = rep(1,12), y = y), expected = NA)
+  expect_message(object = cor_test(x = rep(1,12), y = y, verbose = T),
+                 regexp = 'There are <2 observations with non-missing values of both "x" and "y", so p=NA returned')
+
+  #Testing case where all y have same value
+  expect_identical(object = cor_test(x = x, y = rep(1,12)), expected = NA)
+  expect_message(object = cor_test(x = x, y = rep(1,12), verbose = T),
+                 regexp = 'There are <2 observations with non-missing values of both "x" and "y", so p=NA returned')
+})
+
+test_that("cor_test throwing internal input checking errors", {
+  set.seed(47813458)
+  x <- c(NA,rnorm(5,0,3), rnorm(5,3,3),NA)
+  y <- c(rnorm(5,0,1),NA, rnorm(5,2,1),NA)
+  my_matrix <- matrix(1:10,nrow = 2)
+
+  #Checking x
+  expect_error(cor_test(my_matrix, y = y),
+               regexp = '"x" must be a vector \\(one-dimensional object\\)')
+  expect_error(cor_test(x = numeric(0), y = y),
+               regexp = '"x" length must be > 0')
+  expect_error(cor_test(c(NA,NA,NA), y),
+               regexp = '"x" must have at least one non-NA value')
+  expect_error(cor_test(letters[1:5],y),
+               regexp = '"x" must be a numeric vector')
+
+  #Checking y
+  expect_error(cor_test(x, my_matrix),
+               regexp = '"y" must be a vector \\(one-dimensional object\\)')
+  expect_error(cor_test(x,numeric(0)),
+               regexp = '"y" length must be > 0')
+  expect_error(cor_test(x,c(NA,NA,NA)),
+               regexp = '"y" must have at least one non-NA value')
+  expect_error(cor_test(x,letters[1:5]),
+               regexp = '"y" must be a numeric vector')
+})
+
+
 test_that("test-wilson_ci", {
 
   # check x

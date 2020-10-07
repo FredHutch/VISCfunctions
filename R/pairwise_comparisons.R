@@ -15,7 +15,7 @@
 #' @param sep_val value to be pasted between the two measures. Default is ' vs. '.
 #' @param na_str_out the character string in the output table that replaces missing values.
 #' @param verbose a logical variable indicating if warnings and messages should be displayed.
-#' @return Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median [min, max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
+#' @return Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median \[min, max\]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
 #' @details
 #'
 #' Runs \code{wilcox_test()} in the coin package, with "exact" distribution.
@@ -520,5 +520,3 @@ pairwise_test_bin <- function(x, group, id = NULL,
              stringsAsFactors = FALSE)
 
 }
-
-

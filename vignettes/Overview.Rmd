@@ -1,6 +1,6 @@
 ---
 title: "Overview and Introduction to VISCfunctions Package"
-author: "Jimmy Fulp & Monica Gerber"
+author: "Jimmy Fulp, Monica Gerber and Heather Bouzek"
 date: "`r Sys.Date()`"
 output: 
   pdf_document:
@@ -58,6 +58,7 @@ VISCfunctions is a collection of useful functions designed to assist in analysis
   - two_samp_cont_test
   - cor_test \textcolor{red}{[Coming Soon]}
   - wilson_ci
+  - trapz_sorted
 - Fancy Output Functions
   - pretty_pvalues
   - stat_paste
@@ -107,8 +108,9 @@ Code to load in VISCfunctions and start using:
 # Loading VISCfunctions
 library(VISCfunctions)
 
-# Loading dplyr for this vignette code
+# Loading libraries for this vignette code
 library(dplyr)
+library(pracma)
 ```
 
 ## scharpTemplates Package
@@ -162,6 +164,8 @@ exampleData_BAMA <-
 There are currently two testing functions, with another in development, performing the appropriate statistical tests depending on the data and options, returning a p value.
 
 There is also an estimate function for getting Wilson Confidence Intervals
+
+`trapz_sorted()` is used to create an estimate for the area under a curve while making sure the x-axis is sorted so that both the x-axis and the area are increasing and positive, respectively.
 
 
 ```{r, echo=TRUE}
@@ -236,6 +240,32 @@ cor(testing_data$magnitude1, testing_data$magnitude2,
 
 cor_test(x = testing_data$magnitude1, y = testing_data$magnitude2,
          method = 'spearman')
+
+```
+
+## Computing the Area Under a Curve (Integration Estimate) for Messy Data
+
+`trapz_sorted()` is used to when you are not presorting your data so that it is strictly increasing along the x-axis, or there are 'NA' values that are not removed prior to estimating the area under a curve.
+
+```{r, echo=TRUE, warning=FALSE}
+set.seed(93)
+n <- 10
+# unsorted data
+x <- sample(1:n, n, replace = FALSE)
+y <- runif(n, 0, 42)
+pracma::trapz(x, y)
+trapz_sorted(x,y)
+
+# x axis is decreasing
+x <- n:1
+pracma::trapz(x, y)
+trapz_sorted(x,y)
+
+# NA in data
+x <- c(1:6, NA, 8:10)
+y[2] <- NA
+pracma::trapz(x, y)
+trapz_sorted(x,y, na.rm = TRUE)
 
 ```
 
@@ -558,5 +588,3 @@ kableExtra::kable(my_session_info$packages_table, 'latex', booktabs = TRUE,
       kableExtra::kable_styling(font_size = 8, latex_options = "hold_position")
       
 ```
-
-
