@@ -5,7 +5,7 @@
 #' @param x numeric vector (can include NA values).
 #' @param group categorical vector of group values.
 #' @param paired a logical variable indicating whether to do a paired test.
-#' @param id vector which contains the id information (so \code{x} values can be linked between groups). Only used and must be present when paired = TRUE.
+#' @param id vector which contains the id information (so `x` values can be linked between groups). Only used and must be present when paired = TRUE.
 #' @param method what test to run ("wilcox" or "t.test").
 #' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.
 #' @param sorted_group a vector listing the group testing order from lowest to highest.
@@ -18,13 +18,13 @@
 #' @return Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median \[min, max\]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
 #' @details
 #'
-#' Runs \code{wilcox_test()} in the coin package, with "exact" distribution.
+#' Runs `wilcox_test()` in the coin package, with "exact" distribution.
 #'
-#' If \code{sorted_group} is not specified then testing order based on factor levels if \code{group} is a factor, and alphabetical order otherwise
+#' If `sorted_group` is not specified then testing order based on factor levels if `group` is a factor, and alphabetical order otherwise
 #'
-#' \code{trailing_zeros} does not impact p-value column, which will be a numeric column regardless.
+#' `trailing_zeros` does not impact p-value column, which will be a numeric column regardless.
 #'
-#' If \code{paired = TRUE} the descriptive statistics are shown for observations that have non-missing values for both groups.
+#' If `paired = TRUE` the descriptive statistics are shown for observations that have non-missing values for both groups.
 #'
 #' @examples
 #'
@@ -245,18 +245,18 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'   (can include NA values)
 #' @param group vector of group values.
 #' @param id vector which contains the id information
-#'   (so \code{x} values can be linked between groups).
-#'   Only used and must be present when \code{method = 'mcnemar'}.
+#'   (so `x` values can be linked between groups).
+#'   Only used and must be present when `method = 'mcnemar'`.
 #' @param method what test to run, "barnard" (default), "fisher" ,"chi.sq" ,
 #'   or "mcnemar")
 #' @param barnard_method 	indicates the Barnard method for finding tables as
 #'   or more extreme than the observed table: must be either "Z-pooled",
 #'   "Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate",
-#'   or "CSM modified". Only used when \code{method = 'barnard'}
+#'   or "CSM modified". Only used when `method = 'barnard'`
 #' @param alternative a character string specifying the alternative hypothesis,
 #'   must be one of "two.sided" (default), "greater" or "less". You can specify
 #'   just the initial letter. Only "two.sided" available for
-#'   \code{method = 'chi.sq' or 'mcnemar'}
+#'   `method = 'chi.sq' or 'mcnemar'`
 #' @param sorted_group a vector listing the group testing order from lowest to
 #'   highest, if performing one sided tests
 #' @param num_needed_for_test required sample size (per group) to perform test.
@@ -282,15 +282,15 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'  other 100%)
 #' @details
 #'
-#' If all values of \code{x} are NA, the function will return NULL. This is to allow for nice
-#' return when looping through function with dplyr \code{group_by} and \code{group_modify}
+#' If all values of `x` are NA, the function will return NULL. This is to allow for nice
+#' return when looping through function with dplyr `group_by` and `group_modify`
 #'
-#' For one sided tests if \code{sorted_group = NULL} than the factor level order of \code{group}
+#' For one sided tests if `sorted_group = NULL` than the factor level order of `group`
 #' is respected, otherwise the levels will set to alphabetical order (i.e. if
-#' \code{alternative = less} then testing a < b ).
+#' `alternative = less` then testing a < b ).
 #'
-#' If planning on using the table in a latex document then set \code{latex_output = TRUE}.
-#' This will set the \code{\%} symbol to \code{\\\\\%} in the binary percentages
+#' If planning on using the table in a latex document then set `latex_output = TRUE`.
+#' This will set the `%` symbol to `\\%` in the binary percentages
 #'
 #' @examples
 #'
@@ -520,3 +520,230 @@ pairwise_test_bin <- function(x, group, id = NULL,
              stringsAsFactors = FALSE)
 
 }
+
+
+
+#' Correlation Pairwise Testing
+#'
+#' Takes a continuous variable and a grouping variable to calculate the pairwise
+#' Spearman, Pearson, or Kendall correlation estimate and p-value between two variables.
+#'
+#' @param x numeric vector (can include NA values)
+#' @param group categorical vector which contains the group levels to compare
+#' @param id vector which contains the id information
+#' @param method a character string indicating which correlation coefficient
+#'   is to be used for the test. One of "pearson", "kendall", or "spearman",
+#'   can be abbreviated to "p", "k", or "s".
+#' @param n_distinct_value number of distinct values in `x` each `group` must
+#' have to be compared.
+#' @param digits digits to round for correlation estimate
+#' @param trailing_zeros logical indicating if trailing zeros should be included
+#' in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to
+#' `TRUE`, output is a character vector.
+#' @param pretty_pval should the output include pretty p values created through
+#' [pretty_pvalues]
+#' @param pretty_digits digits to round for pretty p values
+#' @param exact should exact method be used. Ignored if
+#'   `method = "pearson"` or if `method = "spearman"` and there are
+#'   ties in `x` for either `group`.
+#' @param seed seed (only used if `method = "spearman"` and there are
+#'   ties in `x` for either `group`).
+#' @param nresample a positive integer, the number of Monte Carlo replicates
+#'   used for the computation of the approximative reference distribution.
+#'   Defaults to 10000. only used if `method = "spearman"` and there are
+#'   ties in `x` for either `group`.
+#' @param verbose a logical variable indicating if warnings and messages
+#'   should be displayed.
+#' @param ... parameters passed to `stats::cor.test` or `coin:spearman_test`, or
+#' passed to [pretty_pvalues] if `pretty_pval = TRUE`
+#' @return Returns a data frame with all possible pairwise correlations.
+#'
+#' @return Returns a data frame of all possible pairwise correlations
+#' with the following columns:
+#' * `Comparison` - Comparisons made
+#' * `DistinctValues` - number of distinct points
+#' * `NPairs` - number of completed pairs
+#' * `CorrEst` - correlation estimates
+#' * `CorrTest` - correlation p value
+#' * Unpasted columns if `keep_vars = TRUE`
+#' @details
+#'
+#' The p value is calculated using the [cor_test] function (see documentation
+#' for method details)
+#'
+#' If a group has less than `n_distinct_value` non-missing values that group
+#' will be excluded from the comparisons. If a specific comparison has less than
+#' `n_distinct_value` non-missing values to comparison the output will return an
+#'  estimate and the p-value set to NA.
+#'
+#' @examples
+#'
+#' data_in <- data.frame(
+#'   id = 1:10,
+#'   x = c(-2, -1, 0, 1, 2,-2, -1, 0, 1, 2),
+#'   y = c(4, 1, NA, 1, 4,-2, -1, 0, 1, 2),
+#'   z = c(1, 2, 3, 4, NA,-2, -1, 0, 1, 2),
+#'   v = c(rep(1,10)),
+#'   aa = c(1:5,NA,NA,NA,NA,NA),
+#'   bb = c(NA,NA,NA,NA,NA,1:5)
+#' )
+#' data_in_long <- tidyr::pivot_longer(data_in, -id)
+#' pairwise_test_cor(x = data_in_long$value,
+#'                   group = data_in_long$name,
+#'                   id = data_in_long$id,
+#'                   method = 'spearman')
+#'
+#'
+#' # Examples with Real World Data
+#' library(dplyr)
+#'
+#' # BAMA Assay Data Example
+#' data(exampleData_BAMA)
+#'
+#' ## Antigen Correlation
+#' exampleData_BAMA %>%
+#' filter(visitno != 0) %>%
+#' group_by(group, visitno) %>%
+#'  summarize(
+#'    pairwise_test_cor(x = magnitude, group = antigen, id = pubID,
+#'    method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE),
+#'    .groups = 'drop'
+#'           )
+#'
+#' ## Adding Fancy p values for kable output
+#' antigen_testing <- exampleData_BAMA %>%
+#'    filter(visitno != 0) %>%
+#'    group_by(group, visitno) %>%
+#'    summarize(
+#'        pairwise_test_cor(x = magnitude, group = antigen, id = pubID,
+#'        method = 'spearman', n_distinct_value = 3, digits = 1,
+#'        pretty_pval  = TRUE, pretty_digits = 4, background = 'yellow',
+#'        verbose = TRUE),
+#'    .groups = 'drop'
+#'        )
+#'
+#' @export
+
+
+pairwise_test_cor <- function(x,
+                              group,
+                              id,
+                              method = c('spearman', 'pearson', 'kendall'),
+                              n_distinct_value = 3,
+                              digits = 3,
+                              trailing_zeros = TRUE,
+                              pretty_pval = FALSE,
+                              pretty_digits = 3,
+                              exact = TRUE,
+                              seed = 68954857,
+                              nresample = 10000,
+                              verbose = FALSE,
+                              ...){
+
+  # Input checking
+  .check_numeric_input(x)
+  method <- match.arg(method)
+
+  #Dropping any missing in either x, group or id
+  keep_index <- !is.na(x) & !is.na(group) & !is.na(id)
+  x <- x[keep_index]
+  group <- group[keep_index]
+  id <- id[keep_index]
+
+  # Input checking: Dropping entire groups that have less than needed distinct values
+  unique_sizes <- c(by(x, group, function(xx) length(unique(xx))))
+  groups_to_drop <- names(unique_sizes)[unique_sizes < n_distinct_value]
+  if (length(groups_to_drop) > 0) {
+    if (length(groups_to_drop) == length(unique_sizes))
+      stop(paste0('All groups have less than ',n_distinct_value,
+                  ' distinct values'))
+
+    if (length(groups_to_drop) == (length(unique_sizes)) - 1)
+      stop(paste0('Only one group has >=',n_distinct_value,
+                  ' distinct values, so no testing possible'))
+
+    if (verbose)
+      message(paste0('Group(s) ', paste0(groups_to_drop, collapse = ', '),
+                     ' are excluded because the distinct values are less than ',
+                     n_distinct_value))
+
+    id <- id[!group %in% groups_to_drop]
+    x <- x[!group %in% groups_to_drop]
+    group <- group[!group %in% groups_to_drop]
+  }
+
+  #Need to drop unused levels if group if a factor, otherwise set it as factor
+  if (is.factor(group)) group <- droplevels(group) else group <- factor(group)
+  n_levels <- nlevels(group)
+  levels_here <- levels(group)
+
+  results_list <- list()
+  for (i in 1:(n_levels - 1)) {
+    for (j in (i + 1):n_levels) {
+      i_group <- levels_here[i]
+      j_group <- levels_here[j]
+      i_data <- data.frame(x = x[group == i_group], id = id[group == i_group])
+      j_data <- data.frame(y = x[group == j_group], id = id[group == j_group])
+
+      data_here <- stats::na.omit(merge(i_data, j_data, by = 'id'))
+      N_points <- nrow(data_here)
+
+      comparison_here <- paste0(i_group, ' vs. ', j_group)
+
+      distinct_vals <- paste0(length(unique(data_here$x)),
+                              ' vs. ',
+                              length(unique(data_here$y)))
+
+      if (N_points > 0) {
+
+        if (length(unique(data_here$x)) >= n_distinct_value
+            & length(unique(data_here$y)) >= n_distinct_value) {
+          # correlation estimate
+          rho <- stats::cor(x = data_here$x, y = data_here$y, method = method)
+          rho <- round_away_0(rho,
+                              digits = digits,
+                              trailing_zeros = trailing_zeros)
+
+          # p value of spearman test or pearson test
+          mag_p <- cor_test(x = data_here$x,
+                            y = data_here$y,
+                            method = method,
+                            exact = exact,
+                            seed = seed,
+                            nresample = nresample,
+                            verbose = verbose,
+                            ...)
+        } else {
+          if (verbose)
+            message(paste0('Not enough distinct values for at least one group when considering ',
+                           comparison_here))
+          rho <- mag_p <- NA
+        }
+      } else{
+        if (verbose)
+          message(paste0('No non-missing data points when considering ',
+                         comparison_here))
+        rho <- mag_p <- NA
+      }
+
+      results_list[[length(results_list) + 1]] <-
+        data.frame(Comparison = comparison_here,
+                   DistinctValues = distinct_vals,
+                   NPoints = N_points,
+                   CorrEst = rho,
+                   CorrTest = mag_p,
+                   stringsAsFactors = FALSE)
+     }
+  }
+  final_results <- do.call(base::rbind, results_list)
+  if (pretty_pval && any(!is.na(final_results$CorrTest)))
+    final_results$`CorrTest_Pretty` = pretty_pvalues(final_results$CorrTest,
+                                                     digits = pretty_digits,
+                                                     ...)
+
+  final_results
+}
+
+
+
+

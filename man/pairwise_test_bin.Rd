@@ -45,7 +45,7 @@ or "CSM modified". Only used when \code{method = 'barnard'}}
 \item{alternative}{a character string specifying the alternative hypothesis,
 must be one of "two.sided" (default), "greater" or "less". You can specify
 just the initial letter. Only "two.sided" available for
-\code{method = 'chi.sq' or 'mcnemar'}}
+\verb{method = 'chi.sq' or 'mcnemar'}}
 
 \item{sorted_group}{a vector listing the group testing order from lowest to
 highest, if performing one sided tests}
@@ -96,7 +96,7 @@ is respected, otherwise the levels will set to alphabetical order (i.e. if
 \code{alternative = less} then testing a < b ).
 
 If planning on using the table in a latex document then set \code{latex_output = TRUE}.
-This will set the \code{\%} symbol to \code{\\\\\%} in the binary percentages
+This will set the \verb{\%} symbol to \verb{\\\\\%} in the binary percentages
 }
 \examples{
 
