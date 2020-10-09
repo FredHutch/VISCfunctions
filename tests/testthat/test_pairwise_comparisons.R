@@ -266,76 +266,85 @@ test_that("pairwise_comparisons testing multiple groups", {
   library(tidyr)
   library(purrr)
 
-  pvals <-
-    exampleData_BAMA %>%
-    pivot_wider(id_cols = c(antigen, visitno),
-                names_from = group,
-                values_from = c(magnitude, response),
-                values_fn = list) %>%
-    map2(.x = .$magnitude_1, .y = .$magnitude_2, .f = ~wilcox.test(x=.x, y=.y)) %>% map_dbl("p.value")
+  test_single_comp <- function(x, group, Group1, Group2) {
+    test_data <- data.frame(x = x[!is.na(x)],
+                            group = group[!is.na(x)])
 
-  testing_results <-
-    exampleData_BAMA %>%
-    group_by(antigen, visitno, group) %>%
-    summarise(n = n(),
-              mean = mean(magnitude, na.rm = TRUE),
-              sd = sd(magnitude, na.rm = TRUE),
-              median = median(magnitude, na.rm = TRUE),
-              min = min(magnitude, na.rm = TRUE),
-              max = max(magnitude, na.rm = TRUE),
-              .groups = "keep") %>%
-    pivot_wider(names_from = group,
-                values_from = c(n, mean, sd, median, min, max)) %>%
-    mutate(Group1 = "1", Group2 = "2", .before = "n_1") %>%
-    cbind(MagnitudeTest = pvals) %>%
-    mutate(PerfectSeperation = ifelse(min_1 > max_2| max_2 < min_1, TRUE, FALSE), .after = "max_2")
+    testing_stats <- test_data %>%
+      summarise(
+        Group1 = unique(group[group == Group1]), Group2 = unique(group[group == Group2]),
+        Group1_n = length(x[group == Group1]), Group2_n = length(x[group == Group2]),
+        Group1_mean = mean(x[group == Group1]), Group2_mean = mean(x[group == Group2]),
+        Group1_sd = sd(x[group == Group1]), Group2_sd = sd(x[group == Group2]),
+        Group1_median = median(x[group == Group1]), Group2_median = median(x[group == Group2]),
+        Group1_min = min(x[group == Group1]), Group2_min = min(x[group == Group2]),
+        Group1_max = max(x[group == Group1]), Group2_max = max(x[group == Group2]),
+        Group1_IQR = IQR(x[group == Group1])
+      )
 
-  colnames(testing_results)[5:16] <- c("Group1_n", "Group2_n", "Group1_mean",
-                                     "Group2_mean", "Group1_sd", "Group2_sd",
-                                     "Group1_median", "Group2_median",
-                                     "Group1_min", "Group2_min", "Group1_max",
-                                     "Group2_max")
+    # Defaults
+    test_pasting <- paste_tbl_grp(data = testing_stats,
+                                  vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                  sep_val = " vs. ", digits = 3, keep_all = FALSE,
+                                  trailing_zeros = TRUE)
+    names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
+    testing_results <- data.frame(
+      test_pasting,
+      MagnitudeTest = two_samp_cont_test(x = x[group %in% c(Group1,Group2)],
+                                         y = group[group %in% c(Group1,Group2)],
+                                         method = 'wilcox', paired = FALSE),
+      PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                   (testing_stats$Group2_min >  testing_stats$Group1_max),
+                                 TRUE,
+                                 FALSE)
+    )
+    testing_results
+  }
 
-  test_pasting <- paste_tbl_grp(data = testing_results,
-                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
-                                sep_val = " vs. ",
-                                digits = 3,
-                                keep_all = TRUE,
-                                trailing_zeros = TRUE)
+  test_all_comp <- function(x, group){
+    # print(x);print(group);print(group[!is.na(x)])
+    x_here <- x[!is.na(x)]
+    group_here <- droplevels(group[!is.na(x)])
+    if (length(unique(group[!is.na(x)])) > 1) {
+      test_results_paste <- list()
+      for (i in 1:(nlevels(group_here) - 1)) {
+        for (j in ((i + 1):nlevels(group_here))) {
+          # print(test_single_comp(x = x_here, group = group_here, Group1 = levels(group_here)[i], Group2 = levels(group_here)[j]))
+          test_results_paste[[length(test_results_paste) + 1]] <- test_single_comp(x = x_here, group = group_here, Group1 = levels(group_here)[i], Group2 = levels(group_here)[j])
+        }
+      }
+      do.call(base::rbind, test_results_paste)
+    }
+  }
 
-  names(test_pasting)[5:8] <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
-  test_pasting <- test_pasting %>% select(antigen,
-                                          visitno,
-                                          Comparison,
-                                          SampleSizes,
-                                          Median_Min_Max,
-                                          Mean_SD,
-                                          MagnitudeTest,
-                                          PerfectSeperation)
+  testing_results <- testData_BAMA %>%
+    group_by(antigen, visit) %>%
+    group_modify(~test_all_comp(x = .x$magnitude, group = .x$group) %>%
+                   as.data.frame)
 
-  group_testing_dt <- exampleData_BAMA %>%
-    group_by(antigen, visitno) %>%
-    summarise(pairwise_test_cont(x = magnitude,
-                                 group = group,
-                                 paired = FALSE,
-                                 method = 'wilcox',
-                                 alternative = 'two.sided',
-                                 sorted_group = 1:2,
-                                 num_needed_for_test = 3,
-                                 digits = 0,
-                                 trailing_zeros = TRUE,
-                                 sep_val = ' vs. ',
-                                 verbose = FALSE),
-              .groups = "keep")
+  group_testing_dt <- testData_BAMA %>%
+    group_by(antigen, visit) %>%
+    group_modify(~pairwise_test_cont(x = .x$magnitude,
+                                     group = .x$group,
+                                     paired = FALSE,
+                                     method = 'wilcox',
+                                     alternative = 'two.sided',
+                                     num_needed_for_test = 3,
+                                     digits = 3,
+                                     trailing_zeros = TRUE,
+                                     sep_val = ' vs. ',
+                                     verbose = FALSE) %>%
+                   as.data.frame)
 
-  expect_equal(object = group_testing_dt$antigen,
-               expected = test_pasting$antigen)
+  expect_equal(object = group_testing_dt,
+               expected = testing_results)
+
 })
 
 test_that("Test example with fixed result", {
 
   data(exampleData_BAMA)
-  source("./fixed_data.R")
+  source("fixed_data.R")
   fixed_bama_group_testing_dt <- as_tibble(fixed_bama_group_testing_dt) %>%
     arrange(antigen)
 
@@ -356,7 +365,7 @@ test_that("Test example with fixed result", {
     ungroup()
 
   expect_equal(object = group_testing_dt,
-               expected = fixed_bama_group_testing_dt, tolerance = 1e-3)
+               expected = fixed_bama_group_testing_dt)
   })
 
 
@@ -599,7 +608,7 @@ test_that("pairwise_test_bin testing 3+ groups", {
                                                                    r1_grp2,
                                                                    r0_grp1,
                                                                    r0_grp2),
-                                                                 2, 2, byrow = TRUE),
+                                                                 2, 2, byrow = FALSE),
                                               method = "z-pooled",
                                               to.plot = FALSE,
                                               alternative = "two.sided")$p.value)),
@@ -636,7 +645,158 @@ test_that("pairwise_test_bin testing 3+ groups", {
                                                    verbose = TRUE)))
 
   expect_equal(object = function_obj,
-               expected = testing_results, tolerance = 0.09)
+               expected = testing_results)
 
 })
+
+
+
+
+# Pairwise Correlation Testing --------------------------------------------
+
+# test pairwise_test_cor Using paste_tbl_grp and cor_test in testing since these functions are testing elsewhere
+test_that("pairwise_test_cor testing two groups", {
+  library(tidyr)
+  library(dplyr)
+  set.seed(243542534)
+  x = c(NA, rnorm(25, 0, 1), rnorm(25, 1, 1),NA)
+  group = c(rep('a', 26),rep('b', 26))
+  id = c(1:26, 1:26)
+
+  test_data <- data.frame(x, group, id)
+  test_data_wide <- test_data %>%
+    pivot_wider(names_from = group, values_from = x) %>%
+    drop_na()
+
+
+  testing_results <- data.frame(
+    Comparison = 'a vs. b',
+    NPoints = nrow(test_data_wide),
+    DistinctValues = paste0(test_data_wide$a %>% na.omit %>% length,
+                            ' vs. ',
+                            test_data_wide$b %>% na.omit %>% length),
+    CorrEst = stats::cor(x = test_data_wide$a,
+                       y = test_data_wide$b,
+                       method = 'spearman', use = 'pairwise.complete.obs') %>%
+      round_away_0(digits = 3, trailing_zeros = TRUE),
+    CorrTest = cor_test(x = test_data_wide$a,
+                        y = test_data_wide$b,
+                        method = 'spearman')
+  )
+
+  expect_equal(object = test_data %>%
+                 summarise(pairwise_test_cor(x = x,
+                                             group = group,
+                                             id = id,
+                                             method = 'spearman',
+                                             n_distinct_value = 3,
+                                             digits = 3,
+                                             trailing_zeros = TRUE,
+                                             verbose = FALSE)),
+               expected = testing_results)
+
+  # Digits to 5
+  testing_results5 <- testing_results
+  testing_results5$CorrEst <- stats::cor(x = test_data_wide$a,
+                                        y = test_data_wide$b,
+                                        method = 'spearman',
+                                        use = 'pairwise.complete.obs') %>%
+    round_away_0(digits = 5, trailing_zeros = TRUE)
+
+  expect_equal(object = test_data %>%
+                 summarise(pairwise_test_cor(x = x,
+                                             group = group,
+                                             id = id,
+                                             method = 'spearman',
+                                             n_distinct_value = 3,
+                                             digits = 5,
+                                             trailing_zeros = TRUE,
+                                             verbose = FALSE)),
+               expected = testing_results5)
+})
+
+
+
+
+# test pairwise_test_cor Using paste_tbl_grp and cor_test in testing since these functions are testing elsewhere
+test_that("pairwise_test_cor testing multiple groups", {
+  library(tidyr)
+  library(purrr)
+
+  test_single_comp <- function(data_in) {
+
+    test_data <- data_in %>%
+      filter(!is.na(x)) %>%
+      mutate(group = droplevels(group))
+
+    test_data_wide <- test_data %>%
+      pivot_wider(names_from = group, values_from = x) %>%
+      drop_na()
+
+    testing_results <- data.frame(
+      Comparison = paste0(levels(test_data$group)[1],
+                          ' vs. ',
+                          levels(test_data$group)[2]),
+      NPoints = nrow(test_data_wide),
+      DistinctValues = paste0(test_data_wide[,2, drop = TRUE] %>% length,
+                              ' vs. ',
+                              test_data_wide[,3, drop = TRUE] %>% length),
+      CorrEst = ifelse(sum(!test_data_wide[,2, drop = TRUE] %>% duplicated) >= 3 &
+                         sum(!test_data_wide[,3, drop = TRUE] %>% duplicated) >= 3,
+        stats::cor(x = test_data_wide[,2, drop = TRUE],
+                           y = test_data_wide[,3, drop = TRUE],
+                           method = 'spearman', use = 'pairwise.complete.obs') %>%
+        round_away_0(digits = 3, trailing_zeros = TRUE),
+        NA),
+      CorrTest = cor_test(x = test_data_wide[,2, drop = TRUE],
+                          y = test_data_wide[,3, drop = TRUE],
+                          method = 'spearman')
+    )
+    testing_results
+  }
+
+  test_all_comp <- function(x, group, id){
+    x_here <- x[!is.na(x)]
+    group_here <- droplevels(factor(group[!is.na(x)]))
+    id_here <- id[!is.na(x)]
+    if (length(unique(group[!is.na(x)])) > 1) {
+      test_results_paste <- list()
+      for (i in 1:(nlevels(group_here) - 1)) {
+        for (j in ((i + 1):nlevels(group_here))) {
+          tmp_index <- group_here %in% levels(group_here)[c(i,j)]
+          test_results_paste[[length(test_results_paste) + 1]] <-
+            test_single_comp(data_in = data.frame(
+              x = x_here[tmp_index],
+              group = group_here[tmp_index],
+              id = id_here[tmp_index]))
+        }
+      }
+      do.call(base::rbind, test_results_paste)
+    }
+  }
+
+  testing_results <- testData_BAMA %>%
+    group_by(group, visit) %>%
+    group_modify(~test_all_comp(x = .x$magnitude,
+                                group = .x$antigen,
+                                id = .x$pubID) %>%
+                   as.data.frame)
+
+  group_testing_dt <- testData_BAMA %>%
+    group_by(group, visit) %>%
+    group_modify(~pairwise_test_cor(x = .x$magnitude,
+                                    group = .x$antigen,
+                                    id = .x$pubID,
+                                    method = 'spearman',
+                                    n_distinct_value = 3,
+                                    digits = 3,
+                                    trailing_zeros = TRUE,
+                                    verbose = FALSE) %>%
+                   as.data.frame)
+
+  expect_equal(object = group_testing_dt,
+               expected = testing_results)
+
+})
+
 

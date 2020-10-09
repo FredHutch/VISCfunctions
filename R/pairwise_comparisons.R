@@ -728,8 +728,8 @@ pairwise_test_cor <- function(x,
 
       results_list[[length(results_list) + 1]] <-
         data.frame(Comparison = comparison_here,
-                   DistinctValues = distinct_vals,
                    NPoints = N_points,
+                   DistinctValues = distinct_vals,
                    CorrEst = rho,
                    CorrTest = mag_p,
                    stringsAsFactors = FALSE)
