@@ -796,7 +796,6 @@ test_that("pairwise_test_cor testing multiple groups", {
 
   expect_equal(object = group_testing_dt,
                expected = testing_results)
-
 })
 
 
