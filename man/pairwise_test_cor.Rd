@@ -12,8 +12,6 @@ pairwise_test_cor(
   n_distinct_value = 3,
   digits = 3,
   trailing_zeros = TRUE,
-  pretty_pval = FALSE,
-  pretty_digits = 3,
   exact = TRUE,
   seed = 68954857,
   nresample = 10000,
@@ -41,11 +39,6 @@ have to be compared.}
 in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to
 \code{TRUE}, output is a character vector.}
 
-\item{pretty_pval}{should the output include pretty p values created through
-\link{pretty_pvalues}}
-
-\item{pretty_digits}{digits to round for pretty p values}
-
 \item{exact}{should exact method be used. Ignored if
 \code{method = "pearson"} or if \code{method = "spearman"} and there are
 ties in \code{x} for either \code{group}.}
@@ -61,8 +54,7 @@ ties in \code{x} for either \code{group}.}
 \item{verbose}{a logical variable indicating if warnings and messages
 should be displayed.}
 
-\item{...}{parameters passed to \code{stats::cor.test} or \code{coin:spearman_test}, or
-passed to \link{pretty_pvalues} if \code{pretty_pval = TRUE}}
+\item{...}{parameters passed to \code{stats::cor.test} or \code{coin:spearman_test}}
 }
 \value{
 Returns a data frame with all possible pairwise correlations.
@@ -124,17 +116,5 @@ group_by(group, visitno) \%>\%
    method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE),
    .groups = 'drop'
           )
-
-## Adding Fancy p values for kable output
-antigen_testing <- exampleData_BAMA \%>\%
-   filter(visitno != 0) \%>\%
-   group_by(group, visitno) \%>\%
-   summarize(
-       pairwise_test_cor(x = magnitude, group = antigen, id = pubID,
-       method = 'spearman', n_distinct_value = 3, digits = 1,
-       pretty_pval  = TRUE, pretty_digits = 4, background = 'yellow',
-       verbose = TRUE),
-   .groups = 'drop'
-       )
 
 }

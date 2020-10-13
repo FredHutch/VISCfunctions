@@ -591,12 +591,12 @@ antigen_testing <- exampleData_BAMA %>%
                       group = .x$antigen,
                       id = .x$pubID,
                       method = 'spearman',
-                      n_distinct_value = 3,
-                      pretty_pval =TRUE,
-                      background = 'yellow'))) %>% 
+                      n_distinct_value = 3))) %>% 
   ungroup() %>% 
-  select(-CorrTest) %>% 
-  rename("Corr P Value" = CorrTest_Pretty)
+  # Getting fancy p values
+  mutate(CorrTest = pretty_pvalues(CorrTest, output_type = 'latex', 
+                                   sig_alpha = .1, background = 'yellow')) %>% 
+  rename("Corr P Value" = CorrTest)
 
 kableExtra::kable(antigen_testing, 
                   format = 'latex', escape = FALSE, 

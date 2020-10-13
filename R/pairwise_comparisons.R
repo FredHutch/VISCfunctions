@@ -270,9 +270,9 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'   ' vs. '.
 #' @param na_str_out the character string in the output table that replaces
 #'   missing values.
+#' @param latex_output will this table be used for latex output (default is FALSE)
 #' @param verbose a logical variable indicating if warnings and messages should
 #'   be displayed
-#' @param latex_output will this table be used for latex output (default is FALSE)
 #' @param ... other parameters to pass to Exact::exact.test when running
 #'   Barnard test
 #' @return Returns a data frame with all possible pairwise comparisons.
@@ -351,14 +351,24 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #' @export
 
 
-pairwise_test_bin <- function(x, group, id = NULL,
-                                 method = c('barnard', 'fisher' ,'chi.sq' , 'mcnemar'),
-                                 barnard_method = c("z-pooled", "z-unpooled", "boschloo",
-                                     "santner and snell", "csm", "csm approximate", "csm modified"),
-                                 alternative = c("two.sided", "less", "greater"),
-                                 sorted_group = NULL, num_needed_for_test = 3, conf_level = 0.95,
-                                 digits = 1, trailing_zeros = TRUE, sep_val = " vs. ",
-                                 na_str_out = "---", latex_output = FALSE, verbose = FALSE, ...){
+pairwise_test_bin <- function(x,
+                              group,
+                              id = NULL,
+                              method = c('barnard', 'fisher' ,'chi.sq' , 'mcnemar'),
+                              barnard_method = c("z-pooled", "z-unpooled", "boschloo",
+                                                 "santner and snell", "csm",
+                                                 "csm approximate", "csm modified"),
+                              alternative = c("two.sided", "less", "greater"),
+                              sorted_group = NULL,
+                              num_needed_for_test = 3,
+                              conf_level = 0.95,
+                              digits = 1,
+                              trailing_zeros = TRUE,
+                              sep_val = " vs. ",
+                              na_str_out = "---",
+                              latex_output = FALSE,
+                              verbose = FALSE,
+                              ...){
   #Input Checking
   method <- match.arg(method)
   barnard_method <- match.arg(barnard_method)
@@ -540,9 +550,6 @@ pairwise_test_bin <- function(x, group, id = NULL,
 #' @param trailing_zeros logical indicating if trailing zeros should be included
 #' in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to
 #' `TRUE`, output is a character vector.
-#' @param pretty_pval should the output include pretty p values created through
-#' [pretty_pvalues]
-#' @param pretty_digits digits to round for pretty p values
 #' @param exact should exact method be used. Ignored if
 #'   `method = "pearson"` or if `method = "spearman"` and there are
 #'   ties in `x` for either `group`.
@@ -554,8 +561,7 @@ pairwise_test_bin <- function(x, group, id = NULL,
 #'   ties in `x` for either `group`.
 #' @param verbose a logical variable indicating if warnings and messages
 #'   should be displayed.
-#' @param ... parameters passed to `stats::cor.test` or `coin:spearman_test`, or
-#' passed to [pretty_pvalues] if `pretty_pval = TRUE`
+#' @param ... parameters passed to `stats::cor.test` or `coin:spearman_test`
 #' @return Returns a data frame with all possible pairwise correlations.
 #'
 #' @return Returns a data frame of all possible pairwise correlations
@@ -610,18 +616,6 @@ pairwise_test_bin <- function(x, group, id = NULL,
 #'    .groups = 'drop'
 #'           )
 #'
-#' ## Adding Fancy p values for kable output
-#' antigen_testing <- exampleData_BAMA %>%
-#'    filter(visitno != 0) %>%
-#'    group_by(group, visitno) %>%
-#'    summarize(
-#'        pairwise_test_cor(x = magnitude, group = antigen, id = pubID,
-#'        method = 'spearman', n_distinct_value = 3, digits = 1,
-#'        pretty_pval  = TRUE, pretty_digits = 4, background = 'yellow',
-#'        verbose = TRUE),
-#'    .groups = 'drop'
-#'        )
-#'
 #' @export
 
 
@@ -632,8 +626,6 @@ pairwise_test_cor <- function(x,
                               n_distinct_value = 3,
                               digits = 3,
                               trailing_zeros = TRUE,
-                              pretty_pval = FALSE,
-                              pretty_digits = 3,
                               exact = TRUE,
                               seed = 68954857,
                               nresample = 10000,
@@ -735,13 +727,7 @@ pairwise_test_cor <- function(x,
                    stringsAsFactors = FALSE)
      }
   }
-  final_results <- do.call(base::rbind, results_list)
-  if (pretty_pval && any(!is.na(final_results$CorrTest)))
-    final_results$`CorrTest_Pretty` = pretty_pvalues(final_results$CorrTest,
-                                                     digits = pretty_digits,
-                                                     ...)
-
-  final_results
+  do.call(base::rbind, results_list)
 }
 
 
