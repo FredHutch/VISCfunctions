@@ -47,7 +47,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                                                    y = group,
                                                                    method = 'wilcox',
                                                                    paired = FALSE),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                PerfectSeparation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
                                                              (testing_stats$Group2_min >  testing_stats$Group1_max),
                                                            TRUE, FALSE))
 
@@ -73,7 +73,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                                                    y = group,
                                                                    method = 'wilcox',
                                                                    paired = FALSE),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                PerfectSeparation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
                                                              (testing_stats$Group2_min >  testing_stats$Group1_max),
                                                            TRUE, FALSE))
 
@@ -102,7 +102,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                                                    method = 'wilcox',
                                                                    paired = FALSE,
                                                                    alternative = 'less'),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                PerfectSeparation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
                                                              (testing_stats$Group2_min >  testing_stats$Group1_max),
                                                            TRUE, FALSE))
   expect_equal(object = test_data %>% pairwise_test_cont(x = x,
@@ -128,7 +128,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                                                    method = 'wilcox',
                                                                    paired = FALSE,
                                                                    alternative = 'greater'),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                PerfectSeparation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
                                                              (testing_stats$Group2_min >  testing_stats$Group1_max),
                                                            TRUE, FALSE))
   expect_equal(object = test_data %>% pairwise_test_cont(x = x,
@@ -156,7 +156,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                                                    method = 'wilcox',
                                                                    paired = FALSE,
                                                                    alternative = 'less'),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                PerfectSeparation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
                                                              (testing_stats$Group2_min >  testing_stats$Group1_max),
                                                            TRUE, FALSE))
   expect_equal(object = test_data %>% pairwise_test_cont(x = x, group = group,
@@ -180,7 +180,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                                                    y = group,
                                                                    method = 't.test',
                                                                    paired = FALSE),
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                PerfectSeparation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
                                                              (testing_stats$Group2_min >  testing_stats$Group1_max),
                                                            TRUE, FALSE))
 
@@ -199,7 +199,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
   names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
                                 MagnitudeTest = NA_integer_,
-                                PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+                                PerfectSeparation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
                                                              (testing_stats$Group2_min >  testing_stats$Group1_max),
                                                            TRUE, FALSE))
   expect_equal(object = test_data %>% pairwise_test_cont(x = x, group = group,
@@ -245,7 +245,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                 Median_Min_Max = test_pasting$median_min_max_comparison,
                                 Mean_SD = test_pasting$mean_sd_comparison,
                                 MagnitudeTest = two_samp_cont_test(x = x, y = group, method = 'wilcox', paired = TRUE),
-                                PerfectSeperation = ifelse((testing_stats_paired$Group1_min >
+                                PerfectSeparation = ifelse((testing_stats_paired$Group1_min >
                                                               testing_stats_paired$Group2_max) |
                                                              (testing_stats_paired$Group2_min >
                                                                 testing_stats_paired$Group1_max), TRUE, FALSE),
@@ -293,7 +293,7 @@ test_that("pairwise_comparisons testing multiple groups", {
       MagnitudeTest = two_samp_cont_test(x = x[group %in% c(Group1,Group2)],
                                          y = group[group %in% c(Group1,Group2)],
                                          method = 'wilcox', paired = FALSE),
-      PerfectSeperation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
+      PerfectSeparation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
                                    (testing_stats$Group2_min >  testing_stats$Group1_max),
                                  TRUE,
                                  FALSE)
@@ -471,7 +471,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                               ResponseTest  = two_samp_bin_test(x = x,
                                                                                 y = group,
                                                                                 method = method_in),
-                                              PerfectSeperation = ifelse(diff(testing_stats_pre$mean) == 1,
+                                              PerfectSeparation = ifelse(diff(testing_stats_pre$mean) == 1,
                                                                          TRUE, FALSE))
                 expect_equal(object = pairwise_test_bin(x = x, group = group, method = method_in),
                              expected = testing_results)
@@ -497,7 +497,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
   names(test_pasting) <- c('Comparison', 'ResponseStats')
   testing_results <- data.frame(test_pasting,
     ResponseTest  = two_samp_bin_test(x = x, y = group),
-    PerfectSeperation = ifelse(diff(testing_stats_pre_3digits$mean) == 1,
+    PerfectSeparation = ifelse(diff(testing_stats_pre_3digits$mean) == 1,
                                TRUE, FALSE))
   expect_equal(object = pairwise_test_bin(x = x, group = group, digits = 3),
                expected = testing_results)
@@ -511,7 +511,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
   testing_results <- data.frame(test_pasting,
     # Need reverse testing direction
     ResponseTest  = two_samp_bin_test(x = x, y = group, alternative = 'greater'),
-    PerfectSeperation = ifelse(diff(testing_stats_pre$mean) == 1, TRUE, FALSE))
+    PerfectSeparation = ifelse(diff(testing_stats_pre$mean) == 1, TRUE, FALSE))
 
   expect_equal(object = pairwise_test_bin(x = x, group = group, alternative = 'less'),
                expected = testing_results)
@@ -527,7 +527,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
     # Need reverse testing direction
     ResponseTest  = two_samp_bin_test(x = x, y = factor(group, levels = c('b','a')),
                                       alternative = 'less'),
-    PerfectSeperation = ifelse(diff(testing_stats_pre$mean) == 1, TRUE, FALSE))
+    PerfectSeparation = ifelse(diff(testing_stats_pre$mean) == 1, TRUE, FALSE))
   expect_equal(object = pairwise_test_bin(x = x, group = group, alternative = 'greater',
                                           sorted_group = c('b','a')),
                expected = testing_results)
@@ -540,7 +540,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
   testing_results <- data.frame(
     test_pasting,
     ResponseTest  = NA_integer_,
-    PerfectSeperation = ifelse(all(testing_stats_pre$mean == 0) |
+    PerfectSeparation = ifelse(all(testing_stats_pre$mean == 0) |
                                  all(testing_stats_pre$mean == 1),
                                TRUE, FALSE))
   expect_equal(object = pairwise_test_bin(x = x, group = group, num_needed_for_test = 100),
@@ -575,7 +575,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   testing_results <- data.frame(test_pasting,
     ResponseTest  = two_samp_bin_test(x = x, y = group, method = 'mcnemar'),
-    PerfectSeperation = ifelse(diff(testing_stats_pre$mean) == 1, TRUE, FALSE))
+    PerfectSeparation = ifelse(diff(testing_stats_pre$mean) == 1, TRUE, FALSE))
 
   expect_equal(object = pairwise_test_bin(x = x, group = group, id = id, method = 'mcnemar'),
                expected = testing_results)
@@ -612,7 +612,7 @@ test_that("pairwise_test_bin testing 3+ groups", {
                                               method = "z-pooled",
                                               to.plot = FALSE,
                                               alternative = "two.sided")$p.value)),
-           PerfectSeperation = FALSE,
+           PerfectSeparation = FALSE,
            Comparison = "1 vs. 2",
            ResponseStats = paste0(rfraction_grp1,
                                   " = ",
@@ -630,7 +630,7 @@ test_that("pairwise_test_bin testing 3+ groups", {
                                   "%, ",
                                   round_away_0(ci_grp2$upper*100, 1, trailing_zeros = TRUE),
                                   "%)"))  %>%
-    select(antigen, visitno, Comparison, ResponseStats, ResponseTest = pval, PerfectSeperation)
+    select(antigen, visitno, Comparison, ResponseStats, ResponseTest = pval, PerfectSeparation)
 
   function_obj <- exampleData_BAMA %>%
     group_by(antigen, visitno) %>%
@@ -654,8 +654,8 @@ test_that("pairwise_test_bin testing 3+ groups", {
 
 # Pairwise Correlation Testing --------------------------------------------
 
-# test pairwise_test_cor Using paste_tbl_grp and cor_test in testing since these functions are testing elsewhere
-test_that("pairwise_test_cor testing two groups", {
+
+test_that("error checking", {
   library(tidyr)
   library(dplyr)
   set.seed(243542534)
@@ -665,6 +665,55 @@ test_that("pairwise_test_cor testing two groups", {
 
   test_data <- data.frame(x, group, id)
   test_data_wide <- test_data %>%
+    pivot_wider(names_from = group, values_from = x) %>%
+    drop_na()
+
+  expect_error(
+    object =   pairwise_test_cor(x = x,
+                                 group = group,
+                                 id = 1:10),
+    regexp = '"x", "group", and "id" must be same length'
+  )
+
+  expect_error(
+    object =   pairwise_test_cor(x = rep(1:2, 26),
+                                 group = group,
+                                 id = id),
+    regexp = 'All groups have less than 3 distinct values'
+  )
+
+  expect_error(
+    object =   pairwise_test_cor(x = c(rep(1:2, 25), 3, 4),
+                                 group = group,
+                                 id = id),
+    regexp = 'Only one group has >=3 distinct values, so no testing possible'
+  )
+
+  expect_message(
+    object = pairwise_test_cor(x = c(NA,NA,NA,x[-(1:3)],1,2,3),
+                                   group = c(group,rep('c',3)),
+                                   id = c(id,1:3), verbose = TRUE),
+    regexp = 'No non-missing data points when considering a vs. c'
+  )
+
+
+
+
+})
+
+
+
+# test pairwise_test_cor Using paste_tbl_grp and cor_test in testing since these functions are testing elsewhere
+test_that("pairwise_test_cor testing two groups", {
+  library(tidyr)
+  library(dplyr)
+  set.seed(243542534)
+  x = c(NA, rnorm(25, 0, 1), rnorm(25, 1, 1),NA, 1)
+  group = factor(c(rep('a', 26),rep('b', 26), 'c'))
+  id = c(1:26, 1:26, 1)
+
+  test_data <- data.frame(x, group, id)
+  test_data_wide <- test_data[-length(x),] %>%
     pivot_wider(names_from = group, values_from = x) %>%
     drop_na()
 
@@ -694,6 +743,19 @@ test_that("pairwise_test_cor testing two groups", {
                                              trailing_zeros = TRUE,
                                              verbose = FALSE)),
                expected = testing_results)
+
+  expect_message(
+    object = test_data %>%
+      summarise(pairwise_test_cor(x = x,
+                                  group = group,
+                                  id = id,
+                                  method = 'spearman',
+                                  n_distinct_value = 3,
+                                  digits = 3,
+                                  trailing_zeros = TRUE,
+                                  verbose = TRUE)),
+    regexp = 'Group\\(s\\) c are excluded because the distinct values are less than 3'
+  )
 
   # Digits to 5
   testing_results5 <- testing_results
@@ -796,6 +858,21 @@ test_that("pairwise_test_cor testing multiple groups", {
 
   expect_equal(object = group_testing_dt,
                expected = testing_results)
+
+  expect_message(
+    object = testData_BAMA %>%
+      group_by(group, visit) %>%
+      group_modify(~pairwise_test_cor(x = .x$magnitude,
+                                   group = .x$antigen,
+                                   id = .x$pubID,
+                                   method = 'spearman',
+                                   n_distinct_value = 3,
+                                   digits = 3,
+                                   trailing_zeros = TRUE,
+                                   verbose = TRUE)),
+    regexp = 'Not enough distinct values for at least one group when considering Con S gp140 CFI vs. gp70_C.1086C V1/V2/293F'
+  )
+
 })
 
 

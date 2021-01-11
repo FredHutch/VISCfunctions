@@ -48,7 +48,7 @@ pairwise_test_cont(
 \item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
 }
 \value{
-Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median [min, max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
+Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median [min, max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeparation (a logical flag indicating if there is perfect seperation).
 }
 \description{
 Takes a continuous variable and performs pairwise testing (t-test or wilcox test)

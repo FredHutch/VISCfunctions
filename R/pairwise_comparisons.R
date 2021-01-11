@@ -15,7 +15,7 @@
 #' @param sep_val value to be pasted between the two measures. Default is ' vs. '.
 #' @param na_str_out the character string in the output table that replaces missing values.
 #' @param verbose a logical variable indicating if warnings and messages should be displayed.
-#' @return Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median \[min, max\]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
+#' @return Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median \[min, max\]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeparation (a logical flag indicating if there is perfect seperation).
 #' @details
 #'
 #' Runs `wilcox_test()` in the coin package, with "exact" distribution.
@@ -207,7 +207,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
         mag_p <- NA_real_
       }
 
-      results_list[[length(results_list) + 1]] <- data.frame(stats_by_group, `MagnitudeTest` = mag_p, PerfectSeperation = perfect_seperation, stringsAsFactors = FALSE)
+      results_list[[length(results_list) + 1]] <- data.frame(stats_by_group, `MagnitudeTest` = mag_p, PerfectSeparation = perfect_seperation, stringsAsFactors = FALSE)
     }
   }
 
@@ -225,7 +225,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
              Median_Min_Max = pasted_results$median_min_max_comparison,
              Mean_SD = pasted_results$mean_sd_comparison,
              MagnitudeTest = results$MagnitudeTest,
-             PerfectSeperation = results$PerfectSeperation,
+             PerfectSeparation = results$PerfectSeparation,
              stringsAsFactors = FALSE)
 
 }
@@ -243,7 +243,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'
 #' @param x numeric vector (0/1) or logical vector or (F/T)
 #'   (can include NA values)
-#' @param group vector of group values.
+#' @param group categorical vector of group values.
 #' @param id vector which contains the id information
 #'   (so `x` values can be linked between groups).
 #'   Only used and must be present when `method = 'mcnemar'`.
@@ -278,7 +278,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #' @return Returns a data frame with all possible pairwise comparisons.
 #'   Variables include Comparison, ResponseStats (group stats; number positive /
 #'  number = rate (Wilson CI Bounds)), ResponseTest (fisher/chisq p value),
-#'  PerfectSeperation (a logical flag indicating if one group if 0% and the
+#'  PerfectSeparation (a logical flag indicating if one group if 0% and the
 #'  other 100%)
 #' @details
 #'
@@ -371,6 +371,7 @@ pairwise_test_bin <- function(x,
                               ...){
   #Input Checking
   method <- match.arg(method)
+  if (length(x) != length(group)) stop('"x" and "group" must be same length')
   barnard_method <- match.arg(barnard_method)
   alternative <- match.arg(alternative)
   if (method == 'chi.sq' & alternative != 'two.sided')
@@ -506,7 +507,7 @@ pairwise_test_bin <- function(x,
 
       results_list[[length(results_list) + 1]] <-
         data.frame(stats_by_group, `ResponseTest` = response_p,
-                   PerfectSeperation = perfect_seperation,
+                   PerfectSeparation = perfect_seperation,
                    stringsAsFactors = FALSE)
 
     }
@@ -526,7 +527,7 @@ pairwise_test_bin <- function(x,
   data.frame(Comparison = pasted_results$Comparison,
              ResponseStats = pasted_results$rr_comparison,
              ResponseTest = results$ResponseTest ,
-             PerfectSeperation = results$PerfectSeperation,
+             PerfectSeparation = results$PerfectSeparation,
              stringsAsFactors = FALSE)
 
 }
@@ -635,6 +636,9 @@ pairwise_test_cor <- function(x,
   # Input checking
   .check_numeric_input(x)
   method <- match.arg(method)
+  # input length checking
+  if (length(x) != length(group) | length(x) != length(id))
+    stop('"x", "group", and "id" must be same length')
 
   #Dropping any missing in either x, group or id
   keep_index <- !is.na(x) & !is.na(group) & !is.na(id)
@@ -711,7 +715,7 @@ pairwise_test_cor <- function(x,
                            comparison_here))
           rho <- mag_p <- NA
         }
-      } else{
+      } else {
         if (verbose)
           message(paste0('No non-missing data points when considering ',
                          comparison_here))

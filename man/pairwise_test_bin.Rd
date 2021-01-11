@@ -28,7 +28,7 @@ pairwise_test_bin(
 \item{x}{numeric vector (0/1) or logical vector or (F/T)
 (can include NA values)}
 
-\item{group}{vector of group values.}
+\item{group}{categorical vector of group values.}
 
 \item{id}{vector which contains the id information
 (so \code{x} values can be linked between groups).
@@ -79,7 +79,7 @@ Barnard test}
 Returns a data frame with all possible pairwise comparisons.
 Variables include Comparison, ResponseStats (group stats; number positive /
 number = rate (Wilson CI Bounds)), ResponseTest (fisher/chisq p value),
-PerfectSeperation (a logical flag indicating if one group if 0\% and the
+PerfectSeparation (a logical flag indicating if one group if 0\% and the
 other 100\%)
 }
 \description{
