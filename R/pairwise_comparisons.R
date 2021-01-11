@@ -543,35 +543,35 @@ pairwise_test_bin <- function(x,
 #' @param group categorical vector which contains the group levels to compare
 #' @param id vector which contains the id information
 #' @param method a character string indicating which correlation coefficient
-#'   is to be used for the test. One of "pearson", "kendall", or "spearman",
-#'   can be abbreviated to "p", "k", or "s".
+#'   is to be used for the test ("pearson" (default), "kendall", or "spearman").
 #' @param n_distinct_value number of distinct values in `x` each `group` must
-#' have to be compared.
-#' @param digits digits to round for correlation estimate
+#' have to be compared. The value must be >1, with a default of 3.
+#' @param digits numeric value between 0 and 14 indicating the number of digits
+#'   to round the correlation estimate. The default is set to 3.
 #' @param trailing_zeros logical indicating if trailing zeros should be included
 #' in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to
 #' `TRUE`, output is a character vector.
-#' @param exact should exact method be used. Ignored if
-#'   `method = "pearson"` or if `method = "spearman"` and there are
-#'   ties in `x` for either `group`.
-#' @param seed seed (only used if `method = "spearman"` and there are
-#'   ties in `x` for either `group`).
-#' @param nresample a positive integer, the number of Monte Carlo replicates
-#'   used for the computation of the approximative reference distribution.
-#'   Defaults to 10000. only used if `method = "spearman"` and there are
-#'   ties in `x` for either `group`.
-#' @param verbose a logical variable indicating if warnings and messages
+#' @param exact logical value indicating whether the "exact" method should be
+#'   used. Ignored if `method = "pearson"` or if `method = "spearman"` and there
+#'   are ties in `x` for either `group`.
+#' @param seed seed numeric value used to set the seed. Only used if
+#'   `method = "spearman"` and there are ties in `x` for either `group`.
+#' @param nresample positive integer indicating the number of Monte Carlo
+#'   replicates to used for the computation of the approximative reference
+#'   distribution. Defaults is set to 10,000. Only used when
+#'   `method = "spearman"` and there are ties in `x` for either `group`.
+#' @param verbose logical variable indicating whether warnings and messages
 #'   should be displayed.
 #' @param ... parameters passed to `stats::cor.test` or `coin:spearman_test`
-#' @return Returns a data frame with all possible pairwise correlations.
 #'
 #' @return Returns a data frame of all possible pairwise correlations
-#' with the following columns:
+#' with group sizes greater than or equal to the minimum number of values
+#' in group, as set by `n_distinct_value`:
 #' * `Comparison` - Comparisons made
 #' * `DistinctValues` - number of distinct points
-#' * `NPairs` - number of completed pairs
+#' * `NPairs` - number of non-missing pairs considered
 #' * `CorrEst` - correlation estimates
-#' * `CorrTest` - correlation p value
+#' * `CorrTest` - correlation test p value
 #' * Unpasted columns if `keep_vars = TRUE`
 #' @details
 #'
@@ -639,6 +639,8 @@ pairwise_test_cor <- function(x,
   # input length checking
   if (length(x) != length(group) | length(x) != length(id))
     stop('"x", "group", and "id" must be same length')
+  if (n_distinct_value <= 1)
+    stop('"n_distinct_value" must be >1')
 
   #Dropping any missing in either x, group or id
   keep_index <- !is.na(x) & !is.na(group) & !is.na(id)

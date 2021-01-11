@@ -676,6 +676,14 @@ test_that("error checking", {
   )
 
   expect_error(
+    object =   pairwise_test_cor(x = x,
+                                 group = group,
+                                 id = id,
+                                 n_distinct_value = 1),
+    regexp = '"n_distinct_value" must be >1'
+  )
+
+  expect_error(
     object =   pairwise_test_cor(x = rep(1:2, 26),
                                  group = group,
                                  id = id),

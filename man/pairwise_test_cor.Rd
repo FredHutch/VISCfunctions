@@ -27,46 +27,45 @@ pairwise_test_cor(
 \item{id}{vector which contains the id information}
 
 \item{method}{a character string indicating which correlation coefficient
-is to be used for the test. One of "pearson", "kendall", or "spearman",
-can be abbreviated to "p", "k", or "s".}
+is to be used for the test ("pearson" (default), "kendall", or "spearman").}
 
 \item{n_distinct_value}{number of distinct values in \code{x} each \code{group} must
-have to be compared.}
+have to be compared. The value must be >1, with a default of 3.}
 
-\item{digits}{digits to round for correlation estimate}
+\item{digits}{numeric value between 0 and 14 indicating the number of digits
+to round the correlation estimate. The default is set to 3.}
 
 \item{trailing_zeros}{logical indicating if trailing zeros should be included
 in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to
 \code{TRUE}, output is a character vector.}
 
-\item{exact}{should exact method be used. Ignored if
-\code{method = "pearson"} or if \code{method = "spearman"} and there are
-ties in \code{x} for either \code{group}.}
+\item{exact}{logical value indicating whether the "exact" method should be
+used. Ignored if \code{method = "pearson"} or if \code{method = "spearman"} and there
+are ties in \code{x} for either \code{group}.}
 
-\item{seed}{seed (only used if \code{method = "spearman"} and there are
-ties in \code{x} for either \code{group}).}
+\item{seed}{seed numeric value used to set the seed. Only used if
+\code{method = "spearman"} and there are ties in \code{x} for either \code{group}.}
 
-\item{nresample}{a positive integer, the number of Monte Carlo replicates
-used for the computation of the approximative reference distribution.
-Defaults to 10000. only used if \code{method = "spearman"} and there are
-ties in \code{x} for either \code{group}.}
+\item{nresample}{positive integer indicating the number of Monte Carlo
+replicates to used for the computation of the approximative reference
+distribution. Defaults is set to 10,000. Only used when
+\code{method = "spearman"} and there are ties in \code{x} for either \code{group}.}
 
-\item{verbose}{a logical variable indicating if warnings and messages
+\item{verbose}{logical variable indicating whether warnings and messages
 should be displayed.}
 
 \item{...}{parameters passed to \code{stats::cor.test} or \code{coin:spearman_test}}
 }
 \value{
-Returns a data frame with all possible pairwise correlations.
-
 Returns a data frame of all possible pairwise correlations
-with the following columns:
+with group sizes greater than or equal to the minimum number of values
+in group, as set by \code{n_distinct_value}:
 \itemize{
 \item \code{Comparison} - Comparisons made
 \item \code{DistinctValues} - number of distinct points
-\item \code{NPairs} - number of completed pairs
+\item \code{NPairs} - number of non-missing pairs considered
 \item \code{CorrEst} - correlation estimates
-\item \code{CorrTest} - correlation p value
+\item \code{CorrTest} - correlation test p value
 \item Unpasted columns if \code{keep_vars = TRUE}
 }
 }
