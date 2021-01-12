@@ -93,7 +93,7 @@ cred = git2r::cred_ssh_key(
 	privatekey = "MYPATH/.ssh/id_rsa")
 
 # Installing VISCfunctions from GitHub
-devtools::install_git(
+remotes::install_git(
   "https://github.com/FredHutch/VISCfunctions.git", 
   credentials = cred)
 ```
@@ -122,7 +122,7 @@ cred = git2r::cred_ssh_key(
 	publickey = "MYPATH/.ssh/id_rsa.pub", 
 	privatekey = "MYPATH/.ssh/id_rsa")
 
-devtools::install_git(
+remotes::install_git(
   "https://github.com/FredHutch/scharpTemplates.git", 
   credentials = cred)
 ```
