@@ -741,27 +741,25 @@ test_that("pairwise_test_cor testing two groups", {
                         method = 'spearman')
   )
 
-  expect_equal(object = test_data %>%
-                 summarise(pairwise_test_cor(x = x,
-                                             group = group,
-                                             id = id,
+  expect_equal(object = pairwise_test_cor(x = test_data$x,
+                                             group = test_data$group,
+                                             id = test_data$id,
                                              method = 'spearman',
                                              n_distinct_value = 3,
                                              digits = 3,
                                              trailing_zeros = TRUE,
-                                             verbose = FALSE)),
+                                             verbose = FALSE),
                expected = testing_results)
 
   expect_message(
-    object = test_data %>%
-      summarise(pairwise_test_cor(x = x,
-                                  group = group,
-                                  id = id,
+    object = pairwise_test_cor(x = test_data$x,
+                                  group = test_data$group,
+                                  id = test_data$id,
                                   method = 'spearman',
                                   n_distinct_value = 3,
                                   digits = 3,
                                   trailing_zeros = TRUE,
-                                  verbose = TRUE)),
+                                  verbose = TRUE),
     regexp = 'Group\\(s\\) c are excluded because the distinct values are less than 3'
   )
 
@@ -773,15 +771,14 @@ test_that("pairwise_test_cor testing two groups", {
                                         use = 'pairwise.complete.obs') %>%
     round_away_0(digits = 5, trailing_zeros = TRUE)
 
-  expect_equal(object = test_data %>%
-                 summarise(pairwise_test_cor(x = x,
-                                             group = group,
-                                             id = id,
+  expect_equal(object = pairwise_test_cor(x = test_data$x,
+                                             group = test_data$group,
+                                             id = test_data$id,
                                              method = 'spearman',
                                              n_distinct_value = 3,
                                              digits = 5,
                                              trailing_zeros = TRUE,
-                                             verbose = FALSE)),
+                                             verbose = FALSE),
                expected = testing_results5)
 })
 
