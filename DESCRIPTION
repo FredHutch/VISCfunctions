@@ -2,7 +2,7 @@ Package: VISCfunctions
 Type: Package
 Title: VISC STP/SRA functions
 Version: 1.1.4.9000
-Date: 2019-06-05
+Date: 2021-01-12
 Authors@R: c(person("Bryan", "Mayer", ,"bmayer@fredhutch.org", "aut"),
              person("Monica", "Gerber", ,"mgerber@fredhutch.org", "aut"),
              person("Celia", "Mahoney", ,"cmahoney@fredhutch.org", "aut"),
