@@ -430,7 +430,7 @@ wilson_ci <- function(x, conf.level = .95){
 #'
 #' `r lifecycle::badge("stable")`
 #'
-#' Wrapper for [binom::binom.confint()]
+#' Wrapper for [binom::binom.confint]
 #'
 #' @param x vector of type integer (0/1) or logical (TRUE/FALSE)
 #' @param conf.level confidence level (between 0 and 1)

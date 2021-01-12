@@ -31,7 +31,7 @@ Returns a data frame with the following columns:
 \description{
 \ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}
 
-Wrapper for \code{\link[binom:binom.confint]{binom::binom.confint()}}
+Wrapper for \link[binom:binom.confint]{binom::binom.confint}
 }
 \details{
 See \link[binom:binom.confint]{binom::binom.confint} for method details
