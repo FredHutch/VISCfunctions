@@ -37,15 +37,15 @@ ties in x or y.}
 \item{verbose}{a logical variable indicating if warnings and messages
 should be displayed.}
 
-\item{...}{parameters passed to \code{stats::cor.test} or \code{coin:spearman_test}}
+\item{...}{parameters passed to \link[stats:cor.test]{stats::cor.test} or \link[coin:CorrelationTests]{coin::spearman_test}}
 }
 \value{
 correlation estimate p value.
 }
 \description{
-This function is a wrapper for \code{stats::cor.test} function, except if
+This function is a wrapper for \link[stats:cor.test]{stats::cor.test} function, except if
 \code{method = "spearman"} is selected and there are ties in at least one
-variable, in which case this is a wrapper for \code{coin::spearman_test}
+variable, in which case this is a wrapper for \link[coin:CorrelationTests]{coin::spearman_test}
 employing the approximate method.
 }
 \details{
@@ -68,12 +68,12 @@ normal distribution.
 
 The preferred method for a Spearman test is using the exact method, unless
 computation time is too high. This
-preferred method is obtained though \code{stats::cor.test} with \code{exact = TRUE}.
+preferred method is obtained though \link[stats:cor.test]{stats::cor.test} with \code{exact = TRUE}.
 When there are ties in either variable there is no exact method possible.
-Unfortunately if there are any ties the \code{stats::cor.test} function switches
+Unfortunately if there are any ties the \link[stats:cor.test]{stats::cor.test} function switches
 to the asymptotic method, which is especially troubling with small sample
 sizes. If there are ties \code{cor_test} will switch to the approximate
-method available in the \code{coin::spearman_test}.
+method available in the \link[coin:CorrelationTests]{coin::spearman_test}.
 }
 \examples{
 
