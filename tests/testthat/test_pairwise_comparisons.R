@@ -738,7 +738,8 @@ test_that("pairwise_test_cor testing two groups", {
       round_away_0(digits = 3, trailing_zeros = TRUE),
     CorrTest = cor_test(x = test_data_wide$a,
                         y = test_data_wide$b,
-                        method = 'spearman')
+                        method = 'spearman'),
+    stringsAsFactors = FALSE
   )
 
   expect_equal(object = pairwise_test_cor(x = test_data$x,
@@ -817,7 +818,8 @@ test_that("pairwise_test_cor testing multiple groups", {
         NA),
       CorrTest = cor_test(x = test_data_wide[,2, drop = TRUE],
                           y = test_data_wide[,3, drop = TRUE],
-                          method = 'spearman')
+                          method = 'spearman'),
+      stringsAsFactors = FALSE
     )
     testing_results
   }
