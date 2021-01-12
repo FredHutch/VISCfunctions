@@ -17,7 +17,6 @@ Imports:
     car,
     coin,
     data.table,
-    devtools (>= 2.0.0),
     dplyr (>= 0.8.1),
     Exact,
     git2r,
