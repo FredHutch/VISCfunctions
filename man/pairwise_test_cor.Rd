@@ -26,11 +26,11 @@ pairwise_test_cor(
 
 \item{id}{vector which contains the id information}
 
-\item{method}{a character string indicating which correlation coefficient
+\item{method}{character string indicating which correlation coefficient
 is to be used for the test ("pearson" (default), "kendall", or "spearman").}
 
 \item{n_distinct_value}{number of distinct values in \code{x} each \code{group} must
-have to be compared. The value must be >1, with a default of 3.}
+contain to be compared. The value must be >1, with a default of 3.}
 
 \item{digits}{numeric value between 0 and 14 indicating the number of digits
 to round the correlation estimate. The default is set to 3.}

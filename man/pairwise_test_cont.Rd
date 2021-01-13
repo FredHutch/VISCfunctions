@@ -31,7 +31,7 @@ pairwise_test_cont(
 
 \item{method}{what test to run ("wilcox" or "t.test").}
 
-\item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.}
+\item{alternative}{character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.}
 
 \item{sorted_group}{a vector listing the group testing order from lowest to highest.}
 

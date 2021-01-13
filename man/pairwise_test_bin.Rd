@@ -42,7 +42,7 @@ or more extreme than the observed table: must be either "Z-pooled",
 "Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate",
 or "CSM modified". Only used when \code{method = 'barnard'}}
 
-\item{alternative}{a character string specifying the alternative hypothesis,
+\item{alternative}{character string specifying the alternative hypothesis,
 must be one of "two.sided" (default), "greater" or "less". You can specify
 just the initial letter. Only "two.sided" available for
 \verb{method = 'chi.sq' or 'mcnemar'}}

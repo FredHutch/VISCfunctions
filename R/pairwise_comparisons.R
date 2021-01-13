@@ -7,7 +7,7 @@
 #' @param paired a logical variable indicating whether to do a paired test.
 #' @param id vector which contains the id information (so `x` values can be linked between groups). Only used and must be present when paired = TRUE.
 #' @param method what test to run ("wilcox" or "t.test").
-#' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.
+#' @param alternative character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.
 #' @param sorted_group a vector listing the group testing order from lowest to highest.
 #' @param num_needed_for_test required sample size (per group) to perform test. Note at least 2 distinct values per group are always needed for testing.
 #' @param digits digits to round for magnitude descriptive statistics (default = 0).
@@ -253,7 +253,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'   or more extreme than the observed table: must be either "Z-pooled",
 #'   "Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate",
 #'   or "CSM modified". Only used when `method = 'barnard'`
-#' @param alternative a character string specifying the alternative hypothesis,
+#' @param alternative character string specifying the alternative hypothesis,
 #'   must be one of "two.sided" (default), "greater" or "less". You can specify
 #'   just the initial letter. Only "two.sided" available for
 #'   `method = 'chi.sq' or 'mcnemar'`
@@ -542,10 +542,10 @@ pairwise_test_bin <- function(x,
 #' @param x numeric vector (can include NA values)
 #' @param group categorical vector which contains the group levels to compare
 #' @param id vector which contains the id information
-#' @param method a character string indicating which correlation coefficient
+#' @param method character string indicating which correlation coefficient
 #'   is to be used for the test ("pearson" (default), "kendall", or "spearman").
 #' @param n_distinct_value number of distinct values in `x` each `group` must
-#' have to be compared. The value must be >1, with a default of 3.
+#' contain to be compared. The value must be >1, with a default of 3.
 #' @param digits numeric value between 0 and 14 indicating the number of digits
 #'   to round the correlation estimate. The default is set to 3.
 #' @param trailing_zeros logical indicating if trailing zeros should be included
