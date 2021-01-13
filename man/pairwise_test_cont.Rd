@@ -31,7 +31,7 @@ pairwise_test_cont(
 
 \item{method}{what test to run ("wilcox" or "t.test").}
 
-\item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.}
+\item{alternative}{character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.}
 
 \item{sorted_group}{a vector listing the group testing order from lowest to highest.}
 
@@ -48,7 +48,7 @@ pairwise_test_cont(
 \item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
 }
 \value{
-Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median [min, max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
+Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median [min, max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeparation (a logical flag indicating if there is perfect seperation).
 }
 \description{
 Takes a continuous variable and performs pairwise testing (t-test or wilcox test)

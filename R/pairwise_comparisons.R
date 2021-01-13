@@ -5,9 +5,9 @@
 #' @param x numeric vector (can include NA values).
 #' @param group categorical vector of group values.
 #' @param paired a logical variable indicating whether to do a paired test.
-#' @param id vector which contains the id information (so \code{x} values can be linked between groups). Only used and must be present when paired = TRUE.
+#' @param id vector which contains the id information (so `x` values can be linked between groups). Only used and must be present when paired = TRUE.
 #' @param method what test to run ("wilcox" or "t.test").
-#' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.
+#' @param alternative character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.
 #' @param sorted_group a vector listing the group testing order from lowest to highest.
 #' @param num_needed_for_test required sample size (per group) to perform test. Note at least 2 distinct values per group are always needed for testing.
 #' @param digits digits to round for magnitude descriptive statistics (default = 0).
@@ -15,16 +15,16 @@
 #' @param sep_val value to be pasted between the two measures. Default is ' vs. '.
 #' @param na_str_out the character string in the output table that replaces missing values.
 #' @param verbose a logical variable indicating if warnings and messages should be displayed.
-#' @return Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median \[min, max\]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
+#' @return Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median \[min, max\]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeparation (a logical flag indicating if there is perfect seperation).
 #' @details
 #'
-#' Runs \code{wilcox_test()} in the coin package, with "exact" distribution.
+#' Runs `wilcox_test()` in the coin package, with "exact" distribution.
 #'
-#' If \code{sorted_group} is not specified then testing order based on factor levels if \code{group} is a factor, and alphabetical order otherwise
+#' If `sorted_group` is not specified then testing order based on factor levels if `group` is a factor, and alphabetical order otherwise
 #'
-#' \code{trailing_zeros} does not impact p-value column, which will be a numeric column regardless.
+#' `trailing_zeros` does not impact p-value column, which will be a numeric column regardless.
 #'
-#' If \code{paired = TRUE} the descriptive statistics are shown for observations that have non-missing values for both groups.
+#' If `paired = TRUE` the descriptive statistics are shown for observations that have non-missing values for both groups.
 #'
 #' @examples
 #'
@@ -207,7 +207,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
         mag_p <- NA_real_
       }
 
-      results_list[[length(results_list) + 1]] <- data.frame(stats_by_group, `MagnitudeTest` = mag_p, PerfectSeperation = perfect_seperation, stringsAsFactors = FALSE)
+      results_list[[length(results_list) + 1]] <- data.frame(stats_by_group, `MagnitudeTest` = mag_p, PerfectSeparation = perfect_seperation, stringsAsFactors = FALSE)
     }
   }
 
@@ -225,7 +225,7 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
              Median_Min_Max = pasted_results$median_min_max_comparison,
              Mean_SD = pasted_results$mean_sd_comparison,
              MagnitudeTest = results$MagnitudeTest,
-             PerfectSeperation = results$PerfectSeperation,
+             PerfectSeparation = results$PerfectSeparation,
              stringsAsFactors = FALSE)
 
 }
@@ -243,20 +243,20 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'
 #' @param x numeric vector (0/1) or logical vector or (F/T)
 #'   (can include NA values)
-#' @param group vector of group values.
+#' @param group categorical vector of group values.
 #' @param id vector which contains the id information
-#'   (so \code{x} values can be linked between groups).
-#'   Only used and must be present when \code{method = 'mcnemar'}.
+#'   (so `x` values can be linked between groups).
+#'   Only used and must be present when `method = 'mcnemar'`.
 #' @param method what test to run, "barnard" (default), "fisher" ,"chi.sq" ,
 #'   or "mcnemar")
 #' @param barnard_method 	indicates the Barnard method for finding tables as
 #'   or more extreme than the observed table: must be either "Z-pooled",
 #'   "Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate",
-#'   or "CSM modified". Only used when \code{method = 'barnard'}
-#' @param alternative a character string specifying the alternative hypothesis,
+#'   or "CSM modified". Only used when `method = 'barnard'`
+#' @param alternative character string specifying the alternative hypothesis,
 #'   must be one of "two.sided" (default), "greater" or "less". You can specify
 #'   just the initial letter. Only "two.sided" available for
-#'   \code{method = 'chi.sq' or 'mcnemar'}
+#'   `method = 'chi.sq' or 'mcnemar'`
 #' @param sorted_group a vector listing the group testing order from lowest to
 #'   highest, if performing one sided tests
 #' @param num_needed_for_test required sample size (per group) to perform test.
@@ -270,27 +270,27 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #'   ' vs. '.
 #' @param na_str_out the character string in the output table that replaces
 #'   missing values.
+#' @param latex_output will this table be used for latex output (default is FALSE)
 #' @param verbose a logical variable indicating if warnings and messages should
 #'   be displayed
-#' @param latex_output will this table be used for latex output (default is FALSE)
 #' @param ... other parameters to pass to Exact::exact.test when running
 #'   Barnard test
 #' @return Returns a data frame with all possible pairwise comparisons.
 #'   Variables include Comparison, ResponseStats (group stats; number positive /
 #'  number = rate (Wilson CI Bounds)), ResponseTest (fisher/chisq p value),
-#'  PerfectSeperation (a logical flag indicating if one group if 0% and the
+#'  PerfectSeparation (a logical flag indicating if one group if 0% and the
 #'  other 100%)
 #' @details
 #'
-#' If all values of \code{x} are NA, the function will return NULL. This is to allow for nice
-#' return when looping through function with dplyr \code{group_by} and \code{group_modify}
+#' If all values of `x` are NA, the function will return NULL. This is to allow for nice
+#' return when looping through function with dplyr `group_by` and `group_modify`
 #'
-#' For one sided tests if \code{sorted_group = NULL} than the factor level order of \code{group}
+#' For one sided tests if `sorted_group = NULL` than the factor level order of `group`
 #' is respected, otherwise the levels will set to alphabetical order (i.e. if
-#' \code{alternative = less} then testing a < b ).
+#' `alternative = less` then testing a < b ).
 #'
-#' If planning on using the table in a latex document then set \code{latex_output = TRUE}.
-#' This will set the \code{\%} symbol to \code{\\\\\%} in the binary percentages
+#' If planning on using the table in a latex document then set `latex_output = TRUE`.
+#' This will set the `%` symbol to `\\%` in the binary percentages
 #'
 #' @examples
 #'
@@ -351,16 +351,27 @@ pairwise_test_cont <- function(x, group, paired = FALSE, id = NULL, method = c('
 #' @export
 
 
-pairwise_test_bin <- function(x, group, id = NULL,
-                                 method = c('barnard', 'fisher' ,'chi.sq' , 'mcnemar'),
-                                 barnard_method = c("z-pooled", "z-unpooled", "boschloo",
-                                     "santner and snell", "csm", "csm approximate", "csm modified"),
-                                 alternative = c("two.sided", "less", "greater"),
-                                 sorted_group = NULL, num_needed_for_test = 3, conf_level = 0.95,
-                                 digits = 1, trailing_zeros = TRUE, sep_val = " vs. ",
-                                 na_str_out = "---", latex_output = FALSE, verbose = FALSE, ...){
+pairwise_test_bin <- function(x,
+                              group,
+                              id = NULL,
+                              method = c('barnard', 'fisher' ,'chi.sq' , 'mcnemar'),
+                              barnard_method = c("z-pooled", "z-unpooled", "boschloo",
+                                                 "santner and snell", "csm",
+                                                 "csm approximate", "csm modified"),
+                              alternative = c("two.sided", "less", "greater"),
+                              sorted_group = NULL,
+                              num_needed_for_test = 3,
+                              conf_level = 0.95,
+                              digits = 1,
+                              trailing_zeros = TRUE,
+                              sep_val = " vs. ",
+                              na_str_out = "---",
+                              latex_output = FALSE,
+                              verbose = FALSE,
+                              ...){
   #Input Checking
   method <- match.arg(method)
+  if (length(x) != length(group)) stop('"x" and "group" must be same length')
   barnard_method <- match.arg(barnard_method)
   alternative <- match.arg(alternative)
   if (method == 'chi.sq' & alternative != 'two.sided')
@@ -496,7 +507,7 @@ pairwise_test_bin <- function(x, group, id = NULL,
 
       results_list[[length(results_list) + 1]] <-
         data.frame(stats_by_group, `ResponseTest` = response_p,
-                   PerfectSeperation = perfect_seperation,
+                   PerfectSeparation = perfect_seperation,
                    stringsAsFactors = FALSE)
 
     }
@@ -516,7 +527,215 @@ pairwise_test_bin <- function(x, group, id = NULL,
   data.frame(Comparison = pasted_results$Comparison,
              ResponseStats = pasted_results$rr_comparison,
              ResponseTest = results$ResponseTest ,
-             PerfectSeperation = results$PerfectSeperation,
+             PerfectSeparation = results$PerfectSeparation,
              stringsAsFactors = FALSE)
 
 }
+
+
+
+#' Correlation Pairwise Testing
+#'
+#' Takes a continuous variable and a grouping variable to calculate the pairwise
+#' Spearman, Pearson, or Kendall correlation estimate and p-value between two variables.
+#'
+#' @param x numeric vector (can include NA values)
+#' @param group categorical vector which contains the group levels to compare
+#' @param id vector which contains the id information
+#' @param method character string indicating which correlation coefficient
+#'   is to be used for the test ("pearson" (default), "kendall", or "spearman").
+#' @param n_distinct_value number of distinct values in `x` each `group` must
+#' contain to be compared. The value must be >1, with a default of 3.
+#' @param digits numeric value between 0 and 14 indicating the number of digits
+#'   to round the correlation estimate. The default is set to 3.
+#' @param trailing_zeros logical indicating if trailing zeros should be included
+#' in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to
+#' `TRUE`, output is a character vector.
+#' @param exact logical value indicating whether the "exact" method should be
+#'   used. Ignored if `method = "pearson"` or if `method = "spearman"` and there
+#'   are ties in `x` for either `group`.
+#' @param seed numeric value used to set the seed. Only used if
+#'   `method = "spearman"` and there are ties in `x` for either `group`.
+#' @param nresample positive integer indicating the number of Monte Carlo
+#'   replicates to used for the computation of the approximative reference
+#'   distribution. Defaults is set to 10,000. Only used when
+#'   `method = "spearman"` and there are ties in `x` for either `group`.
+#' @param verbose logical variable indicating whether warnings and messages
+#'   should be displayed.
+#' @param ... parameters passed to `stats::cor.test` or `coin:spearman_test`
+#'
+#' @return Returns a data frame of all possible pairwise correlations
+#' with group sizes greater than or equal to the minimum number of values
+#' in group, as set by `n_distinct_value`:
+#' * `Comparison` - Comparisons made
+#' * `DistinctValues` - number of distinct points
+#' * `NPairs` - number of non-missing pairs considered
+#' * `CorrEst` - correlation estimates
+#' * `CorrTest` - correlation test p value
+#' * Unpasted columns if `keep_vars = TRUE`
+#' @details
+#'
+#' The p value is calculated using the [cor_test] function (see documentation
+#' for method details)
+#'
+#' If a group has less than `n_distinct_value` non-missing values that group
+#' will be excluded from the comparisons. If a specific comparison has less than
+#' `n_distinct_value` non-missing values to comparison the output will return an
+#'  estimate and the p-value set to NA.
+#'
+#' @examples
+#'
+#' data_in <- data.frame(
+#'   id = 1:10,
+#'   x = c(-2, -1, 0, 1, 2,-2, -1, 0, 1, 2),
+#'   y = c(4, 1, NA, 1, 4,-2, -1, 0, 1, 2),
+#'   z = c(1, 2, 3, 4, NA,-2, -1, 0, 1, 2),
+#'   v = c(rep(1,10)),
+#'   aa = c(1:5,NA,NA,NA,NA,NA),
+#'   bb = c(NA,NA,NA,NA,NA,1:5)
+#' )
+#' data_in_long <- tidyr::pivot_longer(data_in, -id)
+#' pairwise_test_cor(x = data_in_long$value,
+#'                   group = data_in_long$name,
+#'                   id = data_in_long$id,
+#'                   method = 'spearman')
+#'
+#'
+#' # Examples with Real World Data
+#' library(dplyr)
+#'
+#' # BAMA Assay Data Example
+#' data(exampleData_BAMA)
+#'
+#' ## Antigen Correlation
+#' exampleData_BAMA %>%
+#' filter(visitno != 0) %>%
+#' group_by(group, visitno) %>%
+#'  summarize(
+#'    pairwise_test_cor(x = magnitude, group = antigen, id = pubID,
+#'    method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE),
+#'    .groups = 'drop'
+#'           )
+#'
+#' @export
+
+
+pairwise_test_cor <- function(x,
+                              group,
+                              id,
+                              method = c('spearman', 'pearson', 'kendall'),
+                              n_distinct_value = 3,
+                              digits = 3,
+                              trailing_zeros = TRUE,
+                              exact = TRUE,
+                              seed = 68954857,
+                              nresample = 10000,
+                              verbose = FALSE,
+                              ...){
+
+  # Input checking
+  .check_numeric_input(x)
+  method <- match.arg(method)
+  # input length checking
+  if (length(x) != length(group) | length(x) != length(id))
+    stop('"x", "group", and "id" must be same length')
+  if (n_distinct_value <= 1)
+    stop('"n_distinct_value" must be >1')
+
+  #Dropping any missing in either x, group or id
+  keep_index <- !is.na(x) & !is.na(group) & !is.na(id)
+  x <- x[keep_index]
+  group <- group[keep_index]
+  id <- id[keep_index]
+
+  # Input checking: Dropping entire groups that have less than needed distinct values
+  unique_sizes <- c(by(x, group, function(xx) length(unique(xx))))
+  groups_to_drop <- names(unique_sizes)[unique_sizes < n_distinct_value]
+  if (length(groups_to_drop) > 0) {
+    if (length(groups_to_drop) == length(unique_sizes))
+      stop(paste0('All groups have less than ',n_distinct_value,
+                  ' distinct values'))
+
+    if (length(groups_to_drop) == (length(unique_sizes)) - 1)
+      stop(paste0('Only one group has >=',n_distinct_value,
+                  ' distinct values, so no testing possible'))
+
+    if (verbose)
+      message(paste0('Group(s) ', paste0(groups_to_drop, collapse = ', '),
+                     ' are excluded because the distinct values are less than ',
+                     n_distinct_value))
+
+    id <- id[!group %in% groups_to_drop]
+    x <- x[!group %in% groups_to_drop]
+    group <- group[!group %in% groups_to_drop]
+  }
+
+  #Need to drop unused levels if group if a factor, otherwise set it as factor
+  if (is.factor(group)) group <- droplevels(group) else group <- factor(group)
+  n_levels <- nlevels(group)
+  levels_here <- levels(group)
+
+  results_list <- list()
+  for (i in 1:(n_levels - 1)) {
+    for (j in (i + 1):n_levels) {
+      i_group <- levels_here[i]
+      j_group <- levels_here[j]
+      i_data <- data.frame(x = x[group == i_group], id = id[group == i_group])
+      j_data <- data.frame(y = x[group == j_group], id = id[group == j_group])
+
+      data_here <- stats::na.omit(merge(i_data, j_data, by = 'id'))
+      N_points <- nrow(data_here)
+
+      comparison_here <- paste0(i_group, ' vs. ', j_group)
+
+      distinct_vals <- paste0(length(unique(data_here$x)),
+                              ' vs. ',
+                              length(unique(data_here$y)))
+
+      if (N_points > 0) {
+
+        if (length(unique(data_here$x)) >= n_distinct_value
+            & length(unique(data_here$y)) >= n_distinct_value) {
+          # correlation estimate
+          rho <- stats::cor(x = data_here$x, y = data_here$y, method = method)
+          rho <- round_away_0(rho,
+                              digits = digits,
+                              trailing_zeros = trailing_zeros)
+
+          # p value of spearman test or pearson test
+          mag_p <- cor_test(x = data_here$x,
+                            y = data_here$y,
+                            method = method,
+                            exact = exact,
+                            seed = seed,
+                            nresample = nresample,
+                            verbose = verbose,
+                            ...)
+        } else {
+          if (verbose)
+            message(paste0('Not enough distinct values for at least one group when considering ',
+                           comparison_here))
+          rho <- mag_p <- NA
+        }
+      } else {
+        if (verbose)
+          message(paste0('No non-missing data points when considering ',
+                         comparison_here))
+        rho <- mag_p <- NA
+      }
+
+      results_list[[length(results_list) + 1]] <-
+        data.frame(Comparison = comparison_here,
+                   NPoints = N_points,
+                   DistinctValues = distinct_vals,
+                   CorrEst = rho,
+                   CorrTest = mag_p,
+                   stringsAsFactors = FALSE)
+     }
+  }
+  do.call(base::rbind, results_list)
+}
+
+
+
+

@@ -56,7 +56,7 @@ VISCfunctions is a collection of useful functions designed to assist in analysis
 - Testing and Estimate Functions
   - two_samp_bin_test
   - two_samp_cont_test
-  - cor_test \textcolor{red}{[Coming Soon]}
+  - cor_test
   - wilson_ci
   - trapz_sorted
 - Fancy Output Functions
@@ -66,7 +66,7 @@ VISCfunctions is a collection of useful functions designed to assist in analysis
 - Pairwise Comparison Functions
   - pairwise_test_bin
   - pairwise_test_cont
-  - pairwise_test_cor \textcolor{red}{[Coming Soon]}
+  - pairwise_test_cor
 - Model Output Function\textcolor{red}{[Coming Soon]}
   - pretty_model_output \textcolor{red}{[Coming Soon]}
   - run_pretty_model_output \textcolor{red}{[Coming Soon]}
@@ -108,9 +108,8 @@ Code to load in VISCfunctions and start using:
 # Loading VISCfunctions
 library(VISCfunctions)
 
-# Loading libraries for this vignette code
+# Loading dplyr for pipe
 library(dplyr)
-library(pracma)
 ```
 
 ## scharpTemplates Package
@@ -226,19 +225,30 @@ exampleData_BAMA %>%
 ```
 
 
-## Comparing Two Continuous Variables (Correlation) \textcolor{red}{[Coming Soon]}
+## Comparing Two Continuous Variables (Correlation)
 
 `cor_test()` is used for comparing two continuous variables, with Pearson, Kendall, or Spearman methods. 
 
 If Spearman method is chosen and either variable has a tie the approximate distribution is use in the `coin::spreaman_test()` function. This is usually the preferred method over the asymptotic approximation, which is the method `stats:cor.test()` uses in cases of ties. If the Spearman method is chosen and there are no ties, the exact method is used from `stats:cor.test()`.
 
 
-```{r, echo=TRUE, eval=FALSE, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE}
 
-cor(testing_data$magnitude1, testing_data$magnitude2, 
-    method = 'spearman')
+# Making Testing Dataset
+cor_testing_data <- exampleData_BAMA %>% 
+  dplyr::filter(antigen %in% c('A1.con.env03 140 CF', 'B.MN V3 gp70'), 
+                visitno == 1,
+                group == 1) %>% 
+  tidyr::pivot_wider(id_cols = pubID, 
+                     names_from = antigen, 
+                     values_from = magnitude)
 
-cor_test(x = testing_data$magnitude1, y = testing_data$magnitude2,
+stats::cor(cor_testing_data$`A1.con.env03 140 CF`, 
+           cor_testing_data$`B.MN V3 gp70`, 
+           method = 'spearman')
+
+cor_test(x = cor_testing_data$`A1.con.env03 140 CF`, 
+         y = cor_testing_data$`B.MN V3 gp70`,
          method = 'spearman')
 
 ```
@@ -503,7 +513,9 @@ kableExtra::kable(group_testing, format = 'latex', escape = FALSE, booktabs = TR
                   caption = 'Magnitude Comparisons Across Groups') %>% 
   kableExtra::kable_styling(font_size = 6.5, 
                             latex_options = c("hold_position","scale_down")) %>% 
-  kableExtra::collapse_rows(c(1:2), row_group_label_position = 'identity', latex_hline = 'full')
+  kableExtra::collapse_rows(c(1:2), 
+                            row_group_label_position = 'identity', 
+                            latex_hline = 'full')
 ```
 
 \clearpage
@@ -528,12 +540,72 @@ timepoint_testing <- exampleData_ICS %>%
   rename("Median (Range)" = Median_Min_Max, 'Mean (SD)' = Mean_SD)
 
 
-kableExtra::kable(timepoint_testing, format = 'latex', escape = FALSE, booktabs = TRUE, 
+kableExtra::kable(timepoint_testing, 
+                  format = 'latex', 
+                  escape = FALSE, 
+                  booktabs = TRUE, 
                   caption = 'Magnitude Comparisons Across Visits') %>% 
   kableExtra::kable_styling(font_size = 6.5, 
                             latex_options = c("hold_position","scale_down")) %>% 
-  kableExtra::collapse_rows(c(1:2), row_group_label_position = 'identity', latex_hline = 'full')
+  kableExtra::collapse_rows(c(1:2), 
+                            row_group_label_position = 'identity', 
+                            latex_hline = 'full')
 
+```
+
+
+
+
+\clearpage
+
+## Pairwise Comparison of Continuous Variables
+
+
+Simple example using `pairwise_test_cor()`:
+
+```{r, echo=TRUE, warning=FALSE, size='tiny'}
+
+set.seed(1)
+x_example <- c(1, 1, rnorm(48), rnorm(49, mean = 5), NA)
+group_example <- c(rep(1, 25), rep(2, 25), rep(3, 25), rep(4, 25))
+id_example <- c(rep(1:25, 4))
+
+pairwise_test_cor(x_example, group_example, id_example, digits = 4)
+
+
+```
+
+\clearpage
+
+Correlation comparisons using `pairwise_test_cor()`:
+
+```{r, echo=TRUE, warning=FALSE, results='asis'}
+
+## Antigen Correlations
+antigen_testing <- exampleData_BAMA %>%
+  filter(antigen %in% c('B.63521 D11gp120/293F', 'B.con.env03 140 CF', 'B.MN V3 gp70') & 
+           group != 4) %>% 
+  group_by(group, visitno) %>%
+  group_modify(~ as.data.frame(
+    pairwise_test_cor(x = .x$magnitude,
+                      group = .x$antigen,
+                      id = .x$pubID,
+                      method = 'spearman',
+                      n_distinct_value = 3))) %>% 
+  ungroup() %>% 
+  # Getting fancy p values
+  mutate(CorrTest = pretty_pvalues(CorrTest, output_type = 'latex', 
+                                   sig_alpha = .1, background = 'yellow')) %>% 
+  rename("Corr P Value" = CorrTest)
+
+kableExtra::kable(antigen_testing, 
+                  format = 'latex', escape = FALSE, 
+                  booktabs = TRUE, caption = 'Correlations between Antigen') %>% 
+  kableExtra::kable_styling(font_size = 6.5, 
+                            latex_options = c("hold_position","scale_down")) %>% 
+  kableExtra::collapse_rows(c(1:2), 
+                            row_group_label_position = 'identity', 
+                            latex_hline = 'full')
 ```
 
 

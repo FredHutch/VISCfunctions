@@ -435,7 +435,6 @@ stat_paste = function(
 #' kableExtra::kable(pretty_pvals , format = "latex", escape = FALSE,
 #'                   col.names = c("P-values"))
 #'
-#' @import kableExtra
 #' @export
 
 
