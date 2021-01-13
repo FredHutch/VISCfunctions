@@ -43,7 +43,7 @@ in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to
 used. Ignored if \code{method = "pearson"} or if \code{method = "spearman"} and there
 are ties in \code{x} for either \code{group}.}
 
-\item{seed}{seed numeric value used to set the seed. Only used if
+\item{seed}{numeric value used to set the seed. Only used if
 \code{method = "spearman"} and there are ties in \code{x} for either \code{group}.}
 
 \item{nresample}{positive integer indicating the number of Monte Carlo

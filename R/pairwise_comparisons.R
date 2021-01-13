@@ -554,7 +554,7 @@ pairwise_test_bin <- function(x,
 #' @param exact logical value indicating whether the "exact" method should be
 #'   used. Ignored if `method = "pearson"` or if `method = "spearman"` and there
 #'   are ties in `x` for either `group`.
-#' @param seed seed numeric value used to set the seed. Only used if
+#' @param seed numeric value used to set the seed. Only used if
 #'   `method = "spearman"` and there are ties in `x` for either `group`.
 #' @param nresample positive integer indicating the number of Monte Carlo
 #'   replicates to used for the computation of the approximative reference
