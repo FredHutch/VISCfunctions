@@ -254,9 +254,9 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 
 #' Correlation Test for Two Continuous Variables
 #'
-#' This function is a wrapper for `stats::cor.test` function, except if
+#' This function is a wrapper for [stats::cor.test] function, except if
 #' `method = "spearman"` is selected and there are ties in at least one
-#' variable, in which case this is a wrapper for `coin::spearman_test`
+#' variable, in which case this is a wrapper for [coin::spearman_test]
 #' employing the approximate method.
 #'
 #'
@@ -274,7 +274,7 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 #'   ties in x or y.
 #' @param verbose a logical variable indicating if warnings and messages
 #'   should be displayed.
-#' @param ... parameters passed to `stats::cor.test` or `coin:spearman_test`
+#' @param ... parameters passed to [stats::cor.test] or [coin::spearman_test]
 #' @return correlation estimate p value.
 #'
 #' @details
@@ -298,12 +298,12 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 #'
 #' The preferred method for a Spearman test is using the exact method, unless
 #' computation time is too high. This
-#' preferred method is obtained though `stats::cor.test` with `exact = TRUE`.
+#' preferred method is obtained though [stats::cor.test] with `exact = TRUE`.
 #' When there are ties in either variable there is no exact method possible.
-#' Unfortunately if there are any ties the `stats::cor.test` function switches
+#' Unfortunately if there are any ties the [stats::cor.test] function switches
 #' to the asymptotic method, which is especially troubling with small sample
 #' sizes. If there are ties `cor_test` will switch to the approximate
-#' method available in the `coin::spearman_test`.
+#' method available in the [coin::spearman_test].
 #'
 #'
 #' @examples
@@ -386,6 +386,11 @@ cor_test <- function(x,
 
 #' Wilson Confidence Interval
 #'
+#' @description
+#'
+#' `r lifecycle::badge("superseded")`
+#' `wilson_ci` has been superseded by the use of [binom_ci]
+#'
 #' @param x vector of type integer (0/1) or logical (TRUE/FALSE)
 #' @param conf.level confidence level (between 0 and 1)
 #'
@@ -415,4 +420,61 @@ wilson_ci <- function(x, conf.level = .95){
   data.frame(mean = p, lower = (t1 - t2)/denom, upper = (t1 + t2)/denom)
 
 }
+
+
+
+
+#' Binomial confidence intervals
+#'
+#' @description
+#'
+#' `r lifecycle::badge("stable")`
+#'
+#' Wrapper for [binom::binom.confint]
+#'
+#' @param x vector of type integer (0/1) or logical (TRUE/FALSE)
+#' @param conf.level confidence level (between 0 and 1). Default is 0.95.
+#' @param methods which method to use to construct the interval. Any combination of c("exact", "ac", "asymptotic", "wilson", "prop.test", "bayes", "logit", "cloglog", "probit") is allowed or "all". Default is "wilson".
+#' @param ... Additional arguments to be passed to [binom::binom.bayes]
+#'
+#' @details
+#'
+#' See [binom::binom.confint] for method details
+#'
+#' @return data.frame with with mean (`mean`), and bounds of confidence interval (`lower`, `upper`)
+#' @return Returns a data frame with the following columns:
+#' * `method` - method(s) selected
+#' * `x` - number of successes in the binomial experiment
+#' * `n` - number of independent trials in the binomial experiment
+#' * `mean` -  success proportion mean
+#' * `lower` - success proportion lower bound
+#' * `upper` - success proportion upper bound
+#'
+#' @examples
+#'
+#' x <- c(rep(0, 500), rep(1, 500))
+#' binom_ci(x, conf.level = .90, methods = 'all')
+#'
+#' @export
+binom_ci <- function(x,
+                     conf.level = .95,
+                     methods = 'wilson',
+                     ...){
+
+  .check_response_input(x)
+  .check_numeric_input(conf.level, lower_bound = 0, upper_bound = 1 - 1E-12,
+                       scalar = TRUE, whole_num = FALSE, allow_NA = FALSE)
+
+  x <- stats::na.omit(x)
+
+  npos <- sum(x);
+  n <- length(x);
+
+  binom::binom.confint(x = npos,
+                       n = n,
+                       conf.level = conf.level,
+                       methods = methods,
+                       ...)
+}
+
 

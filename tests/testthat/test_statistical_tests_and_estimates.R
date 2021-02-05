@@ -491,6 +491,39 @@ test_that("test-wilson_ci", {
 
 
 
+test_that("test-binom_ci", {
+
+  # check x
+  expect_error(binom_ci(c(NA, NA, NA)), '"x" must have at least one non-NA value')
+  expect_error(binom_ci(c()), '"x" length must be > 0')
+  expect_error(binom_ci(c(NA, NA, NA)), '"x" must have at least one non-NA value')
+  expect_error(binom_ci(x = c("F", "T", "F", "T")),
+               '"x" must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
+  expect_error(binom_ci(x = factor(c("F", "T", "F", "T"))),
+               '"x" must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
+
+  # binom_ci() should match binom::binom.confint()
+  x <- c(1, 1, 1, 0, 0)
+  expect_equal(binom_ci(x), binom::binom.wilson(3, 5))
+  expect_equal(binom_ci(as.logical(x)), binom::binom.wilson(3, 5))
+  expect_equal(binom_ci(x, methods = 'all'),
+               binom::binom.confint(3, 5, methods = 'all'))
+  # testing edge cases
+  expect_equal(binom_ci(rep(0, 50)), binom::binom.wilson(0, 50))
+  expect_equal(binom_ci(rep(1, 50)), binom::binom.wilson(50, 50))
+
+  # check conf.level
+  x <- c(rep(0, 200), rep(1, 400))
+  expect_error(binom_ci(x, conf.level = 1), '"conf.level" must be less than or equal to 0.999999999999')
+  expect_error(binom_ci(x, conf.level = -.95), '"conf.level" must be greater than or equal to 0')
+  expect_error(binom_ci(x, conf.level = 2), '"conf.level" must be less than or equal to 0.999999999999')
+  expect_error(binom_ci(x, conf.level = ".95"), '"conf.level" must be a numeric vector')
+  expect_error(binom_ci(x, conf.level = TRUE), '"conf.level" must be a numeric vector')
+
+})
+
+
+
 
 
 
