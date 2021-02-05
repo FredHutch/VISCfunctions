@@ -9,7 +9,7 @@ binom_ci(x, conf.level = 0.95, methods = "wilson", ...)
 \arguments{
 \item{x}{vector of type integer (0/1) or logical (TRUE/FALSE)}
 
-\item{conf.level}{confidence level (between 0 and 1)}
+\item{conf.level}{confidence level (between 0 and 1). Default is 0.95.}
 
 \item{methods}{which method to use to construct the interval. Any combination of c("exact", "ac", "asymptotic", "wilson", "prop.test", "bayes", "logit", "cloglog", "probit") is allowed or "all". Default is "wilson".}
 

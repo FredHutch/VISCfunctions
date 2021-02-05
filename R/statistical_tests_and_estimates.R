@@ -433,7 +433,7 @@ wilson_ci <- function(x, conf.level = .95){
 #' Wrapper for [binom::binom.confint]
 #'
 #' @param x vector of type integer (0/1) or logical (TRUE/FALSE)
-#' @param conf.level confidence level (between 0 and 1)
+#' @param conf.level confidence level (between 0 and 1). Default is 0.95.
 #' @param methods which method to use to construct the interval. Any combination of c("exact", "ac", "asymptotic", "wilson", "prop.test", "bayes", "logit", "cloglog", "probit") is allowed or "all". Default is "wilson".
 #' @param ... Additional arguments to be passed to [binom::binom.bayes]
 #'
