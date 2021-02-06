@@ -507,7 +507,7 @@ test_that("test-binom_ci", {
   expect_equal(binom_ci(x), binom::binom.wilson(3, 5))
   expect_equal(binom_ci(as.logical(x)), binom::binom.wilson(3, 5))
   expect_equal(binom_ci(x, methods = 'all'),
-               binom::binom.confint(3, 5, methods = 'all'))
+               binom::binom.confint(3, 5, methods = 'all')) %>% suppressWarnings
   # testing edge cases
   expect_equal(binom_ci(rep(0, 50)), binom::binom.wilson(0, 50))
   expect_equal(binom_ci(rep(1, 50)), binom::binom.wilson(50, 50))
