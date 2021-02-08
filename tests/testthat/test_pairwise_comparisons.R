@@ -270,14 +270,14 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                                              (testing_stats_log$Group2_min >  testing_stats_log$Group1_max),
                                                            TRUE, FALSE))
 
-  expect_equal(object = test_data_log %>% pairwise_test_cont(x = x_high,
-                                                         group = group, paired = FALSE,
-                                                         method = 'wilcox',
-                                                         alternative = 'two.sided',
-                                                         num_needed_for_test = 3,
-                                                         digits = 3, trailing_zeros = TRUE,
-                                                         sep_val = ' vs. ', verbose = FALSE,
-                                                         log10_stats = TRUE),
+  expect_equal(object = pairwise_test_cont(x = test_data_log$x_high,
+                                           group = test_data_log$group, paired = FALSE,
+                                           method = 'wilcox',
+                                           alternative = 'two.sided',
+                                           num_needed_for_test = 3,
+                                           digits = 3, trailing_zeros = TRUE,
+                                           sep_val = ' vs. ', verbose = FALSE,
+                                           log10_stats = TRUE),
                expected = testing_results)
 
 
