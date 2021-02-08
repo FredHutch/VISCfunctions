@@ -268,7 +268,8 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                                                    paired = FALSE),
                                 PerfectSeparation = ifelse((testing_stats_log$Group1_min >  testing_stats_log$Group2_max) |
                                                              (testing_stats_log$Group2_min >  testing_stats_log$Group1_max),
-                                                           TRUE, FALSE))
+                                                           TRUE, FALSE),
+                                stringsAsFactors = FALSE)
 
   expect_equal(object = pairwise_test_cont(x = test_data_log$x_high,
                                            group = test_data_log$group, paired = FALSE,
