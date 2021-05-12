@@ -34,28 +34,35 @@ linked between groups). Only used and must be present when paired = TRUE.}
 \item{method}{what test to run ("wilcox" or "t.test").}
 
 \item{alternative}{character string specifying the alternative hypothesis,
-must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.}
+must be one of "two.sided" (default), "greater" or "less". You can specify
+just the initial letter.}
 
-\item{sorted_group}{a vector listing the group testing order from lowest to highest.}
+\item{sorted_group}{a vector listing the group testing order from lowest to
+highest.}
 
 \item{num_needed_for_test}{required sample size (per group) to perform test.
 Note at least 2 distinct values per group are always needed for testing.}
 
-\item{log10_stats}{should the summary statistics and p values be calculated on
-log10 values (i.e. geometric mean). This could effect the median, mean, and p value.
-If TRUE geometric mean is displayed as well as mean (sd) results on log10 x values}
+\item{log10_stats}{specifies whether the summary statistics and p values
+should be calculated on log10 values. This could affect the median, mean,
+and p value.If TRUE, geometric mean is displayed as well as mean (sd)
+results on log10 x values (default is FALSE)}
 
-\item{digits}{digits to round for magnitude descriptive statistics (default = 0).}
+\item{digits}{digits to round for magnitude descriptive statistics (default =
+0).}
 
 \item{trailing_zeros}{logical indicating if trailing zeros should be included
 in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to
 TRUE, output is a character vector.}
 
-\item{sep_val}{value to be pasted between the two measures. Default is ' vs. '.}
+\item{sep_val}{value to be pasted between the two measures. Default is ' vs.
+'.}
 
-\item{na_str_out}{the character string in the output table that replaces missing values.}
+\item{na_str_out}{the character string in the output table that replaces
+missing values.}
 
-\item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
+\item{verbose}{a logical variable indicating if warnings and messages should
+be displayed.}
 }
 \value{
 Returns a data frame with all possible pairwise comparisons:
@@ -64,32 +71,33 @@ Returns a data frame with all possible pairwise comparisons:
 \item \code{SampleSizes} - number of samples per group
 \item \code{Median_Min_Max} - Median [Min, Max] per group
 \item \code{Mean_SD} - Mean(sd) per group (if \code{log10_stats} = FALSE)
-\item \code{Mean} - Mean per group (if \code{log10_stats} = TRUE)
-\item \code{log_Mean_SD} - Mean(sd) per group on log10 \code{x} values (if \code{log10_stats} = TRUE)
+\item \code{Mean} - Geometric mean per group (if \code{log10_stats} = TRUE)
+\item \code{log_Mean_SD} - Mean(sd) per group on log10 \code{x} scale (if \code{log10_stats} = TRUE)
 \item \code{MagnitudeTest} - wilcox/t-test test p value
 \item \code{PerfectSeparation} - logical flag indicating perfect separation
 }
 
-Returns a data frame with all possible pairwise comparisons.
-Variables include Comparison, SampleSizes, Median_Min_Max (group stats;
-median [min, max]), Mean_SD (group stats; mean (sd)), MagnitudeTest
-(wilcox/t-test p-value), PerfectSeparation (a logical flag indicating if
-there is perfect separation).
+Returns a data frame with all possible pairwise comparisons. Variables
+include Comparison, SampleSizes, Median_Min_Max (group stats; median [min,
+max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test
+p-value), PerfectSeparation (a logical flag indicating if there is perfect
+separation).
 }
 \description{
-Takes a continuous variable and performs pairwise testing (t-test or wilcox test)
+Takes a continuous variable and performs pairwise testing (t-test or wilcox
+test)
 }
 \details{
 Runs \code{wilcox_test()} in the coin package, with "exact" distribution.
 
-If \code{sorted_group} is not specified then testing order based on factor
-levels if \code{group} is a factor, and alphabetical order otherwise
+If \code{sorted_group} is not specified then testing order based on factor levels
+if \code{group} is a factor, and alphabetical order otherwise
 
 \code{trailing_zeros} does not impact p-value column, which will be a numeric
 column regardless.
 
-If \code{paired = TRUE} the descriptive statistics are shown for observations
-that have non-missing values for both groups.
+If \code{paired = TRUE} the descriptive statistics are shown for observations that
+have non-missing values for both groups.
 }
 \examples{
 
@@ -100,7 +108,12 @@ pairwise_test_cont(x_example,group_example, num_needed_for_test = 2)
 
 pairwise_test_cont(
 x_example,group_example, alternative = "less",
-  sorted_group = c(1:4, 'a'),num_needed_for_test = 2)
+  sorted_group = c(1:4, 'a'), num_needed_for_test = 2, , digits = 3)
+
+# using log10 computations
+pairwise_test_cont(
+x_example,group_example, alternative = "less", log10_stats = TRUE,
+  sorted_group = c(1:4, 'a'), num_needed_for_test = 2, digits = 3)
 
 
 

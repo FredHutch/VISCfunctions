@@ -1,54 +1,62 @@
-#' Pairwise Testing for a Continuous Variable
+#'Pairwise Testing for a Continuous Variable
 #'
-#' Takes a continuous variable and performs pairwise testing (t-test or wilcox test)
+#'Takes a continuous variable and performs pairwise testing (t-test or wilcox
+#'test)
 #'
-#' @param x numeric vector (can include NA values).
-#' @param group categorical vector of group values.
-#' @param paired a logical variable indicating whether to do a paired test.
-#' @param id vector which contains the id information (so `x` values can be
+#'@param x numeric vector (can include NA values).
+#'@param group categorical vector of group values.
+#'@param paired a logical variable indicating whether to do a paired test.
+#'@param id vector which contains the id information (so `x` values can be
 #'  linked between groups). Only used and must be present when paired = TRUE.
-#' @param method what test to run ("wilcox" or "t.test").
-#' @param alternative character string specifying the alternative hypothesis,
-#'  must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.
-#' @param sorted_group a vector listing the group testing order from lowest to highest.
-#' @param num_needed_for_test required sample size (per group) to perform test.
+#'@param method what test to run ("wilcox" or "t.test").
+#'@param alternative character string specifying the alternative hypothesis,
+#'  must be one of "two.sided" (default), "greater" or "less". You can specify
+#'  just the initial letter.
+#'@param sorted_group a vector listing the group testing order from lowest to
+#'  highest.
+#'@param num_needed_for_test required sample size (per group) to perform test.
 #'  Note at least 2 distinct values per group are always needed for testing.
-#' @param log10_stats should the summary statistics and p values be calculated on
-#'  log10 values (i.e. geometric mean). This could effect the median, mean, and p value.
-#'  If TRUE geometric mean is displayed as well as mean (sd) results on log10 x values
-#' @param digits digits to round for magnitude descriptive statistics (default = 0).
-#' @param trailing_zeros logical indicating if trailing zeros should be included
+#'@param log10_stats specifies whether the summary statistics and p values
+#'  should be calculated on log10 values. This could affect the median, mean,
+#'  and p value.If TRUE, geometric mean is displayed as well as mean (sd)
+#'  results on log10 x values (default is FALSE)
+#'@param digits digits to round for magnitude descriptive statistics (default =
+#'  0).
+#'@param trailing_zeros logical indicating if trailing zeros should be included
 #'  in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to
 #'  TRUE, output is a character vector.
-#' @param sep_val value to be pasted between the two measures. Default is ' vs. '.
-#' @param na_str_out the character string in the output table that replaces missing values.
-#' @param verbose a logical variable indicating if warnings and messages should be displayed.
-#' @return Returns a data frame with all possible pairwise comparisons:
+#'@param sep_val value to be pasted between the two measures. Default is ' vs.
+#'  '.
+#'@param na_str_out the character string in the output table that replaces
+#'  missing values.
+#'@param verbose a logical variable indicating if warnings and messages should
+#'  be displayed.
+#'@return Returns a data frame with all possible pairwise comparisons:
 #' * `Comparison` - Comparisons made
 #' * `SampleSizes` - number of samples per group
 #' * `Median_Min_Max` - Median \[Min, Max\] per group
 #' * `Mean_SD` - Mean(sd) per group (if `log10_stats` = FALSE)
-#' * `Mean` - Mean per group (if `log10_stats` = TRUE)
-#' * `log_Mean_SD` - Mean(sd) per group on log10 `x` values (if `log10_stats` = TRUE)
+#' * `Mean` - Geometric mean per group (if `log10_stats` = TRUE)
+#' * `log_Mean_SD` - Mean(sd) per group on log10 `x` scale (if `log10_stats` = TRUE)
 #' * `MagnitudeTest` - wilcox/t-test test p value
 #' * `PerfectSeparation` - logical flag indicating perfect separation
-#' @return Returns a data frame with all possible pairwise comparisons.
-#'  Variables include Comparison, SampleSizes, Median_Min_Max (group stats;
-#'  median \[min, max\]), Mean_SD (group stats; mean (sd)), MagnitudeTest
-#'  (wilcox/t-test p-value), PerfectSeparation (a logical flag indicating if
-#'  there is perfect separation).
-#' @details
+#'@return Returns a data frame with all possible pairwise comparisons. Variables
+#'  include Comparison, SampleSizes, Median_Min_Max (group stats; median \[min,
+#'  max\]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test
+#'  p-value), PerfectSeparation (a logical flag indicating if there is perfect
+#'  separation).
+#'@details
 #'
-#' Runs `wilcox_test()` in the coin package, with "exact" distribution.
+#'Runs `wilcox_test()` in the coin package, with "exact" distribution.
 #'
-#' If `sorted_group` is not specified then testing order based on factor
-#'  levels if `group` is a factor, and alphabetical order otherwise
+#'If `sorted_group` is not specified then testing order based on factor levels
+#'if `group` is a factor, and alphabetical order otherwise
 #'
-#' `trailing_zeros` does not impact p-value column, which will be a numeric
-#'  column regardless.
+#'`trailing_zeros` does not impact p-value column, which will be a numeric
+#'column regardless.
 #'
-#' If `paired = TRUE` the descriptive statistics are shown for observations
-#'  that have non-missing values for both groups.
+#'If `paired = TRUE` the descriptive statistics are shown for observations that
+#'have non-missing values for both groups.
 #'
 #' @examples
 #'
@@ -59,7 +67,12 @@
 #'
 #'pairwise_test_cont(
 #'x_example,group_example, alternative = "less",
-#'   sorted_group = c(1:4, 'a'),num_needed_for_test = 2)
+#'   sorted_group = c(1:4, 'a'), num_needed_for_test = 2, , digits = 3)
+#'
+#' # using log10 computations
+#'pairwise_test_cont(
+#'x_example,group_example, alternative = "less", log10_stats = TRUE,
+#'   sorted_group = c(1:4, 'a'), num_needed_for_test = 2, digits = 3)
 #'
 #'
 #'
@@ -140,8 +153,7 @@
 #'                        .groups = "keep")
 #'
 #'
-
-#' @export
+#'@export
 
 
 pairwise_test_cont <- function(
@@ -199,7 +211,8 @@ pairwise_test_cont <- function(
     return(NULL)
   }
   if (n_levels == 1) {
-    if (verbose) message('Only one group has any non-missing values, so nothing to compare')
+    if (verbose)
+      message('Only one group has any non-missing values, so nothing to compare')
     return(NULL)
   }
 
@@ -212,8 +225,10 @@ pairwise_test_cont <- function(
       if (paired) {
 
         #For paired testing only using non-missing values in both groups
-        i_data <- data.frame(x = x[group == i_group], id = id[group == i_group])
-        j_data <- data.frame(y = x[group == j_group], id = id[group == j_group])
+        i_data <-
+          data.frame(x = x[group == i_group], id = id[group == i_group])
+        j_data <-
+          data.frame(y = x[group == j_group], id = id[group == j_group])
         data_here <- stats::na.omit(merge(i_data, j_data, by = 'id'))
         i_vals <- data_here$x
         j_vals <- data_here$y
@@ -317,48 +332,60 @@ pairwise_test_cont <- function(
     alternative = alternative, digits = digits, trailing_zeros = trailing_zeros,
     keep_all = TRUE, verbose = verbose)
 
-  # If paired need to return number of pairs for the sample size (note Group1_n = Group2_n in paired cases)
+  # If paired need to return number of pairs for the sample size (note Group1_n
+  # = Group2_n in paired cases)
   if (paired) pasted_results$n_comparison <- results$Group1_n
-
 
   if (log10_stats) {
     pasted_results_extra <- paste_tbl_grp(
-      data = results, vars_to_paste = c("mean_sd"),
-      first_name = 'Group1log', second_name = 'Group2log', sep_val = sep_val,
-      alternative = alternative, digits = digits, trailing_zeros = trailing_zeros,
-      keep_all = TRUE, verbose = verbose)
-
+      data = results,
+      vars_to_paste = c("mean_sd"),
+      first_name = 'Group1log',
+      second_name = 'Group2log',
+      sep_val = sep_val,
+      alternative = alternative,
+      digits = digits,
+      trailing_zeros = trailing_zeros,
+      keep_all = TRUE,
+      verbose = verbose
+    )
     return(
-      data.frame(Comparison = pasted_results$Comparison,
-                 SampleSizes = pasted_results$n_comparison,
-                 Median_Min_Max = pasted_results$median_min_max_comparison,
-                 Mean = pasted_results$mean_comparison,
-                 log_Mean_SD = pasted_results_extra$mean_sd_comparison,
-                 MagnitudeTest = results$MagnitudeTest,
-                 PerfectSeparation = results$PerfectSeparation,
-                 stringsAsFactors = FALSE)
+      data.frame(
+        Comparison = pasted_results$Comparison,
+        SampleSizes = pasted_results$n_comparison,
+        Median_Min_Max = pasted_results$median_min_max_comparison,
+        Mean = pasted_results$mean_comparison,
+        log_Mean_SD = pasted_results_extra$mean_sd_comparison,
+        MagnitudeTest = results$MagnitudeTest,
+        PerfectSeparation = results$PerfectSeparation,
+        stringsAsFactors = FALSE
+      )
     )
   } else {
     pasted_results_extra <- paste_tbl_grp(
-      data = results, vars_to_paste = c("mean_sd"),
-      first_name = 'Group1', second_name = 'Group2', sep_val = sep_val,
-      alternative = alternative, digits = digits, trailing_zeros = trailing_zeros,
-      keep_all = TRUE, verbose = verbose)
-
-
-    return(
-      data.frame(Comparison = pasted_results$Comparison,
-                 SampleSizes = pasted_results$n_comparison,
-                 Median_Min_Max = pasted_results$median_min_max_comparison,
-                 Mean_SD = pasted_results_extra$mean_sd_comparison,
-                 MagnitudeTest = results$MagnitudeTest,
-                 PerfectSeparation = results$PerfectSeparation,
-                 stringsAsFactors = FALSE)
+      data = results,
+      vars_to_paste = c("mean_sd"),
+      first_name = 'Group1',
+      second_name = 'Group2',
+      sep_val = sep_val,
+      alternative = alternative,
+      digits = digits,
+      trailing_zeros = trailing_zeros,
+      keep_all = TRUE,
+      verbose = verbose
     )
-
+    return(
+      data.frame(
+        Comparison = pasted_results$Comparison,
+        SampleSizes = pasted_results$n_comparison,
+        Median_Min_Max = pasted_results$median_min_max_comparison,
+        Mean_SD = pasted_results_extra$mean_sd_comparison,
+        MagnitudeTest = results$MagnitudeTest,
+        PerfectSeparation = results$PerfectSeparation,
+        stringsAsFactors = FALSE
+      )
+    )
   }
-
-
 }
 
 

@@ -15,7 +15,7 @@ wilson_ci(x, conf.level = 0.95)
 data.frame with with mean (\code{mean}), and bounds of confidence interval (\code{lower}, \code{upper})
 }
 \description{
-\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#superseded'><img src='figures/lifecycle-superseded.svg' alt='Superseded lifecycle'></a>}}{\strong{Superseded}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
 \code{wilson_ci} has been superseded by the use of \link{binom_ci}
 }
 \examples{
