@@ -7,6 +7,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
   library(dplyr)
   set.seed(243542534)
   x = c(NA, rnorm(25, 0, 1), rnorm(25, 1, 1),NA)
+  x_high = c(NA, rnorm(25, 100, 1), rnorm(25, 150, 1),NA)
   group = c(rep('a', 26),rep('b', 26))
   id = c(1:26, 1:26)
 
@@ -209,6 +210,77 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                            sep_val = ' vs. ', verbose = FALSE),
                expected = testing_results)
 
+  # Testing log10 stats
+  set.seed(53276537)
+  x_high = c(NA, rnorm(25, 100, 1), rnorm(25, 150, 1),NA)
+
+  test_data_log <- data.frame(x_high, group)
+
+  testing_stats_log <- test_data_log %>%
+    filter(!is.na(x)) %>%
+    mutate(x = log10(x_high)) %>%
+    group_by(group) %>%
+    summarise(n = n(),
+              mean = mean(x, na.rm = TRUE),
+              median = median(x, na.rm = TRUE),
+              min = min(x, na.rm = TRUE),
+              max = max(x, na.rm = TRUE),
+              IQR = IQR(x, na.rm = TRUE),
+              logmean = mean(x, na.rm = TRUE),
+              logsd = sd(x, na.rm = TRUE),
+              .groups = "keep") %>%
+    pivot_wider(names_from = group,
+                values_from = c(n, mean, median, min, max, IQR, logmean, logsd)) %>%
+    mutate(across(mean_a:IQR_b, .fns = ~10^.x),
+           Group1 = "a", Group2 = "b",
+           Group1log = "a", Group2log = "b", .before = "n_a")
+
+  colnames(testing_stats_log)[5:20] <- c("Group1_n", "Group2_n", "Group1_mean",
+                                     "Group2_mean",
+                                     "Group1_median", "Group2_median",
+                                     "Group1_min", "Group2_min", "Group1_max",
+                                     "Group2_max", "Group1_IQR", "Group2_IQR",
+                                     "Group1log_mean", "Group2log_mean",
+                                     "Group1log_sd", "Group2log_sd")
+
+  test_pasting <- paste_tbl_grp(data = testing_stats_log,
+                                vars_to_paste = c('n','median_min_max', 'mean'),
+                                sep_val = " vs. ",
+                                digits = 3,
+                                keep_all = FALSE,
+                                trailing_zeros = TRUE)
+
+  test_pasting_extra <- paste_tbl_grp(data = testing_stats_log,
+                                vars_to_paste = c('mean_sd'),
+                                first_name = 'Group1log',
+                                second_name = 'Group2log',
+                                sep_val = " vs. ",
+                                digits = 3,
+                                keep_all = FALSE,
+                                trailing_zeros = TRUE)
+
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean')
+  testing_results <- data.frame(test_pasting,
+                                log_Mean_SD = test_pasting_extra$mean_sd_comparison,
+                                MagnitudeTest = two_samp_cont_test(x = log10(x_high),
+                                                                   y = group,
+                                                                   method = 'wilcox',
+                                                                   paired = FALSE),
+                                PerfectSeparation = ifelse((testing_stats_log$Group1_min >  testing_stats_log$Group2_max) |
+                                                             (testing_stats_log$Group2_min >  testing_stats_log$Group1_max),
+                                                           TRUE, FALSE),
+                                stringsAsFactors = FALSE)
+
+  expect_equal(object = pairwise_test_cont(x = test_data_log$x_high,
+                                           group = test_data_log$group, paired = FALSE,
+                                           method = 'wilcox',
+                                           alternative = 'two.sided',
+                                           num_needed_for_test = 3,
+                                           digits = 3, trailing_zeros = TRUE,
+                                           sep_val = ' vs. ', verbose = FALSE,
+                                           log10_stats = TRUE),
+               expected = testing_results)
+
 
   # Paired data
 
@@ -251,7 +323,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                                                 testing_stats_paired$Group1_max), TRUE, FALSE),
                                 stringsAsFactors = FALSE)
 
-  expect_equal(object = test_ids %>% filter() %>%  pairwise_test_cont(x = x, group = group,
+  expect_equal(object = pairwise_test_cont(x = x, group = group,
                                            paired = TRUE, id = id, sorted_group = c("a", "b"),
                                            method = 'wilcox', alternative = 'two.sided',
                                            num_needed_for_test = 3, digits = 3,
@@ -432,6 +504,46 @@ test_that("Paired results with test data", {
   expect_equal(group_testing_tibble_less$MagnitudeTest,
                group_testing_tibble_less$est_less)
 })
+
+
+test_that("pairwise_comparisons_bin error catching and messages", {
+
+  expect_error(object = pairwise_test_cont(x = 1:10, group = 0:1),
+               regexp = '"x" and "group" must be same length')
+
+  expect_error(object = pairwise_test_cont(x = 1:10, group = rep(0:1, 5),
+                                           paired = TRUE),
+               regexp = '"id" must be present when "paired" = TRUE')
+
+  expect_error(object = pairwise_test_cont(x = 1:10, group = rep(0:1, 5),
+                                           sorted_group = 1),
+               regexp = '"sorted_group" must contain all possible values of "group"')
+
+  expect_error(object = pairwise_test_cont(x = -1:-10, group = rep(0:1, 5),
+                                           log10_stats = TRUE),
+               regexp = '"x" must be greater than 0 when "log10_stats" = TRUE')
+
+  expect_message(object = pairwise_test_cont(x = 1:10, group = rep(0:1, 5),
+                                             alternative = 'less', verbose = TRUE),
+               regexp = '"sorted_group" not specified so testing in following order: 0, 1')
+
+  expect_message(object = pairwise_test_cont(x = c(NA,1,1,NA), group = c(0,NA,NA, 1),
+                                             verbose = TRUE),
+                 regexp = 'No non-missing values, so nothing to compare')
+  expect_null(object = pairwise_test_cont(x = c(NA,1,1,NA), group = c(0,NA,NA, 1)))
+
+  expect_message(object = pairwise_test_cont(x = c(NA,1,1,NA), group = c(0,NA,1,NA),
+                                             verbose = TRUE),
+                 regexp = 'Only one group has any non-missing values, so nothing to compare')
+  expect_null(object = pairwise_test_cont(x = c(NA,1,1,NA), group = c(0,NA,1,NA)))
+
+  expect_message(object = pairwise_test_cont(x = c(NA,1,1,NA), group = c(0,0,1,1),
+                                             verbose = TRUE),
+               regexp = 'x does not have at least 3 non missing per group, so no test run \\(MagnitudeTest=NA returned\\)')
+
+})
+
+
 
 
 # test pairwise_test_bin.
