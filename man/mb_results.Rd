@@ -18,8 +18,8 @@ mb_results(
 \item{response}{response status, vector of type integer (0/1) or logical
 (TRUE/FALSE). If NULL assumes no response information considered.}
 
-\item{lower_trunc}{the lower truncation value (numeric scalar that must
-be 0 or higher).}
+\item{lower_trunc}{the lower truncation value (numeric scalar that must be 0
+or higher).}
 
 \item{upper_trunc}{the upper truncation value (numeric scalar that must be
 higher than \code{lower_trunc}). Set to Inf for no upper truncation}
@@ -28,35 +28,32 @@ higher than \code{lower_trunc}). Set to Inf for no upper truncation}
 calculation, if any. Must be one of "log10" (default) or "raw".}
 }
 \value{
-Returns a data frame with the following columns:
-\itemize{
-\item \code{magnitude} - magnitude values (similar to times in a survival analysis)
-\item \code{breadth} - percent of antigens greater or equal to the \code{magnitude} value
-\item \code{n_remaining} - number of antigens remaining greater or equal to the \code{magnitude} value
-\item \code{n_here} - number of antigens at the exact \code{magnitude} value
-\item \code{aucMB} - area under the magnitude breadth curve
-}
+Returns a data frame with the following columns: * \code{magnitude} -
+magnitude values (similar to times in a survival analysis) * \code{breadth} -
+percent of antigens greater or equal to the \code{magnitude} value *
+\code{n_remaining} - number of antigens remaining greater or equal to the
+\code{magnitude} value * \code{n_here} - number of antigens at the exact \code{magnitude}
+value * \code{aucMB} - area under the magnitude breadth curve
 }
 \description{
 Creates step curve info for magnitude breadth (MB) plots, with option to
 include response status and have logged transformation for AUC calculation.
 }
 \details{
-AUC is calculated from 0 (or 1 if \code{x_transform = "log10"}) to the
-\code{x} values (after \code{lower_trunc}/\code{upper_trunc} \code{x}
-value truncation).
+AUC is calculated from 0 (or 1 if \code{x_transform = "log10"}) to the \code{x} values
+(after \code{lower_trunc}/\code{upper_trunc} \code{x} value truncation).
 
-If \code{response} is given, non-responding values (\code{response} = 0 or
-FALSE) will have their values set to the \code{lower_trunc} for MB curves
-and AUC calculations.
+If \code{response} is given, non-responding values (\code{response} = 0 or FALSE) will
+have their values set to the \code{lower_trunc} for MB curves and AUC
+calculations.
 
-The output can be used for plotting step function curves,
-with \code{magnitude} on the x axis and \code{breadth} on the y axis.
-Note if \code{x_transform = 'log10'} the resulting plot is best
-displayed on the log10 scale (\code{ggplot2::scale_x_log10}).
+The output can be used for plotting step function curves, with \code{magnitude} on
+the x axis and \code{breadth} on the y axis. Note if \code{x_transform = 'log10'} the
+resulting plot is best displayed on the log10 scale
+(\code{ggplot2::scale_x_log10}).
 
-\code{aucMB} can be used for boxplots and group comparisons. Note
-\code{aucMB} is repeated for values of \code{magnitude} and \code{breadth}.
+\code{aucMB} can be used for boxplots and group comparisons. Note \code{aucMB} is
+repeated for values of \code{magnitude} and \code{breadth}.
 }
 \examples{
 

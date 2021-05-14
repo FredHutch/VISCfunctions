@@ -3,12 +3,21 @@ context("create_step_curve and mb_results")
 
 
 test_that("create_step_curve testing", {
-  get_output <- function(xx) {
-    data.frame(time = c(0, as.double(xx$time)),
-               surv = c(1, xx$surv),
-               n.risk = c(NA, xx$n.risk),
-               n.event = c(NA, xx$n.event),
-               n.censor = c(NA, xx$n.censor))
+  get_output <- function(xx, flip = FALSE) {
+    if (flip) {
+      data.frame(time = c(0, as.double(xx$time), Inf),
+                 surv = c(1, xx$surv, 0),
+                 n.risk = c(max(xx$n.risk), xx$n.risk, NA),
+                 n.event = c(NA, xx$n.event, NA),
+                 n.censor = c(NA, xx$n.censor, NA),
+                 surv.flipped = 1 -  c(1, xx$surv, 0))
+    } else {
+      data.frame(time = c(0, as.double(xx$time)),
+                 surv = c(1, xx$surv),
+                 n.risk = c(max(xx$n.risk), xx$n.risk),
+                 n.event = c(NA, xx$n.event),
+                 n.censor = c(NA, xx$n.censor))
+    }
   }
 
   # Simple testing
@@ -21,9 +30,23 @@ test_that("create_step_curve testing", {
     )
   )
   expect_identical(
-    object = create_step_curve(x, event),
+    object = create_step_curve(x, factor(event)),
     expected = get_output(
       survival::survfit(survival::Surv(x, event) ~ 1)
+    )
+  )
+
+  # testing flip_surv
+  expect_identical(
+    object = create_step_curve(x, flip_surv = TRUE),
+    expected = get_output(
+      survival::survfit(survival::Surv(x) ~ 1), flip = TRUE
+    )
+  )
+  expect_identical(
+    object = create_step_curve(x, event, flip_surv = TRUE),
+    expected = get_output(
+      survival::survfit(survival::Surv(x, event) ~ 1), flip = TRUE
     )
   )
 
@@ -51,6 +74,13 @@ test_that("create_step_curve testing", {
       dplyr::group_modify(~ create_step_curve(x = .x$x, event = .x$event)) %>%
       dplyr::ungroup(),
     expected = expected_output
+  )
+
+
+  # Error checking
+  expect_error(
+    object = create_step_curve(1:3, c(1,'a','a')),
+    regexp = '"event" must be a numeric or factor vector containing only 0/1 values'
   )
 
 })
@@ -144,5 +174,16 @@ test_that("mb_results testing", {
     expected = data.frame(step_info_here, aucMB = auc_here),
     tolerance = 1e-8
   )
+
+  #Error checking
+  expect_error(
+    object = mb_results(data_here$magnitude, lower_trunc = Inf),
+    regexp = '"lower_trunc" can not be set at Inf'
+  )
+  expect_error(
+    object = mb_results(data_here$magnitude[-1], data_here$response),
+    regexp = '"magnitude" and "response" must be same length'
+  )
+
 
 })

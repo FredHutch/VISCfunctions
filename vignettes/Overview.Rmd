@@ -760,11 +760,12 @@ plot_data <-
   tidyr::pivot_longer(cols = c(ic50, ic80)) %>% 
   dplyr::group_by(name, product) %>%
   dplyr::group_modify(~ create_step_curve(x = pmin(.x$value, 100), 
-                                          event = as.numeric(.x$value < 50))) 
+                                          event = as.numeric(.x$value < 50),
+                                          flip_surv = TRUE, flip_top_x = 100)) 
   
   ggplot2::ggplot(data = plot_data,
                   ggplot2::aes(x = time, y = 1 - surv, color = product)) +
-  ggplot2::geom_step(direction = 'vh', lwd = .35) +
+  ggplot2::geom_step(direction = 'hv', lwd = .35) +
   ggplot2::scale_x_log10() +
   ggplot2::scale_y_continuous('Viral Coverage (%)') +
   ggplot2::facet_grid(. ~ name) +
