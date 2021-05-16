@@ -625,17 +625,17 @@ group_testing <- exampleData_ICS %>%
   filter(Population == 'IFNg Or IL2' & Group != 4) %>% 
   group_by(Stim, Visit) %>%
   group_modify(~ as.data.frame(
-    pairwise_test_cont(x = .$PercentCellNet, group = .$Group,
+    pairwise_test_cont(x = pmax(.$PercentCellNet, 0.00001), group = .$Group,
                       method = 'wilcox', paired = FALSE, 
                       alternative = 'greater', num_needed_for_test = 3, 
-                      digits = 3, verbose = FALSE))) %>% 
+                      digits = 3, log10_stats = TRUE))) %>% 
    ungroup() %>% 
   # Getting fancy p values
   mutate(MagnitudeTest = pretty_pvalues(
     MagnitudeTest, output_type = 'latex', 
     sig_alpha = .1, background = 'yellow')
   ) %>% 
-  rename("Median (Range)" = Median_Min_Max, 'Mean (SD)' = Mean_SD)
+  rename("Median (Range)" = Median_Min_Max, 'Mean (SD) (log10)' = log_Mean_SD)
 
 kableExtra::kable(group_testing, escape = FALSE, booktabs = TRUE, 
                   caption = 'Magnitude Comparisons Across Groups') %>% 
@@ -658,17 +658,17 @@ timepoint_testing <- exampleData_ICS %>%
   filter(Population == 'IFNg Or IL2' & Group != 4) %>% 
   group_by(Stim, Group) %>%
   group_modify(~ as.data.frame(
-    pairwise_test_cont(x = .$PercentCellNet, group = .$Visit, id = .$pubID,
-                       method = 'wilcox', paired = TRUE, 
+    pairwise_test_cont(x =  pmax(.$PercentCellNet, 0.00001), group = .$Visit, 
+                       id = .$pubID, method = 'wilcox', paired = TRUE, 
                        num_needed_for_test = 3, 
-                       digits = 3, verbose = FALSE))) %>% 
+                       digits = 3, log10_stats = TRUE))) %>% 
    ungroup() %>% 
   # Getting fancy p values
   mutate(MagnitudeTest = pretty_pvalues(
     MagnitudeTest, output_type = 'latex', 
     sig_alpha = .1, background = 'yellow')
     ) %>% 
-  rename("Median (Range)" = Median_Min_Max, 'Mean (SD)' = Mean_SD)
+  rename("Median (Range)" = Median_Min_Max, 'Mean (SD) (log10)' = log_Mean_SD)
 
 
 kableExtra::kable(timepoint_testing, 
