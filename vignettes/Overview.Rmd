@@ -58,9 +58,9 @@ options(
 
 # Overview
 
-VISCfunctions is a collection of useful functions designed to assist in analysis
-and creation of professional reports. The current VISCfunctions package can be
-broken down to the following sections:
+VISCfunctions is a collection of useful functions designed to assist in the
+analysis and creation of professional reports. The current VISCfunctions package
+can be broken down to the following sections:
 
 - Testing and Estimate Functions
   - two_samp_bin_test
@@ -256,7 +256,7 @@ exampleData_BAMA %>%
 `cor_test` is used for comparing two continuous variables, with Pearson,
 Kendall, or Spearman methods.
 
-If Spearman method is chosen and either variable has a tie the approximate
+If Spearman method is chosen and either variable has a tie, the approximate
 distribution is use in the `coin::spreaman_test` function. This is usually the
 preferred method over the asymptotic approximation, which is the method
 `stats:cor.test` uses in cases of ties. If the Spearman method is chosen and
@@ -289,9 +289,9 @@ cor_test(
 
 ## Computing the Area Under a Curve (Integration Estimate) for Messy Data
 
-`trapz_sorted` is used to when you are not presorting your data so that it is
-strictly increasing along the x-axis, or there are 'NA' values that are not
-removed prior to estimating the area under a curve.
+`trapz_sorted` is used when you are not presorting your data so that it is
+strictly increasing along the x-axis or when there are 'NA' values that are not
+removed prior to estimating the area under the curve.
 
 ```{r, echo=TRUE, warning=FALSE}
 set.seed(93)
@@ -319,11 +319,11 @@ printed in reports.
 
 ## P Values
 
-`pretty_pvalues` can be used on p values, rounding them to a specified digit
-amount and using < for low p values, as opposed to scientific notation (i.e. "p
-< 0.0001" if rounding to 4 digits), allows options for emphasizing p-values and
-specific characters for missing. Currently latex, html, and pandoc (Word) are
-supported.
+`pretty_pvalues` is used on p-values by rounding them to a specified number of
+digits and using < for low p-values as opposed to scientific notation (i.e., "p
+< 0.0001" if rounding to 4 digits), and by allowing options for emphasizing
+p-values and specific characters for missing values.
+
 
 ```{r, echo=TRUE}
 
@@ -393,7 +393,7 @@ exampleData_BAMA %>%
 
 ## Advanced Combining of Variables
 
-`paste_tbl_grp` paste together information, often statistics, from two groups.
+`paste_tbl_grp` pastes together information, often statistics, from two groups.
 There are two predefined combinations: mean(sd) and median[min,max], but user
 may also paste any single measure together.
 
@@ -499,25 +499,25 @@ collapse_group_row(sample_df, x, y, z) %>%
 
 # Pairwise Comparison Functions
 
-`pairwise_test_bin`, `pairwise_test_cont`, `pairwise_test_cor`, are
-functions take will perform pairwise group (or any categorical variable)
-comparisons. The function will goes through all pairwise comparisons and output
-descriptive statistics and relevant p values, calling the appropriate testing
-functions from the [Testing and Estimate
-Functions](#testing-and-estimate-functions) section.
+`pairwise_test_bin`, `pairwise_test_cont`, `pairwise_test_cor` are functions
+that perform pairwise group (or any categorical variable) comparisons. The
+function will go through all pairwise comparisons and output descriptive
+statistics and relevant p values, calling the appropriate testing functions from
+the [Testing and Estimate Functions](#testing-and-estimate-functions) section.
 
 ## Pairwise Comparison of Multiple Groups for a Binary Variable 
 
 Simple example using `pairwise_test_bin`:
 
-```{r, echo=TRUE, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, size = 'tiny'}
 
 set.seed(1)
 x_example <- c(NA, sample(0:1, 50, replace = TRUE, prob = c(.75, .25)),
   sample(0:1, 50, replace = TRUE, prob = c(.25, .75)))
 group_example <- c(rep(1, 25), NA, rep(2, 25), rep(3, 25), rep(4, 25))
 
-pairwise_test_bin(x_example, group_example)
+pairwise_test_bin(x_example, group_example) %>% 
+  rename(Separation = 'PerfectSeparation')
 
 
 ```
@@ -603,20 +603,21 @@ kableExtra::kable(timepoint_testing, escape = FALSE, booktabs = TRUE,
 
 Simple example using `pairwise_test_cont()`:
 
-```{r, echo=TRUE, warning=FALSE, size='tiny'}
+```{r, echo=TRUE, warning=FALSE}
 
 set.seed(1)
 x_example <- c(NA, rnorm(50), rnorm(50, mean = 5))
 group_example <- c(rep(1, 25), rep(2, 25), rep(3, 25), rep(4, 25), NA)
 
-pairwise_test_cont(x_example, group_example, digits = 1)
+pairwise_test_cont(x_example, group_example, digits = 1) %>% 
+  rename(Separation = 'PerfectSeparation')
 
 
 ```
 
 \clearpage
 
-Group comparison Example using `pairwise_test_cont()`:
+Group comparison example using `pairwise_test_cont()`:
 
 ```{r, echo=TRUE, warning=FALSE, results='asis'}
 
@@ -693,7 +694,7 @@ kableExtra::kable(timepoint_testing,
 
 Simple example using `pairwise_test_cor`:
 
-```{r, echo=TRUE, warning=FALSE, size='tiny'}
+```{r, echo=TRUE, warning=FALSE}
 
 set.seed(1)
 x_example <- c(1, 1, rnorm(48), rnorm(49, mean = 5), NA)
@@ -842,8 +843,8 @@ round_away_0(vals_to_round, digits = 2, trailing_zeros = TRUE)
 \clearpage
 
 `get_session_info` produces reproducible tables, which are great to add to the
-end of reports. The first table gives Software Session Information and the
-second table gives Software Package Version Information `get_full_name` is a
+end of reports. The first table gives software session information and the
+second table gives software package version information. `get_full_name` is a
 function used by `get_session_info` to get the user's name, based on user's ID.
 
 ```{r}
