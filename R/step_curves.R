@@ -1,23 +1,28 @@
 #' Create a data.frame to plot step lines
 #'
 #' Creates survival probabilities from time and censoring information and
-#' generates a risk table that includes the survival probabilities and number
-#' at risk in addition to the data provided. This data.frame can be used to
-#' plot step line outcomes such as time-to-event (Kaplan-Meier curves) and
-#' magnitude breadth (MB) curves.
+#' generates a risk table that includes the survival probabilities and number at
+#' risk in addition to the data provided. This data.frame can be used to plot
+#' step line outcomes such as time-to-event (Kaplan-Meier curves) and magnitude
+#' breadth (MB) curves.
 #'
-#' @param x Time values used to create the x-axis in step curves (numeric vector)
-#' @param event event status, 0=censor and 1=event (numeric vector).
-#'   If NULL assumes no censoring
-#' @return Returns a data frame with time, \code{surv}, \code{n.risk},
-#'   \code{n.event}, and \code{n.censor} (\code{survival::summary.survfit}
-#'   output format)
+#' @param x Time values used to create the x-axis in step curves (numeric
+#'   vector)
+#' @param event event status, 0=censor and 1=event (numeric vector). If NULL
+#'   assumes no censoring
+#' @param flip_surv logical indicating if reverse survival estimates should be
+#'   calculated. Default is FALSE.
+#' @param flip_top_x value to set x for top point for plotting. Only used if
+#'   `flip_surv = TRUE`. Default is `Inf`.
+#' @return Returns a data frame with time, `surv`, `n.risk`, `n.event`, and
+#'   `n.censor` (`survival::summary.survfit` output format).
+#'   If `flip_surv = TRUE` also includes `surv.flipped` column.
+#' @details The output of survival probabilities can be used for plotting step
+#'   function curves, with `time` on the x axis, `surv` on the y axis, and
+#'   `n.censor == 1` subset can be used for a `ggplot2::geom_point()` layer.
 #'
-#' @details
-#'   The output of survival probabilities can be used for plotting step function
-#'   curves, with \code{time} on the x axis, \code{surv} on the y axis, and
-#'   \code{n.censor == 1} subset can be used for a \code{ggplot2::geom_point()}
-#'   layer.
+#'   If `flip_surv = TRUE` there is an additional row at the bottom of the
+#'   data.frame needed for horizontal line at the top of the plot
 #'
 #' @examples
 #'
@@ -39,10 +44,35 @@
 #'  ggplot2::geom_point(data = plot_data %>% filter(n.censor == 1),
 #'                      shape = 3, size = 6, show.legend = FALSE)
 #'
+#' #mAB example for reverse curves
+#' data(CAVD812_mAB)
+#'
+#' plot_data <-
+#' CAVD812_mAB %>%
+#'   filter(virus != 'SVA-MLV') %>%
+#'   tidyr::pivot_longer(cols = c(ic50, ic80)) %>%
+#'   dplyr::group_by(name, product) %>%
+#'   dplyr::group_modify(~ create_step_curve(x = pmin(.x$value, 100),
+#'                                           event = as.numeric(.x$value < 50),
+#'                                           flip_surv = TRUE,
+#'                                           flip_top_x = 100))
+#'
+#' ggplot2::ggplot(data = plot_data,
+#'                 ggplot2::aes(x = time, y = surv.flipped, color = product)) +
+#'   ggplot2::geom_step(direction = 'hv', lwd = .35) +
+#'   ggplot2::scale_x_log10() +
+#'   ggplot2::scale_y_continuous('Viral Coverage (%)') +
+#'   ggplot2::facet_grid(. ~ name) +
+#'   ggplot2::theme_bw()
+#'
 #' @export
 
-create_step_curve <- function(x, event = NULL){
+create_step_curve <- function(x,
+                              event = NULL,
+                              flip_surv = FALSE,
+                              flip_top_x = Inf){
   .check_numeric_input(x, lower_bound = 0)
+  .check_numeric_input(flip_top_x, lower_bound = 0, scalar = TRUE)
   if (is.null(event)) {
     surv_obj_here <- survival::Surv(x)
   } else {
@@ -53,12 +83,24 @@ create_step_curve <- function(x, event = NULL){
   }
   surv_fit_obj_here <- survival::survfit(surv_obj_here ~ 1)
 
-  # Need to add 1,0 point for plots and AUC
-  data.frame(time = c(0, as.double(surv_fit_obj_here$time)),
-             surv = c(1, surv_fit_obj_here$surv),
-             n.risk = c(NA, surv_fit_obj_here$n.risk),
-             n.event = c(NA, surv_fit_obj_here$n.event),
-             n.censor = c(NA, surv_fit_obj_here$n.censor))
+  if (flip_surv) {
+    # Need to add 0,1 and Inf,0 points for plots and AUC
+    data.frame(time = c(0, as.double(surv_fit_obj_here$time), Inf),
+               surv = c(1, surv_fit_obj_here$surv, 0),
+               n.risk = c(max(surv_fit_obj_here$n.risk),
+                          surv_fit_obj_here$n.risk, NA),
+               n.event = c(NA, surv_fit_obj_here$n.event, NA),
+               n.censor = c(NA, surv_fit_obj_here$n.censor, NA),
+               surv.flipped = 1 -  c(1, surv_fit_obj_here$surv, 0))
+  } else {
+    # Need to add 0,1 point for plots and AUC
+    data.frame(time = c(0, as.double(surv_fit_obj_here$time)),
+               surv = c(1, surv_fit_obj_here$surv),
+               n.risk = c(max(surv_fit_obj_here$n.risk),
+                          surv_fit_obj_here$n.risk),
+               n.event = c(NA, surv_fit_obj_here$n.event),
+               n.censor = c(NA, surv_fit_obj_here$n.censor))
+  }
 }
 
 
@@ -67,43 +109,42 @@ create_step_curve <- function(x, event = NULL){
 #' Create a data.frame to plot MB curves and AUC
 #'
 #' Creates step curve info for magnitude breadth (MB) plots, with option to
-#'  include response status and have logged transformation for AUC calculation.
+#' include response status and have logged transformation for AUC calculation.
 #'
 #' @param magnitude values to create step curve and AUC for (numeric vector)
 #' @param response response status, vector of type integer (0/1) or logical
 #'   (TRUE/FALSE). If NULL assumes no response information considered.
-#' @param lower_trunc the lower truncation value (numeric scalar that must
-#'   be 0 or higher).
+#' @param lower_trunc the lower truncation value (numeric scalar that must be 0
+#'   or higher).
 #' @param upper_trunc the upper truncation value (numeric scalar that must be
-#'   higher than \code{lower_trunc}). Set to Inf for no upper truncation
+#'   higher than `lower_trunc`). Set to Inf for no upper truncation
 #' @param x_transform a character vector specifying the transformation for AUC
 #'   calculation, if any. Must be one of "log10" (default) or "raw".
-#' @return Returns a data frame with the following columns:
-#' * \code{magnitude} - magnitude values (similar to times in a survival analysis)
-#' * \code{breadth} - percent of antigens greater or equal to the \code{magnitude} value
-#' * \code{n_remaining} - number of antigens remaining greater or equal to the \code{magnitude} value
-#' * \code{n_here} - number of antigens at the exact \code{magnitude} value
-#' * \code{aucMB} - area under the magnitude breadth curve
+#' @return Returns a data frame with the following columns: * `magnitude` -
+#'   magnitude values (similar to times in a survival analysis) * `breadth` -
+#'   percent of antigens greater or equal to the `magnitude` value *
+#'   `n_remaining` - number of antigens remaining greater or equal to the
+#'   `magnitude` value * `n_here` - number of antigens at the exact `magnitude`
+#'   value * `aucMB` - area under the magnitude breadth curve
 #'
 #'
 #' @details
 #'
-#' AUC is calculated from 0 (or 1 if \code{x_transform = "log10"}) to the
-#'  \code{x} values (after \code{lower_trunc}/\code{upper_trunc} \code{x}
-#'  value truncation).
+#' AUC is calculated from 0 (or 1 if `x_transform = "log10"`) to the `x` values
+#' (after `lower_trunc`/`upper_trunc` `x` value truncation).
 #'
-#' If \code{response} is given, non-responding values (\code{response} = 0 or
-#'  FALSE) will have their values set to the \code{lower_trunc} for MB curves
-#'  and AUC calculations.
+#' If `response` is given, non-responding values (`response` = 0 or FALSE) will
+#' have their values set to the `lower_trunc` for MB curves and AUC
+#' calculations.
 #'
 #'
-#' The output can be used for plotting step function curves,
-#'   with \code{magnitude} on the x axis and \code{breadth} on the y axis.
-#'   Note if \code{x_transform = 'log10'} the resulting plot is best
-#'   displayed on the log10 scale (\code{ggplot2::scale_x_log10}).
+#' The output can be used for plotting step function curves, with `magnitude` on
+#' the x axis and `breadth` on the y axis. Note if `x_transform = 'log10'` the
+#' resulting plot is best displayed on the log10 scale
+#' (`ggplot2::scale_x_log10`).
 #'
-#' \code{aucMB} can be used for boxplots and group comparisons. Note
-#'  \code{aucMB} is repeated for values of \code{magnitude} and \code{breadth}.
+#' `aucMB` can be used for boxplots and group comparisons. Note `aucMB` is
+#' repeated for values of `magnitude` and `breadth`.
 #'
 #' @examples
 #'

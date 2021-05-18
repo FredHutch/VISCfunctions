@@ -60,3 +60,17 @@
 #'   ...
 #' }
 "exampleData_NAb"
+
+#' Example mAB dataset from DataSpace
+#'
+#' A subset dataset from the Farzan CAVD 812 Study, looking at eCD4 neutralization.
+#'
+#' @format A data frame with 480 rows and 4 variables:
+#' \describe{
+#'   \item{product}{Eight eCD4-Ig variants were tested}
+#'   \item{virus}{60 HIV pseudoviruses from 12 different clades}
+#'   \item{ic50}{ID50 titer}
+#'   \item{ic80}{ID80 titer}
+#' }
+#' @source \url{https://dataspace.cavd.org}
+"CAVD812_mAB"

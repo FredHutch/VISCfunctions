@@ -4,31 +4,40 @@
 \alias{create_step_curve}
 \title{Create a data.frame to plot step lines}
 \usage{
-create_step_curve(x, event = NULL)
+create_step_curve(x, event = NULL, flip_surv = FALSE, flip_top_x = Inf)
 }
 \arguments{
-\item{x}{Time values used to create the x-axis in step curves (numeric vector)}
+\item{x}{Time values used to create the x-axis in step curves (numeric
+vector)}
 
-\item{event}{event status, 0=censor and 1=event (numeric vector).
-If NULL assumes no censoring}
+\item{event}{event status, 0=censor and 1=event (numeric vector). If NULL
+assumes no censoring}
+
+\item{flip_surv}{logical indicating if reverse survival estimates should be
+calculated. Default is FALSE.}
+
+\item{flip_top_x}{value to set x for top point for plotting. Only used if
+\code{flip_surv = TRUE}. Default is \code{Inf}.}
 }
 \value{
-Returns a data frame with time, \code{surv}, \code{n.risk},
-\code{n.event}, and \code{n.censor} (\code{survival::summary.survfit}
-output format)
+Returns a data frame with time, \code{surv}, \code{n.risk}, \code{n.event}, and
+\code{n.censor} (\code{survival::summary.survfit} output format).
+If \code{flip_surv = TRUE} also includes \code{surv.flipped} column.
 }
 \description{
 Creates survival probabilities from time and censoring information and
-generates a risk table that includes the survival probabilities and number
-at risk in addition to the data provided. This data.frame can be used to
-plot step line outcomes such as time-to-event (Kaplan-Meier curves) and
-magnitude breadth (MB) curves.
+generates a risk table that includes the survival probabilities and number at
+risk in addition to the data provided. This data.frame can be used to plot
+step line outcomes such as time-to-event (Kaplan-Meier curves) and magnitude
+breadth (MB) curves.
 }
 \details{
-The output of survival probabilities can be used for plotting step function
-curves, with \code{time} on the x axis, \code{surv} on the y axis, and
-\code{n.censor == 1} subset can be used for a \code{ggplot2::geom_point()}
-layer.
+The output of survival probabilities can be used for plotting step
+function curves, with \code{time} on the x axis, \code{surv} on the y axis, and
+\code{n.censor == 1} subset can be used for a \code{ggplot2::geom_point()} layer.
+
+If \code{flip_surv = TRUE} there is an additional row at the bottom of the
+data.frame needed for horizontal line at the top of the plot
 }
 \examples{
 
@@ -49,5 +58,26 @@ ggplot2::ggplot(data = plot_data,
  ggplot2::geom_step(linetype = "dashed", direction = 'hv', lwd = .35) +
  ggplot2::geom_point(data = plot_data \%>\% filter(n.censor == 1),
                      shape = 3, size = 6, show.legend = FALSE)
+
+#mAB example for reverse curves
+data(CAVD812_mAB)
+
+plot_data <-
+CAVD812_mAB \%>\%
+  filter(virus != 'SVA-MLV') \%>\%
+  tidyr::pivot_longer(cols = c(ic50, ic80)) \%>\%
+  dplyr::group_by(name, product) \%>\%
+  dplyr::group_modify(~ create_step_curve(x = pmin(.x$value, 100),
+                                          event = as.numeric(.x$value < 50),
+                                          flip_surv = TRUE,
+                                          flip_top_x = 100))
+
+ggplot2::ggplot(data = plot_data,
+                ggplot2::aes(x = time, y = surv.flipped, color = product)) +
+  ggplot2::geom_step(direction = 'hv', lwd = .35) +
+  ggplot2::scale_x_log10() +
+  ggplot2::scale_y_continuous('Viral Coverage (\%)') +
+  ggplot2::facet_grid(. ~ name) +
+  ggplot2::theme_bw()
 
 }
