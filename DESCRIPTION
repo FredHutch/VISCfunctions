@@ -11,7 +11,7 @@ Authors@R: c(person("Bryan", "Mayer", ,"bmayer@fredhutch.org", "aut"),
              person("Jimmy", "Fulp", ,"wfulp@fredhutch.org", c("aut", "cre"))
              )
 Description: Statistical, data processing, and annotation functions for VISC.
-License: GPL-3
+License: MIT
 Depends: R (>= 2.10)
 Imports: 
     binom,
