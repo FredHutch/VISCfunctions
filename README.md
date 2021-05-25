@@ -1,38 +1,91 @@
-VISCfunctions
-=============
 
-A collection of VISC functions for annotation, statistical calculations, data manipulation, etc.
+<!-- badges: start -->
 
-The first rule of VISCfunctions: **We NEVER push to the master.**    
-Please use [pull requests](https://github.com/FredHutch/VISC-Documentation/blob/master/Programming/pull-request-information.md).    
-[Click here for a brief summary on building and installing a package with RStudio.](https://github.com/FredHutch/VISC-Documentation/blob/master/Programming/build_and_test_package.md)
+[![R build
+status](https://github.com/FredHutch/VISCfunctions/workflows/R-CMD-check/badge.svg)](https://github.com/FredHutch/VISCfunctions/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/FredHutch/VISCfunctions/branch/main/graph/badge.svg)](https://codecov.io/gh/FredHutch/VISCfunctions?branch=main)
+[![License:MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<!-- badges: end -->
 
+# VISCfunctions
 
-VISCfunctions Principles
-=============
+The package provides functions for common tasks for creating statistical
+reports at Vaccine Immunology Statistical Center (VISC). The goal of
+VISCfunctions is to:
 
-1. Documentation
-  * Create thorough and clear help files for your functions. Useful examples will motivate the use of your function. 
-  * Code should be [readable](http://adv-r.had.co.nz/Style.html) and include **comments**.
-  * Don't pack too much into one function. Multiple tasks may require multiple functions (modularity).
-  * Function, arguments, and variables should have intuitive, concise names. This is not easy! 
+-   provide standard statistical testing and estimating functions
+-   help format output for PDF and Word reports
+-   provide frequently used utility functions
 
-2. Teamwork and Communication
- * Seek code review and feedback.
- * Be a mindful contributer.
- * Think about modularity. If everyone is writing similar code in their functions, there may be room for an internal,  shared function.
- * Share your ideas and plans!
+for VISC statisticians and programmers at Fred Hutch.
 
-3. Testing - Error Control
- * Write tests!
- * Take time to consider unexpected user errors. Discuss your function with others.
- * If your function utilizes other functions, make sure there are not new opportunities for bugs.
- * Use the testing framework (`devtools::test()` or ctrl-shift-t), the package should pass all tests (with no warnings) before you commit a new feature.
- * Modularity of functions greatly aids in error checking and control.
+# Installation
 
-4. Version Control and Stability
- * Utilize the features of git. Use branches to test new code and and ideas without pushing to the master.
- * **Never git force push**
- * Your changes may affect previously written reports: be mindful!
+The package is available on the Fred Hutch organization GitHub page.
 
-![Image of Yaktocat](https://github.com/FredHutch/VISCfunctions/blob/master/Viscfunction_diagram.png)
+``` r
+remotes::install_github("FredHutch/VISCfunctions")
+
+# Use the build_vignettes parameter to access the vignette:
+remotes::install_github("FredHutch/VISCfunctions", build_vignettes = TRUE)
+vignette("Overview")
+```
+
+# Overview
+
+Below is an overview of the currently available functions in
+VISCfunctions.
+
+## Statistical testing and estimates
+
+Compare two groups, return a p-value:
+
+-   `two_sample_bin_test()` for a Barnard, Fisher’s Exact, Chi-Square or
+    McNemar test.
+-   `two_samp_cont_test()` for a t.test (paired or unpaired), Wilcox
+    Rank-Sum, or Wilcox Signed-Rank test.
+
+Make all pairwise comparisons of a grouping variable (or any categorical
+variable), return descriptive statistics and p-values:
+
+-   `pairwise_test_bin()` for a Barnard, Fisher’s Exact, Chi-Square or
+    McNemar test.
+-   `pairwise_test_cont()` for a t.test (paired or unpaired), Wilcox
+    Rank-Sum, or Wilcox Signed-Rank test.
+
+Estimate wilson confidence intervals for a binary vector:
+
+-   `wilson_ci()`
+
+## Formatting output
+
+-   `paste_tbl_grp()` to paste together information (usually descriptive
+    statistics) from two groups.
+-   `pretty_pvalues()` to round and format p-values.
+-   `stat_paste()` to combine and format values, such as:
+    -   Mean (sd)
+    -   Median \[min, max\]
+    -   Estimate (SE of Estimate)
+    -   Estimate (95% CI Lower Bound, Upper Bound)
+    -   Estimate/Statistic (p value)
+
+## Utility functions
+
+-   `round_away_0()` is an alternative to the `round()` function to
+    properly perform mathematical rounding.
+-   `escape()` is used to inserts a “\\” in front of values, which is
+    needed for Latex.
+-   `get_full_name()` looks up a username from Fred Hutch ID.
+-   `get_session_info()` creates a a data frame with session
+    information.
+
+# Vignette
+
+For more information, browse the vignette
+(`browseVignettes("VISCfunctions")`).
+
+# Contribute to this package
+
+See our [contibuting guide](CONTRIBUTING.md) to learn more about how you
+can contribute to this package.

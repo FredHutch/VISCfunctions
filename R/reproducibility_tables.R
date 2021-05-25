@@ -35,7 +35,9 @@ get_full_name <- function(id = NULL){
          Linux   = {
            if (is.null(id)) {id <- Sys.getenv("USER")}
            myargs <- paste0("-x -h ldapint.pc.scharp.org -b dc=scharp,dc=org uid=", id)
-           user <- system2("ldapsearch", args = myargs, stdout = TRUE)
+           user <- tryCatch({system2("ldapsearch", args = myargs, stdout = TRUE)},
+                            warning = function(w){NULL},
+                            error = function(e){NULL})
            user <- user[grep("cn:", user)]
            if (length(user) > 0) {
              user <- gsub("[a-z]+: ", "", user)
@@ -46,7 +48,9 @@ get_full_name <- function(id = NULL){
          Darwin  = {
            if (is.null(id)) {id <- Sys.getenv("USER")}
            myargs <- paste0("-x -h ldapint.pc.scharp.org -b dc=scharp,dc=org uid=", id)
-           user <- system2("ldapsearch", args = myargs, stdout = TRUE)
+           user <- tryCatch({system2("ldapsearch", args = myargs, stdout = TRUE)},
+                            warning = function(w){NULL},
+                            error = function(e){NULL})
            user <- user[grep("cn:", user)]
            if (length(user) > 0) {
              user <- gsub("[a-z]+: ", "", user)
@@ -141,7 +145,7 @@ get_session_info <- function(){
                            error = function(c) '', warning = function(c) '')
   gitremote <-  substr(gitremoteorg,
                        regexpr("\t", gitremoteorg) + 1,
-                       regexpr(" ", gitremoteorg) - 1)
+                       regexpr(" \\(", gitremoteorg) - 1)
 
   if (is.na(gitremote) || gitremote == "" || grepl('fatal', gitremote)) {
     # No Remote Connection, so just give absolute path
@@ -188,6 +192,9 @@ get_session_info <- function(){
   if (any(!is.na(my_session_info2$data.version)))
     my_session_info2$data.version[is.na(my_session_info2$data.version)] <- '' else
       my_session_info2 <- my_session_info2[, -match('data.version', colnames(my_session_info2))]
+
+  # Replacing @ with # in source
+  my_session_info2$source <- gsub('\\(@', '(', my_session_info2$source)
 
   list(platform_table = my_session_info1, packages_table = my_session_info2)
 }

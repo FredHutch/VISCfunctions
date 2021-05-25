@@ -4,11 +4,22 @@
 \alias{pairwise_test_cont}
 \title{Pairwise Testing for a Continuous Variable}
 \usage{
-pairwise_test_cont(x, group, paired = FALSE, id = NULL,
-  method = c("wilcox", "t.test"), alternative = c("two.sided", "less",
-  "greater"), sorted_group = NULL, num_needed_for_test = 3,
-  digits = 0, trailing_zeros = TRUE, sep_val = " vs. ",
-  na_str_out = "---", verbose = FALSE)
+pairwise_test_cont(
+  x,
+  group,
+  paired = FALSE,
+  id = NULL,
+  method = c("wilcox", "t.test"),
+  alternative = c("two.sided", "less", "greater"),
+  sorted_group = NULL,
+  num_needed_for_test = 3,
+  log10_stats = FALSE,
+  digits = 0,
+  trailing_zeros = TRUE,
+  sep_val = " vs. ",
+  na_str_out = "---",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{x}{numeric vector (can include NA values).}
@@ -17,110 +28,170 @@ pairwise_test_cont(x, group, paired = FALSE, id = NULL,
 
 \item{paired}{a logical variable indicating whether to do a paired test.}
 
-\item{id}{vector which contains the id information (so \code{x} values can be linked between groups). Only used and must be present when paired = TRUE.}
+\item{id}{vector which contains the id information (so \code{x} values can be
+linked between groups). Only used and must be present when paired = TRUE.}
 
 \item{method}{what test to run ("wilcox" or "t.test").}
 
-\item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.}
+\item{alternative}{character string specifying the alternative hypothesis,
+must be one of "two.sided" (default), "greater" or "less". You can specify
+just the initial letter.}
 
-\item{sorted_group}{a vector listing the group testing order from lowest to highest.}
+\item{sorted_group}{a vector listing the group testing order from lowest to
+highest.}
 
-\item{num_needed_for_test}{required sample size (per group) to perform test. Note at least 2 distinct values per group are always needed for testing.}
+\item{num_needed_for_test}{required sample size (per group) to perform test.
+Note at least 2 distinct values per group are always needed for testing.}
 
-\item{digits}{digits to round for magnitude descriptive statistics (default = 0).}
+\item{log10_stats}{specifies whether the summary statistics and p values
+should be calculated on log10 values. This could affect the median, mean,
+and p value.If TRUE, geometric mean is displayed as well as mean (sd)
+results on log10 x values (default is FALSE)}
 
-\item{trailing_zeros}{logical indicating if trailing zeros should be included in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to TRUE, output is a character vector.}
+\item{digits}{digits to round for magnitude descriptive statistics (default =
+0).}
 
-\item{sep_val}{value to be pasted between the two measures. Default is ' vs. '.}
+\item{trailing_zeros}{logical indicating if trailing zeros should be included
+in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to
+TRUE, output is a character vector.}
 
-\item{na_str_out}{the character string in the output table that replaces missing values.}
+\item{sep_val}{value to be pasted between the two measures. Default is ' vs.
+'.}
 
-\item{verbose}{a logical variable indicating if warnings and messages should be displayed.}
+\item{na_str_out}{the character string in the output table that replaces
+missing values.}
+
+\item{verbose}{a logical variable indicating if warnings and messages should
+be displayed.}
 }
 \value{
-Returns a data frame with all possible pairwise comparisons. Variables include Comparison, SampleSizes, Median_Min_Max (group stats; median [min, max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test p-value), PerfectSeperation (a logical flag indicating if there is perfect seperation).
+Returns a data frame with all possible pairwise comparisons:
+\itemize{
+\item \code{Comparison} - Comparisons made
+\item \code{SampleSizes} - number of samples per group
+\item \code{Median_Min_Max} - Median [Min, Max] per group
+\item \code{Mean_SD} - Mean(sd) per group (if \code{log10_stats} = FALSE)
+\item \code{Mean} - Geometric mean per group (if \code{log10_stats} = TRUE)
+\item \code{log_Mean_SD} - Mean(sd) per group on log10 \code{x} scale (if \code{log10_stats} = TRUE)
+\item \code{MagnitudeTest} - wilcox/t-test test p value
+\item \code{PerfectSeparation} - logical flag indicating perfect separation
+}
+
+Returns a data frame with all possible pairwise comparisons. Variables
+include Comparison, SampleSizes, Median_Min_Max (group stats; median [min,
+max]), Mean_SD (group stats; mean (sd)), MagnitudeTest (wilcox/t-test
+p-value), PerfectSeparation (a logical flag indicating if there is perfect
+separation).
 }
 \description{
-Takes a continuous variable and performs pairwise testing (t-test or wilcox test)
+Takes a continuous variable and performs pairwise testing (t-test or wilcox
+test)
 }
 \details{
 Runs \code{wilcox_test()} in the coin package, with "exact" distribution.
 
-If \code{sorted_group} is not specified then testing order based on factor levels if \code{group} is a factor, and alphabetical order otherwise
+If \code{sorted_group} is not specified then testing order based on factor levels
+if \code{group} is a factor, and alphabetical order otherwise
 
-\code{trailing_zeros} does not impact p-value column, which will be a numeric column regardless.
+\code{trailing_zeros} does not impact p-value column, which will be a numeric
+column regardless.
 
-If \code{paired = TRUE} the descriptive statistics are shown for observations that have non-missing values for both groups.
+If \code{paired = TRUE} the descriptive statistics are shown for observations that
+have non-missing values for both groups.
 }
 \examples{
 
-x_example = c(NA, sample(1:50, 50), sample(51:99, 49), 1111,2222)
-group_example = c(rep(1:4,25),'a','a')
+x_example <- c(NA, sample(1:50, 50), sample(51:99, 49), 1111,2222)
+group_example <- c(rep(1:4,25),'a','a')
 
 pairwise_test_cont(x_example,group_example, num_needed_for_test = 2)
 
 pairwise_test_cont(
 x_example,group_example, alternative = "less",
-  sorted_group = c(1:4, 'a'),num_needed_for_test = 2)
+  sorted_group = c(1:4, 'a'), num_needed_for_test = 2, , digits = 3)
+
+# using log10 computations
+pairwise_test_cont(
+x_example,group_example, alternative = "less", log10_stats = TRUE,
+  sorted_group = c(1:4, 'a'), num_needed_for_test = 2, digits = 3)
 
 
 
 # Examples with Real World Data
-library(data.table)
 library(dplyr)
-
 
 # BAMA Assay Data Example
 data(exampleData_BAMA)
 
 ## Group Comparison
-# using data.table
-group_testing_dt <- exampleData_BAMA[, pairwise_test_cont(
- x = magnitude, group = group, paired = FALSE, method = 'wilcox',
- alternative = 'less', num_needed_for_test = 3, digits = 3,
- trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
-),
-by = .(antigen, visitno)][order(antigen, visitno)]
-
-# using dplyr
 group_testing_tibble <- exampleData_BAMA \%>\%
    group_by(antigen, visitno) \%>\%
-   do(pairwise_test_cont(x = .$magnitude, group = .$group, paired = FALSE, method = 'wilcox',
-                         alternative = "less", digits = 3, num_needed_for_test = 3, verbose = TRUE))
-
-# Confirming both methods are the same
-all.equal(group_testing_dt[order(antigen, visitno)],
-          data.table(group_testing_tibble)[order(antigen, visitno)])
+   summarise(pairwise_test_cont(x = magnitude,
+                                group = group,
+                                paired = FALSE,
+                                method = 'wilcox',
+                                alternative = "less",
+                                sorted_group = c(1,2),
+                                digits = 3,
+                                num_needed_for_test = 3,
+                                verbose = TRUE),
+            .groups = "keep")
 
 
 ## Timepoint Comparison
-timepoint_testing_dt <- exampleData_BAMA[, pairwise_test_cont(
-x = magnitude, group = visitno, paired = TRUE,id = pubID, method = 'wilcox',
-alternative = 'less', num_needed_for_test = 3, digits = 3,
-trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
-),
-by = .(antigen, group)]
+timepoint_testing_dt <- exampleData_BAMA \%>\%
+                       group_by(antigen, group) \%>\%
+                       summarise(pairwise_test_cont(x = magnitude,
+                                                   group = visitno,
+                                                   paired = TRUE,
+                                                   id = pubID,
+                                                   method = 'wilcox',
+                                                   sorted_group = c(0,1,2),
+                                                   alternative = 'less',
+                                                   num_needed_for_test = 3,
+                                                   digits = 3,
+                                                   trailing_zeros = TRUE,
+                                                   sep_val = ' vs. ',
+                                                   verbose = TRUE),
+                                 .groups = "keep")
 
 
 # ICS Assay Data Example
 data(exampleData_ICS)
 
 ## Group Comparison
-# using data.table
-group_testing_dt <- exampleData_ICS[, pairwise_test_cont(
- x = PercentCellNet, group = Group, paired = FALSE, method = 'wilcox',
- alternative = 'less', num_needed_for_test = 3, digits = 4,
- trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
-),
-by = .(Stim, Parent, Population, Visit)][order(Stim, Parent, Population, Visit)]
+# using dplyr
+exampleData_ICS \%>\%
+group_by(Stim, Parent, Population, Visit) \%>\%
+summarise(pairwise_test_cont(x = PercentCellNet,
+                            group = Group,
+                            paired = FALSE,
+                            method = 'wilcox',
+                            alternative = 'less',
+                            sorted_group = c(1,2,3,4),
+                            num_needed_for_test = 3,
+                            digits = 4,
+                            trailing_zeros = TRUE,
+                            sep_val = ' vs. ',
+                            verbose = TRUE),
+         .groups = "keep")
 
 # Timepoint Comparison
-timepoint_testing_dt <- exampleData_ICS[, pairwise_test_cont(
-x = PercentCellNet, group = Visit, paired = TRUE,id = pubID, method = 'wilcox',
-alternative = 'less', num_needed_for_test = 3, digits = 4,
-trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE
-),
-by = .(Stim, Parent, Population, Group)]
+timepoint_testing_dt <- exampleData_ICS \%>\%
+                       group_by(Stim, Parent, Population, Group) \%>\%
+                       summarise(pairwise_test_cont(x = PercentCellNet,
+                                                    group = Visit,
+                                                    paired = TRUE,
+                                                    id = pubID,
+                                                    method = 'wilcox',
+                                                    sorted_group = c(0,1,2),
+                                                    alternative = 'less',
+                                                    num_needed_for_test = 3,
+                                                    digits = 4,
+                                                    trailing_zeros = TRUE,
+                                                    sep_val = ' vs. ',
+                                                    verbose = TRUE),
+                       .groups = "keep")
 
 
 }

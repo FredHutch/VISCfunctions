@@ -12,10 +12,11 @@ wilson_ci(x, conf.level = 0.95)
 \item{conf.level}{confidence level (between 0 and 1)}
 }
 \value{
-data.frame with with mean (`mean`), and bounds of confidence interval (`lower`, `upper`)
+data.frame with with mean (\code{mean}), and bounds of confidence interval (\code{lower}, \code{upper})
 }
 \description{
-Wilson Confidence Interval
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+\code{wilson_ci} has been superseded by the use of \link{binom_ci}
 }
 \examples{
 

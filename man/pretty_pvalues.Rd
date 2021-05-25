@@ -4,45 +4,69 @@
 \alias{pretty_pvalues}
 \title{Round and format a vector of p-values}
 \usage{
-pretty_pvalues(pvalues, digits = 3, bold = FALSE, italic = FALSE,
-  background = NULL, sig_alpha = 0.05, missing_char = "---",
-  include_p = FALSE, trailing_zeros = TRUE, output_type = c("latex",
-  "html", "pandoc", "no_markup"))
+pretty_pvalues(
+  pvalues,
+  digits = 3,
+  bold = FALSE,
+  italic = FALSE,
+  background = NULL,
+  sig_alpha = 0.05,
+  missing_char = "---",
+  include_p = FALSE,
+  trailing_zeros = TRUE,
+  output_type = c("latex", "html", "pandoc", "no_markup")
+)
 }
 \arguments{
 \item{pvalues}{numeric vector of raw p-values to be formatted}
 
-\item{digits}{number of digits to round to; values with zeros past this number of digits are truncated}
+\item{digits}{number of digits to round to; values with zeros past this
+number of digits are truncated}
 
-\item{bold}{TRUE or FALSE: set to TRUE to bold p-values < the defined significance level}
+\item{bold}{TRUE or FALSE: set to TRUE to bold p-values < the defined
+significance level}
 
-\item{italic}{TRUE or FALSE: set to TRUE to italicize p-values < the defined significance level}
+\item{italic}{TRUE or FALSE: set to TRUE to italicize p-values < the defined
+significance level}
 
-\item{background}{highlight color for p-values < the defined significance level. Default = NULL (no highlighting)}
+\item{background}{highlight color for p-values < the defined significance
+level. Default = NULL (no highlighting)}
 
 \item{sig_alpha}{the defined significance level. Default = 0.05}
 
-\item{missing_char}{character string that will replace missing values from the p-value vector. Default = "---"}
+\item{missing_char}{character string that will replace missing values from
+the p-value vector. Default = "---"}
 
 \item{include_p}{TRUE or FALSE: set to TRUE to print "p = " before each p-value}
 
-\item{trailing_zeros}{TRUE or FALSE: default = TRUE, p-values are formatted with trailing zeros to the defined number of digits (i.e. 0.100 instead of 0.1 if digits = 3)}
+\item{trailing_zeros}{TRUE or FALSE: default = TRUE, p-values are formatted
+with trailing zeros to the defined number of digits (i.e. 0.100 instead of 0.1 if digits = 3)}
 
-\item{output_type}{output type, "latex" (default), "html" , "pandoc" (for Word document output), or "no_markup"}
+\item{output_type}{output type, "latex" (default), "html" , "pandoc"
+(for Word document output), or "no_markup"}
 }
 \value{
 Vector of transformed p-values for table output
 }
 \description{
-pretty_pvalues() takes a vector of p-values, rounds them to a specified digit amount,
-allows options for emphasizing p-values < the defined significance level, and returns a character for missing.
+pretty_pvalues() takes a vector of p-values, rounds them to a specified
+digit amount,
+allows options for emphasizing p-values < the defined significance level,
+and returns a character for missing.
 }
 \details{
 With this function, there are two things to be noted:
-Since the p-value vector formatting uses \code{cell_spec}, which generates raw HTML or LaTeX, or uses custom markdown syntax for the pandoc option, make sure you remember to put \code{escape = FALSE} into your kable code when generating your table. At the same time, you will need to escape special symbols manually.
-Additionally, \code{cell_spec} needs a way to know whether you want HTML, LaTeX, or Markdown (pandoc) output. You can specify it locally in the function or globally using \code{options(knitr.table.format = "latex")}. If you don't provide anything, this function will output as HTML by default.
+Since the p-value vector formatting uses \code{cell_spec}, which generates raw
+HTML or LaTeX, or uses custom markdown syntax for the pandoc option, make
+sure you remember to put \code{escape = FALSE} into your kable code when generating
+your table. At the same time, you will need to escape special symbols manually.
+Additionally, \code{cell_spec} needs a way to know whether you want HTML, LaTeX,
+or Markdown (pandoc) output. You can specify it locally in the function or
+globally using \code{options(knitr.table.format = "latex")}. If you don't provide
+anything, this function will output as HTML by default.
 
-For pandoc markup only bold and italic can be specified. Both can jointly be specified for bold italics.
+For pandoc markup only bold and italic can be specified. Both can jointly be
+specified for bold italics.
 }
 \examples{
 
@@ -50,12 +74,14 @@ pvalue_example = c(1, 0.06, 0.0005, NA, 1e-6)
 
 pretty_pvalues(pvalue_example, background = "pink")
 
-pretty_pvalues(pvalue_example, digits = 4, missing_char = "missing", bold = TRUE)
+pretty_pvalues(pvalue_example, digits = 4, missing_char = "missing",
+               bold = TRUE)
 
 # How to use pretty_pvalues in reports
 raw_pvals <- c(0.00000007, .05000001, NaN, NA, 0.783)
 pretty_pvals <- pretty_pvalues(raw_pvals , digits = 3, background = "green",
                                italic = TRUE, bold = TRUE)
-kableExtra::kable(pretty_pvals , format = "latex", escape = FALSE, col.names = c("P-values"))
+kableExtra::kable(pretty_pvals , format = "latex", escape = FALSE,
+                  col.names = c("P-values"))
 
 }

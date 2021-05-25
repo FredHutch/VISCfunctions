@@ -4,11 +4,16 @@
 \alias{two_samp_bin_test}
 \title{Binary (Response) Variable Compared to Binary (Group) Variable Test (VISC)}
 \usage{
-two_samp_bin_test(x, y, method = c("barnard", "fisher", "chi.sq",
-  "mcnemar"), barnard_method = c("z-pooled", "z-unpooled", "boschloo",
-  "santner and snell", "csm", "csm approximate", "csm modified"),
-  alternative = c("two.sided", "less", "greater"), verbose = FALSE,
-  ...)
+two_samp_bin_test(
+  x,
+  y,
+  method = c("barnard", "fisher", "chi.sq", "mcnemar"),
+  barnard_method = c("z-pooled", "z-unpooled", "boschloo", "santner and snell", "csm",
+    "csm approximate", "csm modified"),
+  alternative = c("two.sided", "less", "greater"),
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{vector with only 2 levels (can include NA values).}
@@ -20,7 +25,7 @@ two_samp_bin_test(x, y, method = c("barnard", "fisher", "chi.sq",
 "chi.sq" , or "mcnemar")}
 
 \item{barnard_method}{indicates the Barnard method for finding tables as or
- more extreme than the observed table: must be either "z-pooled",
+more extreme than the observed table: must be either "z-pooled",
 "z-unpooled", "santner and snell", "boschloo", "csm", "csm approximate", or
 "csm modified". Only used when \code{method = 'barnard'}}
 
@@ -40,7 +45,7 @@ p-value for comparing x at the different levels of y.
 }
 \description{
 Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and
-  McNemar's test for paired data
+McNemar's test for paired data
 }
 \details{
 For one sided tests if \code{y} is a factor variable the level order is
@@ -54,7 +59,7 @@ for each level.
 
 If only one value of \code{x} than \code{p=1} is returned, however if only one value of \code{y}
 than \code{p=NA} is returned. This is to match expactations since normally y is a group variable
-and x is the outcome (i.e. if both group response rates are 0\% or 100\% we want \code{p=1}
+and x is the outcome (i.e. if both group response rates are 0\\% or 100\\% we want \code{p=1}
 returned)
 }
 \examples{

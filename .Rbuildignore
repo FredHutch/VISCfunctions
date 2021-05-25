@@ -1,6 +1,10 @@
+^README\.Rmd$
+^LICENSE\.md$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^.gitignore$
-^.git$
 ^doc$
 ^Meta$
+CONDUCT.md
+CONTRIBUTING.md
+^\.github$
+data-raw/

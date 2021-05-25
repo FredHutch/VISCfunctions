@@ -4,19 +4,31 @@
 \alias{pairwise_test_bin}
 \title{Binary Variable Pairwise Testing}
 \usage{
-pairwise_test_bin(x, group, id = NULL, method = c("barnard", "fisher",
-  "chi.sq", "mcnemar"), barnard_method = c("z-pooled", "z-unpooled",
-  "boschloo", "santner and snell", "csm", "csm approximate",
-  "csm modified"), alternative = c("two.sided", "less", "greater"),
-  sorted_group = NULL, num_needed_for_test = 3, conf_level = 0.95,
-  digits = 1, trailing_zeros = TRUE, sep_val = " vs. ",
-  na_str_out = "---", latex_output = FALSE, verbose = FALSE, ...)
+pairwise_test_bin(
+  x,
+  group,
+  id = NULL,
+  method = c("barnard", "fisher", "chi.sq", "mcnemar"),
+  barnard_method = c("z-pooled", "z-unpooled", "boschloo", "santner and snell", "csm",
+    "csm approximate", "csm modified"),
+  alternative = c("two.sided", "less", "greater"),
+  sorted_group = NULL,
+  num_needed_for_test = 3,
+  conf_level = 0.95,
+  digits = 1,
+  trailing_zeros = TRUE,
+  sep_val = " vs. ",
+  na_str_out = "---",
+  latex_output = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{numeric vector (0/1) or logical vector or (F/T)
 (can include NA values)}
 
-\item{group}{vector of group values.}
+\item{group}{categorical vector of group values.}
 
 \item{id}{vector which contains the id information
 (so \code{x} values can be linked between groups).
@@ -30,10 +42,10 @@ or more extreme than the observed table: must be either "Z-pooled",
 "Z-unpooled", "Santner and Snell", "Boschloo", "CSM", "CSM approximate",
 or "CSM modified". Only used when \code{method = 'barnard'}}
 
-\item{alternative}{a character string specifying the alternative hypothesis,
+\item{alternative}{character string specifying the alternative hypothesis,
 must be one of "two.sided" (default), "greater" or "less". You can specify
 just the initial letter. Only "two.sided" available for
-\code{method = 'chi.sq' or 'mcnemar'}}
+\verb{method = 'chi.sq' or 'mcnemar'}}
 
 \item{sorted_group}{a vector listing the group testing order from lowest to
 highest, if performing one sided tests}
@@ -65,15 +77,15 @@ Barnard test}
 }
 \value{
 Returns a data frame with all possible pairwise comparisons.
-  Variables include Comparison, ResponseStats (group stats; number positive /
- number = rate (Wilson CI Bounds)), ResponseTest (fisher/chisq p value),
- PerfectSeperation (a logical flag indicating if one group if 0% and the
- other 100%)
+Variables include Comparison, ResponseStats (group stats; number positive /
+number = rate (Wilson CI Bounds)), ResponseTest (fisher/chisq p value),
+PerfectSeparation (a logical flag indicating if one group if 0\% and the
+other 100\%)
 }
 \description{
 Takes a binary variable (e.g., response status) and performs pairwise testing.
-  Performs either Barnard, Fisher's, or Chi-sq test for unpaired data and
-  McNemar's test for paired data.
+Performs either Barnard, Fisher's, or Chi-sq test for unpaired data and
+McNemar's test for paired data.
 }
 \details{
 If all values of \code{x} are NA, the function will return NULL. This is to allow for nice
@@ -84,7 +96,7 @@ is respected, otherwise the levels will set to alphabetical order (i.e. if
 \code{alternative = less} then testing a < b ).
 
 If planning on using the table in a latex document then set \code{latex_output = TRUE}.
-This will set the \code{\%} symbol to \code{\\\\\%} in the binary percentages
+This will set the \verb{\%} symbol to \verb{\\\\\%} in the binary percentages
 }
 \examples{
 

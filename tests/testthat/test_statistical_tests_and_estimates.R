@@ -291,12 +291,24 @@ test_that("two_samp_bin_test throwing internal .rm_na_and_check checking errors"
                  regexp = '"y" only has 1 level when considering non-missing values of "x", so p=NA returned')
 })
 
+# Testing case where p-value equals 1, that machine estimation doesn't add error to values at 1
+test_that("two_samp_bin_test doesn't return p-values greater than one", {
+  x <- c(rep(1,37),rep(4,2),rep(4,2))
+  y <- c(rep(1,21),rep(2,16), rep(1,2),rep(2,2))
+  expect_equal(object = two_samp_bin_test(x = x,
+                                          y = y,
+                                          method = 'fisher',
+                                          alternative = 'two.sided'),
+               expected = 1,
+               tolerance = 0)
+})
+
 test_that("two_samp_bin_test throwing internal input checking errors", {
   set.seed(5432322)
   x <- c(sample(0:1,10,replace = TRUE, prob = c(.65,.25)),
          sample(0:1,10,replace = TRUE, prob = c(.25,.65)))
   y <- c(rep('a', 10), rep('b', 10))
-  my_matrix <- matrix(1:10,nrow = 2)
+  my_matrix <- matrix(1:10, nrow = 2)
 
   #Checking x
   expect_error(two_samp_bin_test(my_matrix, y = y, method = 'barnard'),
@@ -328,6 +340,126 @@ test_that("two_samp_bin_test throwing internal input checking errors", {
 })
 
 
+
+
+
+
+
+# test cor_test
+test_that("cor_test testing various options (no errors)", {
+  ###Testing three methods
+  set.seed(47813458)
+  x <- c(NA,rnorm(5,0,3), rnorm(5,3,3),NA)
+  y <- c(rnorm(5,0,1),NA, rnorm(5,2,1),NA)
+
+  # pearson
+  expect_identical(object = cor_test(x = x, y = y, method = 'pearson'),
+               expected = as.double(cor.test(x,
+                                             y,
+                                             method = 'pearson')$p.value)
+  )
+  # kendall
+  expect_identical(object = cor_test(x = x, y = y, method = 'kendall'),
+               expected = as.double(cor.test(x,
+                                             y,
+                                             method = 'kendall')$p.value)
+  )
+  # spearman no ties
+  expect_identical(object = cor_test(x = x, y = y, method = 'spearman'),
+               expected = as.double(cor.test(x,
+                                             y,
+                                             method = 'spearman')$p.value)
+  )
+  # spearman ties
+  set.seed(4312)
+  tmp_expected <- as.double(coin::pvalue(
+    coin::spearman_test(x~y,
+                        data = data.frame(x = c(x,x), y = c(y,y)),
+                        distribution = coin::approximate(10000)
+    )))
+  expect_identical(object = cor_test(x = c(x,x), y = c(y,y),
+                                 method = 'spearman', seed = 4312,
+                                 nresample = 10000),
+               expected = tmp_expected
+  )
+  expect_message(object = cor_test(x = c(x,x), y = c(y,y),
+                                 method = 'spearman', verbose = TRUE),
+               regexp = 'Either "x" or "y" has ties, so using approximate method.'
+  )
+  # spearman ties but not exact
+  expect_identical(object = cor_test(x = c(x,x), y = c(y,y),
+                                 method = 'spearman', exact = FALSE),
+               expected = as.double(cor.test(c(x,x),
+                                             c(y,y),
+                                             method = 'spearman',
+                                             exact = FALSE)$p.value)
+  )
+
+  #confirming seed is restored
+  old_seed <- get(".Random.seed", globalenv(), mode = "integer",
+                  inherits = FALSE)
+  xx <- cor_test(x = c(x,x), y = c(y,y),
+                 method = 'spearman', seed = 47861684, nresample = 10000)
+  expect_identical(object = get(".Random.seed", globalenv(), mode = "integer",
+                                inherits = FALSE),
+                   expected = old_seed
+  )
+
+})
+
+
+test_that("cor_test throwing internal .rm_na_and_check checking errors", {
+  set.seed(47813458)
+  x <- c(NA,rnorm(5,0,3), rnorm(5,3,3),NA)
+  y <- c(rnorm(5,0,1),NA, rnorm(5,2,1),NA)
+
+  #Testing if x and y are different lengths
+  expect_error(cor_test(x = 1:9, y = 1:10), '"x" and "y" must be the same length')
+
+  #Testing case where no non-missing pairs
+  expect_identical(object = cor_test(x = c(1:20,rep(NA,20)), y = c(rep(NA,20),1:20)), expected = NA)
+  expect_message(object = cor_test(x = c(1:20,rep(NA,20)), y = c(rep(NA,20),1:20), verbose = T),
+                 regexp = 'There are <2 observations with non-missing values of both "x" and "y", so p=NA returned')
+
+  #Testing case where all x have same value
+  expect_identical(object = cor_test(x = rep(1,12), y = y), expected = NA)
+  expect_message(object = cor_test(x = rep(1,12), y = y, verbose = T),
+                 regexp = 'There are <2 observations with non-missing values of both "x" and "y", so p=NA returned')
+
+  #Testing case where all y have same value
+  expect_identical(object = cor_test(x = x, y = rep(1,12)), expected = NA)
+  expect_message(object = cor_test(x = x, y = rep(1,12), verbose = T),
+                 regexp = 'There are <2 observations with non-missing values of both "x" and "y", so p=NA returned')
+})
+
+test_that("cor_test throwing internal input checking errors", {
+  set.seed(47813458)
+  x <- c(NA,rnorm(5,0,3), rnorm(5,3,3),NA)
+  y <- c(rnorm(5,0,1),NA, rnorm(5,2,1),NA)
+  my_matrix <- matrix(1:10,nrow = 2)
+
+  #Checking x
+  expect_error(cor_test(my_matrix, y = y),
+               regexp = '"x" must be a vector \\(one-dimensional object\\)')
+  expect_error(cor_test(x = numeric(0), y = y),
+               regexp = '"x" length must be > 0')
+  expect_error(cor_test(c(NA,NA,NA), y),
+               regexp = '"x" must have at least one non-NA value')
+  expect_error(cor_test(letters[1:5],y),
+               regexp = '"x" must be a numeric vector')
+
+  #Checking y
+  expect_error(cor_test(x, my_matrix),
+               regexp = '"y" must be a vector \\(one-dimensional object\\)')
+  expect_error(cor_test(x,numeric(0)),
+               regexp = '"y" length must be > 0')
+  expect_error(cor_test(x,c(NA,NA,NA)),
+               regexp = '"y" must have at least one non-NA value')
+  expect_error(cor_test(x,letters[1:5]),
+               regexp = '"y" must be a numeric vector')
+})
+
+
 test_that("test-wilson_ci", {
 
   # check x
@@ -354,6 +486,39 @@ test_that("test-wilson_ci", {
   expect_error(wilson_ci(x, conf.level = 2), '"conf.level" must be less than or equal to 0.999999999999')
   expect_error(wilson_ci(x, conf.level = ".95"), '"conf.level" must be a numeric vector')
   expect_error(wilson_ci(x, conf.level = TRUE), '"conf.level" must be a numeric vector')
+
+})
+
+
+
+test_that("test-binom_ci", {
+
+  # check x
+  expect_error(binom_ci(c(NA, NA, NA)), '"x" must have at least one non-NA value')
+  expect_error(binom_ci(c()), '"x" length must be > 0')
+  expect_error(binom_ci(c(NA, NA, NA)), '"x" must have at least one non-NA value')
+  expect_error(binom_ci(x = c("F", "T", "F", "T")),
+               '"x" must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
+  expect_error(binom_ci(x = factor(c("F", "T", "F", "T"))),
+               '"x" must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
+
+  # binom_ci() should match binom::binom.confint()
+  x <- c(1, 1, 1, 0, 0)
+  expect_equal(binom_ci(x), binom::binom.wilson(3, 5))
+  expect_equal(binom_ci(as.logical(x)), binom::binom.wilson(3, 5))
+  expect_equal(binom_ci(x, methods = 'all'),
+               binom::binom.confint(3, 5, methods = 'all')) %>% suppressWarnings
+  # testing edge cases
+  expect_equal(binom_ci(rep(0, 50)), binom::binom.wilson(0, 50))
+  expect_equal(binom_ci(rep(1, 50)), binom::binom.wilson(50, 50))
+
+  # check conf.level
+  x <- c(rep(0, 200), rep(1, 400))
+  expect_error(binom_ci(x, conf.level = 1), '"conf.level" must be less than or equal to 0.999999999999')
+  expect_error(binom_ci(x, conf.level = -.95), '"conf.level" must be greater than or equal to 0')
+  expect_error(binom_ci(x, conf.level = 2), '"conf.level" must be less than or equal to 0.999999999999')
+  expect_error(binom_ci(x, conf.level = ".95"), '"conf.level" must be a numeric vector')
+  expect_error(binom_ci(x, conf.level = TRUE), '"conf.level" must be a numeric vector')
 
 })
 
