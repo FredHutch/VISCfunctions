@@ -166,9 +166,9 @@ There are currently three testing functions performing the appropriate
 statistical tests, depending on the data and options, returning a p value.
 
 There is also an estimate function for getting binary confidence intervals
-(`binom_ci`).
+(`binom_ci()`).
 
-`trapz_sorted` is used to create an estimate for the area under a curve while
+`trapz_sorted()` is used to create an estimate for the area under a curve while
 making sure the x-axis is sorted so that both the x-axis and the area are
 increasing and positive, respectively.
 
@@ -185,10 +185,10 @@ testing_data <- exampleData_BAMA %>%
 
 ## Comparing Two Groups (Binary Variable) for a Binary Variable 
 
-`two_samp_bin_test` is used for comparing a binary variable to a binary (two
+`two_samp_bin_test()` is used for comparing a binary variable to a binary (two
 group) variable, with options for Barnard, Fisher's Exact, Chi-Sq, and McNemar
 tests. For the Barnard test specifically, there are many model options that can
-be set that get passed to the `Exact::exact.test` function.
+be set that get passed to the `Exact::exact.test()` function.
 
 
 ```{r, echo=TRUE, warning=FALSE}
@@ -223,7 +223,7 @@ exampleData_BAMA %>%
 
 ## Comparing Two Groups (Binary Variable) for a Continuous Variable 
 
-`two_samp_cont_test` is used for comparing a continuous variable to a binary
+`two_samp_cont_test()` is used for comparing a continuous variable to a binary
 (two group) variable, with parametric (t.test) and non-parametric (Wilcox
 Rank-Sum) options. Also paired data is allowed, where there are parametric
 (paired t.test) and non-parametric (Wilcox Signed-Rank) options.
@@ -253,13 +253,13 @@ exampleData_BAMA %>%
 
 ## Comparing Two Continuous Variables (Correlation)
 
-`cor_test` is used for comparing two continuous variables, with Pearson,
+`cor_test()` is used for comparing two continuous variables, with Pearson,
 Kendall, or Spearman methods.
 
 If Spearman method is chosen and either variable has a tie, the approximate
-distribution is use in the `coin::spreaman_test` function. This is usually the
+distribution is use in the `coin::spreaman_test()` function. This is usually the
 preferred method over the asymptotic approximation, which is the method
-`stats:cor.test` uses in cases of ties. If the Spearman method is chosen and
+`stats:cor.test()` uses in cases of ties. If the Spearman method is chosen and
 there are no ties, the exact method is used from `stats:cor.test`.
 
 
@@ -289,7 +289,7 @@ cor_test(
 
 ## Computing the Area Under a Curve (Integration Estimate) for Messy Data
 
-`trapz_sorted` is used when you are not presorting your data so that it is
+`trapz_sorted()` is used when you are not presorting your data so that it is
 strictly increasing along the x-axis or when there are 'NA' values that are not
 removed prior to estimating the area under the curve.
 
@@ -319,7 +319,7 @@ printed in reports.
 
 ## P Values
 
-`pretty_pvalues` is used on p-values by rounding them to a specified number of
+`pretty_pvalues()` is used on p-values by rounding them to a specified number of
 digits and using < for low p-values as opposed to scientific notation (i.e., "p
 < 0.0001" if rounding to 4 digits), and by allowing options for emphasizing
 p-values and specific characters for missing values.
@@ -353,7 +353,7 @@ the `include_p` parameter.
 
 ## Basic Combining of Variables
 
-` stat_paste` is used to combine two or three statistics together, allowing
+`stat_paste()` is used to combine two or three statistics together, allowing
 for different rounding and bound character specifications. Common uses for this
 function are for:
 
@@ -393,7 +393,7 @@ exampleData_BAMA %>%
 
 ## Advanced Combining of Variables
 
-`paste_tbl_grp` pastes together information, often statistics, from two groups.
+`paste_tbl_grp()` pastes together information, often statistics, from two groups.
 There are two predefined combinations: mean(sd) and median[min,max], but user
 may also paste any single measure together.
 
@@ -456,7 +456,7 @@ kableExtra::kable(
 
 ## Escape
 
-`escape` protects control characters in a string for use in a latex table or
+`escape()` protects control characters in a string for use in a latex table or
 caption.
 
 ```{r, echo=TRUE, warning=FALSE}
@@ -470,8 +470,8 @@ escape("String_Entry %")
 
 ## Collapsing Rows
 
-`collapse_group_row` is for replacing repeated rows in a data.frame into NA
-for nice printing. This is an alternative to `kableExtra::collapse_rows`,
+`collapse_group_row()` is for replacing repeated rows in a data.frame into NA
+for nice printing. This is an alternative to `kableExtra::collapse_rows()`,
 which does not work well for tables that span multiple pages (i.e. `longtable =
 TRUE`).
 
@@ -499,9 +499,9 @@ collapse_group_row(sample_df, x, y, z) %>%
 
 # Pairwise Comparison Functions
 
-`pairwise_test_bin`, `pairwise_test_cont`, `pairwise_test_cor` are functions
-that perform pairwise group (or any categorical variable) comparisons. The
-function will go through all pairwise comparisons and output descriptive
+`pairwise_test_bin()`, `pairwise_test_cont()`, `pairwise_test_cor()` are
+functions that perform pairwise group (or any categorical variable) comparisons.
+The function will go through all pairwise comparisons and output descriptive
 statistics and relevant p values, calling the appropriate testing functions from
 the [Testing and Estimate Functions](#testing-and-estimate-functions) section.
 
@@ -745,7 +745,7 @@ kableExtra::kable(antigen_testing, escape = FALSE,
 
 # Survival and Magnitude Breadth
 
-`create_step_curve` creates survival probabilities from time and censoring
+`create_step_curve()` creates survival probabilities from time and censoring
 information and generates a risk table that includes the survival probabilities
 and number at risk in addition to the data provided. This output can be used to
 plot step line outcomes such as time-to-event (Kaplan-Meier curves), magnitude
@@ -775,7 +775,7 @@ plot_data <-
 
 \clearpage
 
-`mb_results` creates step curve info for magnitude breadth (MB) plots, with
+`mb_results()` creates step curve info for magnitude breadth (MB) plots, with
 options to include response status and have logged transformation for AUC-MB
 calculation.
 
@@ -827,9 +827,9 @@ ggplot2::ggplot(AUC_MB, ggplot2::aes(x = factor(group), y = aucMB,
 # Utility Functions
 
 
-`round_away_0` is a function to properly perform mathematical rounding (i.e.
-rounding away from 0 when tied), as opposed to the `round` function, which
-rounds to the nearest even number when tied. Also `round_away_0` allows for
+`round_away_0()` is a function to properly perform mathematical rounding (i.e.
+rounding away from 0 when tied), as opposed to the `round()` function, which
+rounds to the nearest even number when tied. Also `round_away_0()` allows for
 trailing zeros (i.e. 0.100 if rounding to 3 digits).
 
 ```{r}
@@ -842,10 +842,10 @@ round_away_0(vals_to_round, digits = 2, trailing_zeros = TRUE)
 
 \clearpage
 
-`get_session_info` produces reproducible tables, which are great to add to the
+`get_session_info()` produces reproducible tables, which are great to add to the
 end of reports. The first table gives software session information and the
-second table gives software package version information. `get_full_name` is a
-function used by `get_session_info` to get the user's name, based on user's ID.
+second table gives software package version information. `get_full_name()` is a
+function used by `get_session_info()` to get the user's name, based on user's ID.
 
 ```{r}
 my_session_info <- get_session_info()
