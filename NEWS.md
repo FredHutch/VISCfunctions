@@ -12,6 +12,7 @@
   * Update README file and add NEWS, CONTRIBUTING, and CONDUCT files
   * Remove `do()` examples
   * Add geometric mean/median ability in `pairwise_test_cont()`
+  * Updated **Overview** vignette with all additions and changes
 * Bug fixes:
   * Fixed issue where `two_samp_bin_test()` could give p>1 
   * Fixed issue with reproducibility tables in Mac
