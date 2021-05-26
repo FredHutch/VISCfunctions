@@ -1,3 +1,8 @@
+# VISCfunctions 1.2.1
+
+* Changing name of `create_step_curve()` to `cor_test_pairs()` and outputting ties instead of number of distinct
+
+
 # VISCfunctions 1.2.0
 
 * New Functions:
