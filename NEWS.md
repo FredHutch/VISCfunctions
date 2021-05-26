@@ -2,7 +2,7 @@
 
 * New Functions:
   * `cor_test()` for testing between two continuous variable 
-  * `pairwise_test_cor()` for group pairwise correlation testing (i.e. correlating values between all combinations antigens)
+  * `cor_test_pairs()` for group pairwise correlation testing (i.e. correlating values between all combinations antigens)
   * `create_step_curve()` function for survival curves and other step curves 
   * `mb_results()` for Magnitude Breadth curves and calculating Area under the MB curve
   * `trapz_sorted()` for Trapezoidal Integration of messy data
