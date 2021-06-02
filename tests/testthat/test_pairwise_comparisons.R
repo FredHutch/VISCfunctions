@@ -772,24 +772,24 @@ test_that("error checking", {
   library(dplyr)
   set.seed(243542534)
   x = c(NA, rnorm(25, 0, 1), rnorm(25, 1, 1),NA)
-  group = c(rep('a', 26),rep('b', 26))
+  pair = c(rep('a', 26),rep('b', 26))
   id = c(1:26, 1:26)
 
-  test_data <- data.frame(x, group, id)
+  test_data <- data.frame(x, pair, id)
   test_data_wide <- test_data %>%
-    pivot_wider(names_from = group, values_from = x) %>%
+    pivot_wider(names_from = pair, values_from = x) %>%
     drop_na()
 
   expect_error(
     object =   cor_test_pairs(x = x,
-                                 group = group,
+                                 pair = pair,
                                  id = 1:10),
-    regexp = '"x", "group", and "id" must be same length'
+    regexp = '"x", "pair", and "id" must be same length'
   )
 
   expect_error(
     object =   cor_test_pairs(x = x,
-                                 group = group,
+                                 pair = pair,
                                  id = id,
                                  n_distinct_value = 1),
     regexp = '"n_distinct_value" must be >1'
@@ -797,21 +797,21 @@ test_that("error checking", {
 
   expect_error(
     object =   cor_test_pairs(x = rep(1:2, 26),
-                                 group = group,
+                                 pair = pair,
                                  id = id),
-    regexp = 'All groups have less than 3 distinct values'
+    regexp = 'All pairs have less than 3 distinct values'
   )
 
   expect_error(
     object =   cor_test_pairs(x = c(rep(1:2, 25), 3, 4),
-                                 group = group,
+                                 pair = pair,
                                  id = id),
-    regexp = 'Only one group has >=3 distinct values, so no testing possible'
+    regexp = 'Only one pair has >=3 distinct values, so no testing possible'
   )
 
   expect_message(
     object = cor_test_pairs(x = c(NA,NA,NA,x[-(1:3)],1,2,3),
-                                   group = c(group,rep('c',3)),
+                                   pair = c(pair,rep('c',3)),
                                    id = c(id,1:3), verbose = TRUE),
     regexp = 'No non-missing data points when considering a and c'
   )
@@ -859,25 +859,25 @@ test_that("cor_test_pairs testing two groups", {
   )
 
   expect_equal(object = cor_test_pairs(x = test_data$x,
-                                             group = test_data$group,
-                                             id = test_data$id,
-                                             method = 'spearman',
-                                             n_distinct_value = 3,
-                                             digits = 3,
-                                             trailing_zeros = TRUE,
-                                             verbose = FALSE),
+                                       pair = test_data$group,
+                                       id = test_data$id,
+                                       method = 'spearman',
+                                       n_distinct_value = 3,
+                                       digits = 3,
+                                       trailing_zeros = TRUE,
+                                       verbose = FALSE),
                expected = testing_results)
 
   expect_message(
     object = cor_test_pairs(x = test_data$x,
-                                  group = test_data$group,
-                                  id = test_data$id,
-                                  method = 'spearman',
-                                  n_distinct_value = 3,
-                                  digits = 3,
-                                  trailing_zeros = TRUE,
-                                  verbose = TRUE),
-    regexp = 'Group\\(s\\) c are excluded because the distinct values are less than 3'
+                            pair = test_data$group,
+                            id = test_data$id,
+                            method = 'spearman',
+                            n_distinct_value = 3,
+                            digits = 3,
+                            trailing_zeros = TRUE,
+                            verbose = TRUE),
+    regexp = 'Pair\\(s\\) c are excluded because the distinct values are less than 3'
   )
 
   # Digits to 5
@@ -889,7 +889,7 @@ test_that("cor_test_pairs testing two groups", {
     round_away_0(digits = 5, trailing_zeros = TRUE)
 
   expect_equal(object = cor_test_pairs(x = test_data$x,
-                                             group = test_data$group,
+                                             pair = test_data$group,
                                              id = test_data$id,
                                              method = 'spearman',
                                              n_distinct_value = 3,
@@ -906,6 +906,7 @@ test_that("cor_test_pairs testing two groups", {
 test_that("cor_test_pairs testing multiple groups", {
   library(tidyr)
   library(purrr)
+  library(dplyr)
 
   test_single_comp <- function(data_in) {
 
@@ -976,7 +977,7 @@ test_that("cor_test_pairs testing multiple groups", {
   group_testing_dt <- testData_BAMA %>%
     group_by(group, visit) %>%
     group_modify(~cor_test_pairs(x = .x$magnitude,
-                                    group = .x$antigen,
+                                    pair = .x$antigen,
                                     id = .x$pubID,
                                     method = 'spearman',
                                     n_distinct_value = 3,
@@ -992,14 +993,14 @@ test_that("cor_test_pairs testing multiple groups", {
     object = testData_BAMA %>%
       group_by(group, visit) %>%
       group_modify(~cor_test_pairs(x = .x$magnitude,
-                                   group = .x$antigen,
+                                   pair = .x$antigen,
                                    id = .x$pubID,
                                    method = 'spearman',
                                    n_distinct_value = 3,
                                    digits = 3,
                                    trailing_zeros = TRUE,
                                    verbose = TRUE)),
-    regexp = 'Not enough distinct values for at least one group when considering Con S gp140 CFI and gp70_C.1086C V1/V2/293F'
+    regexp = 'Not enough distinct values for at least one pair when considering Con S gp140 CFI and gp70_C.1086C V1/V2/293F'
   )
 
 })

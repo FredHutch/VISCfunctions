@@ -698,11 +698,11 @@ Simple example using `cor_test_pairs`:
 
 set.seed(1)
 x_example <- c(1, 1, rnorm(48), rnorm(49, mean = 5), NA)
-group_example <- c(rep('antigen A', 25), rep('antigen B', 25), 
+pair_example <- c(rep('antigen A', 25), rep('antigen B', 25), 
                    rep('antigen C', 25), rep('antigen D', 25))
 id_example <- c(rep(1:25, 4))
 
-cor_test_pairs(x_example, group_example, id_example, digits = 4)
+cor_test_pairs(x_example, pair_example, id_example, digits = 4)
 
 
 ```
@@ -721,7 +721,7 @@ antigen_testing <- exampleData_BAMA %>%
   group_by(group, visitno) %>%
   group_modify(~ as.data.frame(
     cor_test_pairs(x = .x$magnitude,
-                      group = .x$antigen,
+                      pair = .x$antigen,
                       id = .x$pubID,
                       method = 'spearman',
                       n_distinct_value = 3))) %>% 

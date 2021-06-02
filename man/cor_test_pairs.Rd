@@ -2,11 +2,11 @@
 % Please edit documentation in R/pairwise_comparisons.R
 \name{cor_test_pairs}
 \alias{cor_test_pairs}
-\title{Correlation Testing for Multiple Groups/Measures}
+\title{Correlation Testing for Multiple Endpoints/Terms}
 \usage{
 cor_test_pairs(
   x,
-  group,
+  pair,
   id,
   method = c("spearman", "pearson", "kendall"),
   n_distinct_value = 3,
@@ -22,14 +22,14 @@ cor_test_pairs(
 \arguments{
 \item{x}{numeric vector (can include NA values)}
 
-\item{group}{categorical vector which contains the levels to compare}
+\item{pair}{categorical vector which contains the levels to compare}
 
 \item{id}{vector which contains the id information}
 
 \item{method}{character string indicating which correlation coefficient
 is to be used for the test ("pearson" (default), "kendall", or "spearman").}
 
-\item{n_distinct_value}{number of distinct values in \code{x} each \code{group} must
+\item{n_distinct_value}{number of distinct values in \code{x} each \code{pair} must
 contain to be compared. The value must be >1, with a default of 3.}
 
 \item{digits}{numeric value between 0 and 14 indicating the number of digits
@@ -41,15 +41,15 @@ in the descriptive statistics (i.e. 0.100 instead of 0.1). Note if set to
 
 \item{exact}{logical value indicating whether the "exact" method should be
 used. Ignored if \code{method = "pearson"} or if \code{method = "spearman"} and there
-are ties in \code{x} for either \code{group}.}
+are ties in \code{x} for either \code{pair}.}
 
 \item{seed}{numeric value used to set the seed. Only used if
-\code{method = "spearman"} and there are ties in \code{x} for either \code{group}.}
+\code{method = "spearman"} and there are ties in \code{x} for either \code{pair}.}
 
 \item{nresample}{positive integer indicating the number of Monte Carlo
 replicates to used for the computation of the approximative reference
 distribution. Defaults is set to 10,000. Only used when
-\code{method = "spearman"} and there are ties in \code{x} for either \code{group}.}
+\code{method = "spearman"} and there are ties in \code{x} for either \code{pair}.}
 
 \item{verbose}{logical variable indicating whether warnings and messages
 should be displayed.}
@@ -58,8 +58,8 @@ should be displayed.}
 }
 \value{
 Returns a data frame of all possible pairwise correlations
-with group sizes greater than or equal to the minimum number of values
-in group, as set by \code{n_distinct_value}:
+with pair sizes greater than or equal to the minimum number of values
+in pair, as set by \code{n_distinct_value}:
 \itemize{
 \item \code{Correlation} - Comparisons made
 \item \code{NPairs} - number of non-missing pairs considered
@@ -69,15 +69,15 @@ in group, as set by \code{n_distinct_value}:
 }
 }
 \description{
-Takes a continuous variable and a categorical variable, and calculate the
-pairwise Spearman, Pearson, or Kendall correlation estimate and p-value
+Takes a continuous variable and a categorical variable, and calculates the
+Spearman, Pearson, or Kendall correlation estimate and p-value
 between the categorical variable levels.
 }
 \details{
 The p value is calculated using the \link{cor_test} function (see documentation
 for method details)
 
-If a group has less than \code{n_distinct_value} non-missing values that group
+If a pair has less than \code{n_distinct_value} non-missing values that pair
 will be excluded from the comparisons. If a specific comparison has less than
 \code{n_distinct_value} non-missing values to comparison the output will return an
 estimate and the p-value set to NA.
@@ -95,7 +95,7 @@ data_in <- data.frame(
 )
 data_in_long <- tidyr::pivot_longer(data_in, -id)
 cor_test_pairs(x = data_in_long$value,
-                  group = data_in_long$name,
+                  pair = data_in_long$name,
                   id = data_in_long$id,
                   method = 'spearman')
 
@@ -111,7 +111,7 @@ exampleData_BAMA \%>\%
 filter(visitno != 0) \%>\%
 group_by(group, visitno) \%>\%
  summarize(
-   cor_test_pairs(x = magnitude, group = antigen, id = pubID,
+   cor_test_pairs(x = magnitude, pair = antigen, id = pubID,
    method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE),
    .groups = 'drop'
           )

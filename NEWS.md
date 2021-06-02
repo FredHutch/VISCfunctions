@@ -1,6 +1,6 @@
 # VISCfunctions 1.2.1
 
-* Changing name of `create_step_curve()` to `cor_test_pairs()` and outputting ties instead of number of distinct
+* `pairwise_test_cor()` is now named `cor_test_pairs()`. The function `cor_test_pairs()` now returns a data.frame with information on any ties in each variable instead of number of unique values.
 
 
 # VISCfunctions 1.2.0
