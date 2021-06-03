@@ -692,17 +692,18 @@ pairwise_test_bin <- function(x,
 
 
 
-#' Correlation Pairwise Testing
+#' Correlation Testing for Multiple Endpoints/Terms
 #'
-#' Takes a continuous variable and a grouping variable to calculate the pairwise
-#' Spearman, Pearson, or Kendall correlation estimate and p-value between two variables.
+#' Takes a continuous variable and a categorical variable, and calculates the
+#' Spearman, Pearson, or Kendall correlation estimate and p-value
+#' between the categorical variable levels.
 #'
 #' @param x numeric vector (can include NA values)
-#' @param group categorical vector which contains the group levels to compare
+#' @param pair categorical vector which contains the levels to compare
 #' @param id vector which contains the id information
 #' @param method character string indicating which correlation coefficient
 #'   is to be used for the test ("pearson" (default), "kendall", or "spearman").
-#' @param n_distinct_value number of distinct values in `x` each `group` must
+#' @param n_distinct_value number of distinct values in `x` each `pair` must
 #' contain to be compared. The value must be >1, with a default of 3.
 #' @param digits numeric value between 0 and 14 indicating the number of digits
 #'   to round the correlation estimate. The default is set to 3.
@@ -711,32 +712,31 @@ pairwise_test_bin <- function(x,
 #' `TRUE`, output is a character vector.
 #' @param exact logical value indicating whether the "exact" method should be
 #'   used. Ignored if `method = "pearson"` or if `method = "spearman"` and there
-#'   are ties in `x` for either `group`.
+#'   are ties in `x` for either `pair`.
 #' @param seed numeric value used to set the seed. Only used if
-#'   `method = "spearman"` and there are ties in `x` for either `group`.
+#'   `method = "spearman"` and there are ties in `x` for either `pair`.
 #' @param nresample positive integer indicating the number of Monte Carlo
 #'   replicates to used for the computation of the approximative reference
 #'   distribution. Defaults is set to 10,000. Only used when
-#'   `method = "spearman"` and there are ties in `x` for either `group`.
+#'   `method = "spearman"` and there are ties in `x` for either `pair`.
 #' @param verbose logical variable indicating whether warnings and messages
 #'   should be displayed.
 #' @param ... parameters passed to `stats::cor.test` or `coin:spearman_test`
 #'
 #' @return Returns a data frame of all possible pairwise correlations
-#' with group sizes greater than or equal to the minimum number of values
-#' in group, as set by `n_distinct_value`:
-#' * `Comparison` - Comparisons made
-#' * `DistinctValues` - number of distinct points
+#' with pair sizes greater than or equal to the minimum number of values
+#' in pair, as set by `n_distinct_value`:
+#' * `Correlation` - Comparisons made
 #' * `NPairs` - number of non-missing pairs considered
+#' * `Ties` - are ties present in either variable
 #' * `CorrEst` - correlation estimates
 #' * `CorrTest` - correlation test p value
-#' * Unpasted columns if `keep_vars = TRUE`
 #' @details
 #'
 #' The p value is calculated using the [cor_test] function (see documentation
 #' for method details)
 #'
-#' If a group has less than `n_distinct_value` non-missing values that group
+#' If a pair has less than `n_distinct_value` non-missing values that pair
 #' will be excluded from the comparisons. If a specific comparison has less than
 #' `n_distinct_value` non-missing values to comparison the output will return an
 #'  estimate and the p-value set to NA.
@@ -753,8 +753,8 @@ pairwise_test_bin <- function(x,
 #'   bb = c(NA,NA,NA,NA,NA,1:5)
 #' )
 #' data_in_long <- tidyr::pivot_longer(data_in, -id)
-#' pairwise_test_cor(x = data_in_long$value,
-#'                   group = data_in_long$name,
+#' cor_test_pairs(x = data_in_long$value,
+#'                   pair = data_in_long$name,
 #'                   id = data_in_long$id,
 #'                   method = 'spearman')
 #'
@@ -770,7 +770,7 @@ pairwise_test_bin <- function(x,
 #' filter(visitno != 0) %>%
 #' group_by(group, visitno) %>%
 #'  summarize(
-#'    pairwise_test_cor(x = magnitude, group = antigen, id = pubID,
+#'    cor_test_pairs(x = magnitude, pair = antigen, id = pubID,
 #'    method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE),
 #'    .groups = 'drop'
 #'           )
@@ -778,8 +778,8 @@ pairwise_test_bin <- function(x,
 #' @export
 
 
-pairwise_test_cor <- function(x,
-                              group,
+cor_test_pairs <- function(x,
+                              pair,
                               id,
                               method = c('spearman', 'pearson', 'kendall'),
                               n_distinct_value = 3,
@@ -795,59 +795,71 @@ pairwise_test_cor <- function(x,
   .check_numeric_input(x)
   method <- match.arg(method)
   # input length checking
-  if (length(x) != length(group) | length(x) != length(id))
-    stop('"x", "group", and "id" must be same length')
+  if (length(x) != length(pair) | length(x) != length(id))
+    stop('"x", "pair", and "id" must be same length')
   if (n_distinct_value <= 1)
     stop('"n_distinct_value" must be >1')
 
-  #Dropping any missing in either x, group or id
-  keep_index <- !is.na(x) & !is.na(group) & !is.na(id)
+  #Dropping any missing in either x, pair or id
+  keep_index <- !is.na(x) & !is.na(pair) & !is.na(id)
   x <- x[keep_index]
-  group <- group[keep_index]
+  pair <- pair[keep_index]
   id <- id[keep_index]
 
-  # Input checking: Dropping entire groups that have less than needed distinct values
-  unique_sizes <- c(by(x, group, function(xx) length(unique(xx))))
-  groups_to_drop <- names(unique_sizes)[unique_sizes < n_distinct_value]
-  if (length(groups_to_drop) > 0) {
-    if (length(groups_to_drop) == length(unique_sizes))
-      stop(paste0('All groups have less than ',n_distinct_value,
+  # Input checking: Dropping entire pairs that have less than needed distinct values
+  unique_sizes <- c(by(x, pair, function(xx) length(unique(xx))))
+  pairs_to_drop <- names(unique_sizes)[unique_sizes < n_distinct_value]
+  if (length(pairs_to_drop) > 0) {
+    if (length(pairs_to_drop) == length(unique_sizes))
+      stop(paste0('All pairs have less than ',n_distinct_value,
                   ' distinct values'))
 
-    if (length(groups_to_drop) == (length(unique_sizes)) - 1)
-      stop(paste0('Only one group has >=',n_distinct_value,
+    if (length(pairs_to_drop) == (length(unique_sizes)) - 1)
+      stop(paste0('Only one pair has >=',n_distinct_value,
                   ' distinct values, so no testing possible'))
 
     if (verbose)
-      message(paste0('Group(s) ', paste0(groups_to_drop, collapse = ', '),
+      message(paste0('Pair(s) ', paste0(pairs_to_drop, collapse = ', '),
                      ' are excluded because the distinct values are less than ',
                      n_distinct_value))
 
-    id <- id[!group %in% groups_to_drop]
-    x <- x[!group %in% groups_to_drop]
-    group <- group[!group %in% groups_to_drop]
+    id <- id[!pair %in% pairs_to_drop]
+    x <- x[!pair %in% pairs_to_drop]
+    pair <- pair[!pair %in% pairs_to_drop]
   }
 
-  #Need to drop unused levels if group if a factor, otherwise set it as factor
-  if (is.factor(group)) group <- droplevels(group) else group <- factor(group)
-  n_levels <- nlevels(group)
-  levels_here <- levels(group)
+  #Need to drop unused levels if pair if a factor, otherwise set it as factor
+  if (is.factor(pair)) pair <- droplevels(pair) else pair <- factor(pair)
+  n_levels <- nlevels(pair)
+  levels_here <- levels(pair)
 
   results_list <- list()
   for (i in 1:(n_levels - 1)) {
     for (j in (i + 1):n_levels) {
-      i_group <- levels_here[i]
-      j_group <- levels_here[j]
-      i_data <- data.frame(x = x[group == i_group], id = id[group == i_group])
-      j_data <- data.frame(y = x[group == j_group], id = id[group == j_group])
+      i_pair <- levels_here[i]
+      j_pair <- levels_here[j]
+      i_data <- data.frame(x = x[pair == i_pair], id = id[pair == i_pair])
+      j_data <- data.frame(y = x[pair == j_pair], id = id[pair == j_pair])
 
       data_here <- stats::na.omit(merge(i_data, j_data, by = 'id'))
       N_points <- nrow(data_here)
 
-      comparison_here <- paste0(i_group, ' vs. ', j_group)
+      comparison_here <- paste0(i_pair, ' and ', j_pair)
 
-      distinct_vals <- paste0(length(unique(data_here$x)),
-                              ' vs. ',
+      dups_x <- any(duplicated(data_here$x))
+      dups_y <- any(duplicated(data_here$y))
+      if (dups_x & dups_y) {
+        ties = 'ties in both'
+      } else if (dups_x) {
+        ties = paste0('ties in ', i_pair)
+      } else if (dups_y) {
+        ties = paste0('ties in ', j_pair)
+      } else {
+        ties = "no ties"
+      }
+
+        paste0(length(unique(data_here$x)),
+                              ' and ',
                               length(unique(data_here$y)))
 
       if (N_points > 0) {
@@ -871,7 +883,7 @@ pairwise_test_cor <- function(x,
                             ...)
         } else {
           if (verbose)
-            message(paste0('Not enough distinct values for at least one group when considering ',
+            message(paste0('Not enough distinct values for at least one pair when considering ',
                            comparison_here))
           rho <- mag_p <- NA
         }
@@ -883,9 +895,9 @@ pairwise_test_cor <- function(x,
       }
 
       results_list[[length(results_list) + 1]] <-
-        data.frame(Comparison = comparison_here,
+        data.frame(Correlation = comparison_here,
                    NPoints = N_points,
-                   DistinctValues = distinct_vals,
+                   Ties = ties,
                    CorrEst = rho,
                    CorrTest = mag_p,
                    stringsAsFactors = FALSE)

@@ -772,48 +772,48 @@ test_that("error checking", {
   library(dplyr)
   set.seed(243542534)
   x = c(NA, rnorm(25, 0, 1), rnorm(25, 1, 1),NA)
-  group = c(rep('a', 26),rep('b', 26))
+  pair = c(rep('a', 26),rep('b', 26))
   id = c(1:26, 1:26)
 
-  test_data <- data.frame(x, group, id)
+  test_data <- data.frame(x, pair, id)
   test_data_wide <- test_data %>%
-    pivot_wider(names_from = group, values_from = x) %>%
+    pivot_wider(names_from = pair, values_from = x) %>%
     drop_na()
 
   expect_error(
-    object =   pairwise_test_cor(x = x,
-                                 group = group,
+    object =   cor_test_pairs(x = x,
+                                 pair = pair,
                                  id = 1:10),
-    regexp = '"x", "group", and "id" must be same length'
+    regexp = '"x", "pair", and "id" must be same length'
   )
 
   expect_error(
-    object =   pairwise_test_cor(x = x,
-                                 group = group,
+    object =   cor_test_pairs(x = x,
+                                 pair = pair,
                                  id = id,
                                  n_distinct_value = 1),
     regexp = '"n_distinct_value" must be >1'
   )
 
   expect_error(
-    object =   pairwise_test_cor(x = rep(1:2, 26),
-                                 group = group,
+    object =   cor_test_pairs(x = rep(1:2, 26),
+                                 pair = pair,
                                  id = id),
-    regexp = 'All groups have less than 3 distinct values'
+    regexp = 'All pairs have less than 3 distinct values'
   )
 
   expect_error(
-    object =   pairwise_test_cor(x = c(rep(1:2, 25), 3, 4),
-                                 group = group,
+    object =   cor_test_pairs(x = c(rep(1:2, 25), 3, 4),
+                                 pair = pair,
                                  id = id),
-    regexp = 'Only one group has >=3 distinct values, so no testing possible'
+    regexp = 'Only one pair has >=3 distinct values, so no testing possible'
   )
 
   expect_message(
-    object = pairwise_test_cor(x = c(NA,NA,NA,x[-(1:3)],1,2,3),
-                                   group = c(group,rep('c',3)),
+    object = cor_test_pairs(x = c(NA,NA,NA,x[-(1:3)],1,2,3),
+                                   pair = c(pair,rep('c',3)),
                                    id = c(id,1:3), verbose = TRUE),
-    regexp = 'No non-missing data points when considering a vs. c'
+    regexp = 'No non-missing data points when considering a and c'
   )
 
 
@@ -823,8 +823,8 @@ test_that("error checking", {
 
 
 
-# test pairwise_test_cor Using paste_tbl_grp and cor_test in testing since these functions are testing elsewhere
-test_that("pairwise_test_cor testing two groups", {
+# test cor_test_pairs Using paste_tbl_grp and cor_test in testing since these functions are testing elsewhere
+test_that("cor_test_pairs testing two groups", {
   library(tidyr)
   library(dplyr)
   set.seed(243542534)
@@ -839,11 +839,15 @@ test_that("pairwise_test_cor testing two groups", {
 
 
   testing_results <- data.frame(
-    Comparison = 'a vs. b',
+    Correlation = 'a and b',
     NPoints = nrow(test_data_wide),
-    DistinctValues = paste0(test_data_wide$a %>% na.omit %>% length,
-                            ' vs. ',
-                            test_data_wide$b %>% na.omit %>% length),
+    Ties = case_when(
+      any(duplicated(test_data_wide$a)) &
+        any(duplicated(test_data_wide$b)) ~ 'ties in both',
+      any(duplicated(test_data_wide$a)) ~ 'ties in a',
+      any(duplicated(test_data_wide$b)) ~ 'ties in b',
+      TRUE ~ 'no ties'
+    ),
     CorrEst = stats::cor(x = test_data_wide$a,
                        y = test_data_wide$b,
                        method = 'spearman', use = 'pairwise.complete.obs') %>%
@@ -854,26 +858,26 @@ test_that("pairwise_test_cor testing two groups", {
     stringsAsFactors = FALSE
   )
 
-  expect_equal(object = pairwise_test_cor(x = test_data$x,
-                                             group = test_data$group,
-                                             id = test_data$id,
-                                             method = 'spearman',
-                                             n_distinct_value = 3,
-                                             digits = 3,
-                                             trailing_zeros = TRUE,
-                                             verbose = FALSE),
+  expect_equal(object = cor_test_pairs(x = test_data$x,
+                                       pair = test_data$group,
+                                       id = test_data$id,
+                                       method = 'spearman',
+                                       n_distinct_value = 3,
+                                       digits = 3,
+                                       trailing_zeros = TRUE,
+                                       verbose = FALSE),
                expected = testing_results)
 
   expect_message(
-    object = pairwise_test_cor(x = test_data$x,
-                                  group = test_data$group,
-                                  id = test_data$id,
-                                  method = 'spearman',
-                                  n_distinct_value = 3,
-                                  digits = 3,
-                                  trailing_zeros = TRUE,
-                                  verbose = TRUE),
-    regexp = 'Group\\(s\\) c are excluded because the distinct values are less than 3'
+    object = cor_test_pairs(x = test_data$x,
+                            pair = test_data$group,
+                            id = test_data$id,
+                            method = 'spearman',
+                            n_distinct_value = 3,
+                            digits = 3,
+                            trailing_zeros = TRUE,
+                            verbose = TRUE),
+    regexp = 'Pair\\(s\\) c are excluded because the distinct values are less than 3'
   )
 
   # Digits to 5
@@ -884,8 +888,8 @@ test_that("pairwise_test_cor testing two groups", {
                                         use = 'pairwise.complete.obs') %>%
     round_away_0(digits = 5, trailing_zeros = TRUE)
 
-  expect_equal(object = pairwise_test_cor(x = test_data$x,
-                                             group = test_data$group,
+  expect_equal(object = cor_test_pairs(x = test_data$x,
+                                             pair = test_data$group,
                                              id = test_data$id,
                                              method = 'spearman',
                                              n_distinct_value = 3,
@@ -898,10 +902,11 @@ test_that("pairwise_test_cor testing two groups", {
 
 
 
-# test pairwise_test_cor Using paste_tbl_grp and cor_test in testing since these functions are testing elsewhere
-test_that("pairwise_test_cor testing multiple groups", {
+# test cor_test_pairs Using paste_tbl_grp and cor_test in testing since these functions are testing elsewhere
+test_that("cor_test_pairs testing multiple groups", {
   library(tidyr)
   library(purrr)
+  library(dplyr)
 
   test_single_comp <- function(data_in) {
 
@@ -914,13 +919,19 @@ test_that("pairwise_test_cor testing multiple groups", {
       drop_na()
 
     testing_results <- data.frame(
-      Comparison = paste0(levels(test_data$group)[1],
-                          ' vs. ',
+      Correlation = paste0(levels(test_data$group)[1],
+                          ' and ',
                           levels(test_data$group)[2]),
       NPoints = nrow(test_data_wide),
-      DistinctValues = paste0(test_data_wide[,2, drop = TRUE] %>% length,
-                              ' vs. ',
-                              test_data_wide[,3, drop = TRUE] %>% length),
+      Ties = case_when(
+        any(duplicated(test_data_wide[,2, drop = TRUE])) &
+          any(duplicated(test_data_wide[,3, drop = TRUE])) ~ 'ties in both',
+        any(duplicated(test_data_wide[,2, drop = TRUE])) ~
+          paste0('ties in ', levels(test_data$group)[1]),
+        any(duplicated(test_data_wide[,3, drop = TRUE])) ~
+          paste0('ties in ', levels(test_data$group)[2]),
+        TRUE ~ 'no ties'
+      ),
       CorrEst = ifelse(sum(!test_data_wide[,2, drop = TRUE] %>% duplicated) >= 3 &
                          sum(!test_data_wide[,3, drop = TRUE] %>% duplicated) >= 3,
         stats::cor(x = test_data_wide[,2, drop = TRUE],
@@ -965,8 +976,8 @@ test_that("pairwise_test_cor testing multiple groups", {
 
   group_testing_dt <- testData_BAMA %>%
     group_by(group, visit) %>%
-    group_modify(~pairwise_test_cor(x = .x$magnitude,
-                                    group = .x$antigen,
+    group_modify(~cor_test_pairs(x = .x$magnitude,
+                                    pair = .x$antigen,
                                     id = .x$pubID,
                                     method = 'spearman',
                                     n_distinct_value = 3,
@@ -981,15 +992,15 @@ test_that("pairwise_test_cor testing multiple groups", {
   expect_message(
     object = testData_BAMA %>%
       group_by(group, visit) %>%
-      group_modify(~pairwise_test_cor(x = .x$magnitude,
-                                   group = .x$antigen,
+      group_modify(~cor_test_pairs(x = .x$magnitude,
+                                   pair = .x$antigen,
                                    id = .x$pubID,
                                    method = 'spearman',
                                    n_distinct_value = 3,
                                    digits = 3,
                                    trailing_zeros = TRUE,
                                    verbose = TRUE)),
-    regexp = 'Not enough distinct values for at least one group when considering Con S gp140 CFI vs. gp70_C.1086C V1/V2/293F'
+    regexp = 'Not enough distinct values for at least one pair when considering Con S gp140 CFI and gp70_C.1086C V1/V2/293F'
   )
 
 })

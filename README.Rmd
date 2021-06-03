@@ -50,15 +50,17 @@ Compare two groups, return a p-value:
 
 * `two_sample_bin_test()` for a Barnard, Fisher's Exact, Chi-Square or McNemar test.
 * `two_samp_cont_test()` for a t.test (paired or unpaired), Wilcox Rank-Sum, or Wilcox Signed-Rank test.
+* `cor_test()` for a Spearman, Pearson, or Kendall correlation test.
 
 Make all pairwise comparisons of a grouping variable (or any categorical variable), return descriptive statistics and p-values:
 
 * `pairwise_test_bin()` for a Barnard, Fisher's Exact, Chi-Square or McNemar test.
 * `pairwise_test_cont()` for a t.test (paired or unpaired), Wilcox Rank-Sum, or Wilcox Signed-Rank test.
+* `cor_test_pairs()` for a Spearman, Pearson, or Kendall correlation test.
 
-Estimate wilson confidence intervals for a binary vector:
+Estimate binomial confidence intervals for a binary vector:
 
-* `wilson_ci()`
+* `binom_ci()`
 
 ## Formatting output
 
@@ -70,6 +72,13 @@ Estimate wilson confidence intervals for a binary vector:
     + Estimate (SE of Estimate)
     + Estimate (95% CI Lower Bound, Upper Bound)
     + Estimate/Statistic (p value)
+* `escape()` to protect control characters in a string for use in a latex table or caption
+* `collapse_group_row()` as an alternative to `kableExtra::collapse_rows()` for long tables in latex
+
+## Survival and Magnitude Breadth
+
+* `create_step_curve()` to create survival probabilities and generate a risk table
+* `mb_results()` to create step curve info for magnitude breadth (MB) plots and AUC-MB
 
 ## Utility functions
 
