@@ -1,8 +1,13 @@
+# VISCfunctions 1.2.1
+
+* `pairwise_test_cor()` is now named `cor_test_pairs()`. The function `cor_test_pairs()` now returns a data.frame with information on any ties in each variable instead of number of unique values.
+
+
 # VISCfunctions 1.2.0
 
 * New Functions:
   * `cor_test()` for testing between two continuous variable 
-  * `pairwise_test_cor()` for group pairwise correlation testing (i.e. correlating values between all combinations antigens)
+  * `cor_test_pairs()` for group pairwise correlation testing (i.e. correlating values between all combinations antigens)
   * `create_step_curve()` function for survival curves and other step curves 
   * `mb_results()` for Magnitude Breadth curves and calculating Area under the MB curve
   * `trapz_sorted()` for Trapezoidal Integration of messy data

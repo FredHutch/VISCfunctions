@@ -15,7 +15,6 @@ packrat/lib*/
 # Mac detritus
 .DS_Store
 
-Viscfunction_diagram.png
 inst/doc
 doc
 Meta
