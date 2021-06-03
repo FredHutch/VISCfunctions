@@ -1,6 +1,6 @@
 ---
 title: "Overview and Introduction to VISCfunctions Package"
-author: "Jimmy Fulp, Monica Gerber and Heather Bouzek"
+author: "Jimmy Fulp, Monica Gerber, and Heather Bouzek"
 date: "`r Sys.Date()`"
 output: 
   pdf_document:
@@ -27,7 +27,7 @@ header-includes:
   - \usepackage[normalem]{ulem}
   - \usepackage{makecell}
 vignette: >
-  %\VignetteIndexEntry{Overview and Introduction to VISCfunctions}
+  %\VignetteIndexEntry{Overview and Introduction to VISCfunctions Package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
