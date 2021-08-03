@@ -13,12 +13,34 @@
 #' @return a numeric scalar - the sample geometric mean.
 #'
 #' @details
-#'
 #' @references
-#' @seealso
 #' @examples
+#' # Geometric Mean and Arithmetic Mean
+#' x <- seq(1:20)
+#' y <- exp(x)
+#' Arithemetic mean and geometric mean give similar results for linear scale data
+#' geomean(x)
+#' mean(x)
+#'
+#' # Arithmetic mean and geometric mean give very different results for log-scale data
+#' geomean(y)
+#' mean(y)
+#'
+#' # Data with zero and negative values
+#' x[c(2, 10, 15)] <- NA
+#' x[c(4, 12, 17)] <- -1*x[c(4, 12, 17)]
+#' x[7] <- 0
+#' will produce an 'NA' result due to NA values in 'x'
+#' geomean(x, na.rm = FALSE)
+#' will produce an error due to zero and negative values in 'x'
+#' geomean(x, use_threshold = FALSE)
+#' Setting the threshold at 1 works out to zero on the log scale, but there may be different assay thresholds.
+#' geomean(x, use_threshold = TRUE, negative_threshold = 1)
+#'
 #'
 #' @export
+
+
 geomean <- function(
   x,
   na.rm = TRUE,
@@ -71,8 +93,30 @@ geomean <- function(
 #' @references
 #' @seealso
 #' @examples
-#' @export
+#' # Geometric Median and Arithmetic Median
+#' x <- seq(1:20)
+#' y <- exp(x)
+#' Arithemetic median and geometric median give similar results for linear scale data
+#' geomedian(x)
+#' median(x)
 #'
+#' # Arithmetic median and geometric median give very different results for log-scale data
+#' geomedian(y)
+#' median(y)
+#'
+#' # Data with zero and negative values
+#' x[c(2, 10, 15)] <- NA
+#' x[c(4, 12, 17)] <- -1*x[c(4, 12, 17)]
+#' x[7] <- 0
+#' will produce an 'NA' result due to NA values in 'x'
+#' geomedian(x, na.rm = FALSE)
+#' will produce an error due to zero and negative values in 'x'
+#' geomedian(x, use_threshold = FALSE)
+#' Setting the threshold at 1 works out to zero on the log scale, but there may be different assay thresholds.
+#' geomedian(x, use_threshold = TRUE, negative_threshold = 1)
+#' @export
+
+
 geomedian <- function(
   x,
   na.rm = TRUE,
@@ -126,7 +170,30 @@ geomedian <- function(
 #'
 #' @details
 #' @examples
+#' # Geometric Standard Deviation and Arithmetic Standard Deviation
+#' x <- seq(1:20)
+#' y <- exp(x)
+#' Arithemetic median and geometric median give similar results for linear scale data
+#' geosd(x)
+#' sd(x)
+#'
+#' # Arithmetic median and geometric median give very different results for log-scale data
+#' geosd(y)
+#' sd(y)
+#'
+#' # Data with zero and negative values
+#' x[c(2, 10, 15)] <- NA
+#' x[c(4, 12, 17)] <- -1*x[c(4, 12, 17)]
+#' x[7] <- 0
+#' will produce an 'NA' result due to NA values in 'x'
+#' sd(x, na.rm = FALSE)
+#' will produce an error due to zero and negative values in 'x'
+#' sd(x, use_threshold = FALSE)
+#' Setting the threshold at 1 works out to zero on the log scale, but there may be different assay thresholds.
+#' sd(x, use_threshold = TRUE, negative_threshold = 1)
 #' @export
+
+
 geosd <- function(
   x,
   na.rm = TRUE,
