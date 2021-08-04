@@ -1,22 +1,34 @@
-#' Functions for Log-Scale Transformations - Geometric Mean
+#' Functions for Log-Scale Transformations - Geometric Mean, Median, Standard Deviation and Quantiles
+
 #'
-#' @description Computes the sample geometric mean. This is a more suitable "average" than the arithmetic median for data that is on a log (geometric) scale. Takes a vector of non-negative numbers, log-transforms the numbers, finds the mean of the numbers and then transforms the result back to the normal scale. This is equivalent to the nth root of the product of n values.
+#' @description
+#' `r lifecycle::badge("experimental")`
+#' Computes the sample geometric mean, standard deviation quantiles and median. These functions are more suitable "averages" than the arithmetic averages for data that is on a log (geometric) scale. There are four functions:
+#' * `geomean()` returns the geometric mean
+#' * `geomedian()` returns the geometric median
+#' * `geosd()` returns the geometric standard deviation
+#' * `geoquantile()` return the geometric quantiles
 #'
+#' @inheritParams
 #' @param x Numeric vector of non-negative numbers on the the normal scale (i.e. not log-transformed). Vector must be longer than two elements.
-#'
 #' @param  na.rm Logical scalar indicating whether to remove missing values from 'x'. If 'na.rm = TRUE' (the default) missing values are removed from 'x' prior to computing the geometric mean. If 'na.rm = FALSE' and 'x' contains missing values, then a missing value ('NA') is returned.
+#' @param threshold Logical scalar indicating a lower bound for 'x'. If 'threshold = NULL', no threshold will be set and the data will remain unaltered. If the threshold is set to any positive number (the default is 1) all values below the threshold will be converted to the value in 'threshold'. If 'threshold = NULL' and 'x' contains zero or negative values, then a missing value ('NA') is returned.
+#' @param vebose Detailed description of the perils of setting a threshold less than one that appears if 'verbose = TRUE' and the 'threshold <1' and there are values less than 1 in 'x'.
+#' @param probs (geoquantile only) Numeric vector of probabilities between 0 and 1 for specifying which quantiles should be returned.
+#' @param type (geoquantile only) Integer scalar between 1 and 9 selecting one of the nine quantile algorithms. Default is type 2, the post-2010 SAS default, which uses the inverse of the empirical distribution function averaging at discontinuities.
+#' @param ... Additional arguments passed to functions
 #'
-#' @param use_threshold Logical scalar indicating whether to convert negative values to the 'negative threshold'. If 'use_threshold = TRUE' (the default) negative values will be converted to the value in 'negative_threshold' (the default is 1). If 'use_threshold = FALSE' and 'x' contains zero or negative values, then a missing value ('NA') is returned.
+#' @return Numeric scalar with sample geometric statistic for [geomean()], [geomedian()] and [geosd()]. Numeric vector the length of 'probs' for [geoquantiles()]
 #'
-#' @param negative_threshold Numeric scalar indicating the value to use if there are zero or negative values in the data. The default value is 1.
-#'
-#' @return a numeric scalar - the sample geometric mean.
+#' @seealso [mean()], [median()], [sd()], [fivenum()], [quantile()] for the related arithmetic functions
 #'
 #' @details
+#' Each function takes a vector of non-negative numbers, log-transforms the numbers, finds the statistic for the numbers and then transforms the result back to the normal scale.
 #' @examples
-#' # Geometric Mean and Arithmetic Mean
+#' # Linear and Exponential Data
 #' x <- seq(1:20)
 #' y <- exp(x)
+#'
 #' Arithemetic mean and geometric mean give similar results for linear scale data
 #' geomean(x)
 #' mean(x)
@@ -32,9 +44,9 @@
 #' will produce an 'NA' result due to NA values in 'x'
 #' geomean(x, na.rm = FALSE)
 #' will produce an error due to zero and negative values in 'x'
-#' geomean(x, use_threshold = FALSE)
+#' geomean(x, threshold = NULL)
 #' Setting the threshold at 1 works out to zero on the log scale, but there may be different assay thresholds.
-#' geomean(x, use_threshold = TRUE, negative_threshold = 1)
+#' geomean(x, threshold = 0.1, verbose = TRUE)
 #'
 #'
 #' @export
@@ -43,241 +55,40 @@
 geomean <- function(
   x,
   na.rm = TRUE,
-  use_threshold = TRUE,
-  negative_threshold = 1
-){
-  # Input Checking
-  #
-  # if the length of the vector is less than two, cannot compute mean
-  if (length(x) < 2) stop('"x" must have a length more than two.')
-  # must be a numeric vector
+  threshold = 1,
+  verbose = FALSE
+){# Input Checking
+  # must be a numeric vector, not a factor
   if (!is.vector(x, mode = "numeric") || is.factor(x)) stop ('"x" must be a numeric vector.')
-  if(!is.logical(use_threshold)) stop('"use_threshold" must be logical (i.e.
-                                      TRUE or FALSE)')
+  # must be a logical scalar
   if(!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE)')
-  if (!is.numeric(negative_threshold)) stop('"negative_threshold" must be numeric')
-  # if there are any zero or negative numbers and use_threshold is false throw an error
-  if(any(x <= 0 & use_threshold == FALSE)) stop('There are zeros or negative
-                                                values in "x". Set "use_threshold"
-                                                to TRUE and set a threshold using
-                                                "negative_threshold" or remove
-                                                zeros and negatives from "x"
-                                                before calculating.')
-  # Conversions
-  #
-  if (use_threshold) {
-     x[x <= 0] <- negative_threshold
-  }
-  # decrease the length of 'x' by one if there are 'NA' values in 'x' and 'na.rm' is FALSE
-  if (na.rm) {
-    x <- x[!is.na(x)]
-  }
-  # Function
-  #
-  exp(sum(log(x), na.rm=na.rm) / length(x))
-}
-
-
-#' Functions for Log-Scale Transformations - Geometric Median
-#'
-#' @description Computes the sample geometric median for a vector of non-monotonic and univariate values. This is a more suitable "average" than the arithmetic median for data that is on a log (geometric) scale. Takes a vector of non-negative numbers, log-transforms the numbers, finds the median of the numbers and then transforms the result back to the normal scale.
-#'
-#' @param x numeric vector of non-negative numbers on the the normal scale (i.e. not log-transformed).
-#'
-#' @param  na.rm a logical scale indicating whether to remove missing values from 'x'. If 'na.rm = TRUE' (the default) missing values are removed from 'x' prior to computing the geometric mean. If 'na.rm = FALSE' and 'x' contains missing values, then a missing value ('NA') is returned.
-#'
-#'  @param use_threshold Logical scalar indicating whether to convert negative values to the 'negative threshold'. If 'use_threshold = TRUE' (the default) negative values will be converted to the value in 'negative_threshold' (the default is 1). If 'use_threshold = FALSE' and 'x' contains zero or negative values, then a missing value ('NA') is returned.
-#'
-#' @param negative_threshold Numeric scalar indicating the value to use if there are zero or negative values in the data. The default value is 1.
-#'
-#' @return a numeric scalar - the sample geometric median.
-#'
-#' @details
-#' @examples
-#' # Geometric Median and Arithmetic Median
-#' x <- seq(1:20)
-#' y <- exp(x)
-#' Arithemetic median and geometric median give similar results for linear scale data
-#' geomedian(x)
-#' median(x)
-#'
-#' # Arithmetic median and geometric median give very different results for log-scale data
-#' geomedian(y)
-#' median(y)
-#'
-#' # Data with zero and negative values
-#' x[c(2, 10, 15)] <- NA
-#' x[c(4, 12, 17)] <- -1*x[c(4, 12, 17)]
-#' x[7] <- 0
-#' will produce an 'NA' result due to NA values in 'x'
-#' geomedian(x, na.rm = FALSE)
-#' will produce an error due to zero and negative values in 'x'
-#' geomedian(x, use_threshold = FALSE)
-#' Setting the threshold at 1 works out to zero on the log scale, but there may be different assay thresholds.
-#' geomedian(x, use_threshold = TRUE, negative_threshold = 1)
-#' @export
-
-
-geomedian <- function(
-  x,
-  na.rm = TRUE,
-  use_threshold = TRUE,
-  negative_threshold = 1
-){
-  # Input Checking
-  #
-  # if the length of the vector is less than two, cannot compute mean
+  # must be either a numeric scalar or NULL
+  if (!is.numeric(threshold) | is.null(threshold)) stop('"threshold" must be numeric or null')
+  # if the length of the vector is less than two, cannot compute a statistic
   if (length(x) < 2) stop('"x" must have a length more than two.')
-  # must be a numeric vector
-  if (!is.numeric(x)) stop ('"x" must be numeric.')
-  if(!is.logical(use_threshold)) stop('"use_threshold" must be logical (i.e.
-                                      TRUE or FALSE)')
-  if(!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE)')
-  if (!is.numeric(negative_threshold)) stop('"negative_threshold" must be numeric')
-  # if there are any zero or negative numbers and use_threshold is false throw an error
-  if(any(x <= 0 & use_threshold == FALSE)) stop('There are zeros or negative
-                                                values in "x". Set "use_threshold"
-                                                to TRUE and set a threshold using
-                                                "negative_threshold" or remove
-                                                zeros and negatives from "x"
-                                                before calculating.')
-  # Conversions
-  #
-  if (use_threshold) {
-    x[x <= 0] <- negative_threshold
+  if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
+  # if there are any zero or negative numbers and threshold is null throw an error
+  if(any(x <= 0 & is.null(threshold))) stop('There are zero or negative values
+                                            in "x". Set "threshold" to a
+                                            positive number, or remove zeros and
+                                            negatives from "x" before calculating.')
+  if (verbose == TRUE & threshold < 1 & any(x < 1)){
+    # Explain thresholds less than one
+    "Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceeding zeros. Thresholds set to one will become zero upon log-transformation."
   }
-  # decrease the length of 'x' by one if there are 'NA' values in 'x' and 'na.rm' is FALSE
+  # Conversions
+  # set the values less than the threshold to the threshold
+  if (!is.null(threshold)) {
+     x[x <= threshold] <- threshold
+  }
+  # decrease the length of 'x' if there are 'NA' values in 'x' and 'na.rm' is FALSE
   if (na.rm) {
     x <- x[!is.na(x)]
   }
   # Function
   #
-  exp(median(log(x), na.rm=na.rm))
-
+  exp(mean(log(x), na.rm = na.rm))
 }
-
-
-
-
-#' Functions for Log-Scale Transformations - Geometric Standard Deviation
-#'
-#' @description Computes the sample geometric standard deviation. Takes a vector of non-negative numbers, log-transforms the numbers, finds the standard deviation of the numbers and then transforms the result back to the normal scale.
-#'
-#' @param x numeric vector of non-negative numbers on the the normal scale (i.e. not log-transformed).
-#'
-#' @param  na.rm a logical scale indicating whether to remove missing values from 'x'. If 'na.rm = TRUE' (the default) missing values are removed from 'x' prior to computing the geometric standard deviation. If 'na.rm = FALSE' and 'x' contains missing values, then a missing value ('NA') is returned.
-#'
-#'  @param use_threshold Logical scalar indicating whether to convert negative values to the 'negative threshold'. If 'use_threshold = TRUE' (the default) negative values will be converted to the value in 'negative_threshold' (the default is 1). If 'use_threshold = FALSE' and 'x' contains zero or negative values, then a missing value ('NA') is returned.
-#'
-#' @param negative_threshold Numeric scalar indicating the value to use if there are zero or negative values in the data. The default value is 1.
-#'
-#' @return a numeric scalar - the sample geometric standard deviation.
-#'
-#' @details
-#' @examples
-#' # Geometric Standard Deviation and Arithmetic Standard Deviation
-#' x <- seq(1:20)
-#' y <- exp(x)
-#' Arithemetic standard deviation and geometric standard deviation give similar results for linear scale data
-#' geosd(x)
-#' sd(x)
-#'
-#' # Arithmetic standard deviation and geometric standard deviation give very different results for log-scale data
-#' geosd(y)
-#' sd(y)
-#'
-#' # Data with zero and negative values
-#' x[c(2, 10, 15)] <- NA
-#' x[c(4, 12, 17)] <- -1*x[c(4, 12, 17)]
-#' x[7] <- 0
-#' will produce an 'NA' result due to NA values in 'x'
-#' geosd(x, na.rm = FALSE)
-#' will produce an error due to zero and negative values in 'x'
-#' geosd(x, use_threshold = FALSE)
-#' Setting the threshold at 1 works out to zero on the log scale, but there may be different assay thresholds.
-#' geosd(x, use_threshold = TRUE, negative_threshold = 1)
-#' @export
-
-
-geosd <- function(
-  x,
-  na.rm = TRUE,
-  use_threshold = TRUE,
-  negative_threshold = 1
-){
-  # Input Checking
-  #
-  # if the length of the vector is less than two, cannot compute mean
-  if (length(x) < 2) stop('"x" must have a length more than two.')
-  # must be a numeric vector
-  if (!is.numeric(x)) stop ('"x" must be numeric.')
-  if(!is.logical(use_threshold)) stop('"use_threshold" must be logical (i.e.
-                                      TRUE or FALSE)')
-  if(!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE)')
-  if (!is.numeric(negative_threshold)) stop('"negative_threshold" must be numeric')
-  # if there are any zero or negative numbers and use_threshold is false throw an error
-  if(any(x <= 0 & use_threshold == FALSE)) stop('There are zeros or negative
-                                                values in "x". Set "use_threshold"
-                                                to TRUE and set a threshold using
-                                                "negative_threshold" or remove
-                                                zeros and negatives from "x"
-                                                before calculating.')
-  # Conversions
-  #
-  if (use_threshold) {
-    x[x <= 0] <- negative_threshold
-  }
-  # decrease the length of 'x' by one if there are 'NA' values in 'x' and 'na.rm' is FALSE
-  if (na.rm) {
-    x <- x[!is.na(x)]
-  }
-  # Function
-  #
-  exp(sd(log(x), na.rm=na.rm))
-}
-
-
-#' Functions for Log-Scale Transformations - Geometric Quantiles
-#'
-#' @description Computes the sample geometric quantiles. Takes a vector of non-negative numbers, log-transforms the numbers, finds the quantile of the numbers and then transforms the result back to the normal scale.
-#'
-#' @param x Numeric vector of non-negative numbers on the the normal scale (i.e. not log-transformed).
-#'
-#' @param probs Numeric vector of probabilities between 0 and 1 for specifying which quantiles should be returned.
-#'
-#' @param type Integer scalar between 1 and 9 selecting one of the nine quantile algorithms. Default is type 2, the post-2010 SAS default, which uses the inverse of the empirical distribution function averaging at discontinuities.
-#'
-#'  @param  na.rm Logical scale indicating whether to remove missing values from 'x'. If 'na.rm = TRUE' (the default) missing values are removed from 'x' prior to computing the geometric quantile. If 'na.rm = FALSE' and 'x' contains missing values, then a missing value ('NA') is returned.
-#'
-#'  @param use_threshold Logical scalar indicating whether to convert negative values to the 'negative threshold'. If 'use_threshold = TRUE' (the default) negative values will be converted to the value in 'negative_threshold' (the default is 1). If 'use_threshold = FALSE' and 'x' contains zero or negative values, then a missing value ('NA') is returned.
-#'
-#' @param negative_threshold Numeric scalar indicating the value to use if there are zero or negative values in the data. The default value is 1.
-#'
-#' @return a numeric scalar - the sample geometric quantile.
-#'
-#' @details
-#' See quantiles for other types.
-#' @examples
-#' # Geometric Quantile and Arithmetic Quantile
-#'
-#' x <- rnorm(1001)
-#' y <- rlnorm(1001) #log-normal distribution
-#' geoquantile(x) # Extremes & Quartiles by default
-#' geoquantile(x,  probs = c(0.1, 0.5, 1, 2, 5, 10, 50, NA)/100)
-#' geoquantile(y)
-#'
-#'
-#' # Data with zero and negative values
-#' x[c(2, 10, 15)] <- NA
-#' x[c(4, 12, 17)] <- -1*x[c(4, 12, 17)]
-#' x[7] <- 0
-#' will produce an 'NA' result due to NA values in 'x'
-#' geoquantile(x, na.rm = FALSE)
-#' will produce an error due to zero and negative values in 'x'
-#' geoquantile(x, use_threshold = FALSE)
-#' Setting the threshold at 1 works out to zero on the log scale, but there may be different assay thresholds.
-#' geoquantile(x, use_threshold = TRUE, negative_threshold = 1)
-#' @export
 
 
 geoquantile <- function(
@@ -285,38 +96,95 @@ geoquantile <- function(
   probs = c(0, 0.25, 0.5, 0.75, 1),
   type = 2,
   na.rm = TRUE,
-  use_threshold = TRUE,
-  negative_threshold = 1,
+  threshold = 1,
+  verbose = FALSE,
   ...
-){
-  # Input Checking
+){# Input Checking
   #
   # if the length of the vector is less than two, cannot compute mean
-  if (length(x) < 2) stop('"x" must have a length more than two.')
   # must be a numeric vector
-  if (!is.numeric(x)) stop ('"x" must be numeric.')
-  if(!is.logical(use_threshold)) stop('"use_threshold" must be logical (i.e.
-                                      TRUE or FALSE)')
-  if(!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE)')
-  if (!is.numeric(negative_threshold)) stop('"negative_threshold" must be numeric')
-  # if there are any zero or negative numbers and use_threshold is false throw an error
-  if(any(x <= 0 & use_threshold == FALSE)) stop('There are zeros or negative
-                                                values in "x". Set "use_threshold"
-                                                to TRUE and set a threshold using
-                                                "negative_threshold" or remove
-                                                zeros and negatives from "x"
-                                                before calculating.')
-  # Conversions
-  #
-  if (use_threshold) {
-    x[x <= 0] <- negative_threshold
+  if (!is.numeric(x)) stop ('"x" must be a numeric vector.')
+  if (!is.numeric(probs)) stop ('"probs" must be numeric.')
+  if (is.logical(probs)) stop ('"probs" must be numeric.')
+  if (!is.numeric(type)) stop ('"type" must be numeric.')
+  if (!is.numeric(threshold) | is.null(threshold)) stop('"threshold" must be numeric or null')
+  if(!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE).')
+  if (length(x) < 2) stop('"x" must have a length more than two.')
+  if (length(threshold) != 1 & !is.null(threshold)) stop('"threshold" must have a length of one.')
+  if (length(probs) < 1) stop('"probs" must have a length of at least one.')
+  if (any(probs < 0) | any(probs > 1)) stop('"probs" must have a must be between 0 and 1.')
+  if (type < 1 | type > 9) stop('"type" must be a numeral between 1 and 9.')
+  if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
+  # if there are any zero or negative numbers and threshold is null throw an error
+  if(any(x <= 0 & is.null(threshold))) stop('There are zero or negative values
+                                            in "x". Set "threshold" to a
+                                            positive number, or remove zeros and
+                                            negatives from "x" before calculating.')
+  if (verbose == TRUE & threshold < 1 & any(x < 1)){
+    # Explain thresholds less than one
+    "Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceeding zeros. Thresholds set to one will become zero upon log-transformation."
   }
-  # decrease the length of 'x' by one if there are 'NA' values in 'x' and 'na.rm' is FALSE
+  # Conversions
+  # set the values less than the threshold to the threshold
+  if (!is.null(threshold)) {
+    x[x <= threshold] <- threshold
+  }
+  # decrease the length of 'x' if there are 'NA' values in 'x' and 'na.rm' is FALSE
   if (na.rm) {
     x <- x[!is.na(x)]
   }
   # Function
   #
-  exp(quantile(log(x), probs = probs, na.rm=na.rm, type = type))
+  exp(quantile(log(x), probs = probs, na.rm = na.rm, type = type))
 }
 
+geomedian <- function(
+  x,
+  na.rm = TRUE,
+  threshold = 1,
+  verbose = FALSE
+){geoquantile(x = x,
+               na.rm = na.rm,
+               treshold = threshold,
+               verbose = verbose,
+               type = 2,
+               probs = 0.5)
+}
+
+geosd <- function(
+  x,
+  na.rm = TRUE,
+  threshold = 1,
+  verbose = FALSE
+){# Input Checking
+  # must be a numeric vector, not a factor
+  if (!is.vector(x, mode = "numeric") || is.factor(x)) stop ('"x" must be a numeric vector.')
+  # must be a logical scalar
+  if(!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE)')
+  # must be either a numeric scalar or NULL
+  if (!is.numeric(threshold) | is.null(threshold)) stop('"threshold" must be numeric or null')
+  # if the length of the vector is less than two, cannot compute a statistic
+  if (length(x) < 2) stop('"x" must have a length more than two.')
+  if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
+  # if there are any zero or negative numbers and threshold is null throw an error
+  if(any(x <= 0 & is.null(threshold))) stop('There are zero or negative values
+                                            in "x". Set "threshold" to a
+                                            positive number, or remove zeros and
+                                            negatives from "x" before calculating.')
+  if (verbose == TRUE & threshold < 1 & any(x < 1)){
+    # Explain thresholds less than one
+    "Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceeding zeros. Thresholds set to one will become zero upon log-transformation."
+  }
+  # Conversions
+  # set the values less than the threshold to the threshold
+  if (!is.null(threshold)) {
+    x[x <= threshold] <- threshold
+  }
+  # decrease the length of 'x' if there are 'NA' values in 'x' and 'na.rm' is FALSE
+  if (na.rm) {
+    x <- x[!is.na(x)]
+  }
+  # Function
+  #
+  exp(sd(log(x), na.rm = na.rm))
+}
