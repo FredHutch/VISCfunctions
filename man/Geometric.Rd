@@ -33,19 +33,20 @@ geosd(x, na.rm = TRUE, threshold = 1L, verbose = FALSE)
 
 \item{threshold}{Positive scalar indicating a lower bound for 'x'. If 'threshold = NULL', no threshold will be set and the data will remain unaltered. If the threshold is set to any positive number (the default is 1) all values below the threshold will be converted to the value in 'threshold'. If 'threshold = NULL' and 'x' contains zero or negative values, then an error is returned.}
 
+\item{verbose}{Logical scalar indicating if a warning should appear if there are values in 'x' that are less than 1 and the threshold is set to NULL or less than 1.}
+
 \item{probs}{(geoquantile only) Numeric vector of probabilities between 0 and 1 for specifying which quantiles should be returned.}
 
 \item{type}{(geoquantile only) Integer scalar between 1 and 9 selecting one of the nine quantile algorithms. Default is type 2, the post-2010 SAS default, which uses the inverse of the empirical distribution function averaging at discontinuities.}
 
 \item{...}{Additional arguments passed to functions}
-
-\item{vebose}{Detailed description of the perils of setting a threshold less than one that appears if 'verbose = TRUE' and the 'threshold <1' and there are values less than 1 in 'x'.}
 }
 \value{
 Returns a numeric scalar with sample geometric statistic for \code{\link[=geomean]{geomean()}}, \code{\link[=geomedian]{geomedian()}} and \code{\link[=geosd]{geosd()}}. Returns a numeric vector the length of 'probs' for \code{\link[=geoquantiles]{geoquantiles()}}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Computes the sample geometric mean, standard deviation quantiles and median. These functions are more suitable "averages" than the arithmetic averages for data that is on a log (geometric) scale. There are four functions:
 \itemize{
 \item \code{geomean()} returns the geometric mean
@@ -73,9 +74,18 @@ Each function takes a vector of non-negative numbers, log-transforms the numbers
 x <- 1:20
 y <- exp(x)
 
-Arithemetic mean and geometric mean
+#Arithemetic mean and geometric mean
 geomean(x)
 mean(x)
+
+geosd(x)
+stats::sd(x)
+
+geomedian(x)
+median(x)
+
+geoquantile(x)
+fivenum(x)
 
 geomean(y)
 mean(y)
@@ -86,15 +96,24 @@ x[c(4, 12, 17)] <- -1*x[c(4, 12, 17)]
 x[7] <- 0
 x[1] <- 0.2
 
-#The default is for 'NA' to be removed and a threshold is set at 1 to transform any values below 1 to 1.
-geosd(x, na.rm = TRUE, threshold = 1)
-#The threshold can be removed by setting it to 'NULL'. This will generate an error if there are any zero or negative values.
-\dontrun{geomedian(x, na.rm = FALSE)}
-\dontrun{geomean(x, threshold = NULL)}
-geomean(x, threshold = 0.1, verbose = TRUE)
+#The default is for 'NA' to be removed and a threshold is set at 1 to
+#  transform any values below 1 to 1.
+geomean(x, na.rm = TRUE, threshold = 1)
+
+#The threshold can be removed by setting it to 'NULL'. This will generate an
+#  error if there are any zero or negative values.
+\dontrun{
+geomedian(x, na.rm = FALSE)
+}
+\dontrun{
+geomean(x, threshold = NULL)
+}
+\dontrun{
+geosd(x, threshold = 0.1, verbose = TRUE)
+}
 
 geoquantile(x <- rnorm(1001)) # Extremes & Quartiles by default
-geoquantile(x,  probs = c(0.1, 0.5, 1, 2, 5, 10, 50, NA)/100)
+geoquantile(x,  probs = c(.01, .1, 1))
 geoquantile(x, type = 9)
 
 }
