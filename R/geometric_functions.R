@@ -1,4 +1,4 @@
-#' Functions for Log-Scale Transformations - Geometric Mean, Median, Standard Deviation and Quantiles
+#' Functions for Log-Scale Transformations - Geometric Mean, Geomethric Median, Geometric Standard Deviation and Geometric Quantiles
 
 #'
 #' @description
@@ -8,32 +8,30 @@
 #' * `geomedian()` returns the geometric median
 #' * `geosd()` returns the geometric standard deviation
 #' * `geoquantile()` return the geometric quantiles
-#'
-#' @inheritParams
-#' @param x Numeric vector of non-negative numbers on the the normal scale (i.e. not log-transformed). Vector must be longer than two elements.
+#' @aliases geomedian(), geoquantiles(), geosd()
+#' @param x Numeric vector. Vector must be longer than two elements.
 #' @param  na.rm Logical scalar indicating whether to remove missing values from 'x'. If 'na.rm = TRUE' (the default) missing values are removed from 'x' prior to computing the geometric mean. If 'na.rm = FALSE' and 'x' contains missing values, then a missing value ('NA') is returned.
-#' @param threshold Logical scalar indicating a lower bound for 'x'. If 'threshold = NULL', no threshold will be set and the data will remain unaltered. If the threshold is set to any positive number (the default is 1) all values below the threshold will be converted to the value in 'threshold'. If 'threshold = NULL' and 'x' contains zero or negative values, then a missing value ('NA') is returned.
+#' @param threshold Positive scalar indicating a lower bound for 'x'. If 'threshold = NULL', no threshold will be set and the data will remain unaltered. If the threshold is set to any positive number (the default is 1) all values below the threshold will be converted to the value in 'threshold'. If 'threshold = NULL' and 'x' contains zero or negative values, then an error is returned.
 #' @param vebose Detailed description of the perils of setting a threshold less than one that appears if 'verbose = TRUE' and the 'threshold <1' and there are values less than 1 in 'x'.
 #' @param probs (geoquantile only) Numeric vector of probabilities between 0 and 1 for specifying which quantiles should be returned.
 #' @param type (geoquantile only) Integer scalar between 1 and 9 selecting one of the nine quantile algorithms. Default is type 2, the post-2010 SAS default, which uses the inverse of the empirical distribution function averaging at discontinuities.
 #' @param ... Additional arguments passed to functions
 #'
-#' @return Numeric scalar with sample geometric statistic for [geomean()], [geomedian()] and [geosd()]. Numeric vector the length of 'probs' for [geoquantiles()]
+#' @return Returns a numeric scalar with sample geometric statistic for [geomean()], [geomedian()] and [geosd()]. Returns a numeric vector the length of 'probs' for [geoquantiles()]
 #'
-#' @seealso [mean()], [median()], [sd()], [fivenum()], [quantile()] for the related arithmetic functions
+#' @seealso \code{\link[base:mean]{mean}}, \code{\link[base:median]{median}}, \code{\link[base:quantile]{quantile}}, \code{\link[base:sd]{sd}}, for the related arithmetic functions
 #'
 #' @details
-#' Each function takes a vector of non-negative numbers, log-transforms the numbers, finds the statistic for the numbers and then transforms the result back to the normal scale.
+#' Each function takes a vector of non-negative numbers, log-transforms the numbers, finds the statistic for the numbers and then transforms the result back to the normal scale. Zero and negative numbers must be changed to positive numbers. This can be handled using the 'threshold'. The defalut for threshold is 1, which when log-transformed becomes zero. [geoquantile()] requires both a vector of probabilities and the quantile method type. See [quantile()] for details on methods specified by type. [geomedian()] is a wrapper for [geoquantile(x, probs = 0.5, type = 2)].
 #' @examples
 #' # Linear and Exponential Data
-#' x <- seq(1:20)
+#' x <- 1:20
 #' y <- exp(x)
 #'
-#' Arithemetic mean and geometric mean give similar results for linear scale data
+#' Arithemetic mean and geometric mean
 #' geomean(x)
 #' mean(x)
 #'
-#' # Arithmetic mean and geometric mean give very different results for log-scale data
 #' geomean(y)
 #' mean(y)
 #'
@@ -41,17 +39,22 @@
 #' x[c(2, 10, 15)] <- NA
 #' x[c(4, 12, 17)] <- -1*x[c(4, 12, 17)]
 #' x[7] <- 0
-#' will produce an 'NA' result due to NA values in 'x'
-#' geomean(x, na.rm = FALSE)
-#' will produce an error due to zero and negative values in 'x'
-#' geomean(x, threshold = NULL)
-#' Setting the threshold at 1 works out to zero on the log scale, but there may be different assay thresholds.
+#' x[1] <- 0.2
+#'
+#' #The default is for 'NA' to be removed and a threshold is set at 1 to transform any values below 1 to 1.
+#' geosd(x, na.rm = TRUE, threshold = 1)
+#' #The threshold can be removed by setting it to 'NULL'. This will generate an error if there are any zero or negative values.
+#' \dontrun{geomedian(x, na.rm = FALSE)}
+#' \dontrun{geomean(x, threshold = NULL)}
 #' geomean(x, threshold = 0.1, verbose = TRUE)
 #'
+#' geoquantile(x <- rnorm(1001)) # Extremes & Quartiles by default
+#' geoquantile(x,  probs = c(0.1, 0.5, 1, 2, 5, 10, 50, NA)/100)
+#' geoquantile(x, type = 9)
 #'
 #' @export
 
-
+#' @describeIn geomean Mean for Log-transformed Data
 geomean <- function(
   x,
   na.rm = TRUE,
@@ -85,7 +88,7 @@ if (verbose == TRUE & any(x < 1) & (is.null(threshold)||threshold < 1)){
   exp(mean(log(x), na.rm = na.rm))
 }
 
-
+#' @describeIn geomean Quantiles for Log-transformed Data
 geoquantile <- function(
   x,
   probs = c(0, 0.25, 0.5, 0.75, 1),
@@ -132,6 +135,7 @@ geoquantile <- function(
   exp(quantile(log(x), probs = probs, na.rm = na.rm, type = type))
 }
 
+#' @describeIn geomean Median for Log-transformed Data
 geomedian <- function(
   x,
   na.rm = TRUE,
@@ -145,6 +149,7 @@ geomedian <- function(
                probs = 0.5)
 }
 
+#' @describeIn geomean Standard Deviation for Log-transformed Data
 geosd <- function(
   x,
   na.rm = TRUE,
