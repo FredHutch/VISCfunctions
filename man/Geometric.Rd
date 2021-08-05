@@ -56,7 +56,7 @@ Computes the sample geometric mean, standard deviation quantiles and median. The
 }
 }
 \details{
-Each function takes a vector of non-negative numbers, log-transforms the numbers, finds the statistic for the numbers and then transforms the result back to the normal scale. Zero and negative numbers must be changed to positive numbers. This can be handled using the 'threshold'. The defalut for threshold is 1, which when log-transformed becomes zero. \code{geoquantile()} requires both a vector of probabilities and the quantile method type. See \code{quantile()} for details on methods specified by type. \code{geomedian()} is a wrapper for \code{geoquantile(x, probs = 0.5, type = 2)}.
+Each function takes a vector of non-negative numbers, log-transforms the numbers, finds the statistic for the numbers and then transforms the result back to the normal scale. Zero and negative numbers must be changed to positive numbers. This can be handled using the 'threshold'. The default for threshold is 1, which when log-transformed becomes zero. \code{geoquantile()} requires both a vector of probabilities and the quantile method type. See \code{quantile()} for details on methods specified by type. \code{geomedian()} is a wrapper for \code{geoquantile(x, probs = 0.5, type = 2)}.
 }
 \section{Functions}{
 \itemize{
@@ -72,7 +72,7 @@ Each function takes a vector of non-negative numbers, log-transforms the numbers
 \examples{
 # Linear and Exponential Data
 x <- 1:20
-y <- exp(x)
+y <- exp(x)A
 
 #Arithemetic mean and geometric mean
 geomean(x)
