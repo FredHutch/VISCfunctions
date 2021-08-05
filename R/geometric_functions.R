@@ -1,16 +1,14 @@
-#' Functions for Log-Scale Transformations - Geometric Mean, Geomethric Median, Geometric Standard Deviation and Geometric Quantiles
-#'
+#' Functions for Log-Scale Transformations - Geometric Mean, Geometric Median, Geometric Standard Deviation and Geometric Quantiles
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
-#'
 #'
 #' Computes the sample geometric mean, standard deviation quantiles and median. These functions are more suitable "averages" than the arithmetic averages for data that is on a log (geometric) scale. There are four functions:
 #' * `geomean()` returns the geometric mean
 #' * `geomedian()` returns the geometric median
 #' * `geosd()` returns the geometric standard deviation
 #' * `geoquantile()` return the geometric quantiles
-#' @aliases geomedian(), geoquantiles(), geosd()
+#' @aliases geomedian(), geoquantile(), geosd()
 #' @param x Numeric vector. Vector must be longer than two elements.
 #' @param  na.rm Logical scalar indicating whether to remove missing values from 'x'. If 'na.rm = TRUE' (the default) missing values are removed from 'x' prior to computing the geometric mean. If 'na.rm = FALSE' and 'x' contains missing values, then a missing value ('NA') is returned.
 #' @param threshold Positive scalar indicating a lower bound for 'x'. If 'threshold = NULL', no threshold will be set and the data will remain unaltered. If the threshold is set to any positive number (the default is 1) all values below the threshold will be converted to the value in 'threshold'. If 'threshold = NULL' and 'x' contains zero or negative values, then an error is returned.
@@ -19,12 +17,12 @@
 #' @param verbose Logical scalar indicating if a warning should appear if there are values in 'x' that are less than 1 and the threshold is set to NULL or less than 1.
 #' @param ... Additional arguments passed to functions
 #'
-#' @return Returns a numeric scalar with sample geometric statistic for [geomean()], [geomedian()] and [geosd()]. Returns a numeric vector the length of 'probs' for [geoquantiles()]
+#' @return Returns a numeric scalar with sample geometric statistic for [geomean()], [geomedian()] and [geosd()]. Returns a numeric vector the length of 'probs' for [geoquantile()]
 #'
-#' @seealso \code{\link[base:mean]{mean}}, \code{\link[base:median]{median}}, \code{\link[base:quantile]{quantile}}, \code{\link[base:sd]{sd}}, for the related arithmetic functions
+#' @seealso \code{\link[base:mean]{mean}}, \code{\link[stats:median]{median}}, \code{\link[stats:quantile]{quantile}}, \code{\link[stats:sd]{sd}}, for the related arithmetic functions
 #'
 #' @details
-#' Each function takes a vector of non-negative numbers, log-transforms the numbers, finds the statistic for the numbers and then transforms the result back to the normal scale. Zero and negative numbers must be changed to positive numbers. This can be handled using the 'threshold'. The defalut for threshold is 1, which when log-transformed becomes zero. [geoquantile()] requires both a vector of probabilities and the quantile method type. See [quantile()] for details on methods specified by type. [geomedian()] is a wrapper for [geoquantile(x, probs = 0.5, type = 2)].
+#' Each function takes a vector of non-negative numbers, log-transforms the numbers, finds the statistic for the numbers and then transforms the result back to the normal scale. Zero and negative numbers must be changed to positive numbers. This can be handled using the 'threshold'. The defalut for threshold is 1, which when log-transformed becomes zero. \code{geoquantile()} requires both a vector of probabilities and the quantile method type. See \code{quantile()} for details on methods specified by type. \code{geomedian()} is a wrapper for \code{geoquantile(x, probs = 0.5, type = 2)}.
 #' @examples
 #' # Linear and Exponential Data
 #' x <- 1:20
@@ -60,16 +58,12 @@
 #' #  error if there are any zero or negative values.
 #' \dontrun{
 #' geomedian(x, na.rm = FALSE)
-#' }
-#' \dontrun{
 #' geomean(x, threshold = NULL)
-#' }
-#' \dontrun{
 #' geosd(x, threshold = 0.1, verbose = TRUE)
 #' }
 #'
 #' geoquantile(x <- rnorm(1001)) # Extremes & Quartiles by default
-#' geoquantile(x,  probs = c(.01, .1, 1))
+#' geoquantile(x,  probs = c(0, 0.01, 0.1, 1))
 #' geoquantile(x, type = 9)
 #'
 #' @export geomean
@@ -118,7 +112,6 @@ geoquantile <- function(
   ...
 ){# Input Checking
   #
-  requireNamespace("stats")
   # if the length of the vector is less than two, cannot compute mean
   # must be a numeric vector
   if (!is.numeric(x)) stop ('"x" must be a numeric vector.')

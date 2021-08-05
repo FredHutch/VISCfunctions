@@ -3,12 +3,12 @@
 \name{geomean}
 \alias{geomean}
 \alias{geomedian(),}
-\alias{geoquantiles(),}
+\alias{geoquantile(),}
 \alias{geosd()}
 \alias{geoquantile}
 \alias{geomedian}
 \alias{geosd}
-\title{Functions for Log-Scale Transformations - Geometric Mean, Geomethric Median, Geometric Standard Deviation and Geometric Quantiles}
+\title{Functions for Log-Scale Transformations - Geometric Mean, Geometric Median, Geometric Standard Deviation and Geometric Quantiles}
 \usage{
 geomean(x, na.rm = TRUE, threshold = 1L, verbose = FALSE)
 
@@ -42,7 +42,7 @@ geosd(x, na.rm = TRUE, threshold = 1L, verbose = FALSE)
 \item{...}{Additional arguments passed to functions}
 }
 \value{
-Returns a numeric scalar with sample geometric statistic for \code{\link[=geomean]{geomean()}}, \code{\link[=geomedian]{geomedian()}} and \code{\link[=geosd]{geosd()}}. Returns a numeric vector the length of 'probs' for \code{\link[=geoquantiles]{geoquantiles()}}
+Returns a numeric scalar with sample geometric statistic for \code{\link[=geomean]{geomean()}}, \code{\link[=geomedian]{geomedian()}} and \code{\link[=geosd]{geosd()}}. Returns a numeric vector the length of 'probs' for \code{\link[=geoquantile]{geoquantile()}}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
@@ -56,7 +56,7 @@ Computes the sample geometric mean, standard deviation quantiles and median. The
 }
 }
 \details{
-Each function takes a vector of non-negative numbers, log-transforms the numbers, finds the statistic for the numbers and then transforms the result back to the normal scale. Zero and negative numbers must be changed to positive numbers. This can be handled using the 'threshold'. The defalut for threshold is 1, which when log-transformed becomes zero. \code{\link[=geoquantile]{geoquantile()}} requires both a vector of probabilities and the quantile method type. See \code{\link[=quantile]{quantile()}} for details on methods specified by type. \code{\link[=geomedian]{geomedian()}} is a wrapper for \link{geoquantile(x, probs = 0.5, type = 2)}.
+Each function takes a vector of non-negative numbers, log-transforms the numbers, finds the statistic for the numbers and then transforms the result back to the normal scale. Zero and negative numbers must be changed to positive numbers. This can be handled using the 'threshold'. The defalut for threshold is 1, which when log-transformed becomes zero. \code{geoquantile()} requires both a vector of probabilities and the quantile method type. See \code{quantile()} for details on methods specified by type. \code{geomedian()} is a wrapper for \code{geoquantile(x, probs = 0.5, type = 2)}.
 }
 \section{Functions}{
 \itemize{
@@ -104,19 +104,15 @@ geomean(x, na.rm = TRUE, threshold = 1)
 #  error if there are any zero or negative values.
 \dontrun{
 geomedian(x, na.rm = FALSE)
-}
-\dontrun{
 geomean(x, threshold = NULL)
-}
-\dontrun{
 geosd(x, threshold = 0.1, verbose = TRUE)
 }
 
 geoquantile(x <- rnorm(1001)) # Extremes & Quartiles by default
-geoquantile(x,  probs = c(.01, .1, 1))
+geoquantile(x,  probs = c(0, 0.01, 0.1, 1))
 geoquantile(x, type = 9)
 
 }
 \seealso{
-\code{\link[base:mean]{mean}}, \code{\link[base:median]{median}}, \code{\link[base:quantile]{quantile}}, \code{\link[base:sd]{sd}}, for the related arithmetic functions
+\code{\link[base:mean]{mean}}, \code{\link[stats:median]{median}}, \code{\link[stats:quantile]{quantile}}, \code{\link[stats:sd]{sd}}, for the related arithmetic functions
 }
