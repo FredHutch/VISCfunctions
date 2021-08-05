@@ -91,9 +91,15 @@ test_that("geo functions error when threshold is less than 0, or non-numerical",
 })
 
 test_that("geo functions error when threshold is null",{
-  expect_error(geomean(0:5, threshold = NULL, verbose = TRUE))
-  expect_error(geosd(0:5, threshold = NULL, verbose = TRUE))
-  expect_error(geoquantile(0:5, threshold = NULL, verbose = TRUE))
+  expect_error(geomean(-1:5, threshold = NULL, verbose = FALSE),
+               '"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
+  expect_error(geosd(-1:5, threshold = NULL, verbose = FALSE),
+               '"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
+  expect_error(geoquantile(-1:5, threshold = NULL, verbose = FALSE),
+               '"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
+  expect_warning(geomean(0.1:5, threshold = NULL, verbose = TRUE))
+  expect_warning(geosd(0.1:5, threshold = NULL, verbose = TRUE))
+  expect_warning(geoquantile(0.1:5, threshold = NULL, verbose = TRUE))
 })
 
 test_that("geo functions error when threshold is higher than the data.",{

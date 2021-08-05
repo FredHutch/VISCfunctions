@@ -56,8 +56,8 @@ geomean <- function(
   x,
   na.rm = TRUE,
   threshold = 1L,
-  verbose = FALSE
-){# Input Checking
+  verbose = FALSE)
+  {# Input Checking
   # must be a numeric vector, not a factor
   if (!is.numeric(x)) stop ('"x" must be a numeric vector.')
   if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE).')
@@ -67,7 +67,9 @@ geomean <- function(
   if (!is.null(threshold)){
     if (length(threshold) != 1) stop('"threshold" must have a length of one.')
     if (threshold > max(x, na.rm = TRUE))  stop('"threshold" must be less than at least one value of "x"')
-    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
+    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
+  }else{
+    if (any(x <= 0)) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
   }
 if (verbose == TRUE & any(x < 1) & (is.null(threshold)||threshold < 1)){
     # Explain thresholds less than one
@@ -102,16 +104,18 @@ geoquantile <- function(
   if (!is.numeric(type)) stop ('"type" must be numeric.')
   if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE).')
   if (!(is.numeric(threshold)|is.null(threshold))) stop('"threshold" must be numeric or null')
-  if (length(x) < 2) stop('"x" must have a length more than two.')
   if (length(probs) < 1) stop('"probs" must have a length of at least one.')
   if (any(probs < 0) | any(probs > 1)) stop('"probs" must have a must be between 0 and 1.')
   if (type < 1 | type > 9) stop('"type" must be a numeral between 1 and 9.')
+  if (length(x) < 2) stop('"x" must have a length more than two.')
   if (!is.null(threshold)){
     if (length(threshold) != 1) stop('"threshold" must have a length of one.')
     if (threshold > max(x, na.rm = TRUE))  stop('"threshold" must be less than at least one value of "x"')
-    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
+    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
+  }else{
+    if (any(x <= 0)) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
   }
-if (verbose == TRUE & any(x < 1) & (is.null(threshold)||threshold < 1)){
+  if (verbose == TRUE & any(x < 1) & (is.null(threshold)||threshold < 1)){
     # Explain thresholds less than one
     warning("Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceeding zeros. Thresholds set to one will become zero upon log transformation.")}
   # Conversions
@@ -155,7 +159,9 @@ geosd <- function(
   if (!is.null(threshold)){
     if (length(threshold) != 1) stop('"threshold" must have a length of one.')
     if (threshold > max(x, na.rm = TRUE))  stop('"threshold" must be less than at least one value of "x"')
-    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
+    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
+  }else{
+    if (any(x <= 0)) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
   }
   if (verbose == TRUE & any(x < 1) & (is.null(threshold)||threshold < 1)){
     # Explain thresholds less than one
