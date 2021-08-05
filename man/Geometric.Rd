@@ -72,7 +72,7 @@ Each function takes a vector of non-negative numbers, log-transforms the numbers
 \examples{
 # Linear and Exponential Data
 x <- 1:20
-y <- exp(x)A
+y <- exp(x)
 
 #Arithemetic mean and geometric mean
 geomean(x)

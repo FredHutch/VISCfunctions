@@ -120,8 +120,8 @@ geoquantile <- function(
   if (!is.numeric(type)) stop ('"type" must be numeric.')
   if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
   if (!(is.numeric(threshold)|is.null(threshold))) stop('"threshold" must be numeric or null')
-  if (length(probs) < 1) stop('"probs" must have a length of at least one.')
-  if (any(probs < 0) | any(probs > 1)) stop('"probs" must have a must be between 0 and 1.')
+  #if (length(probs) < 1) stop('"probs" must have a length of at least one.')
+  if (any(probs < 0) | any(probs > 1)) stop('"probs" must be between 0 and 1.')
   if (type < 1 | type > 9) stop('"type" must be a numeral between 1 and 9.')
   if (length(x) < 2) stop('"x" must have a length more than two.')
   if (!is.null(threshold)){
