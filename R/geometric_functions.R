@@ -55,36 +55,29 @@
 geomean <- function(
   x,
   na.rm = TRUE,
-  threshold = 1,
+  threshold = 1L,
   verbose = FALSE
 ){# Input Checking
   # must be a numeric vector, not a factor
-  if (!is.vector(x, mode = "numeric") || is.factor(x)) stop ('"x" must be a numeric vector.')
-  # must be a logical scalar
-  if(!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE)')
-  # must be either a numeric scalar or NULL
-  if (!is.numeric(threshold) | is.null(threshold)) stop('"threshold" must be numeric or null')
-  # if the length of the vector is less than two, cannot compute a statistic
+  if (!is.numeric(x)) stop ('"x" must be a numeric vector.')
+  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE).')
+  if (!(is.numeric(threshold)|is.null(threshold))) stop('"threshold" must be numeric or null')
   if (length(x) < 2) stop('"x" must have a length more than two.')
-  if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
-  # if there are any zero or negative numbers and threshold is null throw an error
-  if(any(x <= 0 & is.null(threshold))) stop('There are zero or negative values
-                                            in "x". Set "threshold" to a
-                                            positive number, or remove zeros and
-                                            negatives from "x" before calculating.')
-  if (verbose == TRUE & threshold < 1 & any(x < 1)){
-    # Explain thresholds less than one
-    "Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceeding zeros. Thresholds set to one will become zero upon log-transformation."
+  #threshold options
+  if (!is.null(threshold)){
+    if (length(threshold) != 1) stop('"threshold" must have a length of one.')
+    if (threshold > max(x, na.rm = TRUE))  stop('"threshold" must be less than at least one value of "x"')
+    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
   }
+if (verbose == TRUE & any(x < 1) & (is.null(threshold)||threshold < 1)){
+    # Explain thresholds less than one
+    warning("Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceeding zeros. Thresholds set to one will become zero upon log transformation.")}
+
   # Conversions
   # set the values less than the threshold to the threshold
-  if (!is.null(threshold)) {
-     x[x <= threshold] <- threshold
-  }
+  if (!is.null(threshold)) { x[x <= threshold] <- threshold}
   # decrease the length of 'x' if there are 'NA' values in 'x' and 'na.rm' is FALSE
-  if (na.rm) {
-    x <- x[!is.na(x)]
-  }
+  if (na.rm) {x <- x[!is.na(x)]}
   # Function
   #
   exp(mean(log(x), na.rm = na.rm))
@@ -96,7 +89,7 @@ geoquantile <- function(
   probs = c(0, 0.25, 0.5, 0.75, 1),
   type = 2,
   na.rm = TRUE,
-  threshold = 1,
+  threshold = 1L,
   verbose = FALSE,
   ...
 ){# Input Checking
@@ -107,23 +100,20 @@ geoquantile <- function(
   if (!is.numeric(probs)) stop ('"probs" must be numeric.')
   if (is.logical(probs)) stop ('"probs" must be numeric.')
   if (!is.numeric(type)) stop ('"type" must be numeric.')
-  if (!is.numeric(threshold) | is.null(threshold)) stop('"threshold" must be numeric or null')
-  if(!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE).')
+  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE).')
+  if (!(is.numeric(threshold)|is.null(threshold))) stop('"threshold" must be numeric or null')
   if (length(x) < 2) stop('"x" must have a length more than two.')
-  if (length(threshold) != 1 & !is.null(threshold)) stop('"threshold" must have a length of one.')
   if (length(probs) < 1) stop('"probs" must have a length of at least one.')
   if (any(probs < 0) | any(probs > 1)) stop('"probs" must have a must be between 0 and 1.')
   if (type < 1 | type > 9) stop('"type" must be a numeral between 1 and 9.')
-  if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
-  # if there are any zero or negative numbers and threshold is null throw an error
-  if(any(x <= 0 & is.null(threshold))) stop('There are zero or negative values
-                                            in "x". Set "threshold" to a
-                                            positive number, or remove zeros and
-                                            negatives from "x" before calculating.')
-  if (verbose == TRUE & threshold < 1 & any(x < 1)){
-    # Explain thresholds less than one
-    "Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceeding zeros. Thresholds set to one will become zero upon log-transformation."
+  if (!is.null(threshold)){
+    if (length(threshold) != 1) stop('"threshold" must have a length of one.')
+    if (threshold > max(x, na.rm = TRUE))  stop('"threshold" must be less than at least one value of "x"')
+    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
   }
+if (verbose == TRUE & any(x < 1) & (is.null(threshold)||threshold < 1)){
+    # Explain thresholds less than one
+    warning("Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceeding zeros. Thresholds set to one will become zero upon log transformation.")}
   # Conversions
   # set the values less than the threshold to the threshold
   if (!is.null(threshold)) {
@@ -141,7 +131,7 @@ geoquantile <- function(
 geomedian <- function(
   x,
   na.rm = TRUE,
-  threshold = 1,
+  threshold = 1L,
   verbose = FALSE
 ){geoquantile(x = x,
                na.rm = na.rm,
@@ -154,27 +144,24 @@ geomedian <- function(
 geosd <- function(
   x,
   na.rm = TRUE,
-  threshold = 1,
+  threshold = 1L,
   verbose = FALSE
 ){# Input Checking
   # must be a numeric vector, not a factor
-  if (!is.vector(x, mode = "numeric") || is.factor(x)) stop ('"x" must be a numeric vector.')
-  # must be a logical scalar
-  if(!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE)')
-  # must be either a numeric scalar or NULL
-  if (!is.numeric(threshold) | is.null(threshold)) stop('"threshold" must be numeric or null')
-  # if the length of the vector is less than two, cannot compute a statistic
+  if (!is.numeric(x)) stop ('"x" must be a numeric vector.')
+  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e. TRUE or FALSE).')
+  if (!(is.numeric(threshold)|is.null(threshold))) stop('"threshold" must be numeric or null')
   if (length(x) < 2) stop('"x" must have a length more than two.')
-  if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
-  # if there are any zero or negative numbers and threshold is null throw an error
-  if(any(x <= 0 & is.null(threshold))) stop('There are zero or negative values
-                                            in "x". Set "threshold" to a
-                                            positive number, or remove zeros and
-                                            negatives from "x" before calculating.')
-  if (verbose == TRUE & threshold < 1 & any(x < 1)){
-    # Explain thresholds less than one
-    "Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceeding zeros. Thresholds set to one will become zero upon log-transformation."
+  if (!is.null(threshold)){
+    if (length(threshold) != 1) stop('"threshold" must have a length of one.')
+    if (threshold > max(x, na.rm = TRUE))  stop('"threshold" must be less than at least one value of "x"')
+    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero.')
   }
+  if (verbose == TRUE & any(x < 1) & (is.null(threshold)||threshold < 1)){
+    # Explain thresholds less than one
+    warning("Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceeding zeros. Thresholds set to one will become zero upon log transformation.")}
+  # if there are any zero or negative numbers and threshold is null throw an error
+
   # Conversions
   # set the values less than the threshold to the threshold
   if (!is.null(threshold)) {
