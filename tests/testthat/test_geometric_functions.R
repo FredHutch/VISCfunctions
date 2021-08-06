@@ -129,6 +129,7 @@ test_that("geo functions error when threshold is less than 0, or non-numerical",
 test_that("geoquantiles error if provided with probabilites outside [0,1]", {
   expect_error(geoquantile(1:5, probs = 10))
   expect_error(geoquantile(1:5, probs = -1))
+  expect_error(geoquantile(1:5, probs = 1:5), '"probs" must have a length of at least one.')
   expect_error(geoquantile(1:5, probs = c("green", "blue")), '"probs" must be numeric')
   expect_error(geoquantile(1:5, probs = TRUE), '"probs" must be numeric')
 })
