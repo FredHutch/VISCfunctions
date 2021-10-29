@@ -1,3 +1,7 @@
+# VISCfunctions 1.2.2
+
+* Fixed bug in `pairwise_test_cont()` to properly catch paired comparisons where no paired data points exist.
+
 # VISCfunctions 1.2.1
 
 * `pairwise_test_cor()` is now named `cor_test_pairs()`. The function `cor_test_pairs()` now returns a data.frame with information on any ties in each variable instead of number of unique values.
