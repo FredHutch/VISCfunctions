@@ -230,10 +230,9 @@ pairwise_test_cont <- function(
         j_data <-
           data.frame(y = x[group == j_group], id = id[group == j_group])
         data_here <- stats::na.omit(merge(i_data, j_data, by = 'id'))
-        print(data_here)
         if (nrow(data_here) == 0) {
           if (verbose)
-            message('No paired samples for levels', i_group, ' and ', j_group)
+            message('No paired samples for levels ', i_group, ' and ', j_group)
           next()
         }
         i_vals <- data_here$x
@@ -329,8 +328,9 @@ pairwise_test_cont <- function(
     }
   }
 
+  if (length(results_list) == 0) return(NULL)
+
   results <- do.call(base::rbind, results_list)
-  if (nrow(results) == 0) stop('No comparisons could be made.')
 
   # Pasting together stats
   pasted_results <- paste_tbl_grp(
