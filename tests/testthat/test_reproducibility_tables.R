@@ -16,7 +16,8 @@ test_that("get_session_info() testing", {
   temp_session_info <- get_session_info()
 
   # testing dimension
-  nrow_expected <- ifelse(any(temp_session_info$platform_table$name == "repo"), 13, 12)
+  nrow_expected <- length(sessioninfo::session_info()[[1]]) +
+    ifelse(any(temp_session_info$platform_table$name == "repo"), 4, 3)
   expect_equal(object = dim(temp_session_info$platform_table), expected = c(nrow_expected,2))
 
   ncol_expected <- ifelse(any(colnames(temp_session_info$packages_table) == "data.version"), 5, 4)
