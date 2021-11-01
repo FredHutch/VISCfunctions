@@ -1,6 +1,8 @@
 # VISCfunctions 1.2.2
 
 * Fixed bug in `pairwise_test_cont()` to properly catch paired comparisons where no paired data points exist.
+* Updated `get_session_info()` test to account for changes in `sessioninfo::session_info()`
+* Removed `car` dependancy
 
 # VISCfunctions 1.2.1
 
