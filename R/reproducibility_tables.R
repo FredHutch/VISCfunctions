@@ -195,6 +195,12 @@ get_session_info <- function(){
 
   # Replacing @ with # in source
   my_session_info2$source <- gsub('\\(@', '(', my_session_info2$source)
+  # Use short git hash
+  my_session_info2$source <- sub(
+    '([@][0-9a-f]{7})[0-9a-f]{33}',
+    '\\1',
+    my_session_info2$source
+  )
 
   list(platform_table = my_session_info1, packages_table = my_session_info2)
 }
