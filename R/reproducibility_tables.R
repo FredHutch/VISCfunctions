@@ -196,6 +196,8 @@ get_session_info <- function(){
   # Replacing @ with # in source
   my_session_info2$source <- gsub('\\(@', '(', my_session_info2$source)
   # Use short git hash
+  # find '@' followed by 40 hex digits,
+  # and substitute with the '@' and the first 7 hex digits in ()-captured group.
   my_session_info2$source <- sub(
     '([@][0-9a-f]{7})[0-9a-f]{33}',
     '\\1',
