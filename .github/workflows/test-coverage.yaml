@@ -6,8 +6,6 @@ on:
 
 name: test-coverage.yaml
 
-permissions: read-all
-
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
