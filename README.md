@@ -27,7 +27,8 @@ The package is available on the Fred Hutch organization GitHub page.
 ``` r
 remotes::install_github("FredHutch/VISCfunctions")
 
-# Use the build_vignettes parameter to access the vignette:
+# Use the build_vignettes parameter to access the vignette
+# (Note that this may auto-upgrade dependencies - this behavior can be controlled with the `upgrade` argument)
 remotes::install_github("FredHutch/VISCfunctions", dependencies = TRUE, build_vignettes = TRUE)
 vignette("Overview")
 ```
