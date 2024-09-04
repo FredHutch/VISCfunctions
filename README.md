@@ -4,7 +4,7 @@
 [![R build
 status](https://github.com/FredHutch/VISCfunctions/workflows/R-CMD-check/badge.svg)](https://github.com/FredHutch/VISCfunctions/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/FredHutch/VISCfunctions/branch/main/graph/badge.svg)](https://codecov.io/gh/FredHutch/VISCfunctions?branch=main)
+coverage](https://codecov.io/gh/FredHutch/VISCfunctions/graph/badge.svg)](https://app.codecov.io/gh/FredHutch/VISCfunctions)
 [![License:MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
