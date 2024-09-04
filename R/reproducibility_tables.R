@@ -193,8 +193,14 @@ get_session_info <- function(){
     my_session_info2$data.version[is.na(my_session_info2$data.version)] <- '' else
       my_session_info2 <- my_session_info2[, -match('data.version', colnames(my_session_info2))]
 
-  # Replacing @ with # in source
-  my_session_info2$source <- gsub('\\(@', '(', my_session_info2$source)
+  # Use short git hash
+  # find '@' followed by 40 hex digits,
+  # and substitute with the '@' and the first 7 hex digits in ()-captured group.
+  my_session_info2$source <- sub(
+    '([@][0-9a-f]{7})[0-9a-f]{33}',
+    '\\1',
+    my_session_info2$source
+  )
 
   list(platform_table = my_session_info1, packages_table = my_session_info2)
 }
