@@ -11,7 +11,6 @@ output:
     number_sections: true
     keep_tex: true
 header-includes:
-  - \hypersetup{colorlinks=true, linkcolor=blue}
   - \usepackage{booktabs}
   - \usepackage{longtable}
   - \usepackage{array}
@@ -31,6 +30,8 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+\hypersetup{colorlinks=true, linkcolor=blue}
 
 \listoftables
 
