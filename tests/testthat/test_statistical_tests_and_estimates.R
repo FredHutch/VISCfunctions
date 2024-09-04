@@ -81,20 +81,19 @@ test_that("two_samp_cont_test testing various options (no errors)", {
   # T-Test Unpaired
   #t.test(x[1:10], x[13:22], paired=F, var.equal = F)$p.value
   expect_equal(object = two_samp_cont_test(x = x, y = y, method = 't', paired = FALSE, verbose = T),
-               expected = t.test(x~factor(y), paired = F, var.equal = F)$p.value,
+               expected = t.test(x~factor(y), var.equal = F)$p.value,
                tolerance = 1e-8)
   # T-Test Paired
-  #Note the list also works: t.test(x[1:10], x[13:22], paired=T, var.equal = F)$p.value
   expect_equal(object = two_samp_cont_test(x = x[-(11:12)], y = y[-(11:12)], method = 't', paired = TRUE, verbose = T),
-               expected = t.test(x[-c(1,10:13,22)]~factor(y[-c(1,10:13,22)]), paired = T, var.equal = F)$p.value,
+               expected = t.test(x[1:10], x[13:22], paired = T, var.equal = F)$p.value,
                tolerance = 1e-8)
   #Testing var.equal = T option in T-Test Unpaired
   expect_equal(object = two_samp_cont_test(x = x, y = y, method = 't', paired = FALSE, verbose = T, var.equal = T),
-               expected = t.test(x~factor(y), paired = F, var.equal = T)$p.value,
+               expected = t.test(x~factor(y), var.equal = T)$p.value,
                tolerance = 1e-8)
   #Testing alternative param can be used
   expect_equal(object = two_samp_cont_test(x = x, y = y, method = 't', paired = FALSE, verbose = T, alternative = 'less'),
-               expected = t.test(x~factor(y), paired = F, alternative = 'less')$p.value,
+               expected = t.test(x~factor(y), alternative = 'less')$p.value,
                tolerance = 1e-8)
 
   #Testing t.test where both levels of y have a single x value
