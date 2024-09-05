@@ -1,3 +1,5 @@
+# VISCfunctions (development version)
+
 # VISCfunctions 1.2.3
 
 * Use shorter git hash in reproducibility table (#92)
