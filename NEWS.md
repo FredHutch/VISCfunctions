@@ -1,3 +1,5 @@
+# VISCfunctions (development version)
+
 # VISCfunctions 1.2.2
 
 * Fixed bug in `pairwise_test_cont()` to properly catch paired comparisons where no paired data points exist.
