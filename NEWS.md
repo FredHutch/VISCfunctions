@@ -1,4 +1,4 @@
-# VISCfunctions (development version)
+# VISCfunctions 1.2.3
 
 * Use shorter git hash in reproducibility table (#92)
 * Update t-test syntax in unit test expectations to avoid new error message introduced in R >= 4.4 (#89)
