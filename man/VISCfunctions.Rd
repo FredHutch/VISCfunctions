@@ -2,8 +2,8 @@
 % Please edit documentation in R/VISCfunctions.r
 \docType{package}
 \name{VISCfunctions}
-\alias{VISCfunctions}
 \alias{VISCfunctions-package}
+\alias{VISCfunctions}
 \title{VISCfunctions: VISC STP/SRA functions}
 \description{
 Statistical, data processing, and annotation functions for VISC.
