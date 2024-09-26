@@ -1,5 +1,7 @@
 # VISCfunctions (development version)
 
+* Suppress warning from get_full_name() when fragile ldapsearch system call fails on Linux and macOS (#96)
+
 # VISCfunctions 1.2.3
 
 * Use shorter git hash in reproducibility table (#92)
