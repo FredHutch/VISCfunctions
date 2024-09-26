@@ -35,7 +35,7 @@ get_full_name <- function(id = NULL){
          Linux   = {
            if (is.null(id)) {id <- Sys.getenv("USER")}
            myargs <- paste0("-x -h ldapint.pc.scharp.org -b dc=scharp,dc=org uid=", id)
-           user <- tryCatch({system2("ldapsearch", args = myargs, stdout = TRUE)},
+           user <- tryCatch({system2("ldapsearch", args = myargs, stdout = TRUE, stderr = FALSE)},
                             warning = function(w){NULL},
                             error = function(e){NULL})
            user <- user[grep("cn:", user)]
@@ -48,7 +48,7 @@ get_full_name <- function(id = NULL){
          Darwin  = {
            if (is.null(id)) {id <- Sys.getenv("USER")}
            myargs <- paste0("-x -h ldapint.pc.scharp.org -b dc=scharp,dc=org uid=", id)
-           user <- tryCatch({system2("ldapsearch", args = myargs, stdout = TRUE)},
+           user <- tryCatch({system2("ldapsearch", args = myargs, stdout = TRUE, stderr = FALSE)},
                             warning = function(w){NULL},
                             error = function(e){NULL})
            user <- user[grep("cn:", user)]
