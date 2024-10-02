@@ -1,3 +1,5 @@
+# VISCfunctions (development version)
+
 # VISCfunctions 1.2.4
 
 * Suppress warning from get_full_name() when fragile ldapsearch system call fails on Linux and macOS (#96)
