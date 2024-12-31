@@ -265,6 +265,10 @@ pairwise_test_cont <- function(
           Group2_median = 10^stats::median(log10(j_vals), na.rm = T),
           Group1_max = max(i_vals, na.rm = T),
           Group2_max = max(j_vals, na.rm = T),
+          Group1_first_quart = stats::quantile(i_vals, probs = c(.25), na.rm = T),
+          Group2_first_quart = stats::quantile(j_vals, probs = c(.25), na.rm = T),
+          Group1_third_quart = stats::quantile(i_vals, probs = c(.75), na.rm = T),
+          Group2_third_quart = stats::quantile(j_vals, probs = c(.75), na.rm = T),
           Group1_mean = 10^mean(log10(i_vals), na.rm = T),
           Group2_mean = 10^mean(log10(j_vals), na.rm = T),
           Group1log_mean = mean(log10(i_vals), na.rm = T),
@@ -286,6 +290,10 @@ pairwise_test_cont <- function(
           Group2_max = max(j_vals, na.rm = T),
           Group1_mean = mean(i_vals, na.rm = T),
           Group2_mean = mean(j_vals, na.rm = T),
+          Group1_first_quart = stats::quantile(i_vals, probs = c(.25), na.rm = T),
+          Group2_first_quart = stats::quantile(j_vals, probs = c(.25), na.rm = T),
+          Group1_third_quart = stats::quantile(i_vals, probs = c(.75), na.rm = T),
+          Group2_third_quart = stats::quantile(j_vals, probs = c(.75), na.rm = T),
           Group1_sd = stats::sd(i_vals, na.rm = T),
           Group2_sd = stats::sd(j_vals, na.rm = T)
         )
@@ -334,7 +342,7 @@ pairwise_test_cont <- function(
 
   # Pasting together stats
   pasted_results <- paste_tbl_grp(
-    data = results, vars_to_paste = c("n","median_min_max",'mean'),
+    data = results, vars_to_paste = c("n","median_min_max",'mean', "median_first_quart_third_quart"),
     first_name = 'Group1', second_name = 'Group2', sep_val = sep_val,
     alternative = alternative, digits = digits, trailing_zeros = trailing_zeros,
     keep_all = TRUE, verbose = verbose)
@@ -363,6 +371,7 @@ pairwise_test_cont <- function(
         Median_Min_Max = pasted_results$median_min_max_comparison,
         Mean = pasted_results$mean_comparison,
         log_Mean_SD = pasted_results_extra$mean_sd_comparison,
+        Median_Quartiles = pasted_results$median_first_quart_third_quart,
         MagnitudeTest = results$MagnitudeTest,
         PerfectSeparation = results$PerfectSeparation,
         stringsAsFactors = FALSE
@@ -387,6 +396,7 @@ pairwise_test_cont <- function(
         SampleSizes = pasted_results$n_comparison,
         Median_Min_Max = pasted_results$median_min_max_comparison,
         Mean_SD = pasted_results_extra$mean_sd_comparison,
+        Median_Quartiles = pasted_results$median_first_quart_third_quart,
         MagnitudeTest = results$MagnitudeTest,
         PerfectSeparation = results$PerfectSeparation,
         stringsAsFactors = FALSE
