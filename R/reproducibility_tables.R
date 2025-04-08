@@ -184,16 +184,16 @@ get_session_info <- function(libpath = FALSE){
   # TABLE 2
   my_session_info2 <- packages[packages$attached,] %>% # Only want attached packages
     as.data.frame() %>%
-    mutate(
+    dplyr::mutate(
       # Pulling in Data Version numbers
-      data.version = purrr::map_chr(package, utils::packageDescription, fields = 'DataVersion')
+      data.version = purrr::map_chr(.data[['package']], utils::packageDescription, fields = 'DataVersion')
     ) %>%
-    rename(version = loadedversion)
+    dplyr::rename(version = .data[['loadedversion']])
   if (libpath){
-    my_session_info2 <- my_session_info2 %>% rename(libpath = library)
+    my_session_info2 <- my_session_info2 %>% dplyr::rename(libpath = .data[['library']])
   }
   my_session_info2 <- my_session_info2 %>%
-    select(any_of(
+    dplyr::select(dplyr::any_of(
       c('package', 'version', 'data.version', 'date', 'source', 'libpath')
     ))
   if (any(!is.na(my_session_info2$data.version)))

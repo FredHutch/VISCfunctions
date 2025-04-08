@@ -44,7 +44,7 @@ test_that("get_session_info() testing", {
                                  source = expected_packages$source,
                                  stringsAsFactors = FALSE) %>%
   # need to re-shorten git hash after source is extracted from the object of class `packages_info`
-  mutate(source = sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', source))
+  dplyr::mutate(source = sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', source))
 
   expect_equal(object = temp_session_info$packages_table, expected = expected_packages)
 
