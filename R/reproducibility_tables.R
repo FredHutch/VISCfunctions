@@ -108,7 +108,7 @@ get_full_name <- function(id = NULL){
 #' @export
 
 
-get_session_info <- function(){
+get_session_info <- function(libpath = FALSE){
 
   username <- tryCatch(get_full_name(),
                        error = function(c)
@@ -181,14 +181,20 @@ get_session_info <- function(){
 
 
   # TABLE 2
-  my_session_info2 <- packages[packages$attached,] # Only want attached packages
-  my_session_info2 <- data.frame(package = my_session_info2$package,
-                                 version = my_session_info2$loadedversion,
-                                 # Pulling in Data Version numbers
-                                 data.version = purrr::map_chr(my_session_info2$package, utils::packageDescription, fields = 'DataVersion'),
-                                 date = my_session_info2$date,
-                                 source = my_session_info2$source,
-                                 stringsAsFactors = FALSE)
+  my_session_info2 <- packages[packages$attached,] %>% # Only want attached packages
+    as.data.frame() %>%
+    mutate(
+      # Pulling in Data Version numbers
+      data.version = purrr::map_chr(package, utils::packageDescription, fields = 'DataVersion')
+    ) %>%
+    rename(version = loadedversion)
+  if (libpath){
+    my_session_info2 <- my_session_info2 %>% rename(libpath = library)
+  }
+  my_session_info2 <- my_session_info2 %>%
+    select(any_of(
+      c('package', 'version', 'data.version', 'date', 'source', 'libpath')
+    ))
   if (any(!is.na(my_session_info2$data.version)))
     my_session_info2$data.version[is.na(my_session_info2$data.version)] <- '' else
       my_session_info2 <- my_session_info2[, -match('data.version', colnames(my_session_info2))]
@@ -201,6 +207,8 @@ get_session_info <- function(){
     '\\1',
     my_session_info2$source
   )
+  # reset row names to match unit tests
+  rownames(my_session_info2) <- NULL
 
   list(platform_table = my_session_info1, packages_table = my_session_info2)
 }
