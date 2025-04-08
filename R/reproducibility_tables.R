@@ -70,6 +70,7 @@ get_full_name <- function(id = NULL){
 #'
 #'
 #' @return list of length two, containing dataframe of Software Session Information and dataframe of Software Package Version Information
+#' @param libpath Show R package library path column in packages table
 #'
 #' @details
 #'
