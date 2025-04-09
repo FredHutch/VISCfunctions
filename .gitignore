@@ -18,3 +18,5 @@ packrat/lib*/
 inst/doc
 doc
 Meta
+/doc/
+/Meta/
