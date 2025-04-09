@@ -183,8 +183,6 @@ get_session_info <- function(libpath = FALSE){
 
   # TABLE 2
   my_session_info2 <- packages[packages$attached,] # Only want attached packages
-  # Pulling in Data Version numbers
-
   my_session_info2 <- with(my_session_info2, {
     data.frame(package = package,
                version = loadedversion,
