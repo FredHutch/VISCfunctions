@@ -18,6 +18,7 @@ Imports:
     Exact,
     kableExtra,
     knitr,
+    lifecycle,
     purrr,
     sessioninfo,
     survival,
@@ -30,8 +31,7 @@ Suggests:
     rmarkdown,
     testthat,
     stringr,
-    tibble,
-    lifecycle
+    tibble
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
