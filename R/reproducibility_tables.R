@@ -182,34 +182,36 @@ get_session_info <- function(libpath = FALSE){
 
 
   # TABLE 2
-  my_session_info2 <- packages[packages$attached,] %>% # Only want attached packages
-    as.data.frame() %>%
-    dplyr::mutate(
-      # Pulling in Data Version numbers
-      data.version = purrr::map_chr(.data[['package']], utils::packageDescription, fields = 'DataVersion')
-    ) %>%
-    dplyr::rename(version = .data[['loadedversion']])
-  if (libpath){
-    my_session_info2 <- my_session_info2 %>% dplyr::rename(libpath = .data[['library']])
-  }
-  my_session_info2 <- my_session_info2 %>%
-    dplyr::select(dplyr::any_of(
-      c('package', 'version', 'data.version', 'date', 'source', 'libpath')
-    ))
+  my_session_info2 <- packages[packages$attached,] # Only want attached packages
+  # Pulling in Data Version numbers
+
+  my_session_info2 <- with(my_session_info2, {
+    data.frame(package = package,
+               version = loadedversion,
+               # Pulling in Data Version numbers
+               data.version = purrr::map_chr(package, utils::packageDescription, fields = 'DataVersion'),
+               date = date,
+               source = source,
+               libpath = library)
+  })
+  if (! libpath) my_session_info2$libpath <- NULL
   if (any(!is.na(my_session_info2$data.version)))
     my_session_info2$data.version[is.na(my_session_info2$data.version)] <- '' else
       my_session_info2 <- my_session_info2[, -match('data.version', colnames(my_session_info2))]
 
   # Use short git hash
-  # find '@' followed by 40 hex digits,
-  # and substitute with the '@' and the first 7 hex digits in ()-captured group.
-  my_session_info2$source <- sub(
-    '([@][0-9a-f]{7})[0-9a-f]{33}',
-    '\\1',
-    my_session_info2$source
-  )
-  # reset row names to match unit tests
-  rownames(my_session_info2) <- NULL
+  my_session_info2$source <- shorten_git_hash(my_session_info2$source)
 
   list(platform_table = my_session_info1, packages_table = my_session_info2)
 }
+
+
+#' Shorten git hash
+#'
+#' Internal function for Reproducibility Tables. find '@' followed by 40 hex
+#' digits, and substitute with the '@' and the first 7 hex digits in ()-captured
+#' group.
+#'
+#' @param x String containing `@` followed by long git hash
+#' @return String containing `@` followed by short git hash
+shorten_git_hash <- function(x) sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', x)

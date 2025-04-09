@@ -2,6 +2,7 @@
 % Please edit documentation in R/VISCfunctions.r
 \docType{package}
 \name{VISCfunctions}
+\alias{VISCfunctions-package}
 \alias{VISCfunctions}
 \title{VISCfunctions: VISC STP/SRA functions}
 \description{
