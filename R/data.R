@@ -74,3 +74,35 @@
 #' }
 #' @source \url{https://dataspace.cavd.org}
 "CAVD812_mAB"
+
+#' @title Example B-cell flow-and-summary file derived from G001
+#' @description Example B-cell flow-and-summary file derived from G001
+#' @format A data frame with 3995 rows and 23 variables:
+#' \describe{
+#'   \item{\code{PubID}}{character publication ID}
+#'   \item{\code{Group}}{character group}
+#'   \item{\code{Treatment}}{character treatment}
+#'   \item{\code{dose}}{character dose}
+#'   \item{\code{dose_unit}}{character dose unit}
+#'   \item{\code{visitno}}{character visit number}
+#'   \item{\code{visit}}{character visit}
+#'   \item{\code{visitunits}}{character visit units}
+#'   \item{\code{Week}}{integer week}
+#'   \item{\code{bcell_population}}{character bcell population}
+#'   \item{\code{igx_type}}{character igx type}
+#'   \item{\code{antigen_specificity}}{character antigen specificity}
+#'   \item{\code{epitope_specificity}}{character epitope specificity}
+#'   \item{\code{bnab_class}}{character bnab class}
+#'   \item{\code{source_assay}}{character source assay}
+#'   \item{\code{flag_bound}}{logical flag bound}
+#'   \item{\code{probeset}}{logical probe set}
+#'   \item{\code{sample_type}}{character sample type}
+#'   \item{\code{source_file}}{character source file}
+#'   \item{\code{name}}{character name}
+#'   \item{\code{value}}{double value}
+#'   \item{\code{value_type}}{character value type}
+#'   \item{\code{percent_denominator}}{character percent denominator}
+#'}
+#' @details Example B-cell flow-and-summary file derived from G001
+#' @source \url{https://github.com/SchiefLab/G001/raw/main/data/figures/flow_summary/flow_and_sequences.csv.gz}
+"G001_fas"
