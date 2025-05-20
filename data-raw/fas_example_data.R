@@ -140,7 +140,7 @@ df <- fas %>%
     bnab_class = if_else(grepl('^VRC01[-]class$', cell_population), 'VRC01-class', NA_character_),
     source_assay = if_else(grepl('VRC01[-]class|sequenced', name), 'sequencing', 'flow'),
     flag_bound = NA,
-    probeset = NA,
+    probeset = 'G001 PBMC (KO11 eOD-GT8)',
     sample_type = 'PBMC',
     source_file = 'https://github.com/SchiefLab/G001/raw/main/data/figures/flow_summary/flow_and_sequences.csv.gz',
     PubID = sub('^PubID_', '', PubID)
