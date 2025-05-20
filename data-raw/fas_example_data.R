@@ -92,15 +92,15 @@ df <- fas %>%
       matches('^Percent of'),
       matches('^Number')
     ),
-    names_to = 'endpoint_name',
+    names_to = 'endpoint',
     values_to = 'value'
   ) %>%
   mutate(value_type = case_when(
-    grepl('^Percent', endpoint_name) ~ 'percent',
-    grepl('^Number', endpoint_name) ~ 'count',
+    grepl('^Percent', endpoint) ~ 'percent',
+    grepl('^Number', endpoint) ~ 'count',
   )) %>%
   mutate(
-    cell_population = endpoint_name,
+    cell_population = endpoint,
     cell_population = sub('Number of ', '', cell_population),
     # for a typo in original dataset
     cell_population = sub('Number ', '', cell_population),
@@ -109,7 +109,7 @@ df <- fas %>%
   mutate(
     percent_denominator = if_else(
       value_type == 'percent',
-      gsub('^Percent of | ((that are)|(detected as)) .+$', '', endpoint_name),
+      gsub('^Percent of | ((that are)|(detected as)) .+$', '', endpoint),
       NA_character_
     ),
     percent_denominator = case_match(
@@ -128,7 +128,7 @@ df <- fas %>%
       .default = gsub(' \\(without regard to KO binding status\\)|IgD\\-', '', cell_population)
     ),
     bcell_population = cell_population,
-    igx_type = if_else(grepl('IgG', endpoint_name), 'IgG+', NA_character_),
+    igx_type = if_else(grepl('IgG', endpoint), 'IgG+', NA_character_),
     Group = case_match(
       Treatment,
       '20 µg eOD-GT8 60mer + AS01B' ~ 1L,
@@ -146,13 +146,13 @@ df <- fas %>%
     ),
     visitno = sub('^V', '', Visit),
     visit_units = 'weeks',
-    antigen_specificity = if_else(grepl('GT8[+][+]|VRC01[-]class', endpoint_name), 'GT8++', NA_character_),
-    epitope_specificity = if_else(grepl('KO[-]|VRC01[-]class', endpoint_name), 'KO-', NA_character_),
+    antigen_specificity = if_else(grepl('GT8[+][+]|VRC01[-]class', endpoint), 'GT8++', NA_character_),
+    epitope_specificity = if_else(grepl('KO[-]|VRC01[-]class', endpoint), 'KO-', NA_character_),
     bnab_class = if_else(grepl('^VRC01[-]class$', cell_population), 'VRC01-class', NA_character_),
     source_assay = case_when(
-      value_type == 'count' & grepl('VRC01[-]class|sequenced', endpoint_name) ~ 'sequencing',
-      endpoint_name == 'Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class' ~ 'sequencing',
-      value_type == 'percent' & grepl('VRC01[-]class|sequenced', endpoint_name) ~ 'flow and sequencing',
+      value_type == 'count' & grepl('VRC01[-]class|sequenced', endpoint) ~ 'sequencing',
+      endpoint == 'Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class' ~ 'sequencing',
+      value_type == 'percent' & grepl('VRC01[-]class|sequenced', endpoint) ~ 'flow and sequencing',
       .default =  'flow'
     ),
     flag_bound = NA,
@@ -177,7 +177,7 @@ df <- fas %>%
     visit_units,
     sample_type,
     probeset,
-    endpoint_name,
+    endpoint,
     source_assay,
     value,
     value_type,
