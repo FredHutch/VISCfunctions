@@ -92,15 +92,15 @@ df <- fas %>%
       matches('^Percent of'),
       matches('^Number')
     ),
-    names_to = 'name',
+    names_to = 'endpoint_name',
     values_to = 'value'
   ) %>%
   mutate(value_type = case_when(
-    grepl('^Percent', name) ~ 'percent',
-    grepl('^Number', name) ~ 'count',
+    grepl('^Percent', endpoint_name) ~ 'percent',
+    grepl('^Number', endpoint_name) ~ 'count',
   )) %>%
   mutate(
-    cell_population = name,
+    cell_population = endpoint_name,
     cell_population = sub('Number of ', '', cell_population),
     # for a typo in original dataset
     cell_population = sub('Number ', '', cell_population),
@@ -109,7 +109,7 @@ df <- fas %>%
   mutate(
     percent_denominator = if_else(
       value_type == 'percent',
-      gsub('^Percent of | ((that are)|(detected as)) .+$', '', name),
+      gsub('^Percent of | ((that are)|(detected as)) .+$', '', endpoint_name),
       NA_character_
     ),
     percent_denominator = case_match(
@@ -128,17 +128,17 @@ df <- fas %>%
       .default = gsub(' \\(without regard to KO binding status\\)|IgD\\-', '', cell_population)
     ),
     bcell_population = cell_population,
-    igx_type = if_else(grepl('IgG', name), 'IgG+', NA_character_),
+    igx_type = if_else(grepl('IgG', endpoint_name), 'IgG+', NA_character_),
     Group = NA_character_,
     dose = NA_character_,
     dose_unit = NA_character_,
     visitno = sub('^V', '', Visit),
     visit = NA_character_,
     visitunits = NA_character_,
-    antigen_specificity = if_else(grepl('GT8[+][+]|VRC01[-]class', name), 'GT8++', NA_character_),
-    epitope_specificity = if_else(grepl('KO[-]|VRC01[-]class', name), 'KO-', NA_character_),
+    antigen_specificity = if_else(grepl('GT8[+][+]|VRC01[-]class', endpoint_name), 'GT8++', NA_character_),
+    epitope_specificity = if_else(grepl('KO[-]|VRC01[-]class', endpoint_name), 'KO-', NA_character_),
     bnab_class = if_else(grepl('^VRC01[-]class$', cell_population), 'VRC01-class', NA_character_),
-    source_assay = if_else(grepl('VRC01[-]class|sequenced', name), 'sequencing', 'flow'),
+    source_assay = if_else(grepl('VRC01[-]class|sequenced', endpoint_name), 'sequencing', 'flow'),
     flag_bound = NA,
     probeset = 'G001 PBMC (KO11 eOD-GT8)',
     sample_type = 'PBMC',
@@ -170,7 +170,7 @@ df <- fas %>%
     probeset,
     sample_type,
     source_file,
-    name,
+    endpoint_name,
     value,
     value_type,
     percent_denominator
