@@ -160,20 +160,20 @@ df <- fas %>%
     visit,
     visitunits,
     Week = weeks_post,
+    sample_type,
+    probeset,
+    endpoint_name,
+    source_assay,
+    value,
+    value_type,
     bcell_population,
+    percent_denominator,
     igx_type,
     antigen_specificity,
     epitope_specificity,
     bnab_class,
-    source_assay,
     flag_bound,
-    probeset,
-    sample_type,
-    source_file,
-    endpoint_name,
-    value,
-    value_type,
-    percent_denominator
+    source_file
   )
 
 G001_Bcell_flow_seq_PBMC <- df
