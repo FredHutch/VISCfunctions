@@ -30,6 +30,7 @@ A data frame with 3995 rows and 22 variables:
 \item{\code{flag_bound}}{logical COLUMN_DESCRIPTION}
 \item{\code{source_file}}{character COLUMN_DESCRIPTION}
 }
+}
 \source{
 \url{https://github.com/SchiefLab/G001/raw/main/data/figures/flow_summary/flow_and_sequences.csv.gz}
 }
