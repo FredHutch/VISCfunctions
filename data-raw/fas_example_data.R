@@ -129,9 +129,21 @@ df <- fas %>%
     ),
     bcell_population = cell_population,
     igx_type = if_else(grepl('IgG', endpoint_name), 'IgG+', NA_character_),
-    Group = NA_character_,
-    dose = NA_character_,
-    dose_unit = NA_character_,
+    Group = case_match(
+      Treatment,
+      '20 µg eOD-GT8 60mer + AS01B' ~ 1L,
+      '100 µg eOD-GT8 60mer + AS01B' ~ 2L
+    ),
+    dose = case_match(
+      Treatment,
+      '20 µg eOD-GT8 60mer + AS01B' ~ 20,
+      '100 µg eOD-GT8 60mer + AS01B' ~ 100
+    ),
+    dose_unit = case_match(
+      Treatment,
+      '20 µg eOD-GT8 60mer + AS01B' ~ 'µg',
+      '100 µg eOD-GT8 60mer + AS01B' ~ 'µg'
+    ),
     visitno = sub('^V', '', Visit),
     visit_units = 'weeks',
     antigen_specificity = if_else(grepl('GT8[+][+]|VRC01[-]class', endpoint_name), 'GT8++', NA_character_),
