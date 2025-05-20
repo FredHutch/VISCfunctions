@@ -115,16 +115,19 @@ df <- fas %>%
     percent_denominator = case_match(
       percent_denominator,
       'GT8++IgG+ B cells' ~ 'GT8++ IgG+ B cells',
-      "epitope-specific (KO-GT8++) sequenced IgG BCRs" ~ "sequenced epitope-specific (KO-GT8++) IgG+ B cells",
+      "epitope-specific (KO-GT8++) sequenced IgG BCRs" ~
+        "sequenced epitope-specific (KO-GT8++) IgG+ B cells",
       .default = percent_denominator
     ),
     bcell_population = case_match(
       bcell_population,
-      "epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class" ~ 'VRC01-class',
+      "epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class" ~
+        'sequenced epitope-specific (KO-GT8++) IgG+ B cells that are VRC01-class',
       "KO-" ~ 'GT8++KO-',
       "IgD-IgG+ B cells" ~ 'IgG+',
       "IgD-IgG+ B cells that are GT8++ (without regard to KO binding status)" ~ 'GT8++ IgG+',
-      "epitope-specific (KO-GT8++) IgG+ B cells that have BCR heavy and light chains sequenced" ~ "sequenced epitope-specific (KO-GT8++) IgG+ B cells",
+      "epitope-specific (KO-GT8++) IgG+ B cells that have BCR heavy and light chains sequenced" ~
+        "sequenced epitope-specific (KO-GT8++) IgG+ B cells",
       .default = gsub(' \\(without regard to KO binding status\\)|IgD\\-', '', bcell_population)
     ),
     igx_type = if_else(grepl('IgG', endpoint), 'IgG+', NA_character_),
