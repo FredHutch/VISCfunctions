@@ -176,6 +176,6 @@ df <- fas %>%
     percent_denominator
   )
 
-G001_fas <- df
+G001_Bcell_flow_seq_PBMC <- df
 
-usethis::use_data(G001_fas)
+usethis::use_data(G001_Bcell_flow_seq_PBMC)

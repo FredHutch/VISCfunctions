@@ -105,4 +105,4 @@
 #'}
 #' @details Example B-cell flow-and-summary file derived from G001
 #' @source \url{https://github.com/SchiefLab/G001/raw/main/data/figures/flow_summary/flow_and_sequences.csv.gz}
-"G001_fas"
+"G001_Bcell_flow_seq_PBMC"
