@@ -138,7 +138,12 @@ df <- fas %>%
     antigen_specificity = if_else(grepl('GT8[+][+]|VRC01[-]class', endpoint_name), 'GT8++', NA_character_),
     epitope_specificity = if_else(grepl('KO[-]|VRC01[-]class', endpoint_name), 'KO-', NA_character_),
     bnab_class = if_else(grepl('^VRC01[-]class$', cell_population), 'VRC01-class', NA_character_),
-    source_assay = if_else(grepl('VRC01[-]class|sequenced', endpoint_name), 'sequencing', 'flow'),
+    source_assay = case_when(
+      value_type == 'count' & grepl('VRC01[-]class|sequenced', endpoint_name) ~ 'sequencing',
+      endpoint_name == 'Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class' ~ 'sequencing',
+      value_type == 'percent' & grepl('VRC01[-]class|sequenced', endpoint_name) ~ 'flow and sequencing',
+      .default =  'flow'
+    ),
     flag_bound = NA,
     probeset = 'G001 PBMC (KO11 eOD-GT8)',
     sample_type = 'PBMC',
