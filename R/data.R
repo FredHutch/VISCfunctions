@@ -77,32 +77,30 @@
 
 #' @title Example B-cell flow-and-summary file derived from G001
 #' @description Example B-cell flow-and-summary file derived from G001
-#' @format A data frame with 3995 rows and 23 variables:
+#' @format A data frame with 3995 rows and 22 variables:
 #' \describe{
-#'   \item{\code{PubID}}{character publication ID}
-#'   \item{\code{Group}}{character group}
-#'   \item{\code{Treatment}}{character treatment}
-#'   \item{\code{dose}}{character dose}
-#'   \item{\code{dose_unit}}{character dose unit}
-#'   \item{\code{visitno}}{character visit number}
-#'   \item{\code{visit}}{character visit}
-#'   \item{\code{visitunits}}{character visit units}
-#'   \item{\code{Week}}{integer week}
-#'   \item{\code{bcell_population}}{character bcell population}
-#'   \item{\code{igx_type}}{character igx type}
-#'   \item{\code{antigen_specificity}}{character antigen specificity}
-#'   \item{\code{epitope_specificity}}{character epitope specificity}
-#'   \item{\code{bnab_class}}{character bnab class}
-#'   \item{\code{source_assay}}{character source assay}
-#'   \item{\code{flag_bound}}{logical flag bound}
-#'   \item{\code{probeset}}{logical probe set}
-#'   \item{\code{sample_type}}{character sample type}
-#'   \item{\code{source_file}}{character source file}
-#'   \item{\code{name}}{character name}
-#'   \item{\code{value}}{double value}
-#'   \item{\code{value_type}}{character value type}
-#'   \item{\code{percent_denominator}}{character percent denominator}
-#'}
+#'   \item{\code{PubID}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{Group}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{Treatment}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{dose}}{double COLUMN_DESCRIPTION}
+#'   \item{\code{dose_unit}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{visitno}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{visit}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{visit_units}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{sample_type}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{probeset}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{source_assay}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{endpoint}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{value}}{double COLUMN_DESCRIPTION}
+#'   \item{\code{value_type}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{bcell_population}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{percent_denominator}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{igx_type}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{antigen_specificity}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{epitope_specificity}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{bnab_class}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{flag_bound}}{logical COLUMN_DESCRIPTION}
+#'   \item{\code{source_file}}{character COLUMN_DESCRIPTION} #'}
 #' @details Example B-cell flow-and-summary file derived from G001
 #' @source \url{https://github.com/SchiefLab/G001/raw/main/data/figures/flow_summary/flow_and_sequences.csv.gz}
 "G001_Bcell_flow_seq_PBMC"
