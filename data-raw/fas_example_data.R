@@ -83,7 +83,7 @@ df <- fas %>%
     )
   ) %>%
   select(! all_of(drop_cols)) %>%
-  # subset on and then remove a confusingly named column
+  # subset on and then remove a column name that is nearly reused later
   filter(BCell_Population == "/Lymphocytes/Singlets/Live|Dump-/CD19+CD20+") %>%
   select(-BCell_Population) %>%
   # from kellie's processing, lightly edited
@@ -100,11 +100,11 @@ df <- fas %>%
     grepl('^Number', endpoint) ~ 'count',
   )) %>%
   mutate(
-    cell_population = endpoint,
-    cell_population = sub('Number of ', '', cell_population),
+    bcell_population = endpoint,
+    bcell_population = sub('Number of ', '', bcell_population),
     # for a typo in original dataset
-    cell_population = sub('Number ', '', cell_population),
-    cell_population = sub('Percent of .+ (that are|detected as) ', '', cell_population)
+    bcell_population = sub('Number ', '', bcell_population),
+    bcell_population = sub('Percent of .+ (that are|detected as) ', '', bcell_population)
   ) %>%
   mutate(
     percent_denominator = if_else(
@@ -118,16 +118,15 @@ df <- fas %>%
       "epitope-specific (KO-GT8++) sequenced IgG BCRs" ~ "sequenced epitope-specific (KO-GT8++) IgG+ B cells",
       .default = percent_denominator
     ),
-    cell_population = case_match(
-      cell_population,
+    bcell_population = case_match(
+      bcell_population,
       "epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class" ~ 'VRC01-class',
       "KO-" ~ 'GT8++KO-',
       "IgD-IgG+ B cells" ~ 'IgG+',
       "IgD-IgG+ B cells that are GT8++ (without regard to KO binding status)" ~ 'GT8++ IgG+',
       "epitope-specific (KO-GT8++) IgG+ B cells that have BCR heavy and light chains sequenced" ~ "sequenced epitope-specific (KO-GT8++) IgG+ B cells",
-      .default = gsub(' \\(without regard to KO binding status\\)|IgD\\-', '', cell_population)
+      .default = gsub(' \\(without regard to KO binding status\\)|IgD\\-', '', bcell_population)
     ),
-    bcell_population = cell_population,
     igx_type = if_else(grepl('IgG', endpoint), 'IgG+', NA_character_),
     Group = case_match(
       Treatment,
@@ -148,7 +147,7 @@ df <- fas %>%
     visit_units = 'weeks',
     antigen_specificity = if_else(grepl('GT8[+][+]|VRC01[-]class', endpoint), 'GT8++', NA_character_),
     epitope_specificity = if_else(grepl('KO[-]|VRC01[-]class', endpoint), 'KO-', NA_character_),
-    bnab_class = if_else(grepl('^VRC01[-]class$', cell_population), 'VRC01-class', NA_character_),
+    bnab_class = if_else(grepl('^VRC01[-]class$', bcell_population), 'VRC01-class', NA_character_),
     source_assay = case_when(
       value_type == 'count' & grepl('VRC01[-]class|sequenced', endpoint) ~ 'sequencing',
       endpoint == 'Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class' ~ 'sequencing',
@@ -162,9 +161,7 @@ df <- fas %>%
     PubID = sub('^PubID_', '', PubID)
   ) %>%
   # column cleanup
-  select(
-    -cell_population, -Visit
-  ) %>%
+  select(-Visit) %>%
   # Select/rename/reorder columns
   select(
     PubID,
