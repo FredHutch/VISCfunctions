@@ -165,6 +165,14 @@ df <- fas %>%
     source_file = 'https://github.com/SchiefLab/G001/raw/main/data/figures/flow_summary/flow_and_sequences.csv.gz',
     PubID = sub('^PubID_', '', PubID)
   ) %>%
+  mutate(
+    bcell_population = if_else(
+      value_type == "percent" & source_assay == "flow",
+      paste(bcell_population, percent_denominator),
+      bcell_population
+    ),
+    bcell_population = sub("(GT8[+][+]KO-) GT8[+][+]", "\\1", bcell_population)
+  ) %>%
   # column cleanup
   select(-Visit) %>%
   # Select/rename/reorder columns
