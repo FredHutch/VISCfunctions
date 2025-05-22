@@ -128,6 +128,8 @@ df <- fas %>%
       "IgD-IgG+ B cells that are GT8++ (without regard to KO binding status)" ~ 'GT8++ IgG+ B cells',
       "epitope-specific (KO-GT8++) IgG+ B cells that have BCR heavy and light chains sequenced" ~
         "sequenced epitope-specific (KO-GT8++) IgG+ B cells",
+      "epitope-specific (KO-GT8++) sequenced IgG BCRs that are not VRC01-class but have a 5-aa CDRL3" ~ "sequenced epitope-specific (KO-GT8++) IgG+ B cells that are not VRC01-class but have a 5-aa CDRL3",
+      "epitope-specific (KO-GT8++) sequenced IgG BCRs that are not VRC01-class but have a VH1-2 heavy chain" ~ "sequenced epitope-specific (KO-GT8++) IgG+ B cells that are not VRC01-class but have a VH1-2 heavy chain",
       .default = gsub(' \\(without regard to KO binding status\\)|IgD\\-', '', bcell_population)
     ),
     igx_type = if_else(grepl('IgG', endpoint), 'IgG+', NA_character_),
