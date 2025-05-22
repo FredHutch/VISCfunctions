@@ -123,7 +123,7 @@ df <- fas %>%
       bcell_population,
       "epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class" ~
         'sequenced epitope-specific (KO-GT8++) IgG+ B cells that are VRC01-class',
-      "KO-" ~ 'GT8++KO- B cells',
+      "KO-" ~ 'GT8++KO-',
       "IgD-IgG+ B cells" ~ 'IgG+ B cells',
       "IgD-IgG+ B cells that are GT8++ (without regard to KO binding status)" ~ 'GT8++ IgG+ B cells',
       "epitope-specific (KO-GT8++) IgG+ B cells that have BCR heavy and light chains sequenced" ~
