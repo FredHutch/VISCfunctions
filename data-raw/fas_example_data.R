@@ -176,9 +176,9 @@ df <- fas %>%
   select(-Visit) %>%
   # Select/rename/reorder columns
   select(
-    PubID,
-    Group,
-    Treatment,
+    pubid = PubID,
+    group = Group,
+    treatment = Treatment,
     dose,
     dose_unit,
     visitno,

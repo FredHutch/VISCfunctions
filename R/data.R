@@ -79,9 +79,9 @@
 #' @description Example B-cell flow-and-summary file derived from G001
 #' @format A data frame with 3995 rows and 21 variables:
 #' \describe{
-#'   \item{\code{PubID}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{Group}}{integer COLUMN_DESCRIPTION}
-#'   \item{\code{Treatment}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{pubid}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{group}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{treatment}}{character COLUMN_DESCRIPTION}
 #'   \item{\code{dose}}{double COLUMN_DESCRIPTION}
 #'   \item{\code{dose_unit}}{character COLUMN_DESCRIPTION}
 #'   \item{\code{visitno}}{character COLUMN_DESCRIPTION}
