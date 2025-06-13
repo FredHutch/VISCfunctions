@@ -28,7 +28,7 @@ fas %>%
   unique %>%
   expect_equal(1)
 
-non_numeric <- grep('^Number of|^Percent of', names(fas), value = TRUE, invert = TRUE)
+non_numeric <- grep('^Number |^Percent ', names(fas), value = TRUE, invert = TRUE)
 keep_numeric <- c(
   # cell counts
   'Number of B cells',
@@ -37,6 +37,8 @@ keep_numeric <- c(
   'Number of epitope-specific (KO-GT8++) IgG+ B cells',
   'Number of epitope-specific (KO-GT8++) IgG+ B cells that have BCR heavy and light chains sequenced',
   'Number of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class',
+  "Number epitope-specific (KO-GT8++) sequenced IgG BCRs that are not VRC01-class but have a VH1-2 heavy chain",
+  "Number epitope-specific (KO-GT8++) sequenced IgG BCRs that are not VRC01-class but have a 5-aa CDRL3",
 
   # key percentages
   'Percent of B cells that are GT8++ (without regard to KO binding status)',
