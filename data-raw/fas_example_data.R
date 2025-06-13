@@ -159,7 +159,6 @@ df <- fas %>%
       value_type == 'percent' & grepl('VRC01[-]class|sequenced', endpoint) ~ 'flow and sequencing',
       .default =  'flow'
     ),
-    flag_bound = NA,
     probeset = 'G001 PBMC (KO11 eOD-GT8)',
     sample_type = 'PBMC',
     source_file = 'https://github.com/SchiefLab/G001/raw/main/data/figures/flow_summary/flow_and_sequences.csv.gz',
@@ -197,7 +196,6 @@ df <- fas %>%
     antigen_specificity,
     epitope_specificity,
     bnab_class,
-    flag_bound,
     source_file
   )
 

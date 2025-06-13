@@ -5,7 +5,7 @@
 \alias{G001_Bcell_flow_seq_PBMC}
 \title{Example B-cell flow-and-summary file derived from G001}
 \format{
-A data frame with 3995 rows and 22 variables:
+A data frame with 3995 rows and 21 variables:
 \describe{
 \item{\code{PubID}}{character COLUMN_DESCRIPTION}
 \item{\code{Group}}{integer COLUMN_DESCRIPTION}
@@ -27,7 +27,6 @@ A data frame with 3995 rows and 22 variables:
 \item{\code{antigen_specificity}}{character COLUMN_DESCRIPTION}
 \item{\code{epitope_specificity}}{character COLUMN_DESCRIPTION}
 \item{\code{bnab_class}}{character COLUMN_DESCRIPTION}
-\item{\code{flag_bound}}{logical COLUMN_DESCRIPTION}
 \item{\code{source_file}}{character COLUMN_DESCRIPTION}
 }
 }
