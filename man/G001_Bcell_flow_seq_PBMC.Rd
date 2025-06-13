@@ -19,8 +19,8 @@ A data frame with 3995 rows and 21 variables:
 \item{\code{probeset}}{character COLUMN_DESCRIPTION}
 \item{\code{source_assay}}{character COLUMN_DESCRIPTION}
 \item{\code{endpoint}}{character COLUMN_DESCRIPTION}
-\item{\code{value}}{double COLUMN_DESCRIPTION}
-\item{\code{value_type}}{character COLUMN_DESCRIPTION}
+\item{\code{endpoint_value}}{double COLUMN_DESCRIPTION}
+\item{\code{endpoint_value_type}}{character COLUMN_DESCRIPTION}
 \item{\code{bcell_population}}{character COLUMN_DESCRIPTION}
 \item{\code{percent_denominator}}{character COLUMN_DESCRIPTION}
 \item{\code{igx_type}}{character COLUMN_DESCRIPTION}

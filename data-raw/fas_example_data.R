@@ -93,9 +93,9 @@ df <- fas %>%
       matches('^Number')
     ),
     names_to = 'endpoint',
-    values_to = 'value'
+    values_to = 'endpoint_value'
   ) %>%
-  mutate(value_type = case_when(
+  mutate(endpoint_value_type = case_when(
     grepl('^Percent', endpoint) ~ 'percent',
     grepl('^Number', endpoint) ~ 'count',
   )) %>%
@@ -108,7 +108,7 @@ df <- fas %>%
   ) %>%
   mutate(
     percent_denominator = if_else(
-      value_type == 'percent',
+      endpoint_value_type == 'percent',
       gsub('^Percent of | ((that are)|(detected as)) .+$', '', endpoint),
       NA_character_
     ),
@@ -154,9 +154,9 @@ df <- fas %>%
     epitope_specificity = if_else(grepl('KO[-]|VRC01[-]class', endpoint), 'KO-', NA_character_),
     bnab_class = if_else(grepl('^VRC01[-]class$', bcell_population), 'VRC01-class', NA_character_),
     source_assay = case_when(
-      value_type == 'count' & grepl('VRC01[-]class|sequenced', endpoint) ~ 'sequencing',
+      endpoint_value_type == 'count' & grepl('VRC01[-]class|sequenced', endpoint) ~ 'sequencing',
       endpoint == 'Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class' ~ 'sequencing',
-      value_type == 'percent' & grepl('VRC01[-]class|sequenced', endpoint) ~ 'flow and sequencing',
+      endpoint_value_type == 'percent' & grepl('VRC01[-]class|sequenced', endpoint) ~ 'flow and sequencing',
       .default =  'flow'
     ),
     probeset = 'G001 PBMC (KO11 eOD-GT8)',
@@ -166,7 +166,7 @@ df <- fas %>%
   ) %>%
   mutate(
     bcell_population = if_else(
-      value_type == "percent" & source_assay == "flow",
+      endpoint_value_type == "percent" & source_assay == "flow",
       paste(bcell_population, percent_denominator),
       bcell_population
     ),
@@ -188,8 +188,8 @@ df <- fas %>%
     probeset,
     source_assay,
     endpoint,
-    value,
-    value_type,
+    endpoint_value,
+    endpoint_value_type,
     bcell_population,
     percent_denominator,
     igx_type,
