@@ -539,7 +539,15 @@ test_that("pairwise_comparisons_bin error catching and messages", {
 
   expect_message(object = pairwise_test_cont(x = c(NA,1,1,NA), group = c(0,0,1,1),
                                              verbose = TRUE),
-               regexp = 'x does not have at least 3 non missing per group, so no test run \\(MagnitudeTest=NA returned\\)')
+                 regexp = 'x does not have at least 3 non missing per group, so no test run \\(MagnitudeTest=NA returned\\)')
+
+  expect_message(object = pairwise_test_cont(x = c(NA,1,1,NA), group = c(0,0,1,1),
+                                             paired = TRUE, id = c('a','b','a','b'),
+                                             verbose = TRUE),
+                 regexp = 'No paired samples for levels 0 and 1')
+
+  expect_null(object = pairwise_test_cont(x = c(NA,1,1,NA), group = c(0,0,1,1),
+                                             paired = TRUE, id = c('a','b','a','b')))
 
 })
 

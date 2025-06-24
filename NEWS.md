@@ -1,3 +1,22 @@
+# VISCfunctions (development version)
+
+# VISCfunctions 1.2.4
+
+* Suppress warning from get_full_name() when fragile ldapsearch system call fails on Linux and macOS (#96)
+
+# VISCfunctions 1.2.3
+
+* Use shorter git hash in reproducibility table (#92)
+* Update t-test syntax in unit test expectations to avoid new error message introduced in R >= 4.4 (#89)
+* Update instructions for installing vignettes with dependencies (#94)
+* Update CI (#91)
+
+# VISCfunctions 1.2.2
+
+* Fixed bug in `pairwise_test_cont()` to properly catch paired comparisons where no paired data points exist.
+* Updated `get_session_info()` test to account for changes in `sessioninfo::session_info()`
+* Removed `car` dependency
+
 # VISCfunctions 1.2.1
 
 * `pairwise_test_cor()` is now named `cor_test_pairs()`. The function `cor_test_pairs()` now returns a data.frame with information on any ties in each variable instead of number of unique values.
