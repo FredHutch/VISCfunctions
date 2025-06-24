@@ -60,15 +60,15 @@ Each function takes a vector of non-negative numbers, log-transforms the numbers
 }
 \section{Functions}{
 \itemize{
-\item \code{geomean}: Mean for Log-transformed Data
+\item \code{geomean()}: Mean for Log-transformed Data
 
-\item \code{geoquantile}: Quantiles for Log-transformed Data
+\item \code{geoquantile()}: Quantiles for Log-transformed Data
 
-\item \code{geomedian}: Median for Log-transformed Data
+\item \code{geomedian()}: Median for Log-transformed Data
 
-\item \code{geosd}: Standard Deviation for Log-transformed Data
+\item \code{geosd()}: Standard Deviation for Log-transformed Data
+
 }}
-
 \examples{
 # Linear and Exponential Data
 x <- 1:20
