@@ -240,6 +240,7 @@ pairwise_test_cont <- function(
         vals_here <-  c(i_vals, j_vals)
         groups_here <-  c(rep(i_group, nrow(data_here)),
                           rep(j_group, nrow(data_here)))
+        groups_here <- droplevels(factor(groups_here, levels = levels_here))
 
       } else {
 
@@ -611,6 +612,7 @@ pairwise_test_bin <- function(x,
         vals_here <-  c(i_vals, j_vals)
         groups_here <-  c(rep(i_group, nrow(data_here)),
                           rep(j_group, nrow(data_here)))
+        groups_here <- droplevels(factor(groups_here, levels = levels_here))
       } else {
         i_vals <- x[group == i_group]
         j_vals <- x[group == j_group]

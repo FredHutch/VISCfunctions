@@ -312,6 +312,15 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                 sep_val = " vs. ", digits = 3, keep_all = FALSE,
                                 trailing_zeros = TRUE)
 
+  # test group order
+  test_pasting_rev <- paste_tbl_grp(data = testing_stats_paired,
+                                vars_to_paste = c('median_min_max', 'mean_sd'),
+                                sep_val = " vs. ", digits = 3, keep_all = FALSE,
+                                first_name = "Group2", second_name = "Group1",
+                                trailing_zeros = TRUE)
+
+  expect_false(identical(test_pasting, test_pasting_rev))
+
   testing_results <- data.frame(Comparison = test_pasting$Comparison,
                                 SampleSizes =  sum(duplicated(na.omit(data.frame(x, group, id))$id)),
                                 Median_Min_Max = test_pasting$median_min_max_comparison,
@@ -324,13 +333,33 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                 stringsAsFactors = FALSE)
 
   expect_equal(object = pairwise_test_cont(x = x, group = group,
-                                           paired = TRUE, id = id, sorted_group = c("a", "b"),
+                                           paired = TRUE, id = id,
+                                           sorted_group = c("a", "b"),
                                            method = 'wilcox', alternative = 'two.sided',
                                            num_needed_for_test = 3, digits = 3,
                                            trailing_zeros = TRUE, sep_val = ' vs. ',
                                            verbose = FALSE),
                expected = testing_results)
 
+  testing_results_rev <- data.frame(Comparison = test_pasting_rev$Comparison,
+                                    SampleSizes =  sum(duplicated(na.omit(data.frame(x, group, id))$id)),
+                                    Median_Min_Max = test_pasting_rev$median_min_max_comparison,
+                                    Mean_SD = test_pasting_rev$mean_sd_comparison,
+                                    MagnitudeTest = two_samp_cont_test(x = x, y = group, method = 'wilcox', paired = TRUE),
+                                    PerfectSeparation = ifelse((testing_stats_paired$Group1_min >
+                                                                  testing_stats_paired$Group2_max) |
+                                                                 (testing_stats_paired$Group2_min >
+                                                                    testing_stats_paired$Group1_max), TRUE, FALSE),
+                                    stringsAsFactors = FALSE)
+
+  expect_equal(object = pairwise_test_cont(x = x, group = factor(group, levels = c("b", "a")),
+                                           paired = TRUE, id = id,
+                                           #sorted_group = c("a", "b"),
+                                           method = 'wilcox', alternative = 'two.sided',
+                                           num_needed_for_test = 3, digits = 3,
+                                           trailing_zeros = TRUE, sep_val = ' vs. ',
+                                           verbose = FALSE),
+               expected = testing_results_rev)
 })
 
 # test pairwise_test_cont. Using paste_tbl_grp and two_samp_cont_test in testing since these functions are testing elsewhere
@@ -551,12 +580,10 @@ test_that("pairwise_comparisons_bin error catching and messages", {
 
 })
 
-
-
-
 # test pairwise_test_bin.
 #Using paste_tbl_grp and two_samp_bin_test in testing since these functions are testing elsewhere
 test_that("pairwise_comparisons_bin testing two groups", {
+  library(dplyr)
   set.seed(243542534)
   x = c(NA,
         sample(0:1,25,replace = TRUE, prob = c(.75,.25)),
@@ -690,8 +717,14 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
 
   test_pasting <- paste_tbl_grp(data = paired_stats)
+  # this tests that the group order can be switched at the pairwise call
+  test_pasting_rev <- paste_tbl_grp(data = paired_stats,
+                                    first_name = "Group2",
+                                    second_name = "Group1")
+  expect_false(identical(test_pasting, test_pasting_rev))
 
   names(test_pasting) <- c('Comparison', 'ResponseStats')
+  names(test_pasting_rev) <- c('Comparison', 'ResponseStats')
 
   testing_results <- data.frame(test_pasting,
     ResponseTest  = two_samp_bin_test(x = x, y = group, method = 'mcnemar'),
@@ -699,6 +732,16 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   expect_equal(object = pairwise_test_bin(x = x, group = group, id = id, method = 'mcnemar'),
                expected = testing_results)
+
+  testing_results_rev <- data.frame(test_pasting_rev,
+                                ResponseTest  = two_samp_bin_test(x = x, y = group, method = 'mcnemar'),
+                                PerfectSeparation = ifelse(diff(testing_stats_pre$mean) == 1, TRUE, FALSE))
+
+  expect_equal(object = pairwise_test_bin(x = x,
+                                          group = factor(group, levels = c("b", "a")),
+                                          id = id, method = 'mcnemar'),
+               expected = testing_results_rev)
+
 })
 
 # test pairwise_test_bin with 3+ groups.
