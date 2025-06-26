@@ -157,7 +157,7 @@ tibble::glimpse(exampleData_BAMA)
 # Loading in example datasets
 exampleData_BAMA <- 
   exampleData_BAMA %>% 
-  mutate(antigen = stringr::str_replace_all(antigen, '_', ' '))
+  mutate(antigen = gsub('_', ' ', antigen))
 ```
 
 

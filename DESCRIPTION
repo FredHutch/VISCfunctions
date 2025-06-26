@@ -30,7 +30,6 @@ Suggests:
     pracma,
     rmarkdown,
     testthat,
-    stringr,
     tibble
 VignetteBuilder: 
     knitr
