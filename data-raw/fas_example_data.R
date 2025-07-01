@@ -74,7 +74,9 @@ drop_cols <- c(
   "Response_GT8"
 )
 
-df <- fas %>%
+# first: filter down to particular endpoints/variables of interest and pivot
+# data to long, resulting in a bare-bones long-format version of the dataset
+df_filtered_long <- fas %>%
   # discard unneeded numeric (Percent* / Number*) columns
   select(
     all_of(
@@ -101,6 +103,26 @@ df <- fas %>%
     grepl('^Percent', endpoint) ~ 'percent',
     grepl('^Number', endpoint) ~ 'count',
   )) %>%
+  # impute certain endpoints, using upper estimates for pre-vaccination time
+  # points and lower estimates (zero) for post-vaccination time points
+  group_by(PubID, weeks_post) %>%
+  mutate(endpoint_value_imputed = case_when(
+    # sequencing-only percentage endpoints
+    is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class") ~ 100,
+    is.na(endpoint_value) & (weeks_post > 0) & (endpoint == "Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class") ~ 0,
+    # flow and sequencing percentage endpoints
+    is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of B cells detected as VRC01-class") ~ endpoint_value[endpoint == "Percent of B cells that are epitope-specific (KO-GT8++)"][1],
+    is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of IgG+ B cells detected as VRC01-class") ~ endpoint_value[endpoint == "Percent of IgG+ B cells that are epitope-specific (KO-GT8++)"][1],
+    is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of GT8++ IgG+ B cells detected as VRC01-class") ~ endpoint_value[endpoint == "Percent of GT8++IgG+ B cells that are KO-"][1],
+    is.na(endpoint_value) & (weeks_post > 0) & grepl('^Percent of .*B cells detected as VRC01-class$', endpoint) ~ 0,
+    .default = endpoint_value
+  )) %>%
+  ungroup()
+
+# next: add/format supplemental columns bcell_population, percent_denominator,
+# igx_type, antigen_specificity, epitope_specificity, bnab_class
+# as well as sample metadata columns related to participant, visit, and assay
+df <- df_filtered_long %>%
   mutate(
     bcell_population = endpoint,
     bcell_population = sub('Number of ', '', bcell_population),
@@ -135,6 +157,9 @@ df <- fas %>%
       .default = gsub(' \\(without regard to KO binding status\\)|IgD\\-', '', bcell_population)
     ),
     igx_type = if_else(grepl('IgG', endpoint), 'IgG+', NA_character_),
+    antigen_specificity = if_else(grepl('GT8[+][+]|VRC01[-]class', endpoint), 'GT8++', NA_character_),
+    epitope_specificity = if_else(grepl('KO[-]|VRC01[-]class', endpoint), 'KO-', NA_character_),
+    bnab_class = if_else(grepl('^VRC01[-]class$', bcell_population), 'VRC01-class', NA_character_),
     Group = case_match(
       Treatment,
       '20 µg eOD-GT8 60mer + AS01B' ~ 1L,
@@ -152,9 +177,6 @@ df <- fas %>%
     ),
     visitno = sub('^V', '', Visit),
     visit_units = 'weeks',
-    antigen_specificity = if_else(grepl('GT8[+][+]|VRC01[-]class', endpoint), 'GT8++', NA_character_),
-    epitope_specificity = if_else(grepl('KO[-]|VRC01[-]class', endpoint), 'KO-', NA_character_),
-    bnab_class = if_else(grepl('^VRC01[-]class$', bcell_population), 'VRC01-class', NA_character_),
     source_assay = case_when(
       endpoint_value_type == 'count' & grepl('VRC01[-]class|sequenced', endpoint) ~ 'sequencing',
       endpoint == 'Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class' ~ 'sequencing',
@@ -174,8 +196,6 @@ df <- fas %>%
     ),
     bcell_population = sub("(GT8[+][+]KO-) GT8[+][+]", "\\1", bcell_population)
   ) %>%
-  # column cleanup
-  select(-Visit) %>%
   # Select/rename/reorder columns
   select(
     pubid = PubID,
@@ -192,6 +212,7 @@ df <- fas %>%
     endpoint,
     endpoint_value,
     endpoint_value_type,
+    endpoint_value_imputed,
     bcell_population,
     percent_denominator,
     igx_type,
@@ -200,6 +221,13 @@ df <- fas %>%
     bnab_class,
     source_file
   )
+
+# # to review the imputed values
+# df %>%
+#   filter(is.na(endpoint_value)) %>%
+#   select(pubid, visit, endpoint, endpoint_value, endpoint_value_imputed) %>%
+#   arrange(endpoint, visit) %>%
+#   View()
 
 G001_Bcell_flow_seq_PBMC <- df
 
