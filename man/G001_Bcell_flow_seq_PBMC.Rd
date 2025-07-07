@@ -5,7 +5,7 @@
 \alias{G001_Bcell_flow_seq_PBMC}
 \title{Example B-cell flow-and-summary file derived from G001}
 \format{
-A data frame with 3995 rows and 21 variables:
+A data frame with 3995 rows and 22 variables:
 \describe{
 \item{\code{pubid}}{character COLUMN_DESCRIPTION}
 \item{\code{group}}{integer COLUMN_DESCRIPTION}
@@ -21,6 +21,7 @@ A data frame with 3995 rows and 21 variables:
 \item{\code{endpoint}}{character COLUMN_DESCRIPTION}
 \item{\code{endpoint_value}}{double COLUMN_DESCRIPTION}
 \item{\code{endpoint_value_type}}{character COLUMN_DESCRIPTION}
+\item{\code{endpoint_value_imputed}}{character COLUMN_DESCRIPTION}
 \item{\code{bcell_population}}{character COLUMN_DESCRIPTION}
 \item{\code{percent_denominator}}{character COLUMN_DESCRIPTION}
 \item{\code{igx_type}}{character COLUMN_DESCRIPTION}
