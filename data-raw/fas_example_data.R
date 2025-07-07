@@ -1,0 +1,234 @@
+library(data.table)
+library(dplyr)
+library(tidyr)
+library(testthat)
+library(usethis)
+# for reading .gz directly with fread()
+library(R.utils)
+
+gzf <- 'flow_and_sequences.csv.gz'
+if (! file.exists(file.path('data-raw', gzf))){
+  download.file(
+    file.path(
+      'https://github.com/SchiefLab/G001/raw/main/data/figures/flow_summary',
+      gzf
+    ),
+    destfile = file.path('data-raw', gzf)
+  )
+}
+
+fas <- fread('data-raw/flow_and_sequences.csv.gz')
+# ubs <- fread('unblinded_sequences.csv')
+
+# check that we have one row per ppt + visit
+fas %>%
+  group_by(PubID, Visit) %>%
+  summarize(n = n()) %>%
+  pull(n) %>%
+  unique %>%
+  expect_equal(1)
+
+non_numeric <- grep('^Number |^Percent ', names(fas), value = TRUE, invert = TRUE)
+keep_numeric <- c(
+  # cell counts
+  'Number of B cells',
+  'Number of IgD-IgG+ B cells',
+  'Number of IgD-IgG+ B cells that are GT8++ (without regard to KO binding status)',
+  'Number of epitope-specific (KO-GT8++) IgG+ B cells',
+  'Number of epitope-specific (KO-GT8++) IgG+ B cells that have BCR heavy and light chains sequenced',
+  'Number of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class',
+  "Number epitope-specific (KO-GT8++) sequenced IgG BCRs that are not VRC01-class but have a VH1-2 heavy chain",
+  "Number epitope-specific (KO-GT8++) sequenced IgG BCRs that are not VRC01-class but have a 5-aa CDRL3",
+
+  # key percentages
+  'Percent of B cells that are GT8++ (without regard to KO binding status)',
+  'Percent of B cells that are epitope-specific (KO-GT8++)',
+  'Percent of IgG+ B cells that are GT8++ (without regard to KO binding status)',
+  'Percent of IgG+ B cells that are epitope-specific (KO-GT8++)',
+  'Percent of GT8++IgG+ B cells that are KO-',
+  'Percent of B cells detected as VRC01-class',
+  'Percent of IgG+ B cells detected as VRC01-class',
+  'Percent of GT8++ IgG+ B cells detected as VRC01-class',
+  'Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class'
+)
+
+drop_cols <- c(
+  "V1",
+  "Response",
+  "Response (missing seq to 0)",
+  "Response not VRC01",
+  "Response not VRC01 (missing seq to 0)",
+  "Sequence Performed",
+  "root_Population",
+  "PBMC_Population",
+  "IgD_IgG_Population",
+  "IgD_Population",
+  "Bulk_Population",
+  "IgG_KOneg_Population",
+  "AG_Specific_Population",
+  "IgD_IgG_GT8pospos_noKO_Population",
+  "IgD_IgG_GT8pospos_KOneg_Population",
+  "IgD_GT8pospos_noKO_Population",
+  "IgD_GT8pospos_KOneg_Population",
+  "Response_Ep_Specific",
+  "Response_GT8"
+)
+
+# first: filter down to particular endpoints/variables of interest and pivot
+# data to long, resulting in a bare-bones long-format version of the dataset
+df_filtered_long <- fas %>%
+  # discard unneeded numeric (Percent* / Number*) columns
+  select(
+    all_of(
+      intersect(
+        names(fas),
+        c(non_numeric, keep_numeric)
+      )
+    )
+  ) %>%
+  select(! all_of(drop_cols)) %>%
+  # subset on and then remove a column name that is nearly reused later
+  filter(BCell_Population == "/Lymphocytes/Singlets/Live|Dump-/CD19+CD20+") %>%
+  select(-BCell_Population) %>%
+  # from kellie's processing, lightly edited
+  pivot_longer(
+    c(
+      matches('^Percent of'),
+      matches('^Number')
+    ),
+    names_to = 'endpoint',
+    values_to = 'endpoint_value'
+  ) %>%
+  mutate(endpoint_value_type = case_when(
+    grepl('^Percent', endpoint) ~ 'percent',
+    grepl('^Number', endpoint) ~ 'count',
+  )) %>%
+  # impute certain endpoints, using upper estimates for pre-vaccination time
+  # points and lower estimates (zero) for post-vaccination time points
+  group_by(PubID, weeks_post) %>%
+  mutate(endpoint_value_imputed = case_when(
+    # sequencing-only percentage endpoints
+    is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class") ~ 100,
+    is.na(endpoint_value) & (weeks_post > 0) & (endpoint == "Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class") ~ 0,
+    # flow and sequencing percentage endpoints
+    is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of B cells detected as VRC01-class") ~ endpoint_value[endpoint == "Percent of B cells that are epitope-specific (KO-GT8++)"][1],
+    is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of IgG+ B cells detected as VRC01-class") ~ endpoint_value[endpoint == "Percent of IgG+ B cells that are epitope-specific (KO-GT8++)"][1],
+    is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of GT8++ IgG+ B cells detected as VRC01-class") ~ endpoint_value[endpoint == "Percent of GT8++IgG+ B cells that are KO-"][1],
+    is.na(endpoint_value) & (weeks_post > 0) & grepl('^Percent of .*B cells detected as VRC01-class$', endpoint) ~ 0,
+    .default = endpoint_value
+  )) %>%
+  ungroup()
+
+# next: add/format supplemental columns bcell_population, percent_denominator,
+# igx_type, antigen_specificity, epitope_specificity, bnab_class
+# as well as sample metadata columns related to participant, visit, and assay
+df <- df_filtered_long %>%
+  mutate(
+    bcell_population = endpoint,
+    bcell_population = sub('Number of ', '', bcell_population),
+    # for a typo in original dataset
+    bcell_population = sub('Number ', '', bcell_population),
+    bcell_population = sub('Percent of .+ (that are|detected as) ', '', bcell_population)
+  ) %>%
+  mutate(
+    percent_denominator = if_else(
+      endpoint_value_type == 'percent',
+      gsub('^Percent of | ((that are)|(detected as)) .+$', '', endpoint),
+      NA_character_
+    ),
+    percent_denominator = case_match(
+      percent_denominator,
+      'GT8++IgG+ B cells' ~ 'GT8++ IgG+ B cells',
+      "epitope-specific (KO-GT8++) sequenced IgG BCRs" ~
+        "sequenced epitope-specific (KO-GT8++) IgG+ B cells",
+      .default = percent_denominator
+    ),
+    bcell_population = case_match(
+      bcell_population,
+      "epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class" ~
+        'VRC01-class',
+      "KO-" ~ 'GT8++KO-',
+      "IgD-IgG+ B cells" ~ 'IgG+ B cells',
+      "IgD-IgG+ B cells that are GT8++ (without regard to KO binding status)" ~ 'GT8++ IgG+ B cells',
+      "epitope-specific (KO-GT8++) IgG+ B cells that have BCR heavy and light chains sequenced" ~
+        "sequenced epitope-specific (KO-GT8++) IgG+ B cells",
+      "epitope-specific (KO-GT8++) sequenced IgG BCRs that are not VRC01-class but have a 5-aa CDRL3" ~ "sequenced epitope-specific (KO-GT8++) IgG+ B cells that are not VRC01-class but have a 5-aa CDRL3",
+      "epitope-specific (KO-GT8++) sequenced IgG BCRs that are not VRC01-class but have a VH1-2 heavy chain" ~ "sequenced epitope-specific (KO-GT8++) IgG+ B cells that are not VRC01-class but have a VH1-2 heavy chain",
+      .default = gsub(' \\(without regard to KO binding status\\)|IgD\\-', '', bcell_population)
+    ),
+    igx_type = if_else(grepl('IgG', endpoint), 'IgG+', NA_character_),
+    antigen_specificity = if_else(grepl('GT8[+][+]|VRC01[-]class', endpoint), 'GT8++', NA_character_),
+    epitope_specificity = if_else(grepl('KO[-]|VRC01[-]class', endpoint), 'KO-', NA_character_),
+    bnab_class = if_else(grepl('^VRC01[-]class$', bcell_population), 'VRC01-class', NA_character_),
+    Group = case_match(
+      Treatment,
+      '20 µg eOD-GT8 60mer + AS01B' ~ 1L,
+      '100 µg eOD-GT8 60mer + AS01B' ~ 2L
+    ),
+    dose = case_match(
+      Treatment,
+      '20 µg eOD-GT8 60mer + AS01B' ~ 20,
+      '100 µg eOD-GT8 60mer + AS01B' ~ 100
+    ),
+    dose_unit = case_match(
+      Treatment,
+      '20 µg eOD-GT8 60mer + AS01B' ~ 'µg',
+      '100 µg eOD-GT8 60mer + AS01B' ~ 'µg'
+    ),
+    visitno = sub('^V', '', Visit),
+    visit_units = 'weeks',
+    source_assay = case_when(
+      endpoint_value_type == 'count' & grepl('VRC01[-]class|sequenced', endpoint) ~ 'sequencing',
+      endpoint == 'Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class' ~ 'sequencing',
+      endpoint_value_type == 'percent' & grepl('VRC01[-]class|sequenced', endpoint) ~ 'flow and sequencing',
+      .default =  'flow'
+    ),
+    probeset = 'G001 PBMC (KO11 eOD-GT8)',
+    sample_type = 'PBMC',
+    source_file = 'https://github.com/SchiefLab/G001/raw/main/data/figures/flow_summary/flow_and_sequences.csv.gz',
+    PubID = sub('^PubID_', '', PubID)
+  ) %>%
+  mutate(
+    bcell_population = if_else(
+      endpoint_value_type == "percent" & source_assay == "flow",
+      paste(bcell_population, percent_denominator),
+      bcell_population
+    ),
+    bcell_population = sub("(GT8[+][+]KO-) GT8[+][+]", "\\1", bcell_population)
+  ) %>%
+  # Select/rename/reorder columns
+  select(
+    pubid = PubID,
+    group = Group,
+    treatment = Treatment,
+    dose,
+    dose_unit,
+    visitno,
+    visit = weeks_post,
+    visit_units,
+    sample_type,
+    probeset,
+    source_assay,
+    endpoint,
+    endpoint_value,
+    endpoint_value_type,
+    endpoint_value_imputed,
+    bcell_population,
+    percent_denominator,
+    igx_type,
+    antigen_specificity,
+    epitope_specificity,
+    bnab_class,
+    source_file
+  )
+
+# # to review the imputed values
+# df %>%
+#   filter(is.na(endpoint_value)) %>%
+#   select(pubid, visit, endpoint, endpoint_value, endpoint_value_imputed) %>%
+#   arrange(endpoint, visit) %>%
+#   View()
+
+G001_Bcell_flow_seq_PBMC <- df
+
+usethis::use_data(G001_Bcell_flow_seq_PBMC, overwrite = TRUE)
