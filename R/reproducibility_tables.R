@@ -187,7 +187,15 @@ get_session_info <- function(libpath = FALSE){
     data.frame(package = package,
                version = loadedversion,
                # Pulling in Data Version numbers
-               data.version = purrr::map_chr(package, utils::packageDescription, fields = 'DataVersion'),
+               data.version = vapply(
+                 package,
+                 function(x){
+                   as.character(
+                     utils::packageDescription(x, fields = 'DataVersion')
+                   )
+                 },
+                 "",
+                 USE.NAMES = FALSE),
                date = date,
                source = source,
                libpath = library)
