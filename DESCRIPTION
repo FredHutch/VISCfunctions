@@ -29,8 +29,7 @@ Suggests:
     tidyr,
     pracma,
     rmarkdown,
-    testthat,
-    tibble
+    testthat
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

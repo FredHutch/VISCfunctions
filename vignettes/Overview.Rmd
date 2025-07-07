@@ -149,7 +149,7 @@ associated documentation that can be viewed using `?` (i.e `?exampleData_BAMA`).
 data("exampleData_BAMA", "exampleData_NAb", "exampleData_ICS", "CAVD812_mAB")
 
 # Quick view of dataset
-tibble::glimpse(exampleData_BAMA)
+str(exampleData_BAMA)
 ```
 
 
