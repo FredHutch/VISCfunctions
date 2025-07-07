@@ -27,7 +27,6 @@ Suggests:
     dplyr,
     tidyr,
     pracma,
-    rmarkdown,
     testthat
 VignetteBuilder: 
     knitr
