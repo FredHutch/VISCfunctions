@@ -612,7 +612,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   names(test_pasting) <- c('Comparison', 'ResponseStats')
 
-  purrr::walk(c("barnard", "fisher", "chi.sq"),
+  lapply(c("barnard", "fisher", "chi.sq"),
               function(method_in){
                 testing_results <- data.frame(test_pasting,
                                               ResponseTest  = two_samp_bin_test(x = x,
