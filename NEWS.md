@@ -1,5 +1,11 @@
 # VISCfunctions (development version)
 
+# VISCfunctions 1.3.0
+
+* Fix bug in `pairwise_test_bin()` and `pairwise_test_cont()` (#111)
+* Add option to show library path in packages reproducibility table (#107)
+* Maintenance of package and CI (#110, #107)
+
 # VISCfunctions 1.2.4
 
 * Suppress warning from get_full_name() when fragile ldapsearch system call fails on Linux and macOS (#96)
