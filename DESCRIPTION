@@ -1,40 +1,39 @@
-Package: VISCfunctions
 Type: Package
+Package: VISCfunctions
 Title: VISC STP/SRA functions
 Version: 1.3.0.9000
-Authors@R: c(person("Bryan", "Mayer", ,"bmayer@fredhutch.org", "aut"),
-             person("Monica", "Gerber", ,"mgerber@fredhutch.org", "aut"),
-             person("Celia", "Mahoney", ,"cmahoney@fredhutch.org", "aut"),
-             person("Ellis", "Hughes", ,"ehhughes@fredhutch.org", "aut"),
-             person("Heather", "Bouzek", ,"hbouzek@fredhutch.org", "aut"),
-             person("Jimmy", "Fulp", ,"wfulp@fredhutch.org", c("aut", "cre"))
-             )
-Description: Statistical, data processing, and annotation functions for VISC.
+Authors@R: c(
+    person("Bryan", "Mayer", , "bmayer@fredhutch.org", role = "aut"),
+    person("Monica", "Gerber", , "mgerber@fredhutch.org", role = "aut"),
+    person("Celia", "Mahoney", , "cmahoney@fredhutch.org", role = "aut"),
+    person("Ellis", "Hughes", , "ehhughes@fredhutch.org", role = "aut"),
+    person("Heather", "Bouzek", , "hbouzek@fredhutch.org", role = "aut"),
+    person("Jimmy", "Fulp", , "wfulp@fredhutch.org", role = c("aut", "cre"))
+  )
+Description:
+    Statistical, data processing, and annotation functions for VISC.
 License: MIT + file LICENSE
-Depends: R (>= 2.10)
+Depends:
+    R (>= 2.10)
 Imports: 
     binom,
-    coin (>= 1.3-1),
+    coin,
     Exact,
     kableExtra,
     knitr,
     lifecycle,
-    purrr,
     sessioninfo,
     survival,
     withr
 Suggests: 
-    ggplot2,
     dplyr,
-    tidyr,
+    ggplot2,
     pracma,
-    rmarkdown,
     testthat,
-    stringr,
-    tibble
+    tidyr
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

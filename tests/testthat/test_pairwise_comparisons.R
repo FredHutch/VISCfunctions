@@ -365,7 +365,6 @@ test_that("pairwise_comparisons_bin testing two groups", {
 # test pairwise_test_cont. Using paste_tbl_grp and two_samp_cont_test in testing since these functions are testing elsewhere
 test_that("pairwise_comparisons testing multiple groups", {
   library(tidyr)
-  library(purrr)
 
   test_single_comp <- function(x, group, Group1, Group2) {
     test_data <- data.frame(x = x[!is.na(x)],
@@ -612,7 +611,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   names(test_pasting) <- c('Comparison', 'ResponseStats')
 
-  purrr::walk(c("barnard", "fisher", "chi.sq"),
+  lapply(c("barnard", "fisher", "chi.sq"),
               function(method_in){
                 testing_results <- data.frame(test_pasting,
                                               ResponseTest  = two_samp_bin_test(x = x,
@@ -956,7 +955,6 @@ test_that("cor_test_pairs testing two groups", {
 # test cor_test_pairs Using paste_tbl_grp and cor_test in testing since these functions are testing elsewhere
 test_that("cor_test_pairs testing multiple groups", {
   library(tidyr)
-  library(purrr)
   library(dplyr)
 
   test_single_comp <- function(data_in) {
