@@ -1,3 +1,7 @@
+# VISCfunctions (development version)
+
+* Maintenance of package and CI (#114)
+
 # VISCfunctions 1.3.0
 
 * Fix bug in `pairwise_test_bin()` and `pairwise_test_cont()` (#111)
