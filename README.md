@@ -65,6 +65,8 @@ Estimate binomial confidence intervals for a binary vector:
 |----|----|----|----|----|----|
 | `binom_ci()` | Estimate binomial confidence intervals for a binary vector | binom::binom.confint | Calculate response rate 95% CI (replaces wilson_ci) | Vector of ones and zeros (or T/F) and method (default Wilson) | dataframe of summary statistics |
 
+Note that `wilson_ci()` has been superseded by the use of `binom_ci()`.
+
 ## Formatting output
 
 | Function | Description | Dependencies | VISC use-case | Key Inputs | Key Outputs |
@@ -104,11 +106,21 @@ Estimate binomial confidence intervals for a binary vector:
 |----|----|----|----|----|----|
 | `get_full_name()` | looks up a username from Fred Hutch ID |  |  | ID to look full name up. If null (default) looks up ID of current user | character vector |
 | `get_session_info()` | creates a a data frame with session information | my_session_info | Creating tables used at the end of reports, for reproducibility. Most of the information is based off of sessioninfo::session_info() |  | dataframe |
+| `shorten_git_hash()` | Internal function for Reproducibility Tables. find ‘@’ followed by 40 hex digits, and substitute with the ‘@’ and the first 7 hex digits in ()-captured group. |  | used within `get_session_info()` | String containing @ followed by long git hash | String containing @ followed by short git hash |
 
 <!-- * `round_away_0()` is an alternative to the `round()` function to properly perform mathematical rounding. -->
 <!-- * `escape()` is used to inserts a "\\" in front of values, which is needed for Latex. -->
 <!-- * `get_full_name()` looks up a username from Fred Hutch ID. -->
 <!-- * `get_session_info()` creates a a data frame with session information. -->
+
+## Example Datasets
+
+| Assay | Dataset | Description |
+|----|----|----|
+| ICS | `exampleData_ICS` | A dataset containing response (0/1) and magnitude (continuous) ICS data for 3 cell populations and 2 antigen stimulations. Can be used to run VISCfunctions examples. |
+| BAMA | `exampleData_BAMA` | A dataset containing response (0/1) and magnitude (continuous) BAMA data for 7 antigens, 2 groups, and 3 visits. Can be used to run VISCfunctions examples. |
+| NAb | `exampleData_NAb` | A dataset containing response (0/1) and magnitude (continuous) NAb data for 6 isolates, 4 groups, and 1 visit. Can be used to run VISCfunctions examples. |
+| mAB | `CAVD812_mAB` | A subset dataset from the Farzan CAVD 812 Study, looking at eCD4 neutralization. |
 
 # Vignette
 
