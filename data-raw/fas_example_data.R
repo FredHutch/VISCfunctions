@@ -78,7 +78,7 @@ drop_cols <- c(
 #'
 #' Implements the following imputation rules:
 #' (x/y) * (z/w) where x,y are from flow data and z,w are from sequencing data.
-#' if x and y are available (not-missing) but w is either NA or 0
+#' if x and y are available (not-missing) but w is either NA or 0, and y not 0
 #' (note: z <= w so z will also be NA or 0 in this case), we set:
 #'  z/w = 1 for baseline (pre-vaccination) time points
 #'  z/w = 0 for post-vaccination time points
