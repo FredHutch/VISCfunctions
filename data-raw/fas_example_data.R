@@ -108,7 +108,7 @@ one_step_impute <- function(
   evi <- setNames(df$endpoint_value_imputed, df$endpoint)
 
   # if we are imputing
-  if ((is.na(ev[W]) || ev[W] == 0) && is.na(ev[Z]) && ! is.na(ev[X]) && ! is.na(ev[Y])){
+  if ((is.na(ev[W]) || ev[W] == 0) && (is.na(ev[Z]) || ev[Z] == 0) && ! is.na(ev[X]) && ! is.na(ev[Y])){
     # if baseline
     if (visit == "V02"){
       # set Z/W to 1, then convert to %
