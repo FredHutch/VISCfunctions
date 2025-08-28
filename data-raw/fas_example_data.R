@@ -118,7 +118,7 @@ one_step_impute <- function(
       # set Z/W to 0, then convert to %
       evi[d] <- ev[X] / ev[Y] * 0 * 100
     }
-    df[["endpoint_value_imputed"]] <- evi
+    df[["endpoint_value_imputed"]] <- unname(evi)
   }
   df
 }
@@ -159,13 +159,9 @@ df_filtered_long <- fas %>%
     # sequencing-only percentage endpoints
     is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class") ~ 100,
     is.na(endpoint_value) & (weeks_post > 0) & (endpoint == "Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class") ~ 0,
-    # flow and sequencing percentage endpoints
-    is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of B cells detected as VRC01-class") ~ endpoint_value[endpoint == "Percent of B cells that are epitope-specific (KO-GT8++)"][1],
-    is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of IgG+ B cells detected as VRC01-class") ~ endpoint_value[endpoint == "Percent of IgG+ B cells that are epitope-specific (KO-GT8++)"][1],
-    is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of GT8++ IgG+ B cells detected as VRC01-class") ~ endpoint_value[endpoint == "Percent of GT8++IgG+ B cells that are KO-"][1],
-    is.na(endpoint_value) & (weeks_post > 0) & grepl('^Percent of .*B cells detected as VRC01-class$', endpoint) ~ 0,
     .default = endpoint_value
   )) %>%
+  # flow and sequencing percentage endpoints
   # impute "Percent of B cells detected as VRC01-class"
   group_modify(
     one_step_impute,
@@ -287,7 +283,8 @@ df <- df_filtered_long %>%
     epitope_specificity,
     bnab_class,
     source_file
-  )
+  ) %>%
+  arrange(pubid, visit, source_assay, endpoint_value_type, endpoint)
 
 # # to review the imputed values
 # df %>%
