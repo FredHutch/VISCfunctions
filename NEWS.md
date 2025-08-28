@@ -1,6 +1,7 @@
 # VISCfunctions (development version)
 
 * Maintenance of package and CI (#114)
+* Add B cell example dataset from G001 flow and sequencing file (#108)
 
 # VISCfunctions 1.3.0
 
