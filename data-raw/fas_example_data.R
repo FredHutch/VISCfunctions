@@ -74,6 +74,55 @@ drop_cols <- c(
   "Response_GT8"
 )
 
+# Helper function for one-step imputation
+#'
+#' Implements the following imputation rules:
+#' (x/y) * (z/w) where x,y are from flow data and z,w are from sequencing data.
+#' if x and y are available (not-missing) but w is either NA or 0
+#' (note: z <= w so z will also be NA or 0 in this case), we set:
+#'  z/w = 1 for baseline (pre-vaccination) time points
+#'  z/w = 0 for post-vaccination time points
+#'
+#' @param df Input data frame, usually a subset from group_by(ptid, visit)
+#' @param .y Unused, absorbs the forced `.y` from `dplyr::group_modify()`
+#' @param X Endpoint name for X
+#' @param Y Endpoint name for Y
+#' @param Z Endpoint name for Z
+#' @param W Endpoint name for W
+#' @param d Destination endpoint name for imputed values
+#'
+#' @return Modified data.frame, now possibly with imputed values
+one_step_impute <- function(
+    df,
+    .y = NULL,
+    X = "Number of epitope-specific (KO-GT8++) IgG+ B cells",
+    Y = NULL,
+    Z = "Number of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class",
+    W = "Number of epitope-specific (KO-GT8++) IgG+ B cells that have BCR heavy and light chains sequenced",
+    d = NULL
+){
+  visit <- unique(df$Visit)
+  stopifnot(length(visit) == 1L, ! is.na(visit))
+
+  ev <- setNames(df$endpoint_value, df$endpoint)
+  evi <- setNames(df$endpoint_value_imputed, df$endpoint)
+
+  # if we are imputing
+  if ((is.na(ev[W]) || ev[W] == 0) && is.na(ev[Z]) && ! is.na(ev[X]) && ! is.na(ev[Y])){
+    # if baseline
+    if (visit == "V02"){
+      # set Z/W to 1, then convert to %
+      evi[d] <- ev[X] / ev[Y] * 1 * 100
+      # if not baseline
+    } else {
+      # set Z/W to 0, then convert to %
+      evi[d] <- ev[X] / ev[Y] * 0 * 100
+    }
+    df[["endpoint_value_imputed"]] <- evi
+  }
+  df
+}
+
 # first: filter down to particular endpoints/variables of interest and pivot
 # data to long, resulting in a bare-bones long-format version of the dataset
 df_filtered_long <- fas %>%
@@ -117,6 +166,24 @@ df_filtered_long <- fas %>%
     is.na(endpoint_value) & (weeks_post > 0) & grepl('^Percent of .*B cells detected as VRC01-class$', endpoint) ~ 0,
     .default = endpoint_value
   )) %>%
+  # impute "Percent of B cells detected as VRC01-class"
+  group_modify(
+    one_step_impute,
+    Y = "Number of B cells",
+    d = "Percent of B cells detected as VRC01-class"
+  ) %>%
+  # impute "Percent of IgG+ B cells detected as VRC01-class"
+  group_modify(
+    one_step_impute,
+    Y = "Number of IgD-IgG+ B cells",
+    d = "Percent of IgG+ B cells detected as VRC01-class"
+  ) %>%
+  # impute "Percent of GT8++ IgG+ B cells detected as VRC01-class"
+  group_modify(
+    one_step_impute,
+    Y = "Number of IgD-IgG+ B cells that are GT8++ (without regard to KO binding status)",
+    d = "Percent of GT8++ IgG+ B cells detected as VRC01-class"
+  ) %>%
   ungroup()
 
 # next: add/format supplemental columns bcell_population, percent_denominator,
