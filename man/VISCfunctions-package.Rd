@@ -7,6 +7,13 @@
 \description{
 Statistical, data processing, and annotation functions for VISC.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://fredhutch.github.io/VISCfunctions/}
+}
+
+}
 \author{
 \strong{Maintainer}: Jimmy Fulp \email{wfulp@fredhutch.org}
 
