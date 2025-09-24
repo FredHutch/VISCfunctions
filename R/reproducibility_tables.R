@@ -133,9 +133,15 @@ get_session_info <- function(libpath = FALSE){
   packages <- my_session_info[[2]]
 
   # TABLE 1
-  my_session_info1 <- data.frame(
-    name = names(platform),
-    value = matrix(unlist(platform), nrow = length(platform))
+  my_session_info1 <- rbind(
+    data.frame(
+      name = 'nodename',
+      value = Sys.info()[['nodename']]
+    ),
+    data.frame(
+      name = names(platform),
+      value = matrix(unlist(platform), nrow = length(platform))
+    )
   )
 
   my_current_input <- ifelse(
@@ -209,13 +215,8 @@ get_session_info <- function(libpath = FALSE){
       value = gitremote
     )
 
-    nodename_info <- data.frame(
-      name = 'nodename',
-      value = Sys.info()[['nodename']]
-    )
-
     my_session_info1 <- rbind(
-      nodename_info, my_session_info1, url_info, file_name, folder_info, user_info
+      my_session_info1, url_info, file_name, folder_info, user_info
     )
   }
 
