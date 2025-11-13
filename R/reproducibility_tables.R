@@ -121,18 +121,13 @@ get_full_name <- function(id = NULL){
 
 get_session_info <- function(libpath = FALSE){
 
-  username <- tryCatch(get_full_name(),
-                       error = function(c)
-                         ifelse(Sys.info()[['sysname']] == 'Windows',
-                                Sys.getenv("USERNAME"),
-                                Sys.getenv("USER")))
-
   my_session_info <- sessioninfo::session_info()
 
   platform <- my_session_info[[1]]
   packages <- my_session_info[[2]]
 
-  # TABLE 1
+  # TABLE 1: platform_table
+
   my_session_info1 <- rbind(
     data.frame(
       name = 'nodename',
@@ -144,8 +139,22 @@ get_session_info <- function(libpath = FALSE){
     )
   )
 
+  username <- tryCatch(get_full_name(),
+                       error = function(c)
+                         ifelse(Sys.info()[['sysname']] == 'Windows',
+                                Sys.getenv("USERNAME"),
+                                Sys.getenv("USER")))
+
+  user_info <- data.frame(
+    name = 'user',
+    value = username
+  )
+
+  # get name of current input file
   my_current_input <- ifelse(
-    is.null(ci <- knitr::current_input()), 'No Input File Detected', ci
+    is.null(ci <- knitr::current_input()),
+    'No Input File Detected',
+    ci
   )
   my_current_input_w_dir <- ifelse(
     is.null(ci <-  knitr::current_input(dir = TRUE)),
@@ -158,22 +167,36 @@ get_session_info <- function(libpath = FALSE){
     value = my_current_input
   )
 
-  # Add user info
-  user_info <- data.frame(
-    name = 'user',
-    value = username
-  )
-
-  gitremoteorg <- tryCatch(
+  # get url info for git repo remote
+  git_remote_org <- tryCatch(
     system2("git" ,"remote -v", stdout = TRUE, stderr = FALSE)[1],
     error = function(c) '',
     warning = function(c) ''
   )
-  gitremote <-  substr(gitremoteorg,
-                       regexpr("\t", gitremoteorg) + 1,
-                       regexpr(" \\(", gitremoteorg) - 1)
+  git_remote <- substr(git_remote_org,
+                       regexpr("\t", git_remote_org) + 1,
+                       regexpr(" \\(", git_remote_org) - 1)
 
-  if (is.na(gitremote) || gitremote == "" || grepl('fatal', gitremote)) {
+  # get git branch and commit info, if available
+  git_branch <- tryCatch(
+    system("git rev-parse --abbrev-ref HEAD", intern = TRUE),
+    error = function(c) '',
+    warning = function(c) ''
+  )
+  git_commit <- tryCatch(
+    system("git rev-parse HEAD", intern = TRUE),
+    error = function(c) '',
+    warning = function(c) ''
+  )
+  git_commit_short <- shorten_git_hash(git_commit)
+
+  git_info <- data.frame(
+    name = c('repo', 'branch', 'commit'),
+    value = c(git_remote, git_branch, git_commit_short)
+  )
+
+  # get folder info (where current input file lives)
+  if (is.na(git_remote) || git_remote == "" || grepl('fatal', git_remote)) {
     # No Remote Connection, so just give absolute path
     folder_info <- data.frame(
       name = 'location',
@@ -203,25 +226,20 @@ get_session_info <- function(libpath = FALSE){
       folder_info_in <- 'No Input File Location Detected'
     }
 
-
-    # Dropping matching file names that do not match folder path
     folder_info <- data.frame(
       name = 'location',
       value = folder_info_in
     )
 
-    url_info <- data.frame(
-      name = 'repo',
-      value = gitremote
+    my_session_info1 <- rbind(
+      my_session_info1, git_info, file_name, folder_info, user_info
     )
 
-    my_session_info1 <- rbind(
-      my_session_info1, url_info, file_name, folder_info, user_info
-    )
   }
 
 
-  # TABLE 2
+  # TABLE 2: packages_table
+
   my_session_info2 <- packages[packages$attached,] # Only want attached packages
   my_session_info2 <- with(my_session_info2, {
     data.frame(package = package,
@@ -240,15 +258,27 @@ get_session_info <- function(libpath = FALSE){
                source = source,
                libpath = library)
   })
-  if (! libpath) my_session_info2$libpath <- NULL
-  if (any(!is.na(my_session_info2$data.version)))
-    my_session_info2$data.version[is.na(my_session_info2$data.version)] <- '' else
-      my_session_info2 <- my_session_info2[, -match('data.version', colnames(my_session_info2))]
 
-  # Use short git hash
+  # drop libpath column, if requested
+  if (!libpath) {
+    my_session_info2$libpath <- NULL
+  }
+
+  # if data version info is available for any packages, fill in blanks for other packages
+  if (any(!is.na(my_session_info2$data.version))) {
+    my_session_info2$data.version[is.na(my_session_info2$data.version)] <- ''
+  } else {
+    # otherwise, drop data version column
+    my_session_info2 <- my_session_info2[, -match('data.version', colnames(my_session_info2))]
+  }
+
+  # abbreviate any git hashes in source column
   my_session_info2$source <- shorten_git_hash(my_session_info2$source)
 
+
+  # return both tables
   list(platform_table = my_session_info1, packages_table = my_session_info2)
+
 }
 
 
