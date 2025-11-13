@@ -167,7 +167,7 @@ get_session_info <- function(libpath = FALSE){
     value = my_current_input
   )
 
-  # get url info for git repo remote
+  # get url info for git repo remote, and branch name as well
   git_remote_org <- tryCatch(
     system2("git" ,"remote -v", stdout = TRUE, stderr = FALSE)[1],
     error = function(c) '',
@@ -176,23 +176,15 @@ get_session_info <- function(libpath = FALSE){
   git_remote <- substr(git_remote_org,
                        regexpr("\t", git_remote_org) + 1,
                        regexpr(" \\(", git_remote_org) - 1)
-
-  # get git branch and commit info, if available
   git_branch <- tryCatch(
     system("git rev-parse --abbrev-ref HEAD", intern = TRUE),
     error = function(c) '',
     warning = function(c) ''
   )
-  git_commit <- tryCatch(
-    system("git rev-parse HEAD", intern = TRUE),
-    error = function(c) '',
-    warning = function(c) ''
-  )
-  git_commit_short <- shorten_git_hash(git_commit)
 
   git_info <- data.frame(
-    name = c('repo', 'branch', 'commit'),
-    value = c(git_remote, git_branch, git_commit_short)
+    name = c('repo', 'branch'),
+    value = c(git_remote, git_branch)
   )
 
   # get folder info (where current input file lives)
