@@ -1,0 +1,133 @@
+---
+title: "Plotting utilities in VISCfunctions"
+author: "Kellie MacPhee"
+date: "`r Sys.Date()`"
+output: 
+  html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = TRUE
+)
+```
+
+In this vignette, we will overview the following elements of VISCfunctions,
+which help with plotting:
+
+- create_step_curve (for survival and magnitude breadth analysis)
+
+## Getting Started
+
+Install and load the VISCfunctions package, along with other packages needed
+for this vignette:
+
+```{r, eval=FALSE}
+remotes::install_github("FredHutch/VISCfunctions")
+```
+
+```{r, results='hide', message=FALSE}
+library(VISCfunctions)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
+
+## Plotting
+
+`create_step_curve()` creates survival probabilities from time and censoring
+information and generates a risk table that includes the survival probabilities
+and number at risk in addition to the data provided. This output can be used to
+plot step line outcomes such as time-to-event (Kaplan-Meier curves), magnitude
+breadth (MB) curves, and cumulative plots.
+
+```{r}
+plot_data <- CAVD812_mAB %>%
+  filter(virus != 'SVA-MLV') %>% 
+  pivot_longer(cols = c(ic50, ic80)) %>% 
+  group_by(name, product) %>%
+  group_modify(~ create_step_curve(x = pmin(.x$value, 100), 
+                                   event = as.numeric(.x$value < 50),
+                                   flip_surv = TRUE, flip_top_x = 100)) 
+
+plot_data %>%
+  ggplot(aes(x = time, y = 1 - surv, color = product)) +
+  geom_step(direction = 'hv', lwd = .35) +
+  scale_x_log10() +
+  scale_y_continuous('Viral Coverage (%)') +
+  facet_grid(. ~ name) +
+  theme_bw()
+```
+```{r}
+
+scale_y_continuous_with_limits <- function(lower_limit = NA,
+                                           upper_limit = NA,
+                                           target_breaks = 3,
+                                           breaks = NULL,
+                                           oob = scales::squish,
+                                           ...) {
+  
+  if (is.null(breaks)) {
+    if (is.na(lower_limit) & is.na(upper_limit)) {
+      my_breaks <- waiver()
+    }
+    if (!is.na(lower_limit) & !is.na(upper_limit)) {
+      width <- upper_limit - lower_limit
+      my_breaks <- seq(lower_limit, upper_limit, width/(target_breaks - 1))
+    }
+    if (!is.na(lower_limit) & is.na(upper_limit)) {
+      break_spacing <- 10^round(log10(lower_limit))
+      my_breaks <- lower_limit + c(0, break_spacing * 1:(target_breaks - 1))
+    }
+    if (is.na(lower_limit) & !is.na(!upper_limit)) {
+      break_spacing <- round(upper_limit / target_breaks)
+      my_breaks <- upper_limit - c(break_spacing * (target_breaks - 1):1, 0)
+    }
+  } else {
+    my_breaks <- breaks
+  }
+  
+  if (!is.na(lower_limit)) stopifnot(lower_limit %in% my_breaks)
+  if (!is.na(upper_limit)) stopifnot(upper_limit %in% my_breaks)
+  
+  my_labeller <- function(breaks) {
+    labels <- as.character(breaks)
+    n_labels <- length(labels)
+    if (!is.na(lower_limit)) { labels[1] <- paste("≤", labels[1]) }
+    if (!is.na(upper_limit)) { labels[n_labels] <- paste("≥", labels[n_labels]) }
+    return(labels)
+  }
+  
+  ggplot2::scale_y_continuous(
+    limits = c(lower_limit, upper_limit),
+    breaks = my_breaks,
+    labels = my_labeller,
+    oob = oob,
+    ...
+  )
+  
+}
+
+
+mtcars %>%
+  ggplot(aes(wt, mpg)) +
+  geom_point() +
+  scale_y_continuous_with_limits(lower_limit = 12)
+
+mtcars %>%
+  ggplot(aes(wt, mpg)) +
+  geom_point() +
+  scale_y_continuous_with_limits(upper_limit = 30, target_breaks = 4)
+
+mtcars %>%
+  ggplot(aes(wt, mpg)) +
+  geom_point() +
+  scale_y_continuous_with_limits(lower_limit = 12, upper_limit = 30, target_breaks = 4)
+
+mtcars %>%
+  ggplot(aes(wt, mpg)) +
+  geom_point() +
+  scale_y_continuous_with_limits()
+```
