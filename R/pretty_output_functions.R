@@ -46,15 +46,14 @@
 #'
 #' descriptive_stats_by_group <- exampleData_BAMA %>%
 #'   group_by(visitno,antigen) %>%
-#'   summarise(
+#'   reframe(
 #'     Group1 = unique(group[group == 1]), Group2 = unique(group[group == 2]),
 #'     Group1_n = length(magnitude[group == 1]), Group2_n = length(magnitude[group == 2]),
 #'     Group1_mean = mean(magnitude[group == 1]), Group2_mean = mean(magnitude[group == 2]),
 #'     Group1_sd = sd(magnitude[group == 1]), Group2_sd = sd(magnitude[group == 2]),
 #'     Group1_median = median(magnitude[group == 1]), Group2_median = median(magnitude[group == 2]),
 #'     Group1_min = min(magnitude[group == 1]), Group2_min = min(magnitude[group == 2]),
-#'     Group1_max = max(magnitude[group == 1]), Group2_max = max(magnitude[group == 2]),
-#'     .groups = 'drop'
+#'     Group1_max = max(magnitude[group == 1]), Group2_max = max(magnitude[group == 2])
 #'   )
 #'
 #' paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1',
@@ -74,10 +73,9 @@
 #'exampleData_BAMA %>%
 #'  mutate(group = paste0("Group", group)) %>%
 #'  group_by(group, visitno, antigen) %>%
-#'  summarise(N = n(), mean = mean(magnitude), sd = sd(magnitude),
-#'            median = median(magnitude), min = min(magnitude),
-#'            max = max(magnitude), q95_fun = quantile(magnitude, 0.95),
-#'            .groups = 'drop') %>%
+#'  reframe(N = n(), mean = mean(magnitude), sd = sd(magnitude),
+#'          median = median(magnitude), min = min(magnitude),
+#'          max = max(magnitude), q95_fun = quantile(magnitude, 0.95)) %>%
 #'  pivot_longer(-(group:antigen)) %>% # these three chains create a wide dataset
 #'  unite(temp, group, name) %>%
 #'  pivot_wider(names_from = temp, values_from = value) %>%
