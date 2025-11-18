@@ -2,3 +2,43 @@ url: https://fredhutch.github.io/VISCfunctions/
 template:
   bootstrap: 5
 
+reference:
+  - title: "Example Datasets"
+    contents:
+      - exampleData_BAMA
+      - exampleData_ICS
+      - exampleData_NAb
+      - CAVD812_mAB
+      - G001_Bcell_flow_seq_PBMC
+
+  - title: "Utility Functions"
+    contents:
+      - get_full_name
+      - get_session_info
+      - shorten_git_hash
+
+  - title: "Output Formatting for PDF and Word"
+    contents:
+      - paste_tbl_grp
+      - pretty_pvalues
+      - stat_paste
+      - escape
+      - collapse_group_row
+      - round_away_0
+
+  - title: "Statistical Tests"
+    contents:
+      - two_samp_bin_test
+      - two_samp_cont_test
+      - cor_test
+      - pairwise_test_bin
+      - pairwise_test_cont
+      - cor_test_pairs
+      - binom_ci
+      - wilson_ci
+
+  - title: "Survival and Magnitude Breadth"
+    contents:
+      - create_step_curve
+      - mb_results
+      - trapz_sorted
