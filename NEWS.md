@@ -2,6 +2,7 @@
 
 * Maintenance of package and CI (#114)
 * Add B cell example dataset from G001 flow and sequencing file (#108)
+* Add geometric mean, median, quantile, and standard deviation functions (#82)
 
 # VISCfunctions 1.3.0
 
