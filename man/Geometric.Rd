@@ -5,12 +5,14 @@
 \alias{geomedian(),}
 \alias{geoquantile(),}
 \alias{geosd()}
+\alias{geosd}
 \alias{geoquantile}
 \alias{geomedian}
-\alias{geosd}
 \title{Functions for Log-Scale Transformations - Geometric Mean, Geometric Median, Geometric Standard Deviation and Geometric Quantiles}
 \usage{
 geomean(x, na.rm = TRUE, threshold = 1L, verbose = FALSE)
+
+geosd(x, na.rm = TRUE, threshold = 1L, verbose = FALSE)
 
 geoquantile(
   x,
@@ -23,8 +25,6 @@ geoquantile(
 )
 
 geomedian(x, na.rm = TRUE, threshold = 1L, verbose = FALSE)
-
-geosd(x, na.rm = TRUE, threshold = 1L, verbose = FALSE)
 }
 \arguments{
 \item{x}{Numeric vector. Vector must be longer than two elements.}
@@ -60,13 +60,13 @@ Each function takes a vector of non-negative numbers, log-transforms the numbers
 }
 \section{Functions}{
 \itemize{
-\item \code{geomean()}: Mean for Log-transformed Data
+\item \code{geomean()}: Mean
 
-\item \code{geoquantile()}: Quantiles for Log-transformed Data
+\item \code{geosd()}: Standard Deviation
 
-\item \code{geomedian()}: Median for Log-transformed Data
+\item \code{geoquantile()}: Quantiles
 
-\item \code{geosd()}: Standard Deviation for Log-transformed Data
+\item \code{geomedian()}: Median
 
 }}
 \examples{
@@ -111,7 +111,6 @@ geosd(x, threshold = 0.1, verbose = TRUE)
 geoquantile(x <- rnorm(1001)) # Extremes & Quartiles by default
 geoquantile(x,  probs = c(0, 0.01, 0.1, 1))
 geoquantile(x, type = 9)
-
 }
 \seealso{
 \code{\link[base:mean]{mean}}, \code{\link[stats:median]{median}}, \code{\link[stats:quantile]{quantile}}, \code{\link[stats:sd]{sd}}, for the related arithmetic functions

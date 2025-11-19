@@ -1,3 +1,25 @@
+
+validate_geo_threshold <- function(threshold, verbose = TRUE) {
+
+  if (!(is.numeric(threshold) | is.null(threshold))) stop('"threshold" must be numeric or null')
+
+  if (!is.null(threshold)) {
+
+    if (length(threshold) != 1) stop('"threshold" must have a length of one.')
+    if (threshold > max(x, na.rm = TRUE))  stop('"threshold" must be less than at least one value of "x"')
+    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
+
+  } else {
+    if (any(x <= 0)) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
+  }
+
+  if (verbose == TRUE & any(x < 1) & (is.null(threshold) || threshold < 1)){
+    warning("Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceding zeros. Thresholds set to one will become zero upon log transformation.")
+  }
+
+}
+
+
 #' Functions for Log-Scale Transformations - Geometric Mean, Geometric Median, Geometric Standard Deviation and Geometric Quantiles
 #'
 #' @description
@@ -65,43 +87,47 @@
 #' geoquantile(x <- rnorm(1001)) # Extremes & Quartiles by default
 #' geoquantile(x,  probs = c(0, 0.01, 0.1, 1))
 #' geoquantile(x, type = 9)
-#'
-#' @export geomean
-#' @describeIn Geometric Mean for Log-transformed Data
-geomean <- function(
-  x,
-  na.rm = TRUE,
-  threshold = 1L,
-  verbose = FALSE)
-  {# Input Checking
-  # must be a numeric vector, not a factor
-  if (!is.numeric(x)) stop ('"x" must be a numeric vector.')
-  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
-  if (!(is.numeric(threshold)|is.null(threshold))) stop('"threshold" must be numeric or null')
-  if (length(x) < 2) stop('"x" must have a length more than two.')
-  #threshold options
-  if (!is.null(threshold)){
-    if (length(threshold) != 1) stop('"threshold" must have a length of one.')
-    if (threshold > max(x, na.rm = TRUE))  stop('"threshold" must be less than at least one value of "x"')
-    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
-  }else{
-    if (any(x <= 0)) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
-  }
-if (verbose == TRUE & any(x < 1) & (is.null(threshold)||threshold < 1)){
-    # Explain thresholds less than one
-    warning("Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceding zeros. Thresholds set to one will become zero upon log transformation.")}
 
-  # Conversions
-  # set the values less than the threshold to the threshold
-  if (!is.null(threshold)) { x[x <= threshold] <- threshold}
-  # decrease the length of 'x' if there are 'NA' values in 'x' and 'na.rm' is FALSE
+
+#' @export geomean
+#' @describeIn Geometric Mean
+geomean <- function(x, na.rm = TRUE, threshold = 1L, verbose = FALSE){
+
+  if (!is.numeric(x)) stop('"x" must be a numeric vector.')
+  if (length(x) < 2) stop('"x" must have a length more than two.')
+  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
+  validate_geo_threshold(threshold, verbose = verbose)
+
+  # apply thresholding and remove NAs
+  if (!is.null(threshold)) { x[x <= threshold] <- threshold }
   if (na.rm) {x <- x[!is.na(x)]}
-  # Function
-  #
+
+  # compute geometric mean
   exp(mean(log(x), na.rm = na.rm))
 }
+
+
+#' @export geosd
+#' @describeIn Geometric Standard Deviation
+geosd <- function(x, na.rm = TRUE, threshold = 1L, verbose = FALSE) {
+
+  if (!is.numeric(x)) stop ('"x" must be a numeric vector.')
+  if (length(x) < 2) stop('"x" must have a length more than two.')
+  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
+  validate_geo_threshold(threshold, verbose = verbose)
+
+  # apply thresholding and remove NAs
+  if (!is.null(threshold)) { x[x <= threshold] <- threshold }
+  if (na.rm) { x <- x[!is.na(x)] }
+
+  # compute geometric standard deviation
+  exp(stats::sd(log(x), na.rm = na.rm))
+
+}
+
+
 #' @export geoquantile
-#' @describeIn Geometric Quantiles for Log-transformed Data
+#' @describeIn Geometric Quantiles
 geoquantile <- function(
   x,
   probs = c(0, 0.25, 0.5, 0.75, 1),
@@ -110,94 +136,39 @@ geoquantile <- function(
   threshold = 1L,
   verbose = FALSE,
   ...
-){# Input Checking
-  #
-  # if the length of the vector is less than two, cannot compute mean
-  # must be a numeric vector
+){
+
   if (!is.numeric(x)) stop ('"x" must be a numeric vector.')
+  if (length(x) < 2) stop('"x" must have a length more than two.')
+  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
+  validate_geo_threshold(threshold, verbose = verbose)
+
+  # quantile-specific input checks
   if (!is.numeric(probs)) stop ('"probs" must be numeric.')
   if (is.logical(probs)) stop ('"probs" must be numeric.')
-  if (!is.numeric(type)) stop ('"type" must be numeric.')
-  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
-  if (!(is.numeric(threshold)|is.null(threshold))) stop('"threshold" must be numeric or null')
-  #if (length(probs) < 1) stop('"probs" must have a length of at least one.')
   if (any(probs < 0) | any(probs > 1)) stop('"probs" must be between 0 and 1.')
+  if (!is.numeric(type)) stop ('"type" must be numeric.')
   if (type < 1 | type > 9) stop('"type" must be a numeral between 1 and 9.')
-  if (length(x) < 2) stop('"x" must have a length more than two.')
-  if (!is.null(threshold)){
-    if (length(threshold) != 1) stop('"threshold" must have a length of one.')
-    if (threshold > max(x, na.rm = TRUE))  stop('"threshold" must be less than at least one value of "x"')
-    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
-  }else{
-    if (any(x <= 0)) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
-  }
-  if (verbose == TRUE & any(x < 1) & (is.null(threshold)||threshold < 1)){
-    # Explain thresholds less than one
-    warning("Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceding zeros. Thresholds set to one will become zero upon log transformation.")}
-  # Conversions
-  # set the values less than the threshold to the threshold
-  if (!is.null(threshold)) {
-    x[x <= threshold] <- threshold
-  }
-  # decrease the length of 'x' if there are 'NA' values in 'x' and 'na.rm' is FALSE
-  if (na.rm) {
-    x <- x[!is.na(x)]
-  }
-  # Function
-  #
-  exp(stats::quantile(log(x), probs = probs, na.rm = na.rm, type = type))
+
+  # apply thresholding and remove NAs
+  if (!is.null(threshold)) { x[x <= threshold] <- threshold }
+  if (na.rm) { x <- x[!is.na(x)] }
+
+  # compute geometric quantiles
+  exp(stats::quantile(log(x), probs = probs, na.rm = na.rm, type = type), ...)
+
 }
+
+
 #' @export geomedian
-#' @describeIn Geometric Median for Log-transformed Data
-geomedian <- function(
-  x,
-  na.rm = TRUE,
-  threshold = 1L,
-  verbose = FALSE
-){geoquantile(x = x,
-               na.rm = na.rm,
-               threshold = threshold,
-               verbose = verbose,
-               type = 2,
-               probs = 0.5)
-}
+#' @describeIn Geometric Median
+geomedian <- function(x, na.rm = TRUE, threshold = 1L, verbose = FALSE) {
 
-#' @export geosd
-#' @describeIn Geometric Standard Deviation for Log-transformed Data
-geosd <- function(
-  x,
-  na.rm = TRUE,
-  threshold = 1L,
-  verbose = FALSE
-){# Input Checking
-  requireNamespace("stats")
-  # must be a numeric vector, not a factor
-  if (!is.numeric(x)) stop ('"x" must be a numeric vector.')
-  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
-  if (!(is.numeric(threshold)|is.null(threshold))) stop('"threshold" must be numeric or null')
-  if (length(x) < 2) stop('"x" must have a length more than two.')
-  if (!is.null(threshold)){
-    if (length(threshold) != 1) stop('"threshold" must have a length of one.')
-    if (threshold > max(x, na.rm = TRUE))  stop('"threshold" must be less than at least one value of "x"')
-    if (any(x <= 0) & threshold <= 0) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
-  }else{
-    if (any(x <= 0)) stop('"threshold" must be a positive numeral greater than zero when there are values in the data are at or less than zero')
-  }
-  if (verbose == TRUE & any(x < 1) & (is.null(threshold)||threshold < 1)){
-    # Explain thresholds less than one
-    warning("Any non-null thresholds with values less than one will generate negative numbers when log-transformed. These negative numbers can change the summary statistics in unexpected ways, especially if the other data values are much larger than one or the threshold contains a lot of decimal places with preceding zeros. Thresholds set to one will become zero upon log transformation.")}
-  # if there are any zero or negative numbers and threshold is null throw an error
+  geoquantile(x = x,
+              probs = 0.5,
+              type = 2,
+              na.rm = na.rm,
+              threshold = threshold,
+              verbose = verbose)
 
-  # Conversions
-  # set the values less than the threshold to the threshold
-  if (!is.null(threshold)) {
-    x[x <= threshold] <- threshold
-  }
-  # decrease the length of 'x' if there are 'NA' values in 'x' and 'na.rm' is FALSE
-  if (na.rm) {
-    x <- x[!is.na(x)]
-  }
-  # Function
-  #
-  exp(stats::sd(log(x), na.rm = na.rm))
 }
