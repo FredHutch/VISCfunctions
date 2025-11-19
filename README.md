@@ -6,19 +6,21 @@ status](https://github.com/FredHutch/VISCfunctions/workflows/R-CMD-check/badge.s
 [![Codecov test
 coverage](https://codecov.io/gh/FredHutch/VISCfunctions/graph/badge.svg)](https://app.codecov.io/gh/FredHutch/VISCfunctions)
 [![License:MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 <!-- badges: end -->
 
 # VISCfunctions
 
-The package provides functions for common tasks for creating statistical
-reports at Vaccine Immunology Statistical Center (VISC). The goal of
-VISCfunctions is to:
+This package helps automate and standardize common tasks that are part
+of the process of creating reports at the Vaccine & Immunology
+Statistical Center (VISC) at Fred Hutch. The goal of VISCfunctions is
+to:
 
 - provide standard statistical testing and estimating functions
 - help format output for PDF and Word reports
 - provide frequently used utility functions
 
-for VISC statisticians and programmers at Fred Hutch.
+for VISC statisticians and programmers.
 
 # Installation
 
@@ -79,14 +81,23 @@ Note that `wilson_ci()` has been superseded by the use of `binom_ci()`.
 | `round_away_0` | Unlike R round (which rounds towards an even number), this function rounds away from zero and allows retention of trailing zeros | NA | Generally any time we need to round, additionally when we need to retain significant digits | Numeric vector | Numeric or character vector (if trailing_zeros=TRUE) |
 
 <!-- * `paste_tbl_grp()` to paste together information (usually descriptive statistics) from two groups. -->
+
 <!-- * `pretty_pvalues()` to round and format p-values. -->
+
 <!-- * `stat_paste()` to combine and format values, such as: -->
+
 <!--     + Mean (sd) -->
+
 <!--     + Median [min, max] -->
+
 <!--     + Estimate (SE of Estimate) -->
+
 <!--     + Estimate (95% CI Lower Bound, Upper Bound) -->
+
 <!--     + Estimate/Statistic (p value) -->
+
 <!-- * `escape()` to protect control characters in a string for use in a latex table or caption -->
+
 <!-- * `collapse_group_row()` as an alternative to `kableExtra::collapse_rows()` for long tables in latex -->
 
 ## Survival and Magnitude Breadth
@@ -98,6 +109,7 @@ Note that `wilson_ci()` has been superseded by the use of `binom_ci()`.
 | `trapz_sorted()` | A wrapper for trapz monotonically sorting values and computing area | pracma::trapz |  | x: x-coordinates of points on x-axis, y: y-coordinates of function values, na.rm: boolean for remove NA from x & y or not. | integral of function with discrete points (single numeric value) |
 
 <!-- * `create_step_curve()` to create survival probabilities and generate a risk table -->
+
 <!-- * `mb_results()` to create step curve info for magnitude breadth (MB) plots and AUC-MB -->
 
 ## Utility functions
@@ -109,25 +121,9 @@ Note that `wilson_ci()` has been superseded by the use of `binom_ci()`.
 | `shorten_git_hash()` | Internal function for Reproducibility Tables. find ‘@’ followed by 40 hex digits, and substitute with the ‘@’ and the first 7 hex digits in ()-captured group. |  | used within `get_session_info()` | String containing @ followed by long git hash | String containing @ followed by short git hash |
 
 <!-- * `round_away_0()` is an alternative to the `round()` function to properly perform mathematical rounding. -->
+
 <!-- * `escape()` is used to inserts a "\\" in front of values, which is needed for Latex. -->
+
 <!-- * `get_full_name()` looks up a username from Fred Hutch ID. -->
+
 <!-- * `get_session_info()` creates a a data frame with session information. -->
-
-## Example Datasets
-
-| Assay | Dataset | Description |
-|----|----|----|
-| ICS | `exampleData_ICS` | A dataset containing response (0/1) and magnitude (continuous) ICS data for 3 cell populations and 2 antigen stimulations. Can be used to run VISCfunctions examples. |
-| BAMA | `exampleData_BAMA` | A dataset containing response (0/1) and magnitude (continuous) BAMA data for 7 antigens, 2 groups, and 3 visits. Can be used to run VISCfunctions examples. |
-| NAb | `exampleData_NAb` | A dataset containing response (0/1) and magnitude (continuous) NAb data for 6 isolates, 4 groups, and 1 visit. Can be used to run VISCfunctions examples. |
-| mAB | `CAVD812_mAB` | A subset dataset from the Farzan CAVD 812 Study, looking at eCD4 neutralization. |
-
-# Vignette
-
-For more information, browse the vignette
-(`browseVignettes("VISCfunctions")`).
-
-# Contribute to this package
-
-See our [contibuting guide](CONTRIBUTING.md) to learn more about how you
-can contribute to this package.

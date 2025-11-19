@@ -5,7 +5,7 @@
 \alias{VISCfunctions}
 \title{VISCfunctions: VISC STP/SRA functions}
 \description{
-Statistical, data processing, and annotation functions for VISC.
+Statistical, data processing, and annotation functions for VISC statisticians and programmers.
 }
 \seealso{
 Useful links:
@@ -15,15 +15,15 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Jimmy Fulp \email{wfulp@fredhutch.org}
+\strong{Maintainer}: Bryan Mayer \email{bmayer@fredhutch.org}
 
 Authors:
 \itemize{
-  \item Bryan Mayer \email{bmayer@fredhutch.org}
-  \item Monica Gerber \email{mgerber@fredhutch.org}
-  \item Celia Mahoney \email{cmahoney@fredhutch.org}
-  \item Ellis Hughes \email{ehhughes@fredhutch.org}
-  \item Heather Bouzek \email{hbouzek@fredhutch.org}
+  \item Monica Gerber
+  \item Celia Mahoney
+  \item Ellis Hughes
+  \item Heather Bouzek
+  \item Jimmy Fulp
 }
 
 }

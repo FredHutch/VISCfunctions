@@ -2,31 +2,29 @@ url: https://fredhutch.github.io/VISCfunctions/
 template:
   bootstrap: 5
 
+navbar:
+  structure:
+    left:
+      - home
+      - functions   # replaces "reference"
+      - vignettes   # replaces "articles"
+      - news        # replaces "changelog"
+  components:
+    functions:
+      text: "Functions and Datasets"
+      desc: "All fuunctions and datasets made available by VISCfunctions"
+      href: reference/index.html
+    vignettes:
+      text: "Vignettes"
+      href: articles/index.html
+    news:
+      text: "News"
+      href: news/index.html
+
+
 reference:
-  - title: "Example Datasets"
-    contents:
-      - exampleData_BAMA
-      - exampleData_ICS
-      - exampleData_NAb
-      - CAVD812_mAB
-      - G001_Bcell_flow_seq_PBMC
-
-  - title: "Utility Functions"
-    contents:
-      - get_full_name
-      - get_session_info
-      - shorten_git_hash
-
-  - title: "Output Formatting for PDF and Word"
-    contents:
-      - paste_tbl_grp
-      - pretty_pvalues
-      - stat_paste
-      - escape
-      - collapse_group_row
-      - round_away_0
-
   - title: "Statistical Tests"
+    desc: "Formal hypothesis testing and p-value computations"
     contents:
       - two_samp_bin_test
       - two_samp_cont_test
@@ -42,3 +40,26 @@ reference:
       - create_step_curve
       - mb_results
       - trapz_sorted
+
+  - title: "Output Formatting for PDF and Word"
+    contents:
+      - paste_tbl_grp
+      - pretty_pvalues
+      - stat_paste
+      - escape
+      - collapse_group_row
+      - round_away_0
+
+  - title: "Utility Functions"
+    contents:
+      - get_full_name
+      - get_session_info
+      - shorten_git_hash
+
+  - title: "Example Datasets"
+    contents:
+      - exampleData_BAMA
+      - exampleData_ICS
+      - exampleData_NAb
+      - CAVD812_mAB
+      - G001_Bcell_flow_seq_PBMC
