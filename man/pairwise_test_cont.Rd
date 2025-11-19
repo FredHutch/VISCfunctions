@@ -126,34 +126,32 @@ data(exampleData_BAMA)
 ## Group Comparison
 group_testing_tibble <- exampleData_BAMA \%>\%
    group_by(antigen, visitno) \%>\%
-   summarise(pairwise_test_cont(x = magnitude,
-                                group = group,
-                                paired = FALSE,
-                                method = 'wilcox',
-                                alternative = "less",
-                                sorted_group = c(1,2),
-                                digits = 3,
-                                num_needed_for_test = 3,
-                                verbose = TRUE),
-            .groups = "keep")
+   reframe(pairwise_test_cont(x = magnitude,
+                              group = group,
+                              paired = FALSE,
+                              method = 'wilcox',
+                              alternative = "less",
+                              sorted_group = c(1,2),
+                              digits = 3,
+                              num_needed_for_test = 3,
+                              verbose = TRUE))
 
 
 ## Timepoint Comparison
 timepoint_testing_dt <- exampleData_BAMA \%>\%
                        group_by(antigen, group) \%>\%
-                       summarise(pairwise_test_cont(x = magnitude,
-                                                   group = visitno,
-                                                   paired = TRUE,
-                                                   id = pubID,
-                                                   method = 'wilcox',
-                                                   sorted_group = c(0,1,2),
-                                                   alternative = 'less',
-                                                   num_needed_for_test = 3,
-                                                   digits = 3,
-                                                   trailing_zeros = TRUE,
-                                                   sep_val = ' vs. ',
-                                                   verbose = TRUE),
-                                 .groups = "keep")
+                       reframe(pairwise_test_cont(x = magnitude,
+                                                  group = visitno,
+                                                  paired = TRUE,
+                                                  id = pubID,
+                                                  method = 'wilcox',
+                                                  sorted_group = c(0,1,2),
+                                                  alternative = 'less',
+                                                  num_needed_for_test = 3,
+                                                  digits = 3,
+                                                  trailing_zeros = TRUE,
+                                                  sep_val = ' vs. ',
+                                                  verbose = TRUE))
 
 
 # ICS Assay Data Example
@@ -163,35 +161,33 @@ data(exampleData_ICS)
 # using dplyr
 exampleData_ICS \%>\%
 group_by(Stim, Parent, Population, Visit) \%>\%
-summarise(pairwise_test_cont(x = PercentCellNet,
-                            group = Group,
-                            paired = FALSE,
-                            method = 'wilcox',
-                            alternative = 'less',
-                            sorted_group = c(1,2,3,4),
-                            num_needed_for_test = 3,
-                            digits = 4,
-                            trailing_zeros = TRUE,
-                            sep_val = ' vs. ',
-                            verbose = TRUE),
-         .groups = "keep")
+reframe(pairwise_test_cont(x = PercentCellNet,
+                          group = Group,
+                          paired = FALSE,
+                          method = 'wilcox',
+                          alternative = 'less',
+                          sorted_group = c(1,2,3,4),
+                          num_needed_for_test = 3,
+                          digits = 4,
+                          trailing_zeros = TRUE,
+                          sep_val = ' vs. ',
+                          verbose = TRUE))
 
 # Timepoint Comparison
 timepoint_testing_dt <- exampleData_ICS \%>\%
                        group_by(Stim, Parent, Population, Group) \%>\%
-                       summarise(pairwise_test_cont(x = PercentCellNet,
-                                                    group = Visit,
-                                                    paired = TRUE,
-                                                    id = pubID,
-                                                    method = 'wilcox',
-                                                    sorted_group = c(0,1,2),
-                                                    alternative = 'less',
-                                                    num_needed_for_test = 3,
-                                                    digits = 4,
-                                                    trailing_zeros = TRUE,
-                                                    sep_val = ' vs. ',
-                                                    verbose = TRUE),
-                       .groups = "keep")
+                       reframe(pairwise_test_cont(x = PercentCellNet,
+                                                  group = Visit,
+                                                  paired = TRUE,
+                                                  id = pubID,
+                                                  method = 'wilcox',
+                                                  sorted_group = c(0,1,2),
+                                                  alternative = 'less',
+                                                  num_needed_for_test = 3,
+                                                  digits = 4,
+                                                  trailing_zeros = TRUE,
+                                                  sep_val = ' vs. ',
+                                                  verbose = TRUE))
 
 
 }
