@@ -85,34 +85,32 @@
 #' ## Group Comparison
 #'group_testing_tibble <- exampleData_BAMA %>%
 #'    group_by(antigen, visitno) %>%
-#'    summarise(pairwise_test_cont(x = magnitude,
-#'                                 group = group,
-#'                                 paired = FALSE,
-#'                                 method = 'wilcox',
-#'                                 alternative = "less",
-#'                                 sorted_group = c(1,2),
-#'                                 digits = 3,
-#'                                 num_needed_for_test = 3,
-#'                                 verbose = TRUE),
-#'             .groups = "keep")
+#'    reframe(pairwise_test_cont(x = magnitude,
+#'                               group = group,
+#'                               paired = FALSE,
+#'                               method = 'wilcox',
+#'                               alternative = "less",
+#'                               sorted_group = c(1,2),
+#'                               digits = 3,
+#'                               num_needed_for_test = 3,
+#'                               verbose = TRUE))
 #'
 #'
 #' ## Timepoint Comparison
 #'timepoint_testing_dt <- exampleData_BAMA %>%
 #'                        group_by(antigen, group) %>%
-#'                        summarise(pairwise_test_cont(x = magnitude,
-#'                                                    group = visitno,
-#'                                                    paired = TRUE,
-#'                                                    id = pubID,
-#'                                                    method = 'wilcox',
-#'                                                    sorted_group = c(0,1,2),
-#'                                                    alternative = 'less',
-#'                                                    num_needed_for_test = 3,
-#'                                                    digits = 3,
-#'                                                    trailing_zeros = TRUE,
-#'                                                    sep_val = ' vs. ',
-#'                                                    verbose = TRUE),
-#'                                  .groups = "keep")
+#'                        reframe(pairwise_test_cont(x = magnitude,
+#'                                                   group = visitno,
+#'                                                   paired = TRUE,
+#'                                                   id = pubID,
+#'                                                   method = 'wilcox',
+#'                                                   sorted_group = c(0,1,2),
+#'                                                   alternative = 'less',
+#'                                                   num_needed_for_test = 3,
+#'                                                   digits = 3,
+#'                                                   trailing_zeros = TRUE,
+#'                                                   sep_val = ' vs. ',
+#'                                                   verbose = TRUE))
 #'
 #'
 #' # ICS Assay Data Example
@@ -122,35 +120,33 @@
 #' # using dplyr
 #'exampleData_ICS %>%
 #'group_by(Stim, Parent, Population, Visit) %>%
-#'summarise(pairwise_test_cont(x = PercentCellNet,
-#'                             group = Group,
-#'                             paired = FALSE,
-#'                             method = 'wilcox',
-#'                             alternative = 'less',
-#'                             sorted_group = c(1,2,3,4),
-#'                             num_needed_for_test = 3,
-#'                             digits = 4,
-#'                             trailing_zeros = TRUE,
-#'                             sep_val = ' vs. ',
-#'                             verbose = TRUE),
-#'          .groups = "keep")
+#'reframe(pairwise_test_cont(x = PercentCellNet,
+#'                           group = Group,
+#'                           paired = FALSE,
+#'                           method = 'wilcox',
+#'                           alternative = 'less',
+#'                           sorted_group = c(1,2,3,4),
+#'                           num_needed_for_test = 3,
+#'                           digits = 4,
+#'                           trailing_zeros = TRUE,
+#'                           sep_val = ' vs. ',
+#'                           verbose = TRUE))
 #'
 #' # Timepoint Comparison
 #'timepoint_testing_dt <- exampleData_ICS %>%
 #'                        group_by(Stim, Parent, Population, Group) %>%
-#'                        summarise(pairwise_test_cont(x = PercentCellNet,
-#'                                                     group = Visit,
-#'                                                     paired = TRUE,
-#'                                                     id = pubID,
-#'                                                     method = 'wilcox',
-#'                                                     sorted_group = c(0,1,2),
-#'                                                     alternative = 'less',
-#'                                                     num_needed_for_test = 3,
-#'                                                     digits = 4,
-#'                                                     trailing_zeros = TRUE,
-#'                                                     sep_val = ' vs. ',
-#'                                                     verbose = TRUE),
-#'                        .groups = "keep")
+#'                        reframe(pairwise_test_cont(x = PercentCellNet,
+#'                                                   group = Visit,
+#'                                                   paired = TRUE,
+#'                                                   id = pubID,
+#'                                                   method = 'wilcox',
+#'                                                   sorted_group = c(0,1,2),
+#'                                                   alternative = 'less',
+#'                                                   num_needed_for_test = 3,
+#'                                                   digits = 4,
+#'                                                   trailing_zeros = TRUE,
+#'                                                   sep_val = ' vs. ',
+#'                                                   verbose = TRUE))
 #'
 #'
 #'@export
@@ -240,6 +236,7 @@ pairwise_test_cont <- function(
         vals_here <-  c(i_vals, j_vals)
         groups_here <-  c(rep(i_group, nrow(data_here)),
                           rep(j_group, nrow(data_here)))
+        groups_here <- droplevels(factor(groups_here, levels = levels_here))
 
       } else {
 
@@ -611,6 +608,7 @@ pairwise_test_bin <- function(x,
         vals_here <-  c(i_vals, j_vals)
         groups_here <-  c(rep(i_group, nrow(data_here)),
                           rep(j_group, nrow(data_here)))
+        groups_here <- droplevels(factor(groups_here, levels = levels_here))
       } else {
         i_vals <- x[group == i_group]
         j_vals <- x[group == j_group]
@@ -780,7 +778,7 @@ pairwise_test_bin <- function(x,
 #'    cor_test_pairs(x = magnitude, pair = antigen, id = pubID,
 #'    method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE),
 #'    .groups = 'drop'
-#'           )
+#'  )
 #'
 #' @export
 
