@@ -2,7 +2,7 @@
 % Please edit documentation in R/reproducibility_tables.R
 \name{get_full_name}
 \alias{get_full_name}
-\title{Get Full Username from ID}
+\title{Look up a username from a Fred Hutch ID}
 \usage{
 get_full_name(id = NULL)
 }
@@ -13,7 +13,7 @@ get_full_name(id = NULL)
 First and Last name associated with ID
 }
 \description{
-For a given ID looks up user name
+Look up a username from a Fred Hutch ID
 }
 \details{
 If \code{id} null, uses system "USERNAME" variable for Windows and "USER" variable for Linux and MACs. Full Name is found in Windows via the \code{net} command, and via ldap search in Linux and MACs. The ldap search will only work on SCHARPs network at Fred Hutching Cancer Research Center.

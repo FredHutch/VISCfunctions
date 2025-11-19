@@ -1,6 +1,4 @@
-#' Get Full Username from ID
-#'
-#' For a given ID looks up user name
+#' Look up a username from a Fred Hutch ID
 #'
 #' @param id ID to look full name up. If null (default) looks up ID of current user
 #'
@@ -214,9 +212,9 @@ get_session_info <- function(libpath = FALSE){
 
 #' Shorten git hash
 #'
-#' Internal function for Reproducibility Tables. find '@' followed by 40 hex
-#' digits, and substitute with the '@' and the first 7 hex digits in ()-captured
-#' group.
+#' Internal function for reproducibility tables; used by get_session_info().
+#' Finds '@' followed by 40 hex digits, and substitutes with the '@' and the
+#' first 7 hex digits in ()-captured group.
 #'
 #' @param x String containing `@` followed by long git hash
 #' @return String containing `@` followed by short git hash
