@@ -24,6 +24,7 @@ Imports:
     lifecycle,
     sessioninfo,
     survival,
+    remotes,
     withr
 Suggests: 
     dplyr,
