@@ -3,12 +3,16 @@ Package: VISCfunctions
 Title: VISC STP/SRA functions
 Version: 1.3.0.9000
 Authors@R: c(
-    person("Bryan", "Mayer", , "bmayer@fredhutch.org", role = "aut"),
-    person("Monica", "Gerber", , "mgerber@fredhutch.org", role = "aut"),
-    person("Celia", "Mahoney", , "cmahoney@fredhutch.org", role = "aut"),
-    person("Ellis", "Hughes", , "ehhughes@fredhutch.org", role = "aut"),
-    person("Heather", "Bouzek", , "hbouzek@fredhutch.org", role = "aut"),
-    person("Jimmy", "Fulp", , "wfulp@fredhutch.org", role = c("aut", "cre"))
+    person("Bryan", "Mayer", , "bmayer@fredhutch.org", role = c("aut", "cre")),
+    person("Dave", "Slager", , "dslager@fredhutch.org", role = "aut", comment = c(ORCID = "0000-0003-2525-2039")),
+    person("Kellie", "MacPhee", , "kmacphee@fredhutch.org", role = "aut"),
+    person("Gabrielle", "Lemire", , "glemire@fredhutch.org", role = "aut"),
+    person("Claudio", "Yurdadon", , "cyurdado@fredhutch.org", role = "aut"),
+    person("Monica", "Gerber", , , role = "aut"),
+    person("Celia", "Mahoney", , , role = "aut"),
+    person("Ellis", "Hughes", , , role = "aut", comment = c(ORCID = "0000-0003-0637-4436")),
+    person("Heather", "Bouzek", , , role = "aut"),
+    person("Jimmy", "Fulp", , , role = "aut")
   )
 Description:
     Statistical, data processing, and annotation functions for VISC.

@@ -15,15 +15,19 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Jimmy Fulp \email{wfulp@fredhutch.org}
+\strong{Maintainer}: Bryan Mayer \email{bmayer@fredhutch.org}
 
 Authors:
 \itemize{
-  \item Bryan Mayer \email{bmayer@fredhutch.org}
-  \item Monica Gerber \email{mgerber@fredhutch.org}
-  \item Celia Mahoney \email{cmahoney@fredhutch.org}
-  \item Ellis Hughes \email{ehhughes@fredhutch.org}
-  \item Heather Bouzek \email{hbouzek@fredhutch.org}
+  \item Dave Slager \email{dslager@fredhutch.org} (\href{https://orcid.org/0000-0003-2525-2039}{ORCID})
+  \item Kellie MacPhee \email{kmacphee@fredhutch.org}
+  \item Gabrielle Lemire \email{glemire@fredhutch.org}
+  \item Claudio Yurdadon \email{cyurdado@fredhutch.org}
+  \item Monica Gerber
+  \item Celia Mahoney
+  \item Ellis Hughes (\href{https://orcid.org/0000-0003-0637-4436}{ORCID})
+  \item Heather Bouzek
+  \item Jimmy Fulp
 }
 
 }
