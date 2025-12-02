@@ -3,7 +3,7 @@ Package: VISCfunctions
 Title: VISC STP/SRA functions
 Version: 1.3.0.9000
 Authors@R: c(
-    person("Bryan", "Mayer", , "bmayer@fredhutch.org", role = c("aut", "cre")),
+    person("Bryan", "Mayer", , "bmayer@fredhutch.org", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-2258-5276")),
     person("Dave", "Slager", , "dslager@fredhutch.org", role = "aut", comment = c(ORCID = "0000-0003-2525-2039")),
     person("Kellie", "MacPhee", , "kmacphee@fredhutch.org", role = "aut"),
     person("Gabrielle", "Lemire", , "glemire@fredhutch.org", role = "aut"),

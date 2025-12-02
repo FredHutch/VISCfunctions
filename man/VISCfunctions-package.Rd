@@ -15,7 +15,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Bryan Mayer \email{bmayer@fredhutch.org}
+\strong{Maintainer}: Bryan Mayer \email{bmayer@fredhutch.org} (\href{https://orcid.org/0000-0003-2258-5276}{ORCID})
 
 Authors:
 \itemize{
