@@ -156,13 +156,13 @@ paste_tbl_grp <- function(
 
   # Need to define which variables to check. Special considerations for the predefined values
   vars_to_check <- vars_to_paste_here[!vars_to_paste_here %in%
-                                        c('median_min_max','mean_sd')]
+                                        c('median_min_max','median_quartiles','mean_sd')]
   if (any(vars_to_paste_here == 'median_min_max'))
     vars_to_check <- unique(c(vars_to_check, 'median', 'min', 'max'))
   if (any(vars_to_paste_here == 'mean_sd'))
     vars_to_check <- unique(c(vars_to_check, 'mean', 'sd'))
-  if (any(vars_to_paste_here == 'median_first_quart_third_quart'))
-    vars_to_check <- unique(c(vars_to_check, 'median', 'first_quart','third_quart'))
+  if (any(vars_to_paste_here == 'median_quartiles'))
+    vars_to_check <- unique(c(vars_to_check, 'median', 'q1','q3'))
 
 
   # Need to check the group1 and group2 version of each variable being pasted
@@ -231,7 +231,7 @@ paste_tbl_grp <- function(
                    trailing_zeros = trailing_zeros
         )
       )
-    } else if (vars_to_paste_here[i] == 'mean_quartiles') {
+    } else if (vars_to_paste_here[i] == 'median_quartiles') {
       pasted_results[[i]] <-  paste0(
         stat_paste(stat1 = data_here[, paste0(first_name, '_median')],
                    stat2 = data_here[, paste0(first_name, '_q1')],
