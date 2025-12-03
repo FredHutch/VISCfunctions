@@ -4,7 +4,10 @@
 \alias{get_session_info}
 \title{Get Reproducibility Tables}
 \usage{
-get_session_info()
+get_session_info(libpath = FALSE)
+}
+\arguments{
+\item{libpath}{Show R package library path column in packages table}
 }
 \value{
 list of length two, containing dataframe of Software Session Information and dataframe of Software Package Version Information
