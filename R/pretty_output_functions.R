@@ -139,8 +139,8 @@ paste_tbl_grp <- function(
         vars_to_paste_here <- c(vars_to_paste_here, 'median_min_max')
       if (sum(vars_to_paste_here %in% c('mean','sd')) == 2)
         vars_to_paste_here <- c(vars_to_paste_here, 'mean_sd')
-      if (sum(vars_to_paste_here %in% c('median','first_quart','third_quart')) == 3)
-        vars_to_paste_here <- c(vars_to_paste_here, 'median_first_quart_third_quart')
+      if (sum(vars_to_paste_here %in% c('median','q1','q3')) == 3)
+        vars_to_paste_here <- c(vars_to_paste_here, 'median_quartiles')
 
 
       if (verbose) message('The following measures will be combined: ',
@@ -234,15 +234,15 @@ paste_tbl_grp <- function(
     } else if (vars_to_paste_here[i] == 'mean_quartiles') {
       pasted_results[[i]] <-  paste0(
         stat_paste(stat1 = data_here[, paste0(first_name, '_median')],
-                   stat2 = data_here[, paste0(first_name, '_first_quart')],
-                   stat3 = data_here[, paste0(first_name, '_third_quart')],
+                   stat2 = data_here[, paste0(first_name, '_q1')],
+                   stat3 = data_here[, paste0(first_name, '_q3')],
                    digits = digits, bound_char = '[', sep = ', ',
                    na_str_out = na_str_out, trailing_zeros = trailing_zeros
         ),
         sep_val,
         stat_paste(stat1 = data_here[, paste0(second_name, '_median')],
-                   stat2 = data_here[, paste0(second_name, '_first_quart')],
-                   stat3 = data_here[, paste0(second_name, '_third_quart')],
+                   stat2 = data_here[, paste0(second_name, '_q1')],
+                   stat3 = data_here[, paste0(second_name, '_q3')],
                    digits = digits, bound_char = '[', sep = ', ',
                    na_str_out = na_str_out, trailing_zeros = trailing_zeros
         )
