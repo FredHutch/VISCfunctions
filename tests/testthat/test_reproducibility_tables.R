@@ -17,7 +17,7 @@ test_that("get_session_info() testing", {
 
   # testing dimension
   nrow_expected <- length(sessioninfo::session_info()[[1]]) +
-    ifelse(any(temp_session_info$platform_table$name == "repo"), 4, 3)
+    ifelse(any(temp_session_info$platform_table$name == "repo"), 5, 4)
   expect_equal(object = dim(temp_session_info$platform_table), expected = c(nrow_expected,2))
 
   ncol_expected <- ifelse(any(colnames(temp_session_info$packages_table) == "data.version"), 5, 4)
@@ -31,9 +31,9 @@ test_that("get_session_info() testing", {
 
   # Comparing platform
   expected_platform <- data.frame(
-    name = names(expected_session_info$platform),
-    value = matrix(unlist(expected_session_info$platform), nrow = length(expected_session_info$platform)),
-    stringsAsFactors = FALSE)
+    name = c('nodename', names(expected_session_info$platform)),
+    value = c(Sys.info()[['nodename']], unname(unlist(expected_session_info$platform)))
+  )
   expect_equal(object = temp_session_info$platform_table[match(expected_platform$name, temp_session_info$platform_table$name), ], expected = expected_platform)
 
   # Comparing packages
