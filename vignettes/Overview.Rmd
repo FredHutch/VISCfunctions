@@ -637,7 +637,9 @@ group_testing <- exampleData_ICS %>%
     MagnitudeTest, output_type = 'latex', 
     sig_alpha = .1, background = 'yellow')
   ) %>% 
-  rename("Median (Range)" = Median_Min_Max, 'Mean (SD) (log10)' = log_Mean_SD)
+  rename("Median (Range)" = Median_Min_Max, 
+         "Median (Q1, Q3)" = Median_Quartiles, 
+         'Mean (SD) (log10)' = log_Mean_SD)
 
 kableExtra::kable(group_testing, escape = FALSE, booktabs = TRUE, 
                   caption = 'Magnitude Comparisons Across Groups') %>% 
@@ -670,7 +672,9 @@ timepoint_testing <- exampleData_ICS %>%
     MagnitudeTest, output_type = 'latex', 
     sig_alpha = .1, background = 'yellow')
     ) %>% 
-  rename("Median (Range)" = Median_Min_Max, 'Mean (SD) (log10)' = log_Mean_SD)
+  rename("Median (Range)" = Median_Min_Max, 
+         "Median (Q1, Q3)" = Median_Quartiles, 
+         'Mean (SD) (log10)' = log_Mean_SD)
 
 
 kableExtra::kable(timepoint_testing, 
