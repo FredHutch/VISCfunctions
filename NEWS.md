@@ -1,16 +1,16 @@
 # VISCfunctions (development version)
 
+* Add `Median_Quartiles` to `pairwise_test_cont()` output (#99)
 * Maintenance of package and CI (#114)
 * Add B cell example dataset from G001 flow and sequencing file (#108)
+* Minor Changes:
+  * Update `Overview()` to include new `Median_Quartiles` (#99)
 
 # VISCfunctions 1.3.0
 
-* Add `Median_Quartiles` to `pairwise_test_cont()` output (#99)
 * Fix bug in `pairwise_test_bin()` and `pairwise_test_cont()` (#111)
 * Add option to show library path in packages reproducibility table (#107)
 * Maintenance of package and CI (#110, #107)
-* Minor Changes:
-  * Update `Overview()` to include new `Median_Quartiles` (#99)
 
 # VISCfunctions 1.2.4
 
