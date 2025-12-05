@@ -1,5 +1,7 @@
 # VISCfunctions (development version)
 
+* Add `SampleSizes` output to `pairwise_test_bin()` (#130)
+
 * Maintenance of package and CI (#114)
 * Add B cell example dataset from G001 flow and sequencing file (#108)
 
