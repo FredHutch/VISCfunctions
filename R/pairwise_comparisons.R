@@ -610,6 +610,7 @@ pairwise_test_bin <- function(x,
                           rep(j_group, nrow(data_here)))
         groups_here <- droplevels(factor(groups_here, levels = levels_here))
       } else {
+
         i_vals <- x[group == i_group]
         j_vals <- x[group == j_group]
         vals_here <-  x[group  %in% c(i_group, j_group)]
@@ -640,6 +641,8 @@ pairwise_test_bin <- function(x,
 
       stats_by_group <- data.frame(Group1 = i_group,
                                    Group2 = j_group,
+                                   Group1_n = sum(!is.na(i_vals)),
+                                   Group2_n = sum(!is.na(j_vals)),
                                    Group1_rr = response_info_here_by_group[[1]],
                                    Group2_rr = response_info_here_by_group[[2]],
                                    stringsAsFactors = FALSE
@@ -688,8 +691,9 @@ pairwise_test_bin <- function(x,
 
 
   data.frame(Comparison = pasted_results$Comparison,
+             SampleSizes = pasted_results$n_comparison,
              ResponseStats = pasted_results$rr_comparison,
-             ResponseTest = results$ResponseTest ,
+             ResponseTest = results$ResponseTest,
              PerfectSeparation = results$PerfectSeparation,
              stringsAsFactors = FALSE)
 
