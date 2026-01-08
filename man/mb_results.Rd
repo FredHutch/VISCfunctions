@@ -69,8 +69,8 @@ dat = data.frame(magnitude = c(500,800,20,150,30000,10,1,2000,10000,900),
                  response = c(1,1,0,1,1,0,0,1,1,1),
                  ptid = c(1,1,2,2,3,3,3,3,3,3))
 ind_results <-
- dat \%>\%
-  dplyr::group_by(ptid) \%>\%
+ dat |>
+  dplyr::group_by(ptid) |>
   dplyr::group_modify(~ mb_results(magnitude = .x$magnitude, response = .x$response))
 
 overall_results <-
@@ -88,17 +88,17 @@ ggplot2::ggplot(data = overall_results, ggplot2::aes(x = magnitude, y = breadth)
 data(exampleData_BAMA)
 
 data_here <-
- exampleData_BAMA \%>\%
+ exampleData_BAMA |>
  filter(visitno == 2)
 
 group_results <-
-  data_here \%>\%
-  dplyr::group_by(group) \%>\%
+  data_here |>
+  dplyr::group_by(group) |>
   dplyr::group_modify(~ mb_results(magnitude = .x$magnitude , response = .x$response))
 
 ind_results <-
-  data_here \%>\%
-  dplyr::group_by(group, pubID) \%>\%
+  data_here |>
+  dplyr::group_by(group, pubID) |>
   dplyr::group_modify(~ mb_results(magnitude = .x$magnitude , response = .x$response))
 
 ggplot2::ggplot(data = group_results,
