@@ -18,7 +18,7 @@ Description:
     Statistical, data processing, and annotation functions for VISC.
 License: MIT + file LICENSE
 Depends:
-    R (>= 3.5)
+    R (>= 4.1.0)
 Imports: 
     binom,
     coin,
