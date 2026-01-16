@@ -1,4 +1,4 @@
-# VISCfunctions (development version)
+# VISCfunctions 1.3.1
 
 * Report loaded and attached packages in package reproducibility table (#132)
 * Report nodename in platform reproducibility table (#121)
