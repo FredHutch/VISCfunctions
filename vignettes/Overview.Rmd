@@ -86,6 +86,7 @@ can be broken down to the following sections:
   - round_away_0
   - get_session_info
   - get_full_name
+  - shorten_git_hash
 - Example Datasets
   - exampleData_BAMA
   - exampleData_NAb
@@ -167,7 +168,7 @@ There are currently three testing functions performing the appropriate
 statistical tests, depending on the data and options, returning a p value.
 
 There is also an estimate function for getting binary confidence intervals
-(`binom_ci()`).
+(`binom_ci()`). Note that `wilson_ci()` has been superseded by the use of `binom_ci()`.
 
 `trapz_sorted()` is used to create an estimate for the area under a curve while
 making sure the x-axis is sorted so that both the x-axis and the area are
@@ -829,6 +830,9 @@ round_away_0(vals_to_round, digits = 2, trailing_zeros = TRUE)
 end of reports. The first table gives software session information and the
 second table gives software package version information. `get_full_name()` is a
 function used by `get_session_info()` to get the user's name, based on user's ID.
+`shorten_git_hash()` is an internal function for the reproducibility table and used within `get_session_info()`.
+It shortens the string to 7 digits.
+
 
 ```{r}
 my_session_info <- get_session_info()
