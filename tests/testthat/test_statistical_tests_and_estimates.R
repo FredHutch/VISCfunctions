@@ -493,13 +493,19 @@ test_that("test-wilson_ci", {
 test_that("test-binom_ci", {
 
   # check x
-  expect_error(binom_ci(c(NA, NA, NA)), '"x" must have at least one non-NA value')
   expect_error(binom_ci(c()), '"x" length must be > 0')
-  expect_error(binom_ci(c(NA, NA, NA)), '"x" must have at least one non-NA value')
   expect_error(binom_ci(x = c("F", "T", "F", "T")),
                '"x" must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
   expect_error(binom_ci(x = factor(c("F", "T", "F", "T"))),
                '"x" must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
+
+  # all-NA input should warn and return NAs (issue #105)
+  expect_warning(result <- binom_ci(c(NA, NA, NA)), 'no non-NA values')
+  expect_true(all(is.na(result$mean)))
+  expect_true(all(is.na(result$lower)))
+  expect_true(all(is.na(result$upper)))
+  expect_equal(result$x, 0)
+  expect_equal(result$n, 0)
 
   # binom_ci() should match binom::binom.confint()
   x <- c(1, 1, 1, 0, 0)

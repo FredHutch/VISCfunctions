@@ -461,14 +461,32 @@ binom_ci <- function(x,
                      methods = 'wilson',
                      ...){
 
-  .check_response_input(x)
   .check_numeric_input(conf.level, lower_bound = 0, upper_bound = 1 - 1E-12,
                        scalar = TRUE, whole_num = FALSE, allow_NA = FALSE)
 
-  x <- stats::na.omit(x)
+  # Check input type/length (errors for empty or wrong type)
+  # but handle all-NA case with warning instead of error
+  if (length(dim(x)) > 1) stop('"x" must be a vector (one-dimensional object)')
+  if (length(x) == 0) stop('"x" length must be > 0')
 
-  npos <- sum(x);
-  n <- length(x);
+  x_nona <- x[!is.na(x)]
+
+  if (!is.logical(x) & length(x_nona) > 0 & !all(x_nona %in% c(0, 1)))
+    stop('"x" must be a numeric vector containing only 0/1 values or a logical vector containing only T/F values')
+
+  if (length(x_nona) == 0) {
+    warning('"x" has no non-NA values. Returning NA results.')
+    na_result <- binom::binom.confint(x = 0, n = 0,
+                                      conf.level = conf.level,
+                                      methods = methods)
+    na_result$mean <- NA_real_
+    na_result$lower <- NA_real_
+    na_result$upper <- NA_real_
+    return(na_result)
+  }
+
+  npos <- sum(x_nona);
+  n <- length(x_nona);
 
   binom::binom.confint(x = npos,
                        n = n,
