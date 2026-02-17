@@ -156,7 +156,7 @@ str(exampleData_BAMA)
 ```{r, echo=FALSE}
 # Loading in example datasets
 exampleData_BAMA <- 
-  exampleData_BAMA %>% 
+  exampleData_BAMA |> 
   mutate(antigen = gsub('_', ' ', antigen))
 ```
 
@@ -176,7 +176,7 @@ increasing and positive, respectively.
 ```{r, echo=TRUE}
 
 # Making Testing Dataset
-testing_data <- exampleData_BAMA %>%
+testing_data <- exampleData_BAMA |>
   dplyr::filter(antigen == 'A1.con.env03 140 CF' & visitno == 1)
 
 ```
@@ -213,9 +213,9 @@ two_samp_bin_test(
   alternative = 'two.sided')
 
 # Calling test multiple times
-exampleData_BAMA %>% 
-  group_by(antigen, visitno) %>% 
-  filter(visitno != 0) %>% 
+exampleData_BAMA |> 
+  group_by(antigen, visitno) |> 
+  filter(visitno != 0) |> 
   summarise(p_val = two_samp_bin_test(response, group, method = 'barnard'), .groups = "drop")
 ```
 
@@ -243,9 +243,9 @@ two_samp_cont_test(
 )
 
 # Calling test multiple times
-exampleData_BAMA %>% 
-  group_by(antigen, visitno) %>% 
-  filter(visitno != 0) %>% 
+exampleData_BAMA |> 
+  group_by(antigen, visitno) |> 
+  filter(visitno != 0) |> 
   summarise(p_val = two_samp_cont_test(magnitude, group, method = 'wilcox'), .groups = "drop")
 ```
 
@@ -267,10 +267,10 @@ there are no ties, the exact method is used from `stats:cor.test`.
 ```{r, echo=TRUE, warning=FALSE}
 
 # Making Testing Dataset
-cor_testing_data <- exampleData_BAMA %>%
+cor_testing_data <- exampleData_BAMA |>
   dplyr::filter(antigen %in% c('A1.con.env03 140 CF', 'B.MN V3 gp70'),
                 visitno == 1,
-                group == 1) %>%
+                group == 1) |>
   tidyr::pivot_wider(id_cols = pubID,
                      names_from = antigen,
                      values_from = magnitude)
@@ -341,7 +341,7 @@ kableExtra::kable(
   linesep = "",
   col.names = c("P-values"),
   caption = 'Fancy P Values'
-) %>%
+) |>
   kableExtra::kable_styling(font_size = 8.5,
                             latex_options = "hold_position")
 
@@ -371,9 +371,9 @@ stat_paste(stat1 = 2.45, stat2 = 0.214, stat3 = 55.3,
 stat_paste(stat1 = 6.4864, stat2 = pretty_pvalues(0.0004, digits = 3), 
            digits = 3, bound_char = '(')
 
-exampleData_BAMA %>% 
-  filter(visitno == 1) %>%  
-  group_by(antigen, group) %>% 
+exampleData_BAMA |> 
+  filter(visitno == 1) |>  
+  group_by(antigen, group) |> 
   reframe(`Magnitude Info (Median [Range])` = 
             stat_paste(stat1 = median(magnitude), 
                        stat2 = min(magnitude),
@@ -398,22 +398,22 @@ Example of summary information to be pasted together (partial output):
 
 ```{r, echo=FALSE, warning=FALSE, size='tiny'}
 
-summary_info <- exampleData_BAMA %>%
-  filter(visitno == 1) %>%
-  mutate(group = paste0("Group", group)) %>%
-  group_by(antigen, group) %>%
+summary_info <- exampleData_BAMA |>
+  filter(visitno == 1) |>
+  mutate(group = paste0("Group", group)) |>
+  group_by(antigen, group) |>
   reframe(n = length(magnitude),
           mean = mean(magnitude),
           sd = sd(magnitude),
           median = median(magnitude),
           min = min(magnitude),
-          max = max(magnitude)) %>%
-  tidyr::pivot_longer(cols = n:max) %>%
-  tidyr::unite(var, group, name) %>%
-  tidyr::pivot_wider(names_from = var, values_from = value) %>%
+          max = max(magnitude)) |>
+  tidyr::pivot_longer(cols = n:max) |>
+  tidyr::unite(var, group, name) |>
+  tidyr::pivot_wider(names_from = var, values_from = value) |>
   mutate(Group1 = "Group 1", Group2 = "Group 2")
 
-summary_info %>%
+summary_info |>
   select(antigen,
          Group1_max,
          Group1_mean,
@@ -425,7 +425,7 @@ summary_info %>%
 
 ```{r, echo=TRUE, warning=FALSE}
 
-summary_table <-  summary_info %>%
+summary_table <-  summary_info |>
   paste_tbl_grp(
     vars_to_paste = c('n', 'mean_sd', 'median_min_max'),
     first_name = 'Group1',
@@ -437,8 +437,8 @@ kableExtra::kable(
   booktabs = TRUE,
   linesep = "",
   caption = 'Summary Information Comparison'
-) %>%
-  kableExtra::kable_styling(font_size = 6.5, latex_options = "hold_position") %>%
+) |>
+  kableExtra::kable_styling(font_size = 6.5, latex_options = "hold_position") |>
   kableExtra::footnote('Summary Information for Group 1 vs. Group 2, by Antigen and for Visit 1')
 ```
 
@@ -475,13 +475,13 @@ sample_df <- data.frame(
   outputVal = runif(7)
 )
 
-collapse_group_row(sample_df, x, y, z) %>%
+collapse_group_row(sample_df, x, y, z) |>
   kableExtra::kable(
     booktabs = TRUE,
     linesep = "",
     row.names = FALSE
-  ) %>%
-  kableExtra::row_spec(3, hline_after = TRUE) %>% 
+  ) |>
+  kableExtra::row_spec(3, hline_after = TRUE) |> 
   kableExtra::kable_styling(font_size = 8, latex_options = "hold_position")
 ```
 
@@ -506,7 +506,7 @@ x_example <- c(NA, sample(0:1, 50, replace = TRUE, prob = c(.75, .25)),
   sample(0:1, 50, replace = TRUE, prob = c(.25, .75)))
 group_example <- c(rep(1, 25), NA, rep(2, 25), rep(3, 25), rep(4, 25))
 
-pairwise_test_bin(x_example, group_example) %>% 
+pairwise_test_bin(x_example, group_example) |> 
   rename(Separation = 'PerfectSeparation')
 ```
 
@@ -516,17 +516,17 @@ Group comparison example using `pairwise_test_bin`:
 ```{r, echo=TRUE, warning=FALSE, results='asis'}
 
 ## Group Comparison
-group_testing <- exampleData_ICS %>%
-  filter(Population == 'IFNg Or IL2' & Group != 4) %>%
-  group_by(Stim, Visit) %>%
+group_testing <- exampleData_ICS |>
+  filter(Population == 'IFNg Or IL2' & Group != 4) |>
+  group_by(Stim, Visit) |>
   group_modify( ~ as.data.frame(
     pairwise_test_bin(x = .$response, group = .$Group,
                       method = 'barnard', alternative = 'less',
                       num_needed_for_test = 3, digits = 1,
                       latex_output = TRUE, verbose = FALSE
                       )
-  )) %>%
-  ungroup() %>%
+  )) |>
+  ungroup() |>
   # Getting fancy p values
   mutate(
     ResponseTest = pretty_pvalues(
@@ -542,11 +542,11 @@ group_testing <- exampleData_ICS %>%
 
 kableExtra::kable( group_testing, escape = FALSE, booktabs = TRUE,
   linesep = "", caption = 'Response Rate Comparisons Across Groups'
-) %>%
+) |>
   kableExtra::kable_styling(
     font_size = 6.5,
     latex_options = c("hold_position", "scale_down")
-    ) %>%
+    ) |>
   kableExtra::collapse_rows(c(1:2),
                             row_group_label_position = 'identity',
                             latex_hline = 'full')
@@ -560,23 +560,23 @@ Time point comparison example (paired) using `pairwise_test_bin()`:
 ```{r, echo=TRUE, warning=FALSE, results='asis'}
 
 ## Timepoint Comparison
-timepoint_testing <- exampleData_ICS %>%
-  filter(Population == 'IFNg Or IL2' & Group != 4) %>% 
-  group_by(Stim, Group) %>%
+timepoint_testing <- exampleData_ICS |>
+  filter(Population == 'IFNg Or IL2' & Group != 4) |> 
+  group_by(Stim, Group) |>
   group_modify(~ as.data.frame(
     pairwise_test_bin(x = .$response, group = .$Visit, id = .$pubID,
                       method = 'mcnemar', num_needed_for_test = 3, digits = 1,
-                      latex_output = TRUE, verbose = FALSE))) %>% 
-  ungroup() %>% 
+                      latex_output = TRUE, verbose = FALSE))) |> 
+  ungroup() |> 
   # Getting fancy p values
   mutate(ResponseTest = pretty_pvalues(ResponseTest, output_type = 'latex', 
                                        sig_alpha = .1, background = 'yellow'))
 
 
 kableExtra::kable(timepoint_testing, escape = FALSE, booktabs = TRUE, 
-                  caption = 'Response Rate Comparisons Across Visits') %>% 
+                  caption = 'Response Rate Comparisons Across Visits') |> 
   kableExtra::kable_styling(font_size = 6.5, 
-                            latex_options = c("hold_position","scale_down")) %>% 
+                            latex_options = c("hold_position","scale_down")) |> 
   kableExtra::collapse_rows(c(1:2), row_group_label_position = 'identity', 
                             latex_hline = 'full')
 ```
@@ -596,7 +596,7 @@ set.seed(1)
 x_example <- c(NA, rnorm(50), rnorm(50, mean = 5))
 group_example <- c(rep(1, 25), rep(2, 25), rep(3, 25), rep(4, 25), NA)
 
-pairwise_test_cont(x_example, group_example, digits = 1) %>% 
+pairwise_test_cont(x_example, group_example, digits = 1) |> 
   rename(Separation = 'PerfectSeparation')
 ```
 
@@ -607,15 +607,15 @@ Group comparison example using `pairwise_test_cont()`:
 ```{r, echo=TRUE, warning=FALSE, results='asis'}
 
 ## Group Comparison
-group_testing <- exampleData_ICS %>%
-  filter(Population == 'IFNg Or IL2' & Group != 4) %>% 
-  group_by(Stim, Visit) %>%
+group_testing <- exampleData_ICS |>
+  filter(Population == 'IFNg Or IL2' & Group != 4) |> 
+  group_by(Stim, Visit) |>
   group_modify(~ as.data.frame(
     pairwise_test_cont(x = pmax(.$PercentCellNet, 0.00001), group = .$Group,
                       method = 'wilcox', paired = FALSE, 
                       alternative = 'greater', num_needed_for_test = 3, 
-                      digits = 3, log10_stats = TRUE))) %>% 
-   ungroup() %>% 
+                      digits = 3, log10_stats = TRUE))) |> 
+   ungroup() |> 
   # Getting fancy p values
   mutate(MagnitudeTest = pretty_pvalues(
     MagnitudeTest, output_type = 'latex', 
@@ -626,9 +626,9 @@ group_testing <- exampleData_ICS %>%
          'Mean (SD) (log10)' = log_Mean_SD)
 
 kableExtra::kable(group_testing, escape = FALSE, booktabs = TRUE, 
-                  caption = 'Magnitude Comparisons Across Groups') %>% 
+                  caption = 'Magnitude Comparisons Across Groups') |> 
   kableExtra::kable_styling(font_size = 6.5, 
-                            latex_options = c("hold_position","scale_down")) %>% 
+                            latex_options = c("hold_position","scale_down")) |> 
   kableExtra::collapse_rows(c(1:2), 
                             row_group_label_position = 'identity', 
                             latex_hline = 'full')
@@ -642,15 +642,15 @@ Time point comparison example (paired) using `pairwise_test_cont()`:
 ```{r, echo=TRUE, warning=FALSE, results='asis'}
 
 ## Timepoint Comparison
-timepoint_testing <- exampleData_ICS %>%
-  filter(Population == 'IFNg Or IL2' & Group != 4) %>% 
-  group_by(Stim, Group) %>%
+timepoint_testing <- exampleData_ICS |>
+  filter(Population == 'IFNg Or IL2' & Group != 4) |> 
+  group_by(Stim, Group) |>
   group_modify(~ as.data.frame(
     pairwise_test_cont(x =  pmax(.$PercentCellNet, 0.00001), group = .$Visit, 
                        id = .$pubID, method = 'wilcox', paired = TRUE, 
                        num_needed_for_test = 3, 
-                       digits = 3, log10_stats = TRUE))) %>% 
-   ungroup() %>% 
+                       digits = 3, log10_stats = TRUE))) |> 
+   ungroup() |> 
   # Getting fancy p values
   mutate(MagnitudeTest = pretty_pvalues(
     MagnitudeTest, output_type = 'latex', 
@@ -660,13 +660,12 @@ timepoint_testing <- exampleData_ICS %>%
          "Median (Q1, Q3)" = Median_Quartiles, 
          'Mean (SD) (log10)' = log_Mean_SD)
 
-
 kableExtra::kable(timepoint_testing, 
                   escape = FALSE, 
                   booktabs = TRUE, 
-                  caption = 'Magnitude Comparisons Across Visits') %>% 
+                  caption = 'Magnitude Comparisons Across Visits') |> 
   kableExtra::kable_styling(font_size = 6.5, 
-                            latex_options = c("hold_position","scale_down")) %>% 
+                            latex_options = c("hold_position","scale_down")) |> 
   kableExtra::collapse_rows(c(1:2), 
                             row_group_label_position = 'identity', 
                             latex_hline = 'full')
@@ -699,28 +698,28 @@ Correlation comparisons using `cor_test_pairs`:
 
 ```{r, echo=TRUE, warning=FALSE, results='asis'}
 ## Antigen Correlations
-antigen_testing <- exampleData_BAMA %>%
+antigen_testing <- exampleData_BAMA |>
   filter(antigen %in% c('B.63521 D11gp120/293F', 
                         'B.con.env03 140 CF',
                         'B.MN V3 gp70') & 
-           group != 4) %>% 
-  group_by(group, visitno) %>%
+           group != 4) |> 
+  group_by(group, visitno) |>
   group_modify(~ as.data.frame(
     cor_test_pairs(x = .x$magnitude,
                       pair = .x$antigen,
                       id = .x$pubID,
                       method = 'spearman',
-                      n_distinct_value = 3))) %>% 
-  ungroup() %>% 
+                      n_distinct_value = 3))) |> 
+  ungroup() |> 
   # Getting fancy p values
   mutate(CorrTest = pretty_pvalues(CorrTest, output_type = 'latex', 
-                                   sig_alpha = .1, background = 'yellow')) %>% 
+                                   sig_alpha = .1, background = 'yellow')) |> 
   rename("Corr P Value" = CorrTest)
 
 kableExtra::kable(antigen_testing, escape = FALSE, 
-                  booktabs = TRUE, caption = 'Correlations between Antigen') %>% 
+                  booktabs = TRUE, caption = 'Correlations between Antigen') |> 
   kableExtra::kable_styling(font_size = 6.5, 
-                            latex_options = c("hold_position","scale_down")) %>% 
+                            latex_options = c("hold_position","scale_down")) |> 
   kableExtra::collapse_rows(c(1:2), 
                             row_group_label_position = 'identity', 
                             latex_hline = 'full')
@@ -743,10 +742,10 @@ breadth (MB) curves, and cumulative plots.
 
 #Potency-breadth curves
 plot_data <-
- CAVD812_mAB %>%
-  filter(virus != 'SVA-MLV') %>% 
-  tidyr::pivot_longer(cols = c(ic50, ic80)) %>% 
-  dplyr::group_by(name, product) %>%
+ CAVD812_mAB |>
+  filter(virus != 'SVA-MLV') |> 
+  tidyr::pivot_longer(cols = c(ic50, ic80)) |> 
+  dplyr::group_by(name, product) |>
   dplyr::group_modify(~ create_step_curve(x = pmin(.x$value, 100), 
                                           event = as.numeric(.x$value < 50),
                                           flip_surv = TRUE, flip_top_x = 100)) 
@@ -767,12 +766,12 @@ options to include response status and have logged transformation for AUC-MB
 calculation.
 
 ```{r, echo=TRUE, warning=FALSE, fig.cap='BAMA Magnitude Breadth curves'}
-data_here <- exampleData_BAMA %>% filter(visitno == 2)
+data_here <- exampleData_BAMA |> filter(visitno == 2)
 
-group_results <- data_here %>% dplyr::group_by(group) %>%
+group_results <- data_here |> dplyr::group_by(group) |>
   dplyr::group_modify(~ mb_results(magnitude = .x$magnitude , 
                                    response = .x$response))
-ind_results <-  data_here %>% dplyr::group_by(group, pubID) %>%
+ind_results <-  data_here |> dplyr::group_by(group, pubID) |>
   dplyr::group_modify(~ mb_results(magnitude = .x$magnitude , 
                                    response = .x$response))
 ggplot2::ggplot(
@@ -841,7 +840,7 @@ kableExtra::kable(
   booktabs = TRUE,
   linesep = '',
   caption = "Reproducibility Software Session Information"
-) %>%
+) |>
   kableExtra::kable_styling(font_size = 8, latex_options = "hold_position")
 
 ```
@@ -853,7 +852,7 @@ kableExtra::kable(
   booktabs = TRUE,
   linesep = '',
   caption = "Reproducibility Software Package Version Information"
-) %>%
+) |>
   kableExtra::kable_styling(font_size = 8, latex_options = "hold_position")
 
 ```

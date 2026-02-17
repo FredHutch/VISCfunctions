@@ -99,21 +99,21 @@ get_full_name <- function(id = NULL){
 #'
 #' # Simple HTML Display
 #' kableExtra::kable(my_session_info$platform_table, 'html',
-#'       caption = "Reproducibility Software Session Information") %>%
+#'       caption = "Reproducibility Software Session Information") |>
 #'       kableExtra::kable_styling()
 #'
 #' kableExtra::kable(my_session_info$packages_table, 'html',
-#'       caption = "Reproducibility Software Package Version Information") %>%
+#'       caption = "Reproducibility Software Package Version Information") |>
 #'       kableExtra::kable_styling()
 #'
 #'
 #' # Latex Display
 #' kableExtra::kable(my_session_info$platform_table, 'latex', booktabs = TRUE,
-#'       linesep = '', caption = "Reproducibility Software Session Information") %>%
+#'       linesep = '', caption = "Reproducibility Software Session Information") |>
 #'       kableExtra::kable_styling(font_size = 7)
 #'
 #' kableExtra::kable(my_session_info$packages_table, 'latex', booktabs = TRUE,
-#'       linesep = '', caption = "Reproducibility Software Package Version Information") %>%
+#'       linesep = '', caption = "Reproducibility Software Package Version Information") |>
 #'       kableExtra::kable_styling(font_size = 7)
 #'
 #' @export
@@ -127,10 +127,8 @@ get_session_info <- function(libpath = FALSE){
                                 Sys.getenv("USERNAME"),
                                 Sys.getenv("USER")))
 
-  my_session_info <- sessioninfo::session_info()
-
-  platform <- my_session_info[[1]]
-  packages <- my_session_info[[2]]
+  platform <- sessioninfo::platform_info()
+  packages <- sessioninfo::package_info(pkgs = 'loaded', include_base = FALSE)
 
   # TABLE 1
   my_session_info1 <- rbind(
@@ -222,8 +220,8 @@ get_session_info <- function(libpath = FALSE){
 
 
   # TABLE 2
-  my_session_info2 <- packages[packages$attached,] # Only want attached packages
-  my_session_info2 <- with(my_session_info2, {
+
+  my_session_info2 <- with(packages, {
     data.frame(package = package,
                version = loadedversion,
                # Pulling in Data Version numbers
@@ -238,6 +236,7 @@ get_session_info <- function(libpath = FALSE){
                  USE.NAMES = FALSE),
                date = date,
                source = source,
+               status = ifelse(attached, 'attached', 'loaded'),
                libpath = library)
   })
   if (! libpath) my_session_info2$libpath <- NULL
@@ -247,6 +246,9 @@ get_session_info <- function(libpath = FALSE){
 
   # Use short git hash
   my_session_info2$source <- shorten_git_hash(my_session_info2$source)
+
+  my_session_info2 <- my_session_info2[order(my_session_info2$status),]
+  rownames(my_session_info2) <- NULL
 
   list(platform_table = my_session_info1, packages_table = my_session_info2)
 }

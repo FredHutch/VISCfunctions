@@ -124,8 +124,8 @@ library(dplyr)
 data(exampleData_BAMA)
 
 ## Group Comparison
-group_testing_tibble <- exampleData_BAMA \%>\%
-   group_by(antigen, visitno) \%>\%
+group_testing_tibble <- exampleData_BAMA |>
+   group_by(antigen, visitno) |>
    reframe(pairwise_test_cont(x = magnitude,
                               group = group,
                               paired = FALSE,
@@ -138,8 +138,8 @@ group_testing_tibble <- exampleData_BAMA \%>\%
 
 
 ## Timepoint Comparison
-timepoint_testing_dt <- exampleData_BAMA \%>\%
-                       group_by(antigen, group) \%>\%
+timepoint_testing_dt <- exampleData_BAMA |>
+                       group_by(antigen, group) |>
                        reframe(pairwise_test_cont(x = magnitude,
                                                   group = visitno,
                                                   paired = TRUE,
@@ -159,8 +159,8 @@ data(exampleData_ICS)
 
 ## Group Comparison
 # using dplyr
-exampleData_ICS \%>\%
-group_by(Stim, Parent, Population, Visit) \%>\%
+exampleData_ICS |>
+group_by(Stim, Parent, Population, Visit) |>
 reframe(pairwise_test_cont(x = PercentCellNet,
                           group = Group,
                           paired = FALSE,
@@ -174,8 +174,8 @@ reframe(pairwise_test_cont(x = PercentCellNet,
                           verbose = TRUE))
 
 # Timepoint Comparison
-timepoint_testing_dt <- exampleData_ICS \%>\%
-                       group_by(Stim, Parent, Population, Group) \%>\%
+timepoint_testing_dt <- exampleData_ICS |>
+                       group_by(Stim, Parent, Population, Group) |>
                        reframe(pairwise_test_cont(x = PercentCellNet,
                                                   group = Visit,
                                                   paired = TRUE,

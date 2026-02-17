@@ -21,11 +21,11 @@ fas <- fread('data-raw/flow_and_sequences.csv.gz')
 # ubs <- fread('unblinded_sequences.csv')
 
 # check that we have one row per ppt + visit
-fas %>%
-  group_by(PubID, Visit) %>%
-  summarize(n = n()) %>%
-  pull(n) %>%
-  unique %>%
+fas |>
+  group_by(PubID, Visit) |>
+  summarize(n = n()) |>
+  pull(n) |>
+  unique |>
   expect_equal(1)
 
 non_numeric <- grep('^Number |^Percent ', names(fas), value = TRUE, invert = TRUE)
@@ -125,7 +125,7 @@ one_step_impute <- function(
 
 # first: filter down to particular endpoints/variables of interest and pivot
 # data to long, resulting in a bare-bones long-format version of the dataset
-df_filtered_long <- fas %>%
+df_filtered_long <- fas |>
   # discard unneeded numeric (Percent* / Number*) columns
   select(
     all_of(
@@ -134,11 +134,11 @@ df_filtered_long <- fas %>%
         c(non_numeric, keep_numeric)
       )
     )
-  ) %>%
-  select(! all_of(drop_cols)) %>%
+  ) |>
+  select(! all_of(drop_cols)) |>
   # subset on and then remove a column name that is nearly reused later
-  filter(BCell_Population == "/Lymphocytes/Singlets/Live|Dump-/CD19+CD20+") %>%
-  select(-BCell_Population) %>%
+  filter(BCell_Population == "/Lymphocytes/Singlets/Live|Dump-/CD19+CD20+") |>
+  select(-BCell_Population) |>
   # from kellie's processing, lightly edited
   pivot_longer(
     c(
@@ -147,52 +147,52 @@ df_filtered_long <- fas %>%
     ),
     names_to = 'endpoint',
     values_to = 'endpoint_value'
-  ) %>%
+  ) |>
   mutate(endpoint_value_type = case_when(
     grepl('^Percent', endpoint) ~ 'percent',
     grepl('^Number', endpoint) ~ 'count',
-  )) %>%
+  )) |>
   # impute certain endpoints, using upper estimates for pre-vaccination time
   # points and lower estimates (zero) for post-vaccination time points
-  group_by(PubID, weeks_post) %>%
+  group_by(PubID, weeks_post) |>
   mutate(endpoint_value_imputed = case_when(
     # sequencing-only percentage endpoints
     is.na(endpoint_value) & (weeks_post == -4) & (endpoint == "Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class") ~ 100,
     is.na(endpoint_value) & (weeks_post > 0) & (endpoint == "Percent of epitope-specific (KO-GT8++) sequenced IgG BCRs that are VRC01-class") ~ 0,
     .default = endpoint_value
-  )) %>%
+  )) |>
   # flow and sequencing percentage endpoints
   # impute "Percent of B cells detected as VRC01-class"
   group_modify(
     one_step_impute,
     Y = "Number of B cells",
     d = "Percent of B cells detected as VRC01-class"
-  ) %>%
+  ) |>
   # impute "Percent of IgG+ B cells detected as VRC01-class"
   group_modify(
     one_step_impute,
     Y = "Number of IgD-IgG+ B cells",
     d = "Percent of IgG+ B cells detected as VRC01-class"
-  ) %>%
+  ) |>
   # impute "Percent of GT8++ IgG+ B cells detected as VRC01-class"
   group_modify(
     one_step_impute,
     Y = "Number of IgD-IgG+ B cells that are GT8++ (without regard to KO binding status)",
     d = "Percent of GT8++ IgG+ B cells detected as VRC01-class"
-  ) %>%
+  ) |>
   ungroup()
 
 # next: add/format supplemental columns bcell_population, percent_denominator,
 # igx_type, antigen_specificity, epitope_specificity, bnab_class
 # as well as sample metadata columns related to participant, visit, and assay
-df <- df_filtered_long %>%
+df <- df_filtered_long |>
   mutate(
     bcell_population = endpoint,
     bcell_population = sub('Number of ', '', bcell_population),
     # for a typo in original dataset
     bcell_population = sub('Number ', '', bcell_population),
     bcell_population = sub('Percent of .+ (that are|detected as) ', '', bcell_population)
-  ) %>%
+  ) |>
   mutate(
     percent_denominator = if_else(
       endpoint_value_type == 'percent',
@@ -250,7 +250,7 @@ df <- df_filtered_long %>%
     sample_type = 'PBMC',
     source_file = 'https://github.com/SchiefLab/G001/raw/main/data/figures/flow_summary/flow_and_sequences.csv.gz',
     PubID = sub('^PubID_', '', PubID)
-  ) %>%
+  ) |>
   mutate(
     bcell_population = if_else(
       endpoint_value_type == "percent" & source_assay == "flow",
@@ -258,7 +258,7 @@ df <- df_filtered_long %>%
       bcell_population
     ),
     bcell_population = sub("(GT8[+][+]KO-) GT8[+][+]", "\\1", bcell_population)
-  ) %>%
+  ) |>
   # Select/rename/reorder columns
   select(
     pubid = PubID,
@@ -283,14 +283,14 @@ df <- df_filtered_long %>%
     epitope_specificity,
     bnab_class,
     source_file
-  ) %>%
+  ) |>
   arrange(pubid, visit, source_assay, endpoint_value_type, endpoint)
 
 # # to review the imputed values
-# df %>%
-#   filter(is.na(endpoint_value)) %>%
-#   select(pubid, visit, endpoint, endpoint_value, endpoint_value_imputed) %>%
-#   arrange(endpoint, visit) %>%
+# df |>
+#   filter(is.na(endpoint_value)) |>
+#   select(pubid, visit, endpoint, endpoint_value, endpoint_value_imputed) |>
+#   arrange(endpoint, visit) |>
 #   View()
 
 G001_Bcell_flow_seq_PBMC <- df
