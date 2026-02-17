@@ -7,8 +7,7 @@
 get_full_name(id = NULL)
 }
 \arguments{
-\item{id}{ID to look full name up. If null (default) looks up ID of current
-user}
+\item{id}{ID to look full name up. If null (default) looks up ID of current user}
 }
 \value{
 First and Last name associated with ID
@@ -17,10 +16,8 @@ First and Last name associated with ID
 For a given ID looks up user name
 }
 \details{
-If \code{id} null, uses system "USERNAME" variable for Windows and "USER"
-variable for Linux and MACs. Full Name is found in Windows via the \code{net}
-command, and via ldap search in Linux and MACs. The ldap search will only
-work on SCHARPs network at Fred Hutching Cancer Research Center.
+If \code{id} null, uses system "USERNAME" variable for Windows and "USER" variable for Linux and MACs. Full Name is found in Windows via the \code{net}
+command, and via ldap search in Linux and MACs. The ldap search will only work on SCHARPs network at Fred Hutching Cancer Research Center.
 }
 \examples{
 
