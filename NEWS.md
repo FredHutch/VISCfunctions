@@ -1,5 +1,8 @@
 # VISCfunctions (development version)
 
+* Minor updates to vignette (#141)
+* Update title and description in package DESCRIPTION file (#139)
+
 # VISCfunctions 1.3.1
 
 * Report loaded and attached packages in package reproducibility table (#132)
