@@ -487,7 +487,7 @@ pairwise_test_cont <- function(
 #'    group_by(antigen, visitno) |>
 #'    group_modify(~ as.data.frame(
 #'        pairwise_test_bin(x = .$response, group = .$group,
-#'                method = 'barnard', alternative = 'less',
+#'                method = 'barnard', alternative = 'two.sided',
 #'                num_needed_for_test = 3, digits = 1,
 #'                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
 #'
@@ -508,6 +508,7 @@ pairwise_test_cont <- function(
 #'    group_by(Stim, Parent, Population, Visit) |>
 #'    group_modify(~ as.data.frame(
 #'        pairwise_test_bin(x = .$response, group = .$Group , alternative = 'greater',
+#'                sorted_group = 1:4,
 #'                method = 'barnard', num_needed_for_test = 3, digits = 1,
 #'                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
 #'
