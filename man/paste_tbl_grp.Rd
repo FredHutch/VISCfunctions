@@ -59,12 +59,12 @@ determine the character to be pasted between the group names
 data.frame with all the pasted values requested. Each name will have '_comparison' at the end of the names (i.e. mean_comparison, median_comparison, ...)
 }
 \description{
-Paste together information, often statistics, from two groups. There are two
-predefined combinations: mean(sd) and median[min, max], but user may also
+Paste together information, often statistics, from two groups. There are three
+predefined combinations: mean(sd) and median[min, max] and median[first quartile, third quartile], but user may also
 paste any single measure together.
 }
 \details{
-User must use consistant naming throughout, with a underscore to separate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be columns defining the group names (i.e. \code{Group1} and \code{Group2}), which are used to form the \code{Comparison} variable.
+User must use consistent naming throughout, with a underscore to separate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be columns defining the group names (i.e. \code{Group1} and \code{Group2}), which are used to form the \code{Comparison} variable.
 
 \code{alternative} included as a parameter so the direction can easily be seen in one-sided test. If "two.sided" is selected the value to be pasted between the two group names will be set to \code{sep_val}, where "greater" will use " > " and "less" with use " < " as the pasting value.
 }

@@ -22,27 +22,31 @@ test_that("pairwise_comparisons_bin testing two groups", {
               median = median(x, na.rm = TRUE),
               min = min(x, na.rm = TRUE),
               max = max(x, na.rm = TRUE),
+              q1 = quantile(x, probs = c(.25), na.rm = TRUE),
+              q3 = quantile(x, probs = c(.75), na.rm = TRUE),
               IQR = IQR(x, na.rm = TRUE),
               .groups = "keep") |>
     pivot_wider(names_from = group,
-                values_from = c(n, mean, sd, median, min, max, IQR)) |>
+                values_from = c(n, mean, sd, median, min, max, q1, q3, IQR)) |>
     mutate(Group1 = "a", Group2 = "b", .before = "n_a")
 
-  colnames(testing_stats)[3:16] <- c("Group1_n", "Group2_n", "Group1_mean",
+  colnames(testing_stats)[3:20] <- c("Group1_n", "Group2_n", "Group1_mean",
                                 "Group2_mean", "Group1_sd", "Group2_sd",
                                 "Group1_median", "Group2_median",
                                 "Group1_min", "Group2_min", "Group1_max",
-                                "Group2_max", "Group1_IQR", "Group2_IQR")
+                                "Group2_max", "Group1_q1", "Group2_q1",
+                                "Group1_q3", "Group2_q3", "Group1_IQR",
+                                "Group2_IQR")
 
   # Defaults
   test_pasting <- paste_tbl_grp(data = testing_stats,
-                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                vars_to_paste = c('n','median_min_max', 'median_quartiles', 'mean_sd'),
                                 sep_val = " vs. ",
                                 digits = 0,
                                 keep_all = FALSE,
                                 trailing_zeros = TRUE)
 
-  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Median_Quartiles', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
                                 MagnitudeTest = two_samp_cont_test(x = x,
                                                                    y = group,
@@ -63,12 +67,12 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   # Digits to 3
   test_pasting <- paste_tbl_grp(data = testing_stats,
-                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                vars_to_paste = c('n','median_min_max', 'median_quartiles',  'mean_sd'),
                                 sep_val = " vs. ",
                                 digits = 3,
                                 keep_all = FALSE,
                                 trailing_zeros = TRUE)
-  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Median_Quartiles', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
                                 MagnitudeTest = two_samp_cont_test(x = x,
                                                                    y = group,
@@ -90,13 +94,13 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   # Less than comparison
   test_pasting <- paste_tbl_grp(data = testing_stats,
-                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                vars_to_paste = c('n','median_min_max', 'median_quartiles', 'mean_sd'),
                                 sep_val = " vs. ",
                                 digits = 3,
                                 keep_all = FALSE,
                                 trailing_zeros = TRUE,
                                 alternative = 'less')
-  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Median_Quartiles', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
                                 MagnitudeTest = two_samp_cont_test(x = x,
                                                                    y = group,
@@ -118,11 +122,11 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   # Greater than comparison
   test_pasting <- paste_tbl_grp(data = testing_stats,
-                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                vars_to_paste = c('n','median_min_max', 'median_quartiles', 'mean_sd'),
                                 sep_val = " vs. ", digits = 3,
                                 keep_all = FALSE, trailing_zeros = TRUE,
                                 alternative = 'greater')
-  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Median_Quartiles', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
                                 MagnitudeTest = two_samp_cont_test(x = x,
                                                                    y = group,
@@ -145,12 +149,12 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   # Sorted group, less than comparison
   test_pasting <- paste_tbl_grp(data = testing_stats,
-                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                vars_to_paste = c('n','median_min_max', 'median_quartiles', 'mean_sd'),
                                 sep_val = " vs. ", digits = 3,
                                 keep_all = FALSE, trailing_zeros = TRUE,
                                 first_name = 'Group2', second_name = 'Group1',
                                 alternative = 'less')
-  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Median_Quartiles', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
                                 MagnitudeTest = two_samp_cont_test(x = x,
                                                                    y = factor(group, levels = c('b','a')),
@@ -170,12 +174,12 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   # t.test
   test_pasting <- paste_tbl_grp(data = testing_stats,
-                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                vars_to_paste = c('n','median_min_max', 'median_quartiles', 'mean_sd'),
                                 sep_val = " vs. ",
                                 digits = 3,
                                 keep_all = FALSE,
                                 trailing_zeros = TRUE)
-  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Median_Quartiles', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
                                 MagnitudeTest = two_samp_cont_test(x = x,
                                                                    y = group,
@@ -194,10 +198,10 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   # High number needed for testing
   test_pasting <- paste_tbl_grp(data = testing_stats,
-                                vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                vars_to_paste = c('n','median_min_max', 'median_quartiles', 'mean_sd'),
                                 sep_val = " vs. ", digits = 3,
                                 keep_all = FALSE, trailing_zeros = TRUE)
-  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Median_Quartiles', 'Mean_SD')
   testing_results <- data.frame(test_pasting,
                                 MagnitudeTest = NA_integer_,
                                 PerfectSeparation = ifelse((testing_stats$Group1_min >  testing_stats$Group2_max) |
@@ -225,26 +229,30 @@ test_that("pairwise_comparisons_bin testing two groups", {
               median = median(x, na.rm = TRUE),
               min = min(x, na.rm = TRUE),
               max = max(x, na.rm = TRUE),
+              q1 = quantile(x, probs = c(.25), na.rm = TRUE),
+              q3 = quantile(x, probs = c(.75), na.rm = TRUE),
               IQR = IQR(x, na.rm = TRUE),
               logmean = mean(x, na.rm = TRUE),
               logsd = sd(x, na.rm = TRUE),
               .groups = "keep") |>
     pivot_wider(names_from = group,
-                values_from = c(n, mean, median, min, max, IQR, logmean, logsd)) |>
+                values_from = c(n, mean, median, min, max, q1, q3, IQR, logmean, logsd)) |>
     mutate(across(mean_a:IQR_b, .fns = ~10^.x),
            Group1 = "a", Group2 = "b",
            Group1log = "a", Group2log = "b", .before = "n_a")
 
-  colnames(testing_stats_log)[5:20] <- c("Group1_n", "Group2_n", "Group1_mean",
+  colnames(testing_stats_log)[5:24] <- c("Group1_n", "Group2_n", "Group1_mean",
                                      "Group2_mean",
                                      "Group1_median", "Group2_median",
                                      "Group1_min", "Group2_min", "Group1_max",
-                                     "Group2_max", "Group1_IQR", "Group2_IQR",
-                                     "Group1log_mean", "Group2log_mean",
-                                     "Group1log_sd", "Group2log_sd")
+                                     "Group2_max", "Group1_q1", "Group2_q1",
+                                     "Group1_q3", "Group2_q3", "Group1_IQR",
+                                     "Group2_IQR", "Group1log_mean",
+                                     "Group2log_mean", "Group1log_sd",
+                                     "Group2log_sd")
 
   test_pasting <- paste_tbl_grp(data = testing_stats_log,
-                                vars_to_paste = c('n','median_min_max', 'mean'),
+                                vars_to_paste = c('n','median_min_max', 'median_quartiles', 'mean'),
                                 sep_val = " vs. ",
                                 digits = 3,
                                 keep_all = FALSE,
@@ -259,7 +267,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                 keep_all = FALSE,
                                 trailing_zeros = TRUE)
 
-  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Median_Quartiles', 'Mean')
   testing_results <- data.frame(test_pasting,
                                 log_Mean_SD = test_pasting_extra$mean_sd_comparison,
                                 MagnitudeTest = two_samp_cont_test(x = log10(x_high),
@@ -294,27 +302,31 @@ test_that("pairwise_comparisons_bin testing two groups", {
               median = median(x, na.rm = TRUE),
               min = min(x, na.rm = TRUE),
               max = max(x, na.rm = TRUE),
+              q1 = quantile(x, probs = c(.25), na.rm = TRUE),
+              q3 = quantile(x, probs = c(.75), na.rm = TRUE),
               IQR = IQR(x, na.rm = TRUE),
               .groups = "keep") |>
     pivot_wider(names_from = group,
-                values_from = c(n, mean, sd, median, min, max, IQR)) |>
+                values_from = c(n, mean, sd, median, min, max, q1, q3, IQR)) |>
     mutate(Group1 = "a", Group2 = "b", .before = "n_a")
 
-  colnames(testing_stats_paired)[3:16] <- c("Group1_n", "Group2_n", "Group1_mean",
+  colnames(testing_stats_paired)[3:20] <- c("Group1_n", "Group2_n", "Group1_mean",
                                      "Group2_mean", "Group1_sd", "Group2_sd",
                                      "Group1_median", "Group2_median",
                                      "Group1_min", "Group2_min", "Group1_max",
-                                     "Group2_max", "Group1_IQR", "Group2_IQR")
+                                     "Group2_max", "Group1_q1", "Group2_q1",
+                                     "Group1_q3", "Group2_q3", "Group1_IQR",
+                                     "Group2_IQR")
 
 
   test_pasting <- paste_tbl_grp(data = testing_stats_paired,
-                                vars_to_paste = c('median_min_max', 'mean_sd'),
+                                vars_to_paste = c('median_min_max', 'median_quartiles', 'mean_sd'),
                                 sep_val = " vs. ", digits = 3, keep_all = FALSE,
                                 trailing_zeros = TRUE)
 
   # test group order
   test_pasting_rev <- paste_tbl_grp(data = testing_stats_paired,
-                                vars_to_paste = c('median_min_max', 'mean_sd'),
+                                vars_to_paste = c('median_min_max', 'median_quartiles', 'mean_sd'),
                                 sep_val = " vs. ", digits = 3, keep_all = FALSE,
                                 first_name = "Group2", second_name = "Group1",
                                 trailing_zeros = TRUE)
@@ -324,6 +336,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
   testing_results <- data.frame(Comparison = test_pasting$Comparison,
                                 SampleSizes =  sum(duplicated(na.omit(data.frame(x, group, id))$id)),
                                 Median_Min_Max = test_pasting$median_min_max_comparison,
+                                Median_Quartiles = test_pasting$median_quartiles_comparison,
                                 Mean_SD = test_pasting$mean_sd_comparison,
                                 MagnitudeTest = two_samp_cont_test(x = x, y = group, method = 'wilcox', paired = TRUE),
                                 PerfectSeparation = ifelse((testing_stats_paired$Group1_min >
@@ -344,6 +357,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
   testing_results_rev <- data.frame(Comparison = test_pasting_rev$Comparison,
                                     SampleSizes =  sum(duplicated(na.omit(data.frame(x, group, id))$id)),
                                     Median_Min_Max = test_pasting_rev$median_min_max_comparison,
+                                    Median_Quartiles = test_pasting_rev$median_quartiles_comparison,
                                     Mean_SD = test_pasting_rev$mean_sd_comparison,
                                     MagnitudeTest = two_samp_cont_test(x = x, y = group, method = 'wilcox', paired = TRUE),
                                     PerfectSeparation = ifelse((testing_stats_paired$Group1_min >
@@ -379,15 +393,19 @@ test_that("pairwise_comparisons testing multiple groups", {
         Group1_median = median(x[group == Group1]), Group2_median = median(x[group == Group2]),
         Group1_min = min(x[group == Group1]), Group2_min = min(x[group == Group2]),
         Group1_max = max(x[group == Group1]), Group2_max = max(x[group == Group2]),
+        Group1_q1 = quantile(x[group == Group1], probs = c(.25), na.rm = TRUE ),
+        Group2_q1 = quantile(x[group == Group2], probs = c(.25), na.rm = TRUE),
+        Group1_q3 = quantile(x[group == Group1], probs = c(.75), na.rm = TRUE),
+        Group2_q3 = quantile(x[group == Group2], probs = c(.75), na.rm = TRUE),
         Group1_IQR = IQR(x[group == Group1])
       )
 
     # Defaults
     test_pasting <- paste_tbl_grp(data = testing_stats,
-                                  vars_to_paste = c('n','median_min_max', 'mean_sd'),
+                                  vars_to_paste = c('n','median_min_max', 'median_quartiles', 'mean_sd'),
                                   sep_val = " vs. ", digits = 3, keep_all = FALSE,
                                   trailing_zeros = TRUE)
-    names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Mean_SD')
+    names(test_pasting) <- c('Comparison', 'SampleSizes', 'Median_Min_Max', 'Median_Quartiles', 'Mean_SD')
     testing_results <- data.frame(
       test_pasting,
       MagnitudeTest = two_samp_cont_test(x = x[group %in% c(Group1,Group2)],
@@ -462,7 +480,8 @@ test_that("Test example with fixed result", {
                                  sep_val = ' vs. ',
                                  verbose = TRUE),
               .groups = "drop_last") |>
-    ungroup()
+    ungroup() |>
+    select(-c('Median_Quartiles'))
 
   expect_equal(object = group_testing_dt,
                expected = fixed_bama_group_testing_dt)

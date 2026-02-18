@@ -262,6 +262,10 @@ pairwise_test_cont <- function(
           Group2_median = 10^stats::median(log10(j_vals), na.rm = T),
           Group1_max = max(i_vals, na.rm = T),
           Group2_max = max(j_vals, na.rm = T),
+          Group1_q1 = stats::quantile(i_vals, probs = c(.25), na.rm = T),
+          Group2_q1 = stats::quantile(j_vals, probs = c(.25), na.rm = T),
+          Group1_q3 = stats::quantile(i_vals, probs = c(.75), na.rm = T),
+          Group2_q3 = stats::quantile(j_vals, probs = c(.75), na.rm = T),
           Group1_mean = 10^mean(log10(i_vals), na.rm = T),
           Group2_mean = 10^mean(log10(j_vals), na.rm = T),
           Group1log_mean = mean(log10(i_vals), na.rm = T),
@@ -283,6 +287,10 @@ pairwise_test_cont <- function(
           Group2_max = max(j_vals, na.rm = T),
           Group1_mean = mean(i_vals, na.rm = T),
           Group2_mean = mean(j_vals, na.rm = T),
+          Group1_q1 = stats::quantile(i_vals, probs = c(.25), na.rm = T),
+          Group2_q1 = stats::quantile(j_vals, probs = c(.25), na.rm = T),
+          Group1_q3 = stats::quantile(i_vals, probs = c(.75), na.rm = T),
+          Group2_q3 = stats::quantile(j_vals, probs = c(.75), na.rm = T),
           Group1_sd = stats::sd(i_vals, na.rm = T),
           Group2_sd = stats::sd(j_vals, na.rm = T)
         )
@@ -328,10 +336,9 @@ pairwise_test_cont <- function(
   if (length(results_list) == 0) return(NULL)
 
   results <- do.call(base::rbind, results_list)
-
   # Pasting together stats
   pasted_results <- paste_tbl_grp(
-    data = results, vars_to_paste = c("n","median_min_max",'mean'),
+    data = results, vars_to_paste = c("n","median_min_max",'mean', "median_quartiles"),
     first_name = 'Group1', second_name = 'Group2', sep_val = sep_val,
     alternative = alternative, digits = digits, trailing_zeros = trailing_zeros,
     keep_all = TRUE, verbose = verbose)
@@ -358,6 +365,7 @@ pairwise_test_cont <- function(
         Comparison = pasted_results$Comparison,
         SampleSizes = pasted_results$n_comparison,
         Median_Min_Max = pasted_results$median_min_max_comparison,
+        Median_Quartiles = pasted_results$median_quartiles,
         Mean = pasted_results$mean_comparison,
         log_Mean_SD = pasted_results_extra$mean_sd_comparison,
         MagnitudeTest = results$MagnitudeTest,
@@ -383,6 +391,7 @@ pairwise_test_cont <- function(
         Comparison = pasted_results$Comparison,
         SampleSizes = pasted_results$n_comparison,
         Median_Min_Max = pasted_results$median_min_max_comparison,
+        Median_Quartiles = pasted_results$median_quartiles_comparison,
         Mean_SD = pasted_results_extra$mean_sd_comparison,
         MagnitudeTest = results$MagnitudeTest,
         PerfectSeparation = results$PerfectSeparation,
@@ -774,10 +783,9 @@ pairwise_test_bin <- function(x,
 #' exampleData_BAMA |>
 #' filter(visitno != 0) |>
 #' group_by(group, visitno) |>
-#'  summarize(
+#'  reframe(
 #'    cor_test_pairs(x = magnitude, pair = antigen, id = pubID,
-#'    method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE),
-#'    .groups = 'drop'
+#'    method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE)
 #'  )
 #'
 #' @export

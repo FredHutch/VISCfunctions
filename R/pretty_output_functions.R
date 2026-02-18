@@ -1,7 +1,7 @@
 #' Pasting Together Information for Two Groups
 #'
-#' Paste together information, often statistics, from two groups. There are two
-#' predefined combinations: mean(sd) and median\[min, max\], but user may also
+#' Paste together information, often statistics, from two groups. There are three
+#' predefined combinations: mean(sd) and median\[min, max\] and median\[first quartile, third quartile\], but user may also
 #' paste any single measure together.
 #'
 #'
@@ -32,7 +32,7 @@
 #' @param verbose a logical variable indicating if warnings and messages should be displayed. Default FALSE.
 #' @details
 #'
-#' User must use consistant naming throughout, with a underscore to separate the group names from the measures (i.e. `Group1_mean` and `Group2_mean`). There also must be columns defining the group names (i.e. `Group1` and `Group2`), which are used to form the `Comparison` variable.
+#' User must use consistent naming throughout, with a underscore to separate the group names from the measures (i.e. `Group1_mean` and `Group2_mean`). There also must be columns defining the group names (i.e. `Group1` and `Group2`), which are used to form the `Comparison` variable.
 #'
 #' `alternative` included as a parameter so the direction can easily be seen in one-sided test. If "two.sided" is selected the value to be pasted between the two group names will be set to `sep_val`, where "greater" will use " > " and "less" with use " < " as the pasting value.
 #'
@@ -137,6 +137,9 @@ paste_tbl_grp <- function(
         vars_to_paste_here <- c(vars_to_paste_here, 'median_min_max')
       if (sum(vars_to_paste_here %in% c('mean','sd')) == 2)
         vars_to_paste_here <- c(vars_to_paste_here, 'mean_sd')
+      if (sum(vars_to_paste_here %in% c('median','q1','q3')) == 3)
+        vars_to_paste_here <- c(vars_to_paste_here, 'median_quartiles')
+
 
       if (verbose) message('The following measures will be combined: ',
                            paste0(vars_to_paste_here, collapse = ', '))
@@ -151,11 +154,14 @@ paste_tbl_grp <- function(
 
   # Need to define which variables to check. Special considerations for the predefined values
   vars_to_check <- vars_to_paste_here[!vars_to_paste_here %in%
-                                        c('median_min_max','mean_sd')]
+                                        c('median_min_max','median_quartiles','mean_sd')]
   if (any(vars_to_paste_here == 'median_min_max'))
     vars_to_check <- unique(c(vars_to_check, 'median', 'min', 'max'))
   if (any(vars_to_paste_here == 'mean_sd'))
     vars_to_check <- unique(c(vars_to_check, 'mean', 'sd'))
+  if (any(vars_to_paste_here == 'median_quartiles'))
+    vars_to_check <- unique(c(vars_to_check, 'median', 'q1','q3'))
+
 
   # Need to check the group1 and group2 version of each variable being pasted
   group1_vars_to_check <- paste0(first_name, '_', vars_to_check)
@@ -223,7 +229,23 @@ paste_tbl_grp <- function(
                    trailing_zeros = trailing_zeros
         )
       )
-    } else {
+    } else if (vars_to_paste_here[i] == 'median_quartiles') {
+      pasted_results[[i]] <-  paste0(
+        stat_paste(stat1 = data_here[, paste0(first_name, '_median')],
+                   stat2 = data_here[, paste0(first_name, '_q1')],
+                   stat3 = data_here[, paste0(first_name, '_q3')],
+                   digits = digits, bound_char = '[', sep = ', ',
+                   na_str_out = na_str_out, trailing_zeros = trailing_zeros
+        ),
+        sep_val,
+        stat_paste(stat1 = data_here[, paste0(second_name, '_median')],
+                   stat2 = data_here[, paste0(second_name, '_q1')],
+                   stat3 = data_here[, paste0(second_name, '_q3')],
+                   digits = digits, bound_char = '[', sep = ', ',
+                   na_str_out = na_str_out, trailing_zeros = trailing_zeros
+        )
+      )
+      } else {
       first_var_here <- data_here[, paste0(first_name, '_', vars_to_paste_here[i])]
       second_var_here <- data_here[, paste0(second_name, '_', vars_to_paste_here[i])]
       both_var_here <- c(first_var_here, second_var_here)

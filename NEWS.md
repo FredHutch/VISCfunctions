@@ -1,6 +1,11 @@
 # VISCfunctions (development version)
 
 * Add PR template for the package (#138)
+* Minor updates to vignette (#141)
+* Update title and description in package DESCRIPTION file (#139)
+* Add `Median_Quartiles` to `pairwise_test_cont()` output (#99)
+* Minor Changes:
+  * Update `Overview()` to include new `Median_Quartiles` (#99)
 
 # VISCfunctions 1.3.1
 
@@ -69,7 +74,7 @@
 * New Functions:
   * `escape()` to easily make latex friendly columns with `\` in front of special characters
   * `wilson_ci()` function for Wilson Confident Intervals
-  * `pariwise_test_bin()` for pairwise binary testing comparisons (i.e. pairwise group differences in response rates)
+  * `pairwise_test_bin()` for pairwise binary testing comparisons (i.e. pairwise group differences in response rates)
 * Minor Changes:
   * Adding suffix param to `stat_paste()`. Now easy to add % or something else after each stat, if needed
   * Improved documentation and minor fixes to `two_samp_cont_test()`
