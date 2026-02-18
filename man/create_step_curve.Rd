@@ -49,24 +49,24 @@ dat = data.frame(x = c(1:10),
                  event = c(1,1,0,1,1,0,0,1,1,1),
                  ptid = c(1,1,2,2,3,3,3,3,3,3))
 plot_data <-
- dat \%>\%
-  dplyr::group_by(ptid) \%>\%
+ dat |>
+  dplyr::group_by(ptid) |>
   dplyr::group_modify(~ create_step_curve(x = .x$x, event = .x$event))
 
 ggplot2::ggplot(data = plot_data,
                 ggplot2::aes(x = time, y = surv, color = factor(ptid))) +
  ggplot2::geom_step(linetype = "dashed", direction = 'hv', lwd = .35) +
- ggplot2::geom_point(data = plot_data \%>\% filter(n.censor == 1),
+ ggplot2::geom_point(data = plot_data |> filter(n.censor == 1),
                      shape = 3, size = 6, show.legend = FALSE)
 
 #mAB example for reverse curves
 data(CAVD812_mAB)
 
 plot_data <-
-CAVD812_mAB \%>\%
-  filter(virus != 'SVA-MLV') \%>\%
-  tidyr::pivot_longer(cols = c(ic50, ic80)) \%>\%
-  dplyr::group_by(name, product) \%>\%
+CAVD812_mAB |>
+  filter(virus != 'SVA-MLV') |>
+  tidyr::pivot_longer(cols = c(ic50, ic80)) |>
+  dplyr::group_by(name, product) |>
   dplyr::group_modify(~ create_step_curve(x = pmin(.x$value, 100),
                                           event = as.numeric(.x$value < 50),
                                           flip_surv = TRUE,
