@@ -27,7 +27,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
               IQR = IQR(x, na.rm = TRUE),
               .groups = "keep") |>
     pivot_wider(names_from = group,
-                values_from = c(n, mean, sd, median, min, max, q1, q3, IQR)) %>%
+                values_from = c(n, mean, sd, median, min, max, q1, q3, IQR)) |>
     mutate(Group1 = "a", Group2 = "b", .before = "n_a")
 
   colnames(testing_stats)[3:20] <- c("Group1_n", "Group2_n", "Group1_mean",
@@ -236,7 +236,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
               logsd = sd(x, na.rm = TRUE),
               .groups = "keep") |>
     pivot_wider(names_from = group,
-                values_from = c(n, mean, median, min, max, q1, q3, IQR, logmean, logsd)) %>%
+                values_from = c(n, mean, median, min, max, q1, q3, IQR, logmean, logsd)) |>
     mutate(across(mean_a:IQR_b, .fns = ~10^.x),
            Group1 = "a", Group2 = "b",
            Group1log = "a", Group2log = "b", .before = "n_a")
@@ -307,7 +307,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
               IQR = IQR(x, na.rm = TRUE),
               .groups = "keep") |>
     pivot_wider(names_from = group,
-                values_from = c(n, mean, sd, median, min, max, q1, q3, IQR)) %>%
+                values_from = c(n, mean, sd, median, min, max, q1, q3, IQR)) |>
     mutate(Group1 = "a", Group2 = "b", .before = "n_a")
 
   colnames(testing_stats_paired)[3:20] <- c("Group1_n", "Group2_n", "Group1_mean",
@@ -479,8 +479,8 @@ test_that("Test example with fixed result", {
                                  trailing_zeros = TRUE,
                                  sep_val = ' vs. ',
                                  verbose = TRUE),
-              .groups = "drop_last") %>%
-    ungroup() %>%
+              .groups = "drop_last") |>
+    ungroup() |>
     select(-c('Median_Quartiles'))
 
   expect_equal(object = group_testing_dt,

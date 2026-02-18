@@ -620,7 +620,7 @@ group_testing <- exampleData_ICS |>
   mutate(MagnitudeTest = pretty_pvalues(
     MagnitudeTest, output_type = 'latex', 
     sig_alpha = .1, background = 'yellow')
-  ) %>% 
+  ) |>
   rename("Median (Range)" = Median_Min_Max, 
          "Median (Q1, Q3)" = Median_Quartiles, 
          'Mean (SD) (log10)' = log_Mean_SD)
@@ -655,7 +655,7 @@ timepoint_testing <- exampleData_ICS |>
   mutate(MagnitudeTest = pretty_pvalues(
     MagnitudeTest, output_type = 'latex', 
     sig_alpha = .1, background = 'yellow')
-    ) %>% 
+    ) |>
   rename("Median (Range)" = Median_Min_Max, 
          "Median (Q1, Q3)" = Median_Quartiles, 
          'Mean (SD) (log10)' = log_Mean_SD)
