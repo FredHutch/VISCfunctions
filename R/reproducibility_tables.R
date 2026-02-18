@@ -99,21 +99,21 @@ get_full_name <- function(id = NULL){
 #'
 #' # Simple HTML Display
 #' kableExtra::kable(my_session_info$platform_table, 'html',
-#'       caption = "Reproducibility Software Session Information") %>%
+#'       caption = "Reproducibility Software Session Information") |>
 #'       kableExtra::kable_styling()
 #'
 #' kableExtra::kable(my_session_info$packages_table, 'html',
-#'       caption = "Reproducibility Software Package Version Information") %>%
+#'       caption = "Reproducibility Software Package Version Information") |>
 #'       kableExtra::kable_styling()
 #'
 #'
 #' # Latex Display
 #' kableExtra::kable(my_session_info$platform_table, 'latex', booktabs = TRUE,
-#'       linesep = '', caption = "Reproducibility Software Session Information") %>%
+#'       linesep = '', caption = "Reproducibility Software Session Information") |>
 #'       kableExtra::kable_styling(font_size = 7)
 #'
 #' kableExtra::kable(my_session_info$packages_table, 'latex', booktabs = TRUE,
-#'       linesep = '', caption = "Reproducibility Software Package Version Information") %>%
+#'       linesep = '', caption = "Reproducibility Software Package Version Information") |>
 #'       kableExtra::kable_styling(font_size = 7)
 #'
 #' @export

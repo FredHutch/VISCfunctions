@@ -44,8 +44,8 @@
 #' library(tidyr)
 #' data(exampleData_BAMA)
 #'
-#' descriptive_stats_by_group <- exampleData_BAMA %>%
-#'   group_by(visitno,antigen) %>%
+#' descriptive_stats_by_group <- exampleData_BAMA |>
+#'   group_by(visitno,antigen) |>
 #'   reframe(
 #'     Group1 = unique(group[group == 1]), Group2 = unique(group[group == 2]),
 #'     Group1_n = length(magnitude[group == 1]), Group2_n = length(magnitude[group == 2]),
@@ -70,16 +70,16 @@
 #' # Same example wit tidyverse in single pipe
 #'
 #'
-#'exampleData_BAMA %>%
-#'  mutate(group = paste0("Group", group)) %>%
-#'  group_by(group, visitno, antigen) %>%
+#'exampleData_BAMA |>
+#'  mutate(group = paste0("Group", group)) |>
+#'  group_by(group, visitno, antigen) |>
 #'  reframe(N = n(), mean = mean(magnitude), sd = sd(magnitude),
 #'          median = median(magnitude), min = min(magnitude),
-#'          max = max(magnitude), q95_fun = quantile(magnitude, 0.95)) %>%
-#'  pivot_longer(-(group:antigen)) %>% # these three chains create a wide dataset
-#'  unite(temp, group, name) %>%
-#'  pivot_wider(names_from = temp, values_from = value) %>%
-#'  mutate(Group1 = "Group 1", Group2 = "Group 2") %>%
+#'          max = max(magnitude), q95_fun = quantile(magnitude, 0.95)) |>
+#'  pivot_longer(-(group:antigen)) |> # these three chains create a wide dataset
+#'  unite(temp, group, name) |>
+#'  pivot_wider(names_from = temp, values_from = value) |>
+#'  mutate(Group1 = "Group 1", Group2 = "Group 2") |>
 #'  paste_tbl_grp()
 #'
 #' @export
@@ -310,8 +310,8 @@ paste_tbl_grp <- function(
 #' stat_paste(c(rep(5,5),NA),c(1:5,NA),c(1,NA,2,NA,3,NA),bound_char = '[')
 #'
 #' library(dplyr)
-#' exampleData_BAMA %>%
-#' group_by(antigen, visitno, group) %>%
+#' exampleData_BAMA |>
+#' group_by(antigen, visitno, group) |>
 #' summarise(median_min_max = stat_paste(median(magnitude, na.rm = TRUE),
 #'                                         min(magnitude, na.rm = TRUE),
 #'                                         max(magnitude, na.rm = TRUE)),
