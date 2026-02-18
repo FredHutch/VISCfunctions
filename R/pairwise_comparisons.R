@@ -619,7 +619,6 @@ pairwise_test_bin <- function(x,
                           rep(j_group, nrow(data_here)))
         groups_here <- droplevels(factor(groups_here, levels = levels_here))
       } else {
-
         i_vals <- x[group == i_group]
         j_vals <- x[group == j_group]
         vals_here <-  x[group  %in% c(i_group, j_group)]
