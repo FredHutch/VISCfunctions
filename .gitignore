@@ -21,3 +21,6 @@ Meta
 /doc/
 /Meta/
 docs
+
+# Dataspace login
+.netrc
