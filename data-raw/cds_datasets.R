@@ -47,6 +47,3 @@ CAVD579_bama <- cvd579$getDataset("BAMA") |>
   as.data.frame()
 
 usethis::use_data(CAVD579_bama, overwrite = TRUE)
-
-# ICS
-# cvd579_bama <- cvd579$getDataset("ICS")
