@@ -28,7 +28,7 @@ cvd579_trt <- cvd579$getDataset("Demographics") |>
          study_arm_summary,
          description)
 
-cvd579_bama <- cvd579$getDataset("BAMA") |>
+CAVD579_bama <- cvd579$getDataset("BAMA") |>
   distinct(
     participant_id,
     specimen_type,
@@ -45,7 +45,7 @@ cvd579_bama <- cvd579$getDataset("BAMA") |>
   left_join(cvd579_trt, join_by(participant_id)) |>
   as.data.frame()
 
-usethis::use_data(cvd579_bama, overwrite = TRUE)
+usethis::use_data(CAVD579_bama, overwrite = TRUE)
 
 # ICS
 # cvd579_bama <- cvd579$getDataset("ICS")

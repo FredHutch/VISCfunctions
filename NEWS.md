@@ -1,5 +1,6 @@
 # VISCfunctions (development version)
 
+* Add `CAVD579_bama` to example datasets (#17)
 * Add `SampleSizes` output to `pairwise_test_bin()` (#130)
 * Minor updates to vignette (#141)
 * Update title and description in package DESCRIPTION file (#139)
