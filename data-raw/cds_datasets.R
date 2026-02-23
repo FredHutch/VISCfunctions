@@ -31,6 +31,7 @@ cvd579_trt <- cvd579$getDataset("Demographics") |>
 CAVD579_bama <- cvd579$getDataset("BAMA") |>
   distinct(
     participant_id,
+    visit_day,
     specimen_type,
     assay_identifier,
     antibody_isotype,

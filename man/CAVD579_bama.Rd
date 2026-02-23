@@ -8,6 +8,7 @@
 A data.frame with 1,717 rows and 18 variables:
 \describe{
 \item{participant_id}{Subject identifier.}
+\item{visit_day}{Target study day defined for a study visit. Study days are relative to Day 0, where Day 0 is typically defined as enrollment and/or first injection.}
 \item{specimen_type}{The type of specimen used in the assay.}
 \item{assay_identifier}{Name identifying assay.}
 \item{antibody_isotype}{The binding anitbody isotype that is quantified by the assay.}
