@@ -18,3 +18,4 @@ Provide links to any related GitHub issues.
   - [ ] The roxygen skeleton for this function has been comprehensively created/updated, and the corresponding `*.Rd` files have been updated using `devtools::document`
 - [ ] This PR impacts the [VISCfunctions pkgdown site](https://fredhutch.github.io/VISCfunctions/) and the corresponding changes have been rendered and reviewed locally using `pkgdown::build_site()`
 - [ ] I have updated NEWS.md to describe the proposed changes
+- [ ] All changes are within the scope of PR -- there are no extraneous files or commits 
