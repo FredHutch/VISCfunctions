@@ -3,9 +3,9 @@
 \docType{package}
 \name{VISCfunctions-package}
 \alias{VISCfunctions-package}
-\title{VISCfunctions: VISC STP/SRA functions}
+\title{VISCfunctions: VISCfunctions}
 \description{
-Statistical, data processing, and annotation functions for VISC.
+Statistical, data processing, and annotation functions for VISC statisticians and programmers.
 }
 \seealso{
 Useful links:

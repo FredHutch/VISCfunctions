@@ -487,7 +487,7 @@ pairwise_test_cont <- function(
 #'    group_by(antigen, visitno) |>
 #'    group_modify(~ as.data.frame(
 #'        pairwise_test_bin(x = .$response, group = .$group,
-#'                method = 'barnard', alternative = 'less',
+#'                method = 'barnard', alternative = 'two.sided',
 #'                num_needed_for_test = 3, digits = 1,
 #'                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
 #'
@@ -508,6 +508,7 @@ pairwise_test_cont <- function(
 #'    group_by(Stim, Parent, Population, Visit) |>
 #'    group_modify(~ as.data.frame(
 #'        pairwise_test_bin(x = .$response, group = .$Group , alternative = 'greater',
+#'                sorted_group = 1:4,
 #'                method = 'barnard', num_needed_for_test = 3, digits = 1,
 #'                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
 #'
@@ -649,6 +650,8 @@ pairwise_test_bin <- function(x,
 
       stats_by_group <- data.frame(Group1 = i_group,
                                    Group2 = j_group,
+                                   Group1_n = sum(!is.na(i_vals)),
+                                   Group2_n = sum(!is.na(j_vals)),
                                    Group1_rr = response_info_here_by_group[[1]],
                                    Group2_rr = response_info_here_by_group[[2]],
                                    stringsAsFactors = FALSE
@@ -697,8 +700,9 @@ pairwise_test_bin <- function(x,
 
 
   data.frame(Comparison = pasted_results$Comparison,
+             SampleSizes = pasted_results$n_comparison,
              ResponseStats = pasted_results$rr_comparison,
-             ResponseTest = results$ResponseTest ,
+             ResponseTest = results$ResponseTest,
              PerfectSeparation = results$PerfectSeparation,
              stringsAsFactors = FALSE)
 

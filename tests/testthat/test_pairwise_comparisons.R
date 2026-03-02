@@ -616,19 +616,19 @@ test_that("pairwise_comparisons_bin testing two groups", {
     group_by(group) |>
     mutate(num_pos = sum(x), n = n()) |>
     group_by(group,num_pos, n) |>
-    group_modify( ~ wilson_ci(.$x, .95)) |> ungroup() |>
+    group_modify( ~ wilson_ci(.$x, .95),
+                  sum(.$x)) |> ungroup() |>
     mutate(rr = paste0(num_pos, '/', n, ' = ',
                        stat_paste(mean * 100, lower * 100, upper * 100, digits = 1, suffix = '%')))
 
   testing_stats <- bind_cols(
-    testing_stats_pre |> filter(group == 'a') |> select(Group1 = group, Group1_rr = rr),
-    testing_stats_pre |> filter(group == 'b') |> select(Group2 = group, Group2_rr = rr))
-
+    testing_stats_pre |> filter(group == 'a') |> select(Group1 = group, Group1_n = n, Group1_rr = rr),
+    testing_stats_pre |> filter(group == 'b') |> select(Group2 = group, Group2_n = n, Group2_rr = rr))
 
   # testing multiple methods
   test_pasting <- paste_tbl_grp(data = testing_stats)
 
-  names(test_pasting) <- c('Comparison', 'ResponseStats')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'ResponseStats')
 
   lapply(c("barnard", "fisher", "chi.sq"),
               function(method_in){
@@ -648,18 +648,20 @@ test_that("pairwise_comparisons_bin testing two groups", {
     group_by(group) |>
     mutate(num_pos = sum(x), n = n()) |>
     group_by(group,num_pos, n) |>
-    group_modify( ~ wilson_ci(.$x, .95)) |> ungroup() |>
+    group_modify( ~ wilson_ci(.$x, .95),
+                  sum(.$x)) |>
+    ungroup() |>
     mutate(rr = paste0(num_pos, '/', n, ' = ',
                        stat_paste(mean * 100, lower * 100, upper * 100, digits = 3, suffix = '%')))
 
   testing_stats_3digits <- bind_cols(
     testing_stats_pre_3digits |>
     filter(group == 'a') |>
-    select(Group1 = group, Group1_rr = rr), testing_stats_pre_3digits |>
-    filter(group == 'b') |> select(Group2 = group, Group2_rr = rr))
+    select(Group1 = group, Group1_n = n, Group1_rr = rr), testing_stats_pre_3digits |>
+    filter(group == 'b') |> select(Group2 = group, Group2_n = n, Group2_rr = rr))
 
   test_pasting <- paste_tbl_grp(data = testing_stats_3digits)
-  names(test_pasting) <- c('Comparison', 'ResponseStats')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'ResponseStats')
   testing_results <- data.frame(test_pasting,
     ResponseTest  = two_samp_bin_test(x = x, y = group),
     PerfectSeparation = ifelse(diff(testing_stats_pre_3digits$mean) == 1,
@@ -671,7 +673,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
   # One-sided test comparison
   test_pasting <- paste_tbl_grp(data = testing_stats, alternative = 'less')
 
-  names(test_pasting) <- c('Comparison', 'ResponseStats')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'ResponseStats')
 
   testing_results <- data.frame(test_pasting,
     # Need reverse testing direction
@@ -686,7 +688,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
   # sorted group greater than comparison
   test_pasting <- paste_tbl_grp(data = testing_stats, alternative = 'greater',
                                 first_name = 'Group2', second_name = 'Group1')
-  names(test_pasting) <- c('Comparison', 'ResponseStats')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'ResponseStats')
   testing_results <- data.frame(
     test_pasting,
     # Need reverse testing direction
@@ -701,7 +703,7 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   # High number needed for testing
   test_pasting <- paste_tbl_grp(data = testing_stats)
-  names(test_pasting) <- c('Comparison', 'ResponseStats')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'ResponseStats')
   testing_results <- data.frame(
     test_pasting,
     ResponseTest  = NA_integer_,
@@ -720,7 +722,8 @@ test_that("pairwise_comparisons_bin testing two groups", {
     group_by(group) |>
     mutate(num_pos = sum(x), n = n()) |>
     group_by(group,num_pos, n) |>
-    group_modify( ~ wilson_ci(.$x, .95)) |> ungroup() |>
+    group_modify( ~ wilson_ci(.$x, .95),
+                  sum(.$x)) |> ungroup() |>
     mutate(rr = paste0(num_pos, '/', n, ' = ', stat_paste(mean * 100,
                                                           lower * 100,
                                                           upper * 100,
@@ -729,9 +732,10 @@ test_that("pairwise_comparisons_bin testing two groups", {
 
   paired_stats <- bind_cols(paired_stats_pre |>
                               filter(group == 'a') |>
-                              select(Group1 = group, Group1_rr = rr), paired_stats_pre |>
+                              select(Group1 = group, Group1_n = n, Group1_rr = rr),
+                            paired_stats_pre |>
                               filter(group == 'b') |>
-                              select(Group2 = group, Group2_rr = rr))
+                              select(Group2 = group, Group2_n = n, Group2_rr = rr))
 
 
   test_pasting <- paste_tbl_grp(data = paired_stats)
@@ -741,8 +745,8 @@ test_that("pairwise_comparisons_bin testing two groups", {
                                     second_name = "Group1")
   expect_false(identical(test_pasting, test_pasting_rev))
 
-  names(test_pasting) <- c('Comparison', 'ResponseStats')
-  names(test_pasting_rev) <- c('Comparison', 'ResponseStats')
+  names(test_pasting) <- c('Comparison', 'SampleSizes', 'ResponseStats')
+  names(test_pasting_rev) <- c('Comparison', 'SampleSizes', 'ResponseStats')
 
   testing_results <- data.frame(test_pasting,
     ResponseTest  = two_samp_bin_test(x = x, y = group, method = 'mcnemar'),
@@ -778,11 +782,12 @@ test_that("pairwise_test_bin testing 3+ groups", {
               ci = wilson_ci(response),
               r1 = sum(response),
               r0 = abs(sum(response - 1)),
+              n = n(),
               .groups = "keep")  |>
     pivot_wider(id_cols = c(antigen, visitno),
                 names_from = group,
                 names_prefix = "grp",
-                values_from = c(rfraction, ci, r0, r1)) |>
+                values_from = c(rfraction, ci, r0, r1, n)) |>
     mutate(pval = ifelse(((r0_grp1 == 0 & r0_grp2 == 0) | (r1_grp1 == 0 & r1_grp2 == 0)),
                               1,
                               as.double(Exact::exact.test(matrix(c(r1_grp1,
@@ -795,6 +800,7 @@ test_that("pairwise_test_bin testing 3+ groups", {
                                               alternative = "two.sided")$p.value)),
            PerfectSeparation = FALSE,
            Comparison = "1 vs. 2",
+           SampleSizes = paste0(n_grp1, " vs. ", n_grp2),
            ResponseStats = paste0(rfraction_grp1,
                                   " = ",
                                   round_away_0(ci_grp1$mean*100, 1, trailing_zeros = TRUE),
@@ -811,7 +817,7 @@ test_that("pairwise_test_bin testing 3+ groups", {
                                   "%, ",
                                   round_away_0(ci_grp2$upper*100, 1, trailing_zeros = TRUE),
                                   "%)"))  |>
-    select(antigen, visitno, Comparison, ResponseStats, ResponseTest = pval, PerfectSeparation)
+    select(antigen, visitno, Comparison, SampleSizes, ResponseStats, ResponseTest = pval, PerfectSeparation)
 
   function_obj <- exampleData_BAMA |>
     group_by(antigen, visitno) |>

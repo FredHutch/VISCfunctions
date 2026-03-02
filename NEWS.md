@@ -1,6 +1,7 @@
 # VISCfunctions (development version)
 
 * Add PR template for the package (#138)
+* Add `SampleSizes` output to `pairwise_test_bin()` (#130)
 * Minor updates to vignette (#141)
 * Update title and description in package DESCRIPTION file (#139)
 * Add `Median_Quartiles` to `pairwise_test_cont()` output (#99)
