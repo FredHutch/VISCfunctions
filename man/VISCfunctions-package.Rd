@@ -5,19 +5,12 @@
 \alias{VISCfunctions-package}
 \title{VISCfunctions: VISCfunctions}
 \description{
-Statistical, data processing, and annotation functions for VISC statisticians and programmers.
+Statistical, data processing, and annotation functions for VISC.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://fredhutch.github.io/VISCfunctions/}
-}
-
-}
-\seealso{
-Useful links:
-\itemize{
-  \item \url{https://github.com/FredHutch/VISCfunctions}
   \item Report bugs at \url{https://github.com/FredHutch/VISCfunctions/issues}
 }
 
