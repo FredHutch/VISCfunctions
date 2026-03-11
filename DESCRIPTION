@@ -12,6 +12,8 @@ Authors@R: c(
   )
 Description:
     Statistical, data processing, and annotation functions for VISC.
+URL: https://github.com/FredHutch/VISCfunctions
+BugReports: https://github.com/FredHutch/VISCfunctions/issues
 License: MIT + file LICENSE
 Depends:
     R (>= 3.5)
