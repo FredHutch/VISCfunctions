@@ -15,7 +15,7 @@ Authors@R: c(
     person("Jimmy", "Fulp", , , role = "aut")
   )
 Description:
-    Statistical, data processing, and annotation functions for VISC.
+    Statistical, data processing, and annotation functions for VISC statisticians and programmers.
 License: MIT + file LICENSE
 Depends:
     R (>= 4.1.0)
