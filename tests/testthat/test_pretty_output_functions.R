@@ -7,8 +7,8 @@ test_that("paste_tbl_grp testing various options (no errors)", {
 
   ## Creating Testing Dataset for Pasting
   data(exampleData_BAMA)
-  testing_dataset <- exampleData_BAMA %>%
-    group_by(visitno,antigen) %>%
+  testing_dataset <- exampleData_BAMA |>
+    group_by(visitno,antigen) |>
     summarise(
       Group1 = unique(group[group == 1]), Group2 = unique(group[group == 2]),
       Group1_n = length(magnitude[group == 1]), Group2_n = length(magnitude[group == 2]),
@@ -133,14 +133,14 @@ test_that("paste_tbl_grp testing various options (no errors)", {
                                      keep_all = FALSE))
   # Trying different group naming
   expect_equal(object = paste_tbl_grp(
-    data = testing_dataset %>%
+    data = testing_dataset |>
       select(Group_1 = Group1, Group_2 = Group2,
              Group_2_mean = Group2_mean, Group_1_mean = Group1_mean),
     first_name = 'Group_1', second_name = 'Group_2'),
                expected =  default_expected_results[, c('Comparison', 'mean_comparison')]
   )
   expect_equal(object = paste_tbl_grp(
-    data = testing_dataset %>%
+    data = testing_dataset |>
       select(`G.r/o|up_1` = Group1, Group_2 = Group2,
              Group_2_mean = Group2_mean, `G.r/o|up_1_mean` = Group1_mean),
     first_name = 'G.r/o|up_1', second_name = 'Group_2', keep_all = FALSE),
@@ -148,7 +148,7 @@ test_that("paste_tbl_grp testing various options (no errors)", {
                                                         'mean_comparison')]
   )
   expect_equal(object = paste_tbl_grp(
-    data = testing_dataset %>%
+    data = testing_dataset |>
       select(`Group-1` = Group1, `Group-12` = Group2,
              `Group-12_mean` = Group2_mean, `Group-1_mean` = Group1_mean),
     first_name = 'Group-1', second_name = 'Group-12'),
@@ -165,16 +165,16 @@ test_that("paste_tbl_grp testing various options (no errors)", {
   expect_error(object = paste_tbl_grp(data = testing_dataset, second_name = 'Group3'),
                regexp = 'Expecting one column named "Group3" in input dataset, but there are 0 present'
   )
-  expect_error(object = paste_tbl_grp(data = testing_dataset %>%
+  expect_error(object = paste_tbl_grp(data = testing_dataset |>
                                         select(-starts_with('Group1'))),
                regexp = 'Expecting one column named "Group1" in input dataset, but there are 0 present'
   )
   # Duplicate column names
   expect_error(object = paste_tbl_grp(
-    data = testing_dataset %>%
+    data = testing_dataset |>
       select(Group1, Group2, Group1_mean,
-             Group2_mean) %>%
-      bind_cols(testing_dataset %>% select(Group2_mean),
+             Group2_mean) |>
+      bind_cols(testing_dataset |> select(Group2_mean),
                 .name_repair = 'minimal')),
                regexp = 'Expecting one column named "Group2_mean" in input dataset, but there are 2 present'
   )
