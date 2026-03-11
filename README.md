@@ -101,5 +101,5 @@ For more information, browse the vignette
 
 # Contribute to this package
 
-See our [contibuting guide](CONTRIBUTING.md) to learn more about how you
+See our [contributing guide](CONTRIBUTING.md) to learn more about how you
 can contribute to this package.
