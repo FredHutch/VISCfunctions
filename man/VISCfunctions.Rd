@@ -5,12 +5,13 @@
 \alias{VISCfunctions}
 \title{VISCfunctions: VISC STP/SRA functions}
 \description{
-Statistical, data processing, and annotation functions for VISC statisticians and programmers.
+Statistical, data processing, and annotation functions for VISC.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://fredhutch.github.io/VISCfunctions/}
+  \item Report bugs at \url{https://github.com/FredHutch/VISCfunctions/issues}
 }
 
 }

@@ -5,6 +5,7 @@
 * Minor updates to vignette (#141)
 * Update title and description in package DESCRIPTION file (#139)
 * Add `Median_Quartiles` to `pairwise_test_cont()` output (#99)
+* Improve documentation for datasets and fix typos in various documentation files (#148)
 * Minor Changes:
   * Update `Overview()` to include new `Median_Quartiles` (#99)
 

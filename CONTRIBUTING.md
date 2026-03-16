@@ -1,9 +1,9 @@
 
 # How you can contribute
 
-Thanks for your interest in contributing to VISCtemplates! There are several ways you can contribute to this package:
+Thanks for your interest in contributing to VISCfunctions! There are several ways you can contribute to this package:
 
-* **Propose an idea.** Do you have an idea for a new VISCtemplates feature? Take a look at the issue list first to see if it isn't included or suggested yet. If not, suggest your idea as an issue on GitHub.
+* **Propose an idea.** Do you have an idea for a new VISCfunctions feature? Take a look at the issue list first to see if it isn't included or suggested yet. If not, suggest your idea as an issue on GitHub.
 
 * **Report a bug.** Report a bug as an issue on GitHub so we can fix it. When filing an issue, the most important thing is to include a minimal reproducible example so that we can quickly verify the problem, and then figure out how to fix it. There are three things you need to include to make your example reproducible: required packages, data, code.
 
@@ -35,7 +35,7 @@ We follow the [Gitflow](https://nvie.com/posts/a-successful-git-branching-model/
 
 3. Discuss the pull request.
 
-4. Iterate until the maintainer accepts the PR or decides it's not a good fit for VISCtemplates.
+4. Iterate until the maintainer accepts the PR or decides it's not a good fit for VISCfunctions.
 
 This might feel overwhelming the first time you get set up, but it gets easier with practice.
 
@@ -54,7 +54,7 @@ Your pull request should follow these guidelines:
 1. **Motivation for changes.** Your pull request should clearly and concisely motivate the need for change.
 2. **Only related changes.** Before you submit your pull request, please check to make sure that you haven't accidentally included any unrelated changes. These make it harder to see exactly what's changed, and to evaluate any unexpected side effects. Each PR corresponds to a git branch, so if you expect to submit multiple changes make sure to create multiple branches.
 
-3. **Coding style.** Please follow the official [tidyverse style](https://style.tidyverse.org/). Maintaining a consistent style across the whole code base makes it much easier to jump into the code. If you're modifying existing VISCtemplates code that doesn't follow the style guide, a separate pull request to fix the style would be greatly appreciated.
+3. **Coding style.** Please follow the official [tidyverse style](https://style.tidyverse.org/). Maintaining a consistent style across the whole code base makes it much easier to jump into the code. If you're modifying existing VISCfunctions code that doesn't follow the style guide, a separate pull request to fix the style would be greatly appreciated.
 
 4. **Documentation.** If you're adding new parameters or a new function, you'll also need to document them with roxygen. Make sure to re-run `devtools::document()` on the code before submitting.
 
@@ -62,7 +62,7 @@ Your pull request should follow these guidelines:
 
 # Code of conduct
 
-Please note that VISCtemplates is released with a [Contributor Code of Conduct](CONDUCT.md). By contributing to this project,
+Please note that VISCfunctions is released with a [Contributor Code of Conduct](CONDUCT.md). By contributing to this project,
 you agree to abide by its terms.
 
 # Learn about package development
@@ -79,4 +79,4 @@ Before contributing, you may want to read a bit more about package development i
 
 * [Building Tidy Tools](https://blog.rstudio.com/2019/02/06/rstudio-conf-2019-workshops/). (rstudio::conf workshop)
 
-This contributing guide was inspired by and modified from the [ggplot2 contributing.md](ahttps://github.com/tidyverse/ggplot2/blob/master/CONTRIBUTING.md), [rOpenSci's contributing guide](https://devguide.ropensci.org/contributingguide.html), and [this template](https://gist.github.com/peterdesmet/e90a1b0dc17af6c12daf6e8b2f044e7c).
+This contributing guide was inspired by and modified from the [ggplot2 contributing.md](https://github.com/tidyverse/ggplot2/blob/master/CONTRIBUTING.md), [rOpenSci's contributing guide](https://devguide.ropensci.org/contributingguide.html), and [this template](https://gist.github.com/peterdesmet/e90a1b0dc17af6c12daf6e8b2f044e7c).

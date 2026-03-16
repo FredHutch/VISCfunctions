@@ -7,16 +7,19 @@
 \format{
 A data frame with 210 rows and 9 variables:
 \describe{
-\item{pubID}{randomized subject ID}
-\item{group}{study group}
-\item{visitno}{visit number}
-\item{celltype}{cell type}
-\item{isolate}{isolate tested}
-\item{titer_mod_50}{truncated response magnitude value, ID50 titer (min. 10)}
-\item{titer_mod_80}{truncated response magnitude value, ID80 titer (min. 10)}
-\item{response_50}{response call for ID50 titer (0/1)}
-\item{response_80}{response call for ID80 titer (0/1)}
-...
+\item{pubID}{character. Randomized (de-identified) subject ID.}
+\item{group}{numeric. Study group (2, 3, 4, or 5).}
+\item{visitno}{integer. Visit number.}
+\item{celltype}{character. Cell line used in the neutralization assay (e.g. TZM-bl).}
+\item{isolate}{character. Name of the HIV isolate (pseudovirus) tested.}
+\item{titer_mod_50}{numeric. ID50 neutralization titer, truncated at a minimum of 10
+(below-detection values set to 10).}
+\item{titer_mod_80}{numeric. ID80 neutralization titer, truncated at a minimum of 10
+(below-detection values set to 10).}
+\item{response_50}{numeric. Response call based on ID50 titer (1 = responder,
+0 = non-responder).}
+\item{response_80}{numeric. Response call based on ID80 titer (1 = responder,
+0 = non-responder).}
 }
 }
 \usage{
