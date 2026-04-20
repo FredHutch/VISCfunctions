@@ -112,6 +112,8 @@ Note that `wilson_ci()` has been superseded by the use of `binom_ci()`.
 
 <!-- * `mb_results()` to create step curve info for magnitude breadth (MB) plots and AUC-MB -->
 
+## Utility functions
+
 - `round_away_0()` is an alternative to the `round()` function to
   properly perform mathematical rounding.
 - `escape()` is used to inserts a “\\” in front of values, which is
