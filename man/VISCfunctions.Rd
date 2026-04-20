@@ -11,17 +11,22 @@ Statistical, data processing, and annotation functions for VISC statisticians an
 Useful links:
 \itemize{
   \item \url{https://fredhutch.github.io/VISCfunctions/}
+  \item Report bugs at \url{https://github.com/FredHutch/VISCfunctions/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Bryan Mayer \email{bmayer@fredhutch.org}
+\strong{Maintainer}: Bryan Mayer \email{bmayer@fredhutch.org} (\href{https://orcid.org/0000-0003-2258-5276}{ORCID})
 
 Authors:
 \itemize{
+  \item Dave Slager \email{dslager@fredhutch.org} (\href{https://orcid.org/0000-0003-2525-2039}{ORCID})
+  \item Kellie MacPhee \email{kmacphee@fredhutch.org} (\href{https://orcid.org/0009-0008-0993-4009}{ORCID})
+  \item Gabrielle Lemire \email{glemire@fredhutch.org}
+  \item Claudio Yurdadon \email{cyurdado@fredhutch.org} (\href{https://orcid.org/0000-0002-4928-2737}{ORCID})
   \item Monica Gerber
   \item Celia Mahoney
-  \item Ellis Hughes
+  \item Ellis Hughes (\href{https://orcid.org/0000-0003-0637-4436}{ORCID})
   \item Heather Bouzek
   \item Jimmy Fulp
 }

@@ -7,22 +7,24 @@
 \format{
 A data frame with 306 rows and 15 variables:
 \describe{
-\item{pubID}{randomized subject ID}
-\item{Group}{study group}
-\item{Visit}{visit number: baseline, 1, and 2}
-\item{Stim}{antigen stimulation}
-\item{Parent}{T cell subset}
-\item{Population}{cell population}
-\item{Count}{cell count}
-\item{ParentCount}{parent cell count}
-\item{CountBG}{background cell count}
-\item{ParentCountBG}{parent background cell count}
-\item{PercentCell}{count / parent count}
-\item{PercentCellNet}{response magnitude: percent cell - background percent cell}
-\item{response_prob}{MIMOSA response probability}
-\item{response_fdr_P}{FDR-adjusted p-value}
-\item{response}{response call for percent cell net (0/1)}
-...
+\item{pubID}{character. Randomized (de-identified) subject ID.}
+\item{Group}{character. Study group.}
+\item{Visit}{integer. Visit number (0 = baseline, 1, 2).}
+\item{Stim}{character. Antigen stimulation name (e.g. GAG, POL).}
+\item{Parent}{character. T cell subset used as the parent gate (e.g. CD4/TOTM).}
+\item{Population}{character. Cytokine-expressing cell population (e.g. IFNg, IFNg Or IL2).}
+\item{Count}{integer. Number of cytokine-positive cells in the stimulated sample.}
+\item{ParentCount}{integer. Total number of parent T cells in the stimulated sample.}
+\item{CountBG}{integer. Number of cytokine-positive cells in the background (unstimulated) sample.}
+\item{ParentCountBG}{integer. Total number of parent T cells in the background sample.}
+\item{PercentCell}{numeric. Percent cytokine-positive cells in the stimulated sample
+(Count / ParentCount).}
+\item{PercentCellNet}{numeric. Net (background-subtracted) percent cytokine-positive cells;
+primary response magnitude measure (PercentCell - background PercentCell).}
+\item{response_prob}{numeric. MIMOSA posterior probability of a positive response.}
+\item{response_fdr_P}{numeric. FDR-adjusted p-value from MIMOSA.}
+\item{response}{numeric. Response call based on PercentCellNet (1 = responder,
+0 = non-responder).}
 }
 }
 \usage{

@@ -107,13 +107,12 @@ library(dplyr)
 data(exampleData_BAMA)
 
 ## Antigen Correlation
-exampleData_BAMA \%>\%
-filter(visitno != 0) \%>\%
-group_by(group, visitno) \%>\%
- summarize(
+exampleData_BAMA |>
+filter(visitno != 0) |>
+group_by(group, visitno) |>
+ reframe(
    cor_test_pairs(x = magnitude, pair = antigen, id = pubID,
-   method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE),
-   .groups = 'drop'
-          )
+   method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE)
+ )
 
 }

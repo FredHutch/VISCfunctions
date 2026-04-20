@@ -7,13 +7,14 @@
 \format{
 A data frame with 252 rows and 6 variables:
 \describe{
-\item{pubID}{randomized subject ID}
-\item{group}{study group}
-\item{visitno}{visit number: baseline, 1, and 2}
-\item{antigen}{antigen tested}
-\item{magnitude}{magnitude of response, continuous, MFI*}
-\item{response}{response call for MFI* (0/1, NA at baseline)}
-...
+\item{pubID}{character. Randomized (de-identified) subject ID.}
+\item{group}{integer. Study group (1 or 2).}
+\item{visitno}{numeric. Visit number (0 = baseline, 1, 2).}
+\item{antigen}{character. Name of the antigen tested.}
+\item{magnitude}{numeric. Response magnitude (MFI-blank, background-subtracted
+median fluorescence intensity).}
+\item{response}{integer. Response call based on MFI-blank (1 = responder,
+0 = non-responder, NA at baseline).}
 }
 }
 \usage{

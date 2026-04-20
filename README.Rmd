@@ -112,5 +112,17 @@ Note that `wilson_ci()` has been superseded by the use of `binom_ci()`.
 | `trapz_sorted()` | A wrapper for trapz monotonically sorting values and computing area | pracma::trapz |  | x: x-coordinates of points on x-axis, y: y-coordinates of function values, na.rm: boolean for remove NA from x & y or not. | integral of function with discrete points (single numeric value) |
 
 <!-- * `create_step_curve()` to create survival probabilities and generate a risk table -->
-
 <!-- * `mb_results()` to create step curve info for magnitude breadth (MB) plots and AUC-MB -->
+
+* `round_away_0()` is an alternative to the `round()` function to properly perform mathematical rounding.
+* `escape()` is used to inserts a "\\" in front of values, which is needed for Latex.
+* `get_full_name()` looks up a username from Fred Hutch ID.
+* `get_session_info()` creates a a data frame with session information.
+
+# Vignette
+
+For more information, browse the vignette (`browseVignettes("VISCfunctions")`).
+
+# Contribute to this package
+
+See our [contributing guide](CONTRIBUTING.md) to learn more about how you can contribute to this package.

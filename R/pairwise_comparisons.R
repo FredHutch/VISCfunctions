@@ -83,36 +83,34 @@
 #' data(exampleData_BAMA)
 #'
 #' ## Group Comparison
-#'group_testing_tibble <- exampleData_BAMA %>%
-#'    group_by(antigen, visitno) %>%
-#'    summarise(pairwise_test_cont(x = magnitude,
-#'                                 group = group,
-#'                                 paired = FALSE,
-#'                                 method = 'wilcox',
-#'                                 alternative = "less",
-#'                                 sorted_group = c(1,2),
-#'                                 digits = 3,
-#'                                 num_needed_for_test = 3,
-#'                                 verbose = TRUE),
-#'             .groups = "keep")
+#'group_testing_tibble <- exampleData_BAMA |>
+#'    group_by(antigen, visitno) |>
+#'    reframe(pairwise_test_cont(x = magnitude,
+#'                               group = group,
+#'                               paired = FALSE,
+#'                               method = 'wilcox',
+#'                               alternative = "less",
+#'                               sorted_group = c(1,2),
+#'                               digits = 3,
+#'                               num_needed_for_test = 3,
+#'                               verbose = TRUE))
 #'
 #'
 #' ## Timepoint Comparison
-#'timepoint_testing_dt <- exampleData_BAMA %>%
-#'                        group_by(antigen, group) %>%
-#'                        summarise(pairwise_test_cont(x = magnitude,
-#'                                                    group = visitno,
-#'                                                    paired = TRUE,
-#'                                                    id = pubID,
-#'                                                    method = 'wilcox',
-#'                                                    sorted_group = c(0,1,2),
-#'                                                    alternative = 'less',
-#'                                                    num_needed_for_test = 3,
-#'                                                    digits = 3,
-#'                                                    trailing_zeros = TRUE,
-#'                                                    sep_val = ' vs. ',
-#'                                                    verbose = TRUE),
-#'                                  .groups = "keep")
+#'timepoint_testing_dt <- exampleData_BAMA |>
+#'                        group_by(antigen, group) |>
+#'                        reframe(pairwise_test_cont(x = magnitude,
+#'                                                   group = visitno,
+#'                                                   paired = TRUE,
+#'                                                   id = pubID,
+#'                                                   method = 'wilcox',
+#'                                                   sorted_group = c(0,1,2),
+#'                                                   alternative = 'less',
+#'                                                   num_needed_for_test = 3,
+#'                                                   digits = 3,
+#'                                                   trailing_zeros = TRUE,
+#'                                                   sep_val = ' vs. ',
+#'                                                   verbose = TRUE))
 #'
 #'
 #' # ICS Assay Data Example
@@ -120,37 +118,35 @@
 #'
 #' ## Group Comparison
 #' # using dplyr
-#'exampleData_ICS %>%
-#'group_by(Stim, Parent, Population, Visit) %>%
-#'summarise(pairwise_test_cont(x = PercentCellNet,
-#'                             group = Group,
-#'                             paired = FALSE,
-#'                             method = 'wilcox',
-#'                             alternative = 'less',
-#'                             sorted_group = c(1,2,3,4),
-#'                             num_needed_for_test = 3,
-#'                             digits = 4,
-#'                             trailing_zeros = TRUE,
-#'                             sep_val = ' vs. ',
-#'                             verbose = TRUE),
-#'          .groups = "keep")
+#'exampleData_ICS |>
+#'group_by(Stim, Parent, Population, Visit) |>
+#'reframe(pairwise_test_cont(x = PercentCellNet,
+#'                           group = Group,
+#'                           paired = FALSE,
+#'                           method = 'wilcox',
+#'                           alternative = 'less',
+#'                           sorted_group = c(1,2,3,4),
+#'                           num_needed_for_test = 3,
+#'                           digits = 4,
+#'                           trailing_zeros = TRUE,
+#'                           sep_val = ' vs. ',
+#'                           verbose = TRUE))
 #'
 #' # Timepoint Comparison
-#'timepoint_testing_dt <- exampleData_ICS %>%
-#'                        group_by(Stim, Parent, Population, Group) %>%
-#'                        summarise(pairwise_test_cont(x = PercentCellNet,
-#'                                                     group = Visit,
-#'                                                     paired = TRUE,
-#'                                                     id = pubID,
-#'                                                     method = 'wilcox',
-#'                                                     sorted_group = c(0,1,2),
-#'                                                     alternative = 'less',
-#'                                                     num_needed_for_test = 3,
-#'                                                     digits = 4,
-#'                                                     trailing_zeros = TRUE,
-#'                                                     sep_val = ' vs. ',
-#'                                                     verbose = TRUE),
-#'                        .groups = "keep")
+#'timepoint_testing_dt <- exampleData_ICS |>
+#'                        group_by(Stim, Parent, Population, Group) |>
+#'                        reframe(pairwise_test_cont(x = PercentCellNet,
+#'                                                   group = Visit,
+#'                                                   paired = TRUE,
+#'                                                   id = pubID,
+#'                                                   method = 'wilcox',
+#'                                                   sorted_group = c(0,1,2),
+#'                                                   alternative = 'less',
+#'                                                   num_needed_for_test = 3,
+#'                                                   digits = 4,
+#'                                                   trailing_zeros = TRUE,
+#'                                                   sep_val = ' vs. ',
+#'                                                   verbose = TRUE))
 #'
 #'
 #'@export
@@ -266,6 +262,10 @@ pairwise_test_cont <- function(
           Group2_median = 10^stats::median(log10(j_vals), na.rm = T),
           Group1_max = max(i_vals, na.rm = T),
           Group2_max = max(j_vals, na.rm = T),
+          Group1_q1 = stats::quantile(i_vals, probs = c(.25), na.rm = T),
+          Group2_q1 = stats::quantile(j_vals, probs = c(.25), na.rm = T),
+          Group1_q3 = stats::quantile(i_vals, probs = c(.75), na.rm = T),
+          Group2_q3 = stats::quantile(j_vals, probs = c(.75), na.rm = T),
           Group1_mean = 10^mean(log10(i_vals), na.rm = T),
           Group2_mean = 10^mean(log10(j_vals), na.rm = T),
           Group1log_mean = mean(log10(i_vals), na.rm = T),
@@ -287,6 +287,10 @@ pairwise_test_cont <- function(
           Group2_max = max(j_vals, na.rm = T),
           Group1_mean = mean(i_vals, na.rm = T),
           Group2_mean = mean(j_vals, na.rm = T),
+          Group1_q1 = stats::quantile(i_vals, probs = c(.25), na.rm = T),
+          Group2_q1 = stats::quantile(j_vals, probs = c(.25), na.rm = T),
+          Group1_q3 = stats::quantile(i_vals, probs = c(.75), na.rm = T),
+          Group2_q3 = stats::quantile(j_vals, probs = c(.75), na.rm = T),
           Group1_sd = stats::sd(i_vals, na.rm = T),
           Group2_sd = stats::sd(j_vals, na.rm = T)
         )
@@ -332,10 +336,9 @@ pairwise_test_cont <- function(
   if (length(results_list) == 0) return(NULL)
 
   results <- do.call(base::rbind, results_list)
-
   # Pasting together stats
   pasted_results <- paste_tbl_grp(
-    data = results, vars_to_paste = c("n","median_min_max",'mean'),
+    data = results, vars_to_paste = c("n","median_min_max",'mean', "median_quartiles"),
     first_name = 'Group1', second_name = 'Group2', sep_val = sep_val,
     alternative = alternative, digits = digits, trailing_zeros = trailing_zeros,
     keep_all = TRUE, verbose = verbose)
@@ -362,6 +365,7 @@ pairwise_test_cont <- function(
         Comparison = pasted_results$Comparison,
         SampleSizes = pasted_results$n_comparison,
         Median_Min_Max = pasted_results$median_min_max_comparison,
+        Median_Quartiles = pasted_results$median_quartiles,
         Mean = pasted_results$mean_comparison,
         log_Mean_SD = pasted_results_extra$mean_sd_comparison,
         MagnitudeTest = results$MagnitudeTest,
@@ -387,6 +391,7 @@ pairwise_test_cont <- function(
         Comparison = pasted_results$Comparison,
         SampleSizes = pasted_results$n_comparison,
         Median_Min_Max = pasted_results$median_min_max_comparison,
+        Median_Quartiles = pasted_results$median_quartiles_comparison,
         Mean_SD = pasted_results_extra$mean_sd_comparison,
         MagnitudeTest = results$MagnitudeTest,
         PerfectSeparation = results$PerfectSeparation,
@@ -478,18 +483,18 @@ pairwise_test_cont <- function(
 #' data(exampleData_BAMA)
 #'
 #' ## Group Comparison
-#'group_testing <- exampleData_BAMA %>%
-#'    group_by(antigen, visitno) %>%
+#'group_testing <- exampleData_BAMA |>
+#'    group_by(antigen, visitno) |>
 #'    group_modify(~ as.data.frame(
 #'        pairwise_test_bin(x = .$response, group = .$group,
-#'                method = 'barnard', alternative = 'less',
+#'                method = 'barnard', alternative = 'two.sided',
 #'                num_needed_for_test = 3, digits = 1,
 #'                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
 #'
 #'
 #' ## Timepoint Comparison
-#'timepoint_testing <- exampleData_BAMA %>%
-#'    group_by(antigen, group) %>%
+#'timepoint_testing <- exampleData_BAMA |>
+#'    group_by(antigen, group) |>
 #'    group_modify(~ as.data.frame(
 #'        pairwise_test_bin(x = .$response, group = .$visitno, id = .$pubID,
 #'                method = 'mcnemar', num_needed_for_test = 3, digits = 1,
@@ -499,16 +504,17 @@ pairwise_test_cont <- function(
 #' data(exampleData_ICS)
 #'
 #' ## Group Comparison
-#'group_testing <- exampleData_ICS %>%
-#'    group_by(Stim, Parent, Population, Visit) %>%
+#'group_testing <- exampleData_ICS |>
+#'    group_by(Stim, Parent, Population, Visit) |>
 #'    group_modify(~ as.data.frame(
 #'        pairwise_test_bin(x = .$response, group = .$Group , alternative = 'greater',
+#'                sorted_group = 1:4,
 #'                method = 'barnard', num_needed_for_test = 3, digits = 1,
 #'                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
 #'
 #' ## Timepoint Comparison
-#'timepoint_testing <- exampleData_ICS %>%
-#'    group_by(Stim, Parent, Population, Group) %>%
+#'timepoint_testing <- exampleData_ICS |>
+#'    group_by(Stim, Parent, Population, Group) |>
 #'    group_modify(~ as.data.frame(
 #'        pairwise_test_bin(x = .$response, group = .$Visit, id = .$pubID,
 #'                method = 'mcnemar', num_needed_for_test = 3, digits = 1,
@@ -644,6 +650,8 @@ pairwise_test_bin <- function(x,
 
       stats_by_group <- data.frame(Group1 = i_group,
                                    Group2 = j_group,
+                                   Group1_n = sum(!is.na(i_vals)),
+                                   Group2_n = sum(!is.na(j_vals)),
                                    Group1_rr = response_info_here_by_group[[1]],
                                    Group2_rr = response_info_here_by_group[[2]],
                                    stringsAsFactors = FALSE
@@ -692,8 +700,9 @@ pairwise_test_bin <- function(x,
 
 
   data.frame(Comparison = pasted_results$Comparison,
+             SampleSizes = pasted_results$n_comparison,
              ResponseStats = pasted_results$rr_comparison,
-             ResponseTest = results$ResponseTest ,
+             ResponseTest = results$ResponseTest,
              PerfectSeparation = results$PerfectSeparation,
              stringsAsFactors = FALSE)
 
@@ -775,14 +784,13 @@ pairwise_test_bin <- function(x,
 #' data(exampleData_BAMA)
 #'
 #' ## Antigen Correlation
-#' exampleData_BAMA %>%
-#' filter(visitno != 0) %>%
-#' group_by(group, visitno) %>%
-#'  summarize(
+#' exampleData_BAMA |>
+#' filter(visitno != 0) |>
+#' group_by(group, visitno) |>
+#'  reframe(
 #'    cor_test_pairs(x = magnitude, pair = antigen, id = pubID,
-#'    method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE),
-#'    .groups = 'drop'
-#'           )
+#'    method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE)
+#'  )
 #'
 #' @export
 

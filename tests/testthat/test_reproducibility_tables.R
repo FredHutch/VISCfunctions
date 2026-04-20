@@ -17,31 +17,35 @@ test_that("get_session_info() testing", {
 
   # testing dimension
   nrow_expected <- length(sessioninfo::session_info()[[1]]) +
-    ifelse(any(temp_session_info$platform_table$name == "repo"), 4, 3)
+    ifelse(any(temp_session_info$platform_table$name == "repo"), 5, 4)
   expect_equal(object = dim(temp_session_info$platform_table), expected = c(nrow_expected,2))
 
-  ncol_expected <- ifelse(any(colnames(temp_session_info$packages_table) == "data.version"), 5, 4)
+  ncol_expected <- ifelse(any(colnames(temp_session_info$packages_table) == "data.version"), 6, 5)
   expect_equal(object = ncol(temp_session_info$packages_table), expected = ncol_expected)
 
   # test libpath column option produces that column
   expect_true('libpath' %in% names(get_session_info(libpath = TRUE)$packages_table))
 
   ## testing some outputs from sessioninfo::session_info()
-  expected_session_info <- sessioninfo::session_info()
+  expected_session_info <- sessioninfo::session_info(pkgs = 'loaded')
+
+  expected_session_info$packages$status <-
+    ifelse(expected_session_info$packages$attached, 'attached', 'loaded')
 
   # Comparing platform
   expected_platform <- data.frame(
-    name = names(expected_session_info$platform),
-    value = matrix(unlist(expected_session_info$platform), nrow = length(expected_session_info$platform)),
-    stringsAsFactors = FALSE)
+    name = c('nodename', names(expected_session_info$platform)),
+    value = c(Sys.info()[['nodename']], unname(unlist(expected_session_info$platform)))
+  )
   expect_equal(object = temp_session_info$platform_table[match(expected_platform$name, temp_session_info$platform_table$name), ], expected = expected_platform)
 
   # Comparing packages
-  expected_packages <- expected_session_info$packages[expected_session_info$packages$attached,]
+  expected_packages <- expected_session_info$packages[order(expected_session_info$packages$status),]
   expected_packages <- data.frame(package = expected_packages$package,
                                  version = expected_packages$loadedversion,
                                  date = expected_packages$date,
                                  source = shorten_git_hash(expected_packages$source),
+                                 status = expected_packages$status,
                                  stringsAsFactors = FALSE)
 
   expect_equal(object = temp_session_info$packages_table, expected = expected_packages)

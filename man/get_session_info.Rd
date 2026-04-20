@@ -10,17 +10,23 @@ get_session_info(libpath = FALSE)
 \item{libpath}{Show R package library path column in packages table}
 }
 \value{
-list of length two, containing dataframe of Software Session Information and dataframe of Software Package Version Information
+list of length two, containing dataframe of Software Session
+Information and dataframe of Software Package Version Information
 }
 \description{
-Creating tables used at the end of reports, for reproducibility. Most of the information is based off of sessioninfo::session_info()
+Creating tables used at the end of reports, for reproducibility. Most of the
+information is based off of sessioninfo::session_info()
 }
 \details{
 Both tables usually printing with \code{kable()} at the end of a report.
 
-If any loaded packages have a \code{DataVersion} field then the Software Package Version Information will contain a \code{data.version} column.
+If any loaded packages have a \code{DataVersion} field then the Software
+Package Version Information will contain a \code{data.version} column.
 
-Full Name is found in Windows via the \code{net} command, and via ldap search in Linux and MACs. The ldap search will only work on SCHARPs network at Fred Hutching Cancer Research Center. If there is an error attempting to get the Full Name, the system usernam will be displayed instead.
+Full Name is found in Windows via the \code{net} command, and via ldap search
+in Linux and MACs. The ldap search will only work on SCHARPs network at Fred
+Hutching Cancer Research Center. If there is an error attempting to get the
+Full Name, the system usernam will be displayed instead.
 }
 \examples{
 
@@ -30,21 +36,21 @@ library(dplyr)
 
 # Simple HTML Display
 kableExtra::kable(my_session_info$platform_table, 'html',
-      caption = "Reproducibility Software Session Information") \%>\%
+      caption = "Reproducibility Software Session Information") |>
       kableExtra::kable_styling()
 
 kableExtra::kable(my_session_info$packages_table, 'html',
-      caption = "Reproducibility Software Package Version Information") \%>\%
+      caption = "Reproducibility Software Package Version Information") |>
       kableExtra::kable_styling()
 
 
 # Latex Display
 kableExtra::kable(my_session_info$platform_table, 'latex', booktabs = TRUE,
-      linesep = '', caption = "Reproducibility Software Session Information") \%>\%
+      linesep = '', caption = "Reproducibility Software Session Information") |>
       kableExtra::kable_styling(font_size = 7)
 
 kableExtra::kable(my_session_info$packages_table, 'latex', booktabs = TRUE,
-      linesep = '', caption = "Reproducibility Software Package Version Information") \%>\%
+      linesep = '', caption = "Reproducibility Software Package Version Information") |>
       kableExtra::kable_styling(font_size = 7)
 
 }

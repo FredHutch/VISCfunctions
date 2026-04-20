@@ -59,12 +59,12 @@ determine the character to be pasted between the group names
 data.frame with all the pasted values requested. Each name will have '_comparison' at the end of the names (i.e. mean_comparison, median_comparison, ...)
 }
 \description{
-Paste together information, often statistics, from two groups. There are two
-predefined combinations: mean(sd) and median[min, max], but user may also
+Paste together information, often statistics, from two groups. There are three
+predefined combinations: mean(sd) and median[min, max] and median[first quartile, third quartile], but user may also
 paste any single measure together.
 }
 \details{
-User must use consistant naming throughout, with a underscore to separate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be columns defining the group names (i.e. \code{Group1} and \code{Group2}), which are used to form the \code{Comparison} variable.
+User must use consistent naming throughout, with a underscore to separate the group names from the measures (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be columns defining the group names (i.e. \code{Group1} and \code{Group2}), which are used to form the \code{Comparison} variable.
 
 \code{alternative} included as a parameter so the direction can easily be seen in one-sided test. If "two.sided" is selected the value to be pasted between the two group names will be set to \code{sep_val}, where "greater" will use " > " and "less" with use " < " as the pasting value.
 }
@@ -74,17 +74,16 @@ library(dplyr)
 library(tidyr)
 data(exampleData_BAMA)
 
-descriptive_stats_by_group <- exampleData_BAMA \%>\%
-  group_by(visitno,antigen) \%>\%
-  summarise(
+descriptive_stats_by_group <- exampleData_BAMA |>
+  group_by(visitno,antigen) |>
+  reframe(
     Group1 = unique(group[group == 1]), Group2 = unique(group[group == 2]),
     Group1_n = length(magnitude[group == 1]), Group2_n = length(magnitude[group == 2]),
     Group1_mean = mean(magnitude[group == 1]), Group2_mean = mean(magnitude[group == 2]),
     Group1_sd = sd(magnitude[group == 1]), Group2_sd = sd(magnitude[group == 2]),
     Group1_median = median(magnitude[group == 1]), Group2_median = median(magnitude[group == 2]),
     Group1_min = min(magnitude[group == 1]), Group2_min = min(magnitude[group == 2]),
-    Group1_max = max(magnitude[group == 1]), Group2_max = max(magnitude[group == 2]),
-    .groups = 'drop'
+    Group1_max = max(magnitude[group == 1]), Group2_max = max(magnitude[group == 2])
   )
 
 paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_name = 'Group1',
@@ -101,17 +100,16 @@ paste_tbl_grp(data = descriptive_stats_by_group, vars_to_paste = 'all', first_na
 # Same example wit tidyverse in single pipe
 
 
-exampleData_BAMA \%>\%
- mutate(group = paste0("Group", group)) \%>\%
- group_by(group, visitno, antigen) \%>\%
- summarise(N = n(), mean = mean(magnitude), sd = sd(magnitude),
-           median = median(magnitude), min = min(magnitude),
-           max = max(magnitude), q95_fun = quantile(magnitude, 0.95),
-           .groups = 'drop') \%>\%
- pivot_longer(-(group:antigen)) \%>\% # these three chains create a wide dataset
- unite(temp, group, name) \%>\%
- pivot_wider(names_from = temp, values_from = value) \%>\%
- mutate(Group1 = "Group 1", Group2 = "Group 2") \%>\%
+exampleData_BAMA |>
+ mutate(group = paste0("Group", group)) |>
+ group_by(group, visitno, antigen) |>
+ reframe(N = n(), mean = mean(magnitude), sd = sd(magnitude),
+         median = median(magnitude), min = min(magnitude),
+         max = max(magnitude), q95_fun = quantile(magnitude, 0.95)) |>
+ pivot_longer(-(group:antigen)) |> # these three chains create a wide dataset
+ unite(temp, group, name) |>
+ pivot_wider(names_from = temp, values_from = value) |>
+ mutate(Group1 = "Group 1", Group2 = "Group 2") |>
  paste_tbl_grp()
 
 }
