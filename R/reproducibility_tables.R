@@ -130,7 +130,7 @@ get_session_info <- function(libpath = FALSE){
   raw_platform_info <- sessioninfo::platform_info()
   raw_packages_info <- sessioninfo::package_info(pkgs = 'loaded', include_base = FALSE)
 
-  # Plaform table
+  # Platform table
 
   # username
   username <- tryCatch(
