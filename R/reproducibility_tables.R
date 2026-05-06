@@ -76,6 +76,35 @@ get_full_name <- function(id = NULL){
 #' @return String containing `@` followed by short git hash
 shorten_git_hash <- function(x) sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', x)
 
+ood_env_var <- function(var){
+  rTmpDir <- Sys.getenv("RS_SESSION_TMP_DIR")
+  jobId <- strsplit(rTmpDir, "/")[[1]][3]
+  parentEnvFile <- file.path("/loc/scratch", jobId, "parent.env")
+  lines <- readLines(parentEnvFile)
+  regex <- paste0("^", var, "=")
+  match <- lines[grep(regex, lines)]
+  sub(regex, "", match)
+}
+
+identify_sif_image <- function(){
+  if (nzchar(res <- Sys.getenv('APPTAINER_CONTAINER'))){
+    return(res)
+  } else if (grepl('^rhino|^gizmo', system2('hostname', stdout = TRUE))){
+    dir <- ood_env_var('OLDWD')
+    json <- file.path(dir, 'user_defined_context.json')
+    lst <- jsonlite::fromJSON(json)
+    # custom_sif overrides rserver
+    if (nzchar(res <- lst$custom_sif)){
+      return(res)
+    } else if (nzchar(res <- lst$rserver)){
+      return(res)
+    }
+  }
+  else {
+    NA_character_
+  }
+}
+
 #' Get Reproducibility Tables
 #'
 #' Creating tables used at the end of reports, for reproducibility. Most of the
@@ -131,6 +160,11 @@ get_session_info <- function(libpath = FALSE){
   raw_packages_info <- sessioninfo::package_info(pkgs = 'loaded', include_base = FALSE)
 
   # Platform table
+
+  # apptainer
+
+
+
 
   # username
   username <- tryCatch(
