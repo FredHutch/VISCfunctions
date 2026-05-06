@@ -137,7 +137,7 @@ get_session_info <- function(libpath = FALSE){
   packages <- sessioninfo::package_info(pkgs = 'loaded', include_base = FALSE)
 
   # TABLE 1
-  my_session_info1 <- rbind(
+  plat_tbl <- rbind(
     data.frame(
       name = 'nodename',
       value = Sys.info()[['nodename']]
@@ -186,8 +186,8 @@ get_session_info <- function(libpath = FALSE){
         dirname(my_current_input_w_dir), getwd()
       )
     )
-    my_session_info1 <- rbind(
-      my_session_info1, folder_info, file_name, user_info
+    plat_tbl <- rbind(
+      plat_tbl, folder_info, file_name, user_info
     )
   } else{
     if (my_current_input_w_dir != 'No Input File Detected') {
@@ -219,15 +219,15 @@ get_session_info <- function(libpath = FALSE){
       value = gitremote
     )
 
-    my_session_info1 <- rbind(
-      my_session_info1, url_info, file_name, folder_info, user_info
+    plat_tbl <- rbind(
+      plat_tbl, url_info, file_name, folder_info, user_info
     )
   }
 
 
   # TABLE 2
 
-  my_session_info2 <- with(packages, {
+  pkgs_tbl <- with(packages, {
     data.frame(package = package,
                version = loadedversion,
                # Pulling in Data Version numbers
@@ -245,16 +245,16 @@ get_session_info <- function(libpath = FALSE){
                status = ifelse(attached, 'attached', 'loaded'),
                libpath = library)
   })
-  if (! libpath) my_session_info2$libpath <- NULL
-  if (any(!is.na(my_session_info2$data.version)))
-    my_session_info2$data.version[is.na(my_session_info2$data.version)] <- '' else
-      my_session_info2 <- my_session_info2[, -match('data.version', colnames(my_session_info2))]
+  if (! libpath) pkgs_tbl$libpath <- NULL
+  if (any(!is.na(pkgs_tbl$data.version)))
+    pkgs_tbl$data.version[is.na(pkgs_tbl$data.version)] <- '' else
+      pkgs_tbl <- pkgs_tbl[, -match('data.version', colnames(pkgs_tbl))]
 
   # Use short git hash
-  my_session_info2$source <- shorten_git_hash(my_session_info2$source)
+  pkgs_tbl$source <- shorten_git_hash(pkgs_tbl$source)
 
-  my_session_info2 <- my_session_info2[order(my_session_info2$status),]
-  rownames(my_session_info2) <- NULL
+  pkgs_tbl <- pkgs_tbl[order(pkgs_tbl$status),]
+  rownames(pkgs_tbl) <- NULL
 
-  list(platform_table = my_session_info1, packages_table = my_session_info2)
+  list(platform_table = plat_tbl, packages_table = pkgs_tbl)
 }
