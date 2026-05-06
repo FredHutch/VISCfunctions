@@ -66,7 +66,15 @@ get_full_name <- function(id = NULL){
   return(user)
 }
 
-
+#' Shorten git hash
+#'
+#' Internal function for Reproducibility Tables. find '@' followed by 40 hex
+#' digits, and substitute with the '@' and the first 7 hex digits in ()-captured
+#' group.
+#'
+#' @param x String containing `@` followed by long git hash
+#' @return String containing `@` followed by short git hash
+shorten_git_hash <- function(x) sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', x)
 
 #' Get Reproducibility Tables
 #'
@@ -117,8 +125,6 @@ get_full_name <- function(id = NULL){
 #'       kableExtra::kable_styling(font_size = 7)
 #'
 #' @export
-
-
 get_session_info <- function(libpath = FALSE){
 
   username <- tryCatch(get_full_name(),
@@ -252,14 +258,3 @@ get_session_info <- function(libpath = FALSE){
 
   list(platform_table = my_session_info1, packages_table = my_session_info2)
 }
-
-
-#' Shorten git hash
-#'
-#' Internal function for Reproducibility Tables. find '@' followed by 40 hex
-#' digits, and substitute with the '@' and the first 7 hex digits in ()-captured
-#' group.
-#'
-#' @param x String containing `@` followed by long git hash
-#' @return String containing `@` followed by short git hash
-shorten_git_hash <- function(x) sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', x)
