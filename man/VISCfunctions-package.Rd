@@ -5,7 +5,7 @@
 \alias{VISCfunctions-package}
 \title{VISCfunctions: VISCfunctions}
 \description{
-Statistical, data processing, and annotation functions for VISC.
+Statistical, data processing, and annotation functions for VISC statisticians and programmers.
 }
 \seealso{
 Useful links:

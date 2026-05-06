@@ -5,7 +5,7 @@
 \alias{VISCfunctions}
 \title{VISCfunctions: VISC STP/SRA functions}
 \description{
-Statistical, data processing, and annotation functions for VISC.
+Statistical, data processing, and annotation functions for VISC statisticians and programmers.
 }
 \seealso{
 Useful links:
