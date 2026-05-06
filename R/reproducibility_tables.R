@@ -216,7 +216,7 @@ get_session_info <- function(libpath = FALSE){
         "git" ,"ls-files -co --no-empty-directory --full-name",
         stdout = TRUE, stderr = FALSE
       )
-      folder_info_in <- dirname(
+      location <- dirname(
         all_git_files[unlist(lapply(
           all_git_files,
           function(xx) grepl(xx, my_current_input_w_dir)
