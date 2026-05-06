@@ -127,12 +127,6 @@ shorten_git_hash <- function(x) sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', x)
 #' @export
 get_session_info <- function(libpath = FALSE){
 
-  username <- tryCatch(get_full_name(),
-                       error = function(c)
-                         ifelse(Sys.info()[['sysname']] == 'Windows',
-                                Sys.getenv("USERNAME"),
-                                Sys.getenv("USER")))
-
   raw_platform_info <- sessioninfo::platform_info()
   raw_packages_info <- sessioninfo::package_info(pkgs = 'loaded', include_base = FALSE)
 
@@ -163,6 +157,13 @@ get_session_info <- function(libpath = FALSE){
   )
 
   # Add user info
+
+  username <- tryCatch(get_full_name(),
+                       error = function(c)
+                         ifelse(Sys.info()[['sysname']] == 'Windows',
+                                Sys.getenv("USERNAME"),
+                                Sys.getenv("USER")))
+
   user_info <- data.frame(
     name = 'user',
     value = username
