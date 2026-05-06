@@ -133,8 +133,8 @@ get_session_info <- function(libpath = FALSE){
                                 Sys.getenv("USERNAME"),
                                 Sys.getenv("USER")))
 
-  platform <- sessioninfo::platform_info()
-  packages <- sessioninfo::package_info(pkgs = 'loaded', include_base = FALSE)
+  raw_platform_info <- sessioninfo::platform_info()
+  raw_packages_info <- sessioninfo::package_info(pkgs = 'loaded', include_base = FALSE)
 
   # TABLE 1
   plat_tbl <- rbind(
@@ -143,8 +143,8 @@ get_session_info <- function(libpath = FALSE){
       value = Sys.info()[['nodename']]
     ),
     data.frame(
-      name = names(platform),
-      value = matrix(unlist(platform), nrow = length(platform))
+      name = names(raw_platform_info),
+      value = matrix(unlist(raw_platform_info), nrow = length(raw_platform_info))
     )
   )
 
@@ -227,7 +227,7 @@ get_session_info <- function(libpath = FALSE){
 
   # TABLE 2
 
-  pkgs_tbl <- with(packages, {
+  pkgs_tbl <- with(raw_packages_info, {
     data.frame(package = package,
                version = loadedversion,
                # Pulling in Data Version numbers
