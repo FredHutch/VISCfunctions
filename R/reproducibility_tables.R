@@ -76,6 +76,12 @@ get_full_name <- function(id = NULL){
 #' @return String containing `@` followed by short git hash
 shorten_git_hash <- function(x) sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', x)
 
+#' Get environment variable from Open OnDemand Rstudio Session launcher. This is
+#' useful for parsing which SIF image Rstudio is running on. Only call this
+#' function from within a Fred Hutch Open OnDemand Rstudio session
+#'
+#' @param var environment variable to get
+#' @noRd
 ood_env_var <- function(var){
   rTmpDir <- Sys.getenv("RS_SESSION_TMP_DIR")
   jobId <- strsplit(rTmpDir, "/")[[1]][3]
@@ -86,14 +92,21 @@ ood_env_var <- function(var){
   sub(regex, "", match)
 }
 
-identify_sif_image <- function(){
+#' Get Apptainer SIF image
+#'
+#' @return The path to the Apptainer SIF image for the currently running
+#'   container, if known. Returns environment variable `APPTAINER_CONTAINER` if
+#'   available. Otherwise, if on Fred Hutch Gizmo cluster, attempts to find the
+#'   SIF image in Open OnDemand tempfiles. Otherwise returns NA.
+#' @export
+apptainer_image <- function(){
   if (nzchar(res <- Sys.getenv('APPTAINER_CONTAINER'))){
     return(res)
-  } else if (grepl('^rhino|^gizmo', system2('hostname', stdout = TRUE))){
+  } else if (grepl('^gizmo', system2('hostname', stdout = TRUE))){
     dir <- ood_env_var('OLDWD')
     json <- file.path(dir, 'user_defined_context.json')
     lst <- jsonlite::fromJSON(json)
-    # custom_sif overrides rserver
+    # custom_sif overrides selected rserver
     if (nzchar(res <- lst$custom_sif)){
       return(res)
     } else if (nzchar(res <- lst$rserver)){
@@ -161,11 +174,6 @@ get_session_info <- function(libpath = FALSE){
 
   # Platform table
 
-  # apptainer
-
-
-
-
   # username
   username <- tryCatch(
     get_full_name(),
@@ -225,6 +233,7 @@ get_session_info <- function(libpath = FALSE){
 
   platform_kv <- c(
     nodename = Sys.info()[['nodename']],
+    apptainer = apptainer_image(),
     unlist(raw_platform_info),
     repo = repo,
     filename = my_current_input,
