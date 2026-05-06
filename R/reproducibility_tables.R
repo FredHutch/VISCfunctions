@@ -83,6 +83,7 @@ shorten_git_hash <- function(x) sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', x)
 #' @param var environment variable to get
 #' @noRd
 ood_env_var <- function(var){
+  # Suggested code from Dan at Scicomp
   rTmpDir <- Sys.getenv("RS_SESSION_TMP_DIR")
   jobId <- strsplit(rTmpDir, "/")[[1]][3]
   parentEnvFile <- file.path("/loc/scratch", jobId, "parent.env")
