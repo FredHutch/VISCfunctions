@@ -130,44 +130,26 @@ get_session_info <- function(libpath = FALSE){
   raw_platform_info <- sessioninfo::platform_info()
   raw_packages_info <- sessioninfo::package_info(pkgs = 'loaded', include_base = FALSE)
 
-  # TABLE 1
-  plat_tbl <- rbind(
-    data.frame(
-      name = 'nodename',
-      value = Sys.info()[['nodename']]
-    ),
-    data.frame(
-      name = names(raw_platform_info),
-      value = matrix(unlist(raw_platform_info), nrow = length(raw_platform_info))
-    )
+  # Plaform table
+
+  # username
+  username <- tryCatch(
+    get_full_name(),
+    error = function(c) {
+      ifelse(Sys.info()[['sysname']] == 'Windows',
+             Sys.getenv("USERNAME"),
+             Sys.getenv("USER")
+      )
+    }
   )
 
-  my_current_input <- ifelse(
-    is.null(ci <- knitr::current_input()), 'No Input File Detected', ci
-  )
-  my_current_input_w_dir <- ifelse(
-    is.null(ci <-  knitr::current_input(dir = TRUE)),
-    'No Input File Detected',
-    ci
-  )
+  # file, folder
+  my_current_input <- (ci <- knitr::current_input()) %||%
+    'No Input File Detected'
+  my_current_input_w_dir <- (ci <-  knitr::current_input(dir = TRUE)) %||%
+    'No Input File Detected'
 
-  file_name <-  data.frame(
-    name = 'file name',
-    value = my_current_input
-  )
-
-  # Add user info
-
-  username <- tryCatch(get_full_name(),
-                       error = function(c)
-                         ifelse(Sys.info()[['sysname']] == 'Windows',
-                                Sys.getenv("USERNAME"),
-                                Sys.getenv("USER")))
-
-  user_info <- data.frame(
-    name = 'user',
-    value = username
-  )
+  # git repo
 
   gitremoteorg <- tryCatch(
     system2("git" ,"remote -v", stdout = TRUE, stderr = FALSE)[1],
@@ -179,18 +161,13 @@ get_session_info <- function(libpath = FALSE){
                        regexpr(" \\(", gitremoteorg) - 1)
 
   if (is.na(gitremote) || gitremote == "" || grepl('fatal', gitremote)) {
-    # No Remote Connection, so just give absolute path
-    folder_info <- data.frame(
-      name = 'location',
-      value = ifelse(
-        my_current_input_w_dir != 'No Input File Detected',
-        dirname(my_current_input_w_dir), getwd()
-      )
-    )
-    plat_tbl <- rbind(
-      plat_tbl, folder_info, file_name, user_info
-    )
-  } else{
+    # No Git remote, so just use absolute path
+    location <- if (my_current_input_w_dir != 'No Input File Detected'){
+      dirname(my_current_input_w_dir)
+    } else getwd()
+    repo <- NA
+  } else {
+    # git remote exists
     if (my_current_input_w_dir != 'No Input File Detected') {
 
       all_git_files <- system2(
@@ -205,29 +182,25 @@ get_session_info <- function(libpath = FALSE){
       )
 
     } else {
-      folder_info_in <- 'No Input File Location Detected'
+      # Dropping matching file names that do not match folder path
+      location <- 'No Input File Location Detected'
     }
 
-
-    # Dropping matching file names that do not match folder path
-    folder_info <- data.frame(
-      name = 'location',
-      value = folder_info_in
-    )
-
-    url_info <- data.frame(
-      name = 'repo',
-      value = gitremote
-    )
-
-    plat_tbl <- rbind(
-      plat_tbl, url_info, file_name, folder_info, user_info
-    )
+    repo = gitremote
   }
 
+  platform_kv <- c(
+    nodename = Sys.info()[['nodename']],
+    unlist(raw_platform_info),
+    repo = repo,
+    filename = my_current_input,
+    location = location,
+    user = username
+  )
+  platform_kv <- platform_kv[! is.na(platform_kv)]
 
-  # TABLE 2
 
+  # Packages table
   pkgs_tbl <- with(raw_packages_info, {
     data.frame(package = package,
                version = loadedversion,
@@ -256,6 +229,10 @@ get_session_info <- function(libpath = FALSE){
 
   pkgs_tbl <- pkgs_tbl[order(pkgs_tbl$status),]
   rownames(pkgs_tbl) <- NULL
-
-  list(platform_table = plat_tbl, packages_table = pkgs_tbl)
+  list(
+    platform_table = data.frame(
+      name = names(platform_kv),
+      value = unname(platform_kv)
+    ),
+    packages_table = pkgs_tbl)
 }
