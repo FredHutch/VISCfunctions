@@ -103,8 +103,7 @@ ood_env_var <- function(var){
 apptainer_image <- function(){
   if (nzchar(res <- Sys.getenv('APPTAINER_CONTAINER'))){
     return(res)
-  } else if (grepl('^gizmo', system2('hostname', stdout = TRUE)) &&
-             grepl('openondemand\\.fredhutch\\.org', Sys.getenv('RS_SERVER_URL'))){
+  } else if (grepl('^gizmo', system2('hostname', stdout = TRUE))){
     dir <- ood_env_var('OLDWD')
     json <- file.path(dir, 'user_defined_context.json')
     lst <- jsonlite::fromJSON(json)
