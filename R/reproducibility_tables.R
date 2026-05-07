@@ -78,15 +78,18 @@ shorten_git_hash <- function(x) sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', x)
 
 #' Get environment variable from Open OnDemand Rstudio Session launcher. This is
 #' useful for parsing which SIF image Rstudio is running on. Only call this
-#' function from within a Fred Hutch Open OnDemand Rstudio session
+#' function from within a Fred Hutch Open OnDemand Rstudio session. Simply
+#' returns NA when parsing fails.
 #'
 #' @param var environment variable to get
 #' @noRd
 ood_env_var <- function(var){
   # Suggested code from Dan at Scicomp
   rTmpDir <- Sys.getenv("RS_SESSION_TMP_DIR")
+  if (! nzchar(rTmpDir)) return(NA_character_)
   jobId <- strsplit(rTmpDir, "/")[[1]][3]
   parentEnvFile <- file.path("/loc/scratch", jobId, "parent.env")
+  if (! file.exists(parentEnvFile)) return(NA_character_)
   lines <- readLines(parentEnvFile)
   regex <- paste0("^", var, "=")
   match <- lines[grep(regex, lines)]
@@ -105,6 +108,7 @@ apptainer_image <- function(){
     return(res)
   } else if (grepl('^gizmo', system2('hostname', stdout = TRUE))){
     dir <- ood_env_var('OLDWD')
+    if (! nzchar(dir)) return(NA_character_)
     json <- file.path(dir, 'user_defined_context.json')
     lst <- jsonlite::fromJSON(json)
     # custom_sif overrides selected rserver
