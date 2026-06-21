@@ -24,6 +24,7 @@ Imports:
     binom,
     coin,
     Exact,
+    jsonlite,
     kableExtra,
     knitr,
     lifecycle,

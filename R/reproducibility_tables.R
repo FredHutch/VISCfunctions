@@ -66,7 +66,62 @@ get_full_name <- function(id = NULL){
   return(user)
 }
 
+#' Shorten git hash
+#'
+#' Internal function for Reproducibility Tables. find '@' followed by 40 hex
+#' digits, and substitute with the '@' and the first 7 hex digits in ()-captured
+#' group.
+#'
+#' @param x String containing `@` followed by long git hash
+#' @return String containing `@` followed by short git hash
+shorten_git_hash <- function(x) sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', x)
 
+#' Get environment variable from Open OnDemand Rstudio Session launcher. This is
+#' useful for parsing which SIF image Rstudio is running on. Only call this
+#' function from within a Fred Hutch Open OnDemand Rstudio session. Simply
+#' returns NA when parsing fails.
+#'
+#' @param var environment variable to get
+#' @noRd
+ood_env_var <- function(var){
+  # Suggested code from Dan at Scicomp
+  rTmpDir <- Sys.getenv("RS_SESSION_TMP_DIR")
+  if (! nzchar(rTmpDir)) return(NA_character_)
+  jobId <- strsplit(rTmpDir, "/")[[1]][3]
+  parentEnvFile <- file.path("/loc/scratch", jobId, "parent.env")
+  if (! file.exists(parentEnvFile)) return(NA_character_)
+  lines <- readLines(parentEnvFile)
+  regex <- paste0("^", var, "=")
+  match <- lines[grep(regex, lines)]
+  sub(regex, "", match)
+}
+
+#' Get Apptainer SIF image
+#'
+#' @return The path to the Apptainer SIF image for the currently running
+#'   container, if known. Returns environment variable `APPTAINER_CONTAINER` if
+#'   available. Otherwise, if on Fred Hutch Gizmo cluster, attempts to find the
+#'   SIF image in Open OnDemand tempfiles. Otherwise returns NA.
+#' @export
+apptainer_image <- function(){
+  if (nzchar(res <- Sys.getenv('APPTAINER_CONTAINER'))){
+    return(res)
+  } else if (grepl('^gizmo', system2('hostname', stdout = TRUE))){
+    dir <- ood_env_var('OLDWD')
+    if (! nzchar(dir)) return(NA_character_)
+    json <- file.path(dir, 'user_defined_context.json')
+    lst <- jsonlite::fromJSON(json)
+    # custom_sif overrides selected rserver
+    if (nzchar(res <- lst$custom_sif)){
+      return(res)
+    } else if (nzchar(res <- lst$rserver)){
+      return(res)
+    }
+  }
+  else {
+    NA_character_
+  }
+}
 
 #' Get Reproducibility Tables
 #'
@@ -117,50 +172,31 @@ get_full_name <- function(id = NULL){
 #'       kableExtra::kable_styling(font_size = 7)
 #'
 #' @export
-
-
 get_session_info <- function(libpath = FALSE){
 
-  username <- tryCatch(get_full_name(),
-                       error = function(c)
-                         ifelse(Sys.info()[['sysname']] == 'Windows',
-                                Sys.getenv("USERNAME"),
-                                Sys.getenv("USER")))
+  raw_platform_info <- sessioninfo::platform_info()
+  raw_packages_info <- sessioninfo::package_info(pkgs = 'loaded', include_base = FALSE)
 
-  platform <- sessioninfo::platform_info()
-  packages <- sessioninfo::package_info(pkgs = 'loaded', include_base = FALSE)
+  # Platform table
 
-  # TABLE 1
-  my_session_info1 <- rbind(
-    data.frame(
-      name = 'nodename',
-      value = Sys.info()[['nodename']]
-    ),
-    data.frame(
-      name = names(platform),
-      value = matrix(unlist(platform), nrow = length(platform))
-    )
+  # username
+  username <- tryCatch(
+    get_full_name(),
+    error = function(c) {
+      ifelse(Sys.info()[['sysname']] == 'Windows',
+             Sys.getenv("USERNAME"),
+             Sys.getenv("USER")
+      )
+    }
   )
 
-  my_current_input <- ifelse(
-    is.null(ci <- knitr::current_input()), 'No Input File Detected', ci
-  )
-  my_current_input_w_dir <- ifelse(
-    is.null(ci <-  knitr::current_input(dir = TRUE)),
-    'No Input File Detected',
-    ci
-  )
+  # file, folder
+  my_current_input <- (ci <- knitr::current_input()) %||%
+    'No Input File Detected'
+  my_current_input_w_dir <- (ci <-  knitr::current_input(dir = TRUE)) %||%
+    'No Input File Detected'
 
-  file_name <-  data.frame(
-    name = 'file name',
-    value = my_current_input
-  )
-
-  # Add user info
-  user_info <- data.frame(
-    name = 'user',
-    value = username
-  )
+  # git repo
 
   gitremoteorg <- tryCatch(
     system2("git" ,"remote -v", stdout = TRUE, stderr = FALSE)[1],
@@ -172,25 +208,20 @@ get_session_info <- function(libpath = FALSE){
                        regexpr(" \\(", gitremoteorg) - 1)
 
   if (is.na(gitremote) || gitremote == "" || grepl('fatal', gitremote)) {
-    # No Remote Connection, so just give absolute path
-    folder_info <- data.frame(
-      name = 'location',
-      value = ifelse(
-        my_current_input_w_dir != 'No Input File Detected',
-        dirname(my_current_input_w_dir), getwd()
-      )
-    )
-    my_session_info1 <- rbind(
-      my_session_info1, folder_info, file_name, user_info
-    )
-  } else{
+    # No Git remote, so just use absolute path
+    location <- if (my_current_input_w_dir != 'No Input File Detected'){
+      dirname(my_current_input_w_dir)
+    } else getwd()
+    repo <- NA
+  } else {
+    # git remote exists
     if (my_current_input_w_dir != 'No Input File Detected') {
 
       all_git_files <- system2(
         "git" ,"ls-files -co --no-empty-directory --full-name",
         stdout = TRUE, stderr = FALSE
       )
-      folder_info_in <- dirname(
+      location <- dirname(
         all_git_files[unlist(lapply(
           all_git_files,
           function(xx) grepl(xx, my_current_input_w_dir)
@@ -198,30 +229,27 @@ get_session_info <- function(libpath = FALSE){
       )
 
     } else {
-      folder_info_in <- 'No Input File Location Detected'
+      # Dropping matching file names that do not match folder path
+      location <- 'No Input File Location Detected'
     }
 
-
-    # Dropping matching file names that do not match folder path
-    folder_info <- data.frame(
-      name = 'location',
-      value = folder_info_in
-    )
-
-    url_info <- data.frame(
-      name = 'repo',
-      value = gitremote
-    )
-
-    my_session_info1 <- rbind(
-      my_session_info1, url_info, file_name, folder_info, user_info
-    )
+    repo = gitremote
   }
 
+  platform_kv <- c(
+    nodename = Sys.info()[['nodename']],
+    apptainer = apptainer_image(),
+    unlist(raw_platform_info),
+    repo = repo,
+    filename = my_current_input,
+    location = location,
+    user = username
+  )
+  platform_kv <- platform_kv[! is.na(platform_kv)]
 
-  # TABLE 2
 
-  my_session_info2 <- with(packages, {
+  # Packages table
+  pkgs_tbl <- with(raw_packages_info, {
     data.frame(package = package,
                version = loadedversion,
                # Pulling in Data Version numbers
@@ -239,27 +267,20 @@ get_session_info <- function(libpath = FALSE){
                status = ifelse(attached, 'attached', 'loaded'),
                libpath = library)
   })
-  if (! libpath) my_session_info2$libpath <- NULL
-  if (any(!is.na(my_session_info2$data.version)))
-    my_session_info2$data.version[is.na(my_session_info2$data.version)] <- '' else
-      my_session_info2 <- my_session_info2[, -match('data.version', colnames(my_session_info2))]
+  if (! libpath) pkgs_tbl$libpath <- NULL
+  if (any(!is.na(pkgs_tbl$data.version)))
+    pkgs_tbl$data.version[is.na(pkgs_tbl$data.version)] <- '' else
+      pkgs_tbl <- pkgs_tbl[, -match('data.version', colnames(pkgs_tbl))]
 
   # Use short git hash
-  my_session_info2$source <- shorten_git_hash(my_session_info2$source)
+  pkgs_tbl$source <- shorten_git_hash(pkgs_tbl$source)
 
-  my_session_info2 <- my_session_info2[order(my_session_info2$status),]
-  rownames(my_session_info2) <- NULL
-
-  list(platform_table = my_session_info1, packages_table = my_session_info2)
+  pkgs_tbl <- pkgs_tbl[order(pkgs_tbl$status),]
+  rownames(pkgs_tbl) <- NULL
+  list(
+    platform_table = data.frame(
+      name = names(platform_kv),
+      value = unname(platform_kv)
+    ),
+    packages_table = pkgs_tbl)
 }
-
-
-#' Shorten git hash
-#'
-#' Internal function for Reproducibility Tables. find '@' followed by 40 hex
-#' digits, and substitute with the '@' and the first 7 hex digits in ()-captured
-#' group.
-#'
-#' @param x String containing `@` followed by long git hash
-#' @return String containing `@` followed by short git hash
-shorten_git_hash <- function(x) sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', x)
