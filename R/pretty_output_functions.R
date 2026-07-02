@@ -5,7 +5,7 @@
 #' paste any single measure together.
 #'
 #'
-#' @param data input dataset. User must use consistent naming throughout,
+#' @param data input dataset (wide). User must use consistent naming throughout,
 #' \strong{with an underscore} to separate the group names from the measures
 #' (i.e. `Group1_mean` and `Group2_mean`). There also must be two
 #' columns with column names that exactly match the input for `first_name`
@@ -37,7 +37,7 @@
 #' `alternative` included as a parameter so the direction can easily be seen in one-sided test. If "two.sided" is selected the value to be pasted between the two group names will be set to `sep_val`, where "greater" will use " > " and "less" with use " < " as the pasting value.
 #'
 #'
-#' @return data.frame with all the pasted values requested. Each name will have '_comparison' at the end of the names (i.e. mean_comparison, median_comparison, ...)
+#' @return Long data.frame with all the pasted values requested. Each name will have '_comparison' at the end of the names (i.e. mean_comparison, median_comparison, ...)
 #' @examples
 #'
 #' library(dplyr)
@@ -422,7 +422,7 @@ stat_paste = function(
 #' @param output_type output type, "latex" (default), "html" , "pandoc"
 #' (for Word document output), or "no_markup"
 #'
-#' @return Vector of transformed p-values for table output
+#' @return Character vector of transformed p-values for table output
 #'
 #' @details
 #'

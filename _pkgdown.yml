@@ -6,14 +6,10 @@ navbar:
   structure:
     left:
       - home
-      - functions   # replaces "reference"
-      - vignettes   # replaces "articles"
-      - news        # replaces "changelog"
+      - reference
+      - vignettes   # instead of default "articles"
+      - news        # instead of default "changelog"
   components:
-    functions:
-      text: "Functions and Datasets"
-      desc: "All fuunctions and datasets made available by VISCfunctions"
-      href: reference/index.html
     vignettes:
       text: "Vignettes"
       href: articles/index.html
@@ -23,7 +19,7 @@ navbar:
 
 
 reference:
-  - title: "Statistical Tests"
+  - title: "General Statistical Tests"
     desc: "Formal hypothesis testing and p-value computations"
     contents:
       - two_samp_bin_test
@@ -41,16 +37,16 @@ reference:
       - mb_results
       - trapz_sorted
 
-  - title: "Output Formatting for PDF and Word"
+  - title: "Figure, Table, PDF/Word Output Formatting"
     contents:
+      - collapse_group_row
+      - escape
       - paste_tbl_grp
       - pretty_pvalues
-      - stat_paste
-      - escape
-      - collapse_group_row
       - round_away_0
+      - stat_paste
 
-  - title: "Utility Functions"
+  - title: "Transparency and Reproducibility"
     contents:
       - get_full_name
       - get_session_info
