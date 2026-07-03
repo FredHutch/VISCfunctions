@@ -71,7 +71,7 @@ round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
 }
 
 
-#' Continuous (Response) Variable Compared across Binary (Group) Variable Test
+#' Continuous (Response) Variable Compared across Binary (Group) Variable
 #'
 #' Either Wilcox or T-Test Performed, for unpaired or paired data
 #'

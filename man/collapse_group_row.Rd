@@ -19,6 +19,7 @@ a data.frame where repeated rows in the columns identified by ... are replaced w
 \description{
 This function is for replacing repeated rows in a data.frame into NA for nice printing. This
 is not intended for use during processing.
+It is an alternative to \code{kableExtra::collapse_rows()} for long tables in latex.
 }
 \examples{
 sample_df <- data.frame(

@@ -2,7 +2,7 @@
 % Please edit documentation in R/statistical_tests_and_estimates.R
 \name{two_samp_cont_test}
 \alias{two_samp_cont_test}
-\title{Continuous Variable Compared to Binary Variable Test (VISC)}
+\title{Continuous (Response) Variable Compared across Binary (Group) Variable}
 \usage{
 two_samp_cont_test(
   x,

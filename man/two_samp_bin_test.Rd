@@ -2,7 +2,7 @@
 % Please edit documentation in R/statistical_tests_and_estimates.R
 \name{two_samp_bin_test}
 \alias{two_samp_bin_test}
-\title{Binary (Response) Variable Compared to Binary (Group) Variable Test (VISC)}
+\title{Binary (Response) Variable Compared across Binary (Group) Variable}
 \usage{
 two_samp_bin_test(
   x,

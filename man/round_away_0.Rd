@@ -17,7 +17,7 @@ round_away_0(x, digits = 0, trailing_zeros = FALSE)
 if \code{trailing_zeros = TRUE} returns a character vector of rounded values with trailing zeros, otherwise returns a numeric vector of rounded values.
 }
 \description{
-round_away_0 takes a numeric vector, rounds them to a specified digit amount using the round away from 0 method for ties (i.e. 1.5). This is the SAS method for rounding.
+round_away_0 is an alternative to \code{round()} to  to properly perform mathematical rounding. It takes a numeric vector, and rounds values to a specified digit amount using the round away from 0 method for ties (e.g., 1.5). This is the SAS method for rounding.
 }
 \details{
 \code{round_away_0} is not designed for use at precision levels <= 1e-15
