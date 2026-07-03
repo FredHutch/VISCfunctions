@@ -13,7 +13,7 @@ shorten_git_hash(x)
 String containing \code{@} followed by short git hash
 }
 \description{
-Internal function for Reproducibility Tables. find '@' followed by 40 hex
-digits, and substitute with the '@' and the first 7 hex digits in ()-captured
-group.
+Internal function for reproducibility tables; used by get_session_info().
+Finds '@' followed by 40 hex digits, and substitutes with the '@' and the
+first 7 hex digits in ()-captured group.
 }

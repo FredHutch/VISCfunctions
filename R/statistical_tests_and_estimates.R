@@ -1,6 +1,6 @@
 #' Rounding Using Round Away From 0 Method
 #'
-#' round_away_0 takes a numeric vector, rounds them to a specified digit amount using the round away from 0 method for ties (i.e. 1.5). This is the SAS method for rounding.
+#' round_away_0 is an alternative to `round()` to  to properly perform mathematical rounding. It takes a numeric vector, and rounds values to a specified digit amount using the round away from 0 method for ties (e.g., 1.5). This is the SAS method for rounding.
 #'
 #' @param x numeric vector (can include NA values).
 #' @param digits positive integer of length 1 between 0 (default) and 14, giving the amount of digits to round to.
@@ -71,7 +71,7 @@ round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
 }
 
 
-#' Continuous Variable Compared to Binary Variable Test (VISC)
+#' Continuous (Response) Variable Compared across Binary (Group) Variable
 #'
 #' Either Wilcox or T-Test Performed, for unpaired or paired data
 #'
@@ -135,7 +135,7 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
 
 
 
-#' Binary (Response) Variable Compared to Binary (Group) Variable Test (VISC)
+#' Binary (Response) Variable Compared across Binary (Group) Variable
 #'
 #' Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and
 #'   McNemar's test for paired data
@@ -254,14 +254,15 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 
 #' Correlation Test for Two Continuous Variables
 #'
-#' This function is a wrapper for [stats::cor.test] function, except if
-#' `method = "spearman"` is selected and there are ties in at least one
+#' This function performs a test to determine if the value of the association
+#' between two continuous variables equals zero. It is a wrapper for [stats::cor.test],
+#' except if `method = "spearman"` is selected and there are ties in at least one
 #' variable, in which case this is a wrapper for [coin::spearman_test]
 #' employing the approximate method.
 #'
 #'
-#' @param x numeric vector (can include NA values).
-#' @param y numeric vector (can include NA values).
+#' @param x numeric vector (can include NA values) representing variable 1
+#' @param y numeric vector (can include NA values) representing variable 2
 #' @param method a character string indicating which correlation coefficient
 #'   is to be used for the test. One of "pearson", "kendall", or "spearman",
 #'   can be abbreviated to "p", "k", or "s".
@@ -275,7 +276,7 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 #' @param verbose a logical variable indicating if warnings and messages
 #'   should be displayed.
 #' @param ... parameters passed to [stats::cor.test] or [coin::spearman_test]
-#' @return correlation estimate p value.
+#' @return estimated p-value.
 #'
 #' @details
 #'
@@ -430,7 +431,7 @@ wilson_ci <- function(x, conf.level = .95){
 #'
 #' `r lifecycle::badge("stable")`
 #'
-#' Wrapper for [binom::binom.confint]
+#' Wrapper for [binom::binom.confint] that estimates binomial confidence intervals for a binary vector.
 #'
 #' @param x vector of type integer (0/1) or logical (TRUE/FALSE)
 #' @param conf.level confidence level (between 0 and 1). Default is 0.95.
@@ -441,14 +442,13 @@ wilson_ci <- function(x, conf.level = .95){
 #'
 #' See [binom::binom.confint] for method details
 #'
-#' @return data.frame with with mean (`mean`), and bounds of confidence interval (`lower`, `upper`)
-#' @return Returns a data frame with the following columns:
+#' @return Returns a data frame of summary statistics with the following columns:
 #' * `method` - method(s) selected
 #' * `x` - number of successes in the binomial experiment
 #' * `n` - number of independent trials in the binomial experiment
 #' * `mean` -  success proportion mean
-#' * `lower` - success proportion lower bound
-#' * `upper` - success proportion upper bound
+#' * `lower` - success proportion confidence internal lower bound
+#' * `upper` - success proportion confidence internal upper bound
 #'
 #' @examples
 #'

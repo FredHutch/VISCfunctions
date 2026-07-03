@@ -3,7 +3,7 @@
 \docType{data}
 \name{CAVD812_mAB}
 \alias{CAVD812_mAB}
-\title{Example mAB dataset from DataSpace}
+\title{Example dataset for mAB (monoclonal antibody) data}
 \format{
 A data frame with 480 rows and 4 variables:
 \describe{
@@ -20,6 +20,7 @@ A data frame with 480 rows and 4 variables:
 CAVD812_mAB
 }
 \description{
-A subset dataset from the Farzan CAVD 812 Study, looking at eCD4 neutralization.
+A subset of data from the Farzan CAVD 812 Study, looking at eCD4 neutralization.
+Data is sourced from the CAVD DataSpace (CDS).
 }
 \keyword{datasets}

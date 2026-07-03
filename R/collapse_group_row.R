@@ -2,6 +2,7 @@
 #'
 #' This function is for replacing repeated rows in a data.frame into NA for nice printing. This
 #' is not intended for use during processing.
+#' It is an alternative to `kableExtra::collapse_rows()` for long tables in latex.
 #'
 #' @param .data a data.frame
 #' @param ... Columns to use to identify which to rows to replace with NA's
