@@ -71,7 +71,7 @@ round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
 }
 
 
-#' Continuous Variable Compared to Binary Variable Test (VISC)
+#' Continuous (Response) Variable Compared across Binary (Group) Variable Test
 #'
 #' Either Wilcox or T-Test Performed, for unpaired or paired data
 #'
@@ -135,7 +135,7 @@ two_samp_cont_test <- function(x, y, method = c('wilcox', 't.test'), paired = FA
 
 
 
-#' Binary (Response) Variable Compared to Binary (Group) Variable Test (VISC)
+#' Binary (Response) Variable Compared across Binary (Group) Variable
 #'
 #' Either Barnard, Fisher's, or Chi-sq test performed for unpaired data and
 #'   McNemar's test for paired data
@@ -254,14 +254,15 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 
 #' Correlation Test for Two Continuous Variables
 #'
-#' This function is a wrapper for [stats::cor.test] function, except if
-#' `method = "spearman"` is selected and there are ties in at least one
+#' This function performs a test to determine if the value of the association
+#' between two continuous variables equals zero. It is a wrapper for [stats::cor.test],
+#' except if `method = "spearman"` is selected and there are ties in at least one
 #' variable, in which case this is a wrapper for [coin::spearman_test]
 #' employing the approximate method.
 #'
 #'
-#' @param x numeric vector (can include NA values).
-#' @param y numeric vector (can include NA values).
+#' @param x numeric vector (can include NA values) representing variable 1
+#' @param y numeric vector (can include NA values) representing variable 2
 #' @param method a character string indicating which correlation coefficient
 #'   is to be used for the test. One of "pearson", "kendall", or "spearman",
 #'   can be abbreviated to "p", "k", or "s".
@@ -275,7 +276,7 @@ two_samp_bin_test <- function(x, y, method = c('barnard', 'fisher' ,'chi.sq' , '
 #' @param verbose a logical variable indicating if warnings and messages
 #'   should be displayed.
 #' @param ... parameters passed to [stats::cor.test] or [coin::spearman_test]
-#' @return correlation estimate p value.
+#' @return estimated p-value.
 #'
 #' @details
 #'
