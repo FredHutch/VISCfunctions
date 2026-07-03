@@ -1,6 +1,6 @@
 #' Rounding Using Round Away From 0 Method
 #'
-#' round_away_0 takes a numeric vector, rounds them to a specified digit amount using the round away from 0 method for ties (i.e. 1.5). This is the SAS method for rounding.
+#' round_away_0 is an alternative to `round()` to  to properly perform mathematical rounding. It takes a numeric vector, and rounds values to a specified digit amount using the round away from 0 method for ties (e.g., 1.5). This is the SAS method for rounding.
 #'
 #' @param x numeric vector (can include NA values).
 #' @param digits positive integer of length 1 between 0 (default) and 14, giving the amount of digits to round to.
@@ -430,7 +430,7 @@ wilson_ci <- function(x, conf.level = .95){
 #'
 #' `r lifecycle::badge("stable")`
 #'
-#' Wrapper for [binom::binom.confint]
+#' Wrapper for [binom::binom.confint] that estimates binomial confidence intervals for a binary vector.
 #'
 #' @param x vector of type integer (0/1) or logical (TRUE/FALSE)
 #' @param conf.level confidence level (between 0 and 1). Default is 0.95.
@@ -441,14 +441,13 @@ wilson_ci <- function(x, conf.level = .95){
 #'
 #' See [binom::binom.confint] for method details
 #'
-#' @return data.frame with with mean (`mean`), and bounds of confidence interval (`lower`, `upper`)
-#' @return Returns a data frame with the following columns:
+#' @return Returns a data frame of summary statistics with the following columns:
 #' * `method` - method(s) selected
 #' * `x` - number of successes in the binomial experiment
 #' * `n` - number of independent trials in the binomial experiment
 #' * `mean` -  success proportion mean
-#' * `lower` - success proportion lower bound
-#' * `upper` - success proportion upper bound
+#' * `lower` - success proportion confidence internal lower bound
+#' * `upper` - success proportion confidence internal upper bound
 #'
 #' @examples
 #'

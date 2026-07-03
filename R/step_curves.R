@@ -6,8 +6,8 @@
 #' step line outcomes such as time-to-event (Kaplan-Meier curves) and magnitude
 #' breadth (MB) curves.
 #'
-#' @param x Time values used to create the x-axis in step curves (numeric
-#'   vector)
+#' @param x Values used to create the x-axis in step curves (numeric
+#'   vector) - typically time, or net-MFI for MB.
 #' @param event event status, 0=censor and 1=event (numeric vector). If NULL
 #'   assumes no censoring
 #' @param flip_surv logical indicating if reverse survival estimates should be

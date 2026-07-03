@@ -1,6 +1,6 @@
 #' Pasting Together Information for Two Groups
 #'
-#' Paste together information, often statistics, from two groups. There are three
+#' Paste together information, usually descriptive statistics, from two groups. There are three
 #' predefined combinations: mean(sd) and median\[min, max\] and median\[first quartile, third quartile\], but user may also
 #' paste any single measure together.
 #'
@@ -289,24 +289,24 @@ paste_tbl_grp <- function(
 
 
 
-#' Rounds and combines up to three numbers into table friendly presentation
+#' Rounds and combines up to three numbers into table-friendly presentation
 #'
 #' Takes in up to 3 numeric values, rounds each to a specified digit amount
 #' (if numeric), and then combines them accordingly.
 #'
-#' @param stat1 first statistic to be pasted.
-#' @param stat2 second statistic to be pasted (optional).
-#' @param stat3 third statistic to be pasted (optional).
+#' @param stat1 first statistic to be pasted (e.g., mean)
+#' @param stat2 optional second statistic to be pasted (e.g., sd/se, p-value, CI lower bound, minimum)
+#' @param stat3 optional third statistic to be pasted (e.g., CI upper bound, maximum, nth percentile).
 #' @param digits positive integer of length 1 between 0 (default) and 14,
-#' giving the amount of digits to round to.
-#' @param trailing_zeros logical indicating if trailing zeros should included
-#' (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector
+#' giving the amount of digits to round stat1, stat2, and stat3 to.
+#' @param trailing_zeros logical indicating if trailing zeros should be included
+#' (i.e. 0.100 instead of 0.1); default is TRUE
 #' @param bound_char the character to be used between stat1 and stat2/stat3.
 #' Available options are '(' (default), '[', '\{', and '|'.
 #' @param sep the string to be used between stat2 and stat3. The default is ', '.
-#' @param na_str_out the character to replace missing values with.
-#' @param suffix a character string to add at the end of each stat
-#' (i.e. `%` if doing response rates)
+#' @param na_str_out the character to replace missing values with (default is '---')
+#' @param suffix an optional character string to add at the end of each stat
+#' (e.g. `%` if doing response rates); default is NULL
 #'
 #' @return string of combined values
 #'
