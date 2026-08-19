@@ -1,6 +1,6 @@
 context("pretty_output_functions")
 
-normalize_ws <- function(x) gsub("\\s+", " ", trimws(x))
+remove_ws <- function(x) gsub("\\s+", "", trimws(x))
 
 
 # test paste_tbl_grp
@@ -240,20 +240,20 @@ test_that("pretty_pvalues testing various options (no errors)", {
 
   test_that("pretty_pvalues html output (italic)", {
     expect_equal(
-      object = normalize_ws(pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3,
-                                           trailing_zeros = T, italic = T, output_type = "html")),
-      expected = normalize_ws(c("<span style=\" font-style: italic; \" ><0.001</span>",
-                                "---", "0.050", "1.000"))
+      object = remove_ws(pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3,
+                                        trailing_zeros = T, italic = T, output_type = "html")),
+      expected = c("<spanstyle=\"font-style:italic;\"><0.001</span>",
+                   "---", "0.050", "1.000")
     )
   })
 
   test_that("pretty_pvalues html output (bold + italic)", {
     expect_equal(
-      object = normalize_ws(pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3,
-                                           trailing_zeros = T, bold = T,
-                                           italic = T, output_type = "html")),
-      expected = normalize_ws(c("<span style=\" font-weight: bold; font-style: italic; \" ><0.001</span>",
-                                "---", "0.050", "1.000"))
+      object = remove_ws(pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3,
+                                        trailing_zeros = T, bold = T,
+                                        italic = T, output_type = "html")),
+      expected = c("<spanstyle=\"font-weight:bold;font-style:italic;\"><0.001</span>",
+                   "---", "0.050", "1.000")
     )
   })
 
