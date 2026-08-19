@@ -1,6 +1,4 @@
 
-
-
 test_that("geomean is the mean log value, exponentiated",{
   expect_equal(geomean(1:2), exp(sum(log(c(1:2)))/2))
   expect_equal(geomean(c(-1:100, NA), threshold = 1), exp(mean(log(c(1, 1, 1:100, NA)), na.rm = TRUE)))

@@ -9,7 +9,7 @@
 #' * `geosd()` returns the geometric standard deviation
 #' * `geoquantile()` returns the geometric quantiles
 #' @aliases geomedian(), geoquantile(), geosd()
-#' @param x Numeric vector. Must have length greater than 2, and contain only positive values.
+#' @param x Numeric vector. Must have length at least 3, and contain only positive values.
 #' @param na.rm Logical scalar indicating whether to remove missing values from 'x'. If 'na.rm = TRUE' (the default) missing values are removed from 'x' prior to computing the geometric mean. If 'na.rm = FALSE' and 'x' contains missing values, then a missing value ('NA') is returned.
 #' @param probs (geoquantile only) Numeric vector of probabilities between 0 and 1 for specifying which quantiles should be returned.
 #' @param type (geoquantile only) Integer scalar between 1 and 9 selecting one of the nine quantile algorithms. Default is type 2, the post-2010 SAS default, which uses the inverse of the empirical distribution function averaging at discontinuities.
@@ -53,10 +53,13 @@
 geomean <- function(x, na.rm = TRUE) {
 
   if (!is.numeric(x)) stop('"x" must be a numeric vector.')
-  if (length(x) < 2) stop('"x" must have a length more than two.')
-  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
+  if (any(x <= 0, na.rm = TRUE)) stop('"x" must contain only positive values.')
 
+  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
   if (na.rm) { x <- x[!is.na(x)] }
+
+  if (length(x) < 3) stop('"x" must have length at least three (non-missing) values.')
+
   exp(mean(log(x), na.rm = na.rm))
 
 }
@@ -67,10 +70,13 @@ geomean <- function(x, na.rm = TRUE) {
 geosd <- function(x, na.rm = TRUE) {
 
   if (!is.numeric(x)) stop('"x" must be a numeric vector.')
-  if (length(x) < 2) stop('"x" must have a length more than two.')
-  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
+  if (any(x <= 0, na.rm = TRUE)) stop('"x" must contain only positive values.')
 
+  if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
   if (na.rm) { x <- x[!is.na(x)] }
+
+  if (length(x) < 3) stop('"x" must have length at least three (non-missing) values.')
+
   exp(stats::sd(log(x), na.rm = na.rm))
 
 }
@@ -87,8 +93,12 @@ geoquantile <- function(
 ) {
 
   if (!is.numeric(x)) stop('"x" must be a numeric vector.')
-  if (length(x) < 2) stop('"x" must have a length more than two.')
+  if (any(x <= 0, na.rm = TRUE)) stop('"x" must contain only positive values.')
+
   if (!is.logical(na.rm)) stop('"na.rm" must be logical (i.e., TRUE or FALSE).')
+  if (na.rm) { x <- x[!is.na(x)] }
+
+  if (length(x) < 3) stop('"x" must have length at least three (non-missing) values.')
 
   # quantile-specific input checks
   if (!is.numeric(probs)) stop('"probs" must be numeric.')
@@ -96,7 +106,6 @@ geoquantile <- function(
   if (!is.numeric(type) || length(type) != 1) stop('"type" must be a single numeral.')
   if (type < 1 || type > 9) stop('"type" must be a numeral between 1 and 9.')
 
-  if (na.rm) { x <- x[!is.na(x)] }
   exp(stats::quantile(log(x), probs = probs, na.rm = na.rm, type = type, ...))
 
 }
