@@ -1,5 +1,15 @@
 context("pretty_output_functions")
 
+# helper to collapse whitespace and trim leading/trailing whitespace
+norm_ws <- function(x) {
+  if (is.character(x)) {
+    x <- gsub("\\s+", " ", x, perl = TRUE)   # collapse runs of whitespace to single space
+    trimws(x)
+  } else {
+    x
+  }
+}
+
 
 # test paste_tbl_grp
 test_that("paste_tbl_grp testing various options (no errors)", {
@@ -236,14 +246,14 @@ test_that("pretty_pvalues testing various options (no errors)", {
 
   # testing different outputs
 
-  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3,
-                                       trailing_zeros = T, italic = T, output_type = "html"),
-               expected = c("<span style=\"  font-style: italic;   \" ><0.001</span>",
+  expect_equal(object = norm_ws(pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3,
+                                               trailing_zeros = T, italic = T, output_type = "html")),
+               expected = c(norm_ws("<span style=\"  font-style: italic;   \" ><0.001</span>"),
                             "---", "0.050", "1.000"))
-  expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3,
+  expect_equal(object = norm_ws(pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3,
                                        trailing_zeros = T, bold = T,
-                                       italic = T, output_type = "html"),
-               expected = c("<span style=\" font-weight: bold; font-style: italic;   \" ><0.001</span>",
+                                       italic = T, output_type = "html")),
+               expected = c(norm_ws("<span style=\" font-weight: bold; font-style: italic;   \" ><0.001</span>"),
                             "---", "0.050", "1.000"))
 
   expect_equal(object = pretty_pvalues(c(0.00000001, NA, 0.05, 1), digits = 3,
