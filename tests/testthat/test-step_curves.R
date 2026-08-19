@@ -69,9 +69,9 @@ test_that("create_step_curve testing", {
     ))
 
   expect_identical(
-    object = dat %>%
-      dplyr::group_by(ptid) %>%
-      dplyr::group_modify(~ create_step_curve(x = .x$x, event = .x$event)) %>%
+    object = dat |>
+      dplyr::group_by(ptid) |>
+      dplyr::group_modify(~ create_step_curve(x = .x$x, event = .x$event)) |>
       dplyr::ungroup(),
     expected = expected_output
   )

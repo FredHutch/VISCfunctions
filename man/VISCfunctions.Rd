@@ -5,18 +5,31 @@
 \alias{VISCfunctions}
 \title{VISCfunctions: VISC STP/SRA functions}
 \description{
-Statistical, data processing, and annotation functions for VISC.
+Statistical, data processing, and annotation functions for VISC statisticians and programmers.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://fredhutch.github.io/VISCfunctions/}
+  \item Report bugs at \url{https://github.com/FredHutch/VISCfunctions/issues}
+}
+
 }
 \author{
-\strong{Maintainer}: Jimmy Fulp \email{wfulp@fredhutch.org}
+\strong{Maintainer}: Bryan Mayer \email{bmayer@fredhutch.org} (\href{https://orcid.org/0000-0003-2258-5276}{ORCID})
 
 Authors:
 \itemize{
-  \item Bryan Mayer \email{bmayer@fredhutch.org}
-  \item Monica Gerber \email{mgerber@fredhutch.org}
-  \item Celia Mahoney \email{cmahoney@fredhutch.org}
-  \item Ellis Hughes \email{ehhughes@fredhutch.org}
-  \item Heather Bouzek \email{hbouzek@fredhutch.org}
+  \item Dave Slager \email{dslager@fredhutch.org} (\href{https://orcid.org/0000-0003-2525-2039}{ORCID})
+  \item Kellie MacPhee \email{kmacphee@fredhutch.org} (\href{https://orcid.org/0009-0008-0993-4009}{ORCID})
+  \item Alicia Sato \email{asato@fredhutch.org} (\href{https://orcid.org/0000-0001-8371-8007}{ORCID})
+  \item Gabrielle Lemire \email{glemire@fredhutch.org} (\href{https://orcid.org/0009-0008-3813-2523}{ORCID})
+  \item Claudio Yurdadon \email{cyurdado@fredhutch.org} (\href{https://orcid.org/0000-0002-4928-2737}{ORCID})
+  \item Monica Gerber
+  \item Celia Mahoney
+  \item Ellis Hughes (\href{https://orcid.org/0000-0003-0637-4436}{ORCID})
+  \item Heather Bouzek
+  \item Jimmy Fulp
 }
 
 }

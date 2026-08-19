@@ -19,8 +19,8 @@
 #'
 #' library(dplyr)
 #' options(knitr.kable.NA = '')
-#' collapse_group_row(sample_df, x, y, z) %>%
-#'  kableExtra::kable() %>%
+#' collapse_group_row(sample_df, x, y, z) |>
+#'  kableExtra::kable() |>
 #'  kableExtra::kable_styling()
 #' @export
 collapse_group_row <- function(.data, ..., reorder_cols = TRUE) {
