@@ -32,7 +32,11 @@ round_away_0 <- function(x, digits = 0, trailing_zeros = FALSE){
   .check_numeric_input(x, allow_NA = TRUE)
   .check_numeric_input(digits, lower_bound = 0, upper_bound = 14, scalar = TRUE, whole_num = TRUE)
 
-  rounded_vals <- sign(x) * round(abs(x) + 1e-15, digits)
+  # inspired by tidytlg::roundSAS()
+  z <- abs(x) * 10^digits
+  z <- z + 0.5 + sqrt(.Machine$double.eps)
+  z <- trunc(z) / 10 ^ digits
+  rounded_vals <- ifelse(! is.na(z) & z > 0, z * sign(x), z)
 
   if (trailing_zeros) {
     # Need to exclude NAs when doing formatting
