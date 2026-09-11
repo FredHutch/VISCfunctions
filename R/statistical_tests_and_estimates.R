@@ -8,7 +8,7 @@
 #' @return if \code{trailing_zeros = TRUE} returns a character vector of rounded values with trailing zeros, otherwise returns a numeric vector of rounded values.
 #' @details
 #'
-#' \code{round_away_0} is not designed for use at precision levels <= 1e-15
+#' \code{round_away_0} is not designed for use at precision levels <= 1e-15 or on numbers with many digits to the left of the rounded digit
 #'
 #' @examples
 #'
