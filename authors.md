@@ -30,7 +30,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/FredHutch/VISCfunctions/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/FredHutch/VISCfunctions/blob/v1.3.2/DESCRIPTION)
 
 Mayer B, Slager D, MacPhee K, Sato A, Lemire G, Yurdadon C, Gerber M,
 Mahoney C, Hughes E, Bouzek H, Fulp J (2026). *VISCfunctions:
