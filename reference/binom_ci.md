@@ -61,6 +61,7 @@ for method details
 ## Examples
 
 ``` r
+
 x <- c(rep(0, 500), rep(1, 500))
 binom_ci(x, conf.level = .90, methods = 'all')
 #>           method   x    n mean     lower     upper
@@ -73,6 +74,6 @@ binom_ci(x, conf.level = .90, methods = 'all')
 #> 7         probit 500 1000  0.5 0.4740110 0.5259890
 #> 8        profile 500 1000  0.5 0.4740102 0.5259898
 #> 9            lrt 500 1000  0.5 0.4740164 0.5259836
-#> 10     prop.test 500 1000  0.5 0.4690696 0.5309304
+#> 10     prop.test 500 1000  0.5 0.4740277 0.5259723
 #> 11        wilson 500 1000  0.5 0.4740277 0.5259723
 ```

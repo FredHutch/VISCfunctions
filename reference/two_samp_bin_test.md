@@ -81,6 +81,7 @@ group response rates are 0\\ returned)
 ## Examples
 
 ``` r
+
 set.seed(5432322)
 outcome <- c(sample(0:1,10,replace = TRUE, prob = c(.75,.25)),
              sample(0:1,10,replace = TRUE, prob = c(.25,.75)))

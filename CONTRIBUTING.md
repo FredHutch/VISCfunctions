@@ -1,9 +1,9 @@
 # How you can contribute
 
-Thanks for your interest in contributing to VISCtemplates! There are
+Thanks for your interest in contributing to VISCfunctions! There are
 several ways you can contribute to this package:
 
-- **Propose an idea.** Do you have an idea for a new VISCtemplates
+- **Propose an idea.** Do you have an idea for a new VISCfunctions
   feature? Take a look at the issue list first to see if it isn’t
   included or suggested yet. If not, suggest your idea as an issue on
   GitHub.
@@ -61,7 +61,7 @@ packages](https://r-pkgs.org/) by Hadley Wickham and Jenny Bryan.
 3.  Discuss the pull request.
 
 4.  Iterate until the maintainer accepts the PR or decides it’s not a
-    good fit for VISCtemplates.
+    good fit for VISCfunctions.
 
 This might feel overwhelming the first time you get set up, but it gets
 easier with practice.
@@ -92,7 +92,7 @@ Your pull request should follow these guidelines:
 3.  **Coding style.** Please follow the official [tidyverse
     style](https://style.tidyverse.org/). Maintaining a consistent style
     across the whole code base makes it much easier to jump into the
-    code. If you’re modifying existing VISCtemplates code that doesn’t
+    code. If you’re modifying existing VISCfunctions code that doesn’t
     follow the style guide, a separate pull request to fix the style
     would be greatly appreciated.
 
@@ -105,7 +105,7 @@ Your pull request should follow these guidelines:
 
 # Code of conduct
 
-Please note that VISCtemplates is released with a [Contributor Code of
+Please note that VISCfunctions is released with a [Contributor Code of
 Conduct](https://fredhutch.github.io/VISCfunctions/CONDUCT.md). By
 contributing to this project, you agree to abide by its terms.
 
@@ -137,7 +137,7 @@ development in general.
   (rstudio::conf workshop)
 
 This contributing guide was inspired by and modified from the [ggplot2
-contributing.md](ahttps://github.com/tidyverse/ggplot2/blob/master/CONTRIBUTING.md),
+contributing.md](https://github.com/tidyverse/ggplot2/blob/master/CONTRIBUTING.md),
 [rOpenSci’s contributing
 guide](https://devguide.ropensci.org/contributingguide.html), and [this
 template](https://gist.github.com/peterdesmet/e90a1b0dc17af6c12daf6e8b2f044e7c).

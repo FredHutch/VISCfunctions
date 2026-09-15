@@ -16,36 +16,40 @@ A data frame with 210 rows and 9 variables:
 
 - pubID:
 
-  randomized subject ID
+  character. Randomized (de-identified) subject ID.
 
 - group:
 
-  study group
+  numeric. Study group (2, 3, 4, or 5).
 
 - visitno:
 
-  visit number
+  integer. Visit number.
 
 - celltype:
 
-  cell type
+  character. Cell line used in the neutralization assay (e.g. TZM-bl).
 
 - isolate:
 
-  isolate tested
+  character. Name of the HIV isolate (pseudovirus) tested.
 
 - titer_mod_50:
 
-  truncated response magnitude value, ID50 titer (min. 10)
+  numeric. ID50 neutralization titer, truncated at a minimum of 10
+  (below-detection values set to 10).
 
 - titer_mod_80:
 
-  truncated response magnitude value, ID80 titer (min. 10)
+  numeric. ID80 neutralization titer, truncated at a minimum of 10
+  (below-detection values set to 10).
 
 - response_50:
 
-  response call for ID50 titer (0/1)
+  numeric. Response call based on ID50 titer (1 = responder, 0 =
+  non-responder).
 
 - response_80:
 
-  response call for ID80 titer (0/1)
+  numeric. Response call based on ID80 titer (1 = responder, 0 =
+  non-responder).

@@ -94,6 +94,7 @@ jointly be specified for bold italics.
 ## Examples
 
 ``` r
+
 pvalue_example = c(1, 0.06, 0.0005, NA, 1e-6)
 
 pretty_pvalues(pvalue_example, background = "pink")

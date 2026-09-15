@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Overview and Introduction to VISCfunctions Package • VISCfunctions</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Overview and Introduction to VISCfunctions Package">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VISCfunctions</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/FredHutch/VISCfunctions/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -59,9 +60,9 @@
                         <h4 data-toc-skip class="author">Jimmy Fulp,
 Monica Gerber, and Heather Bouzek</h4>
             
-            <h4 data-toc-skip class="date">2026-01-16</h4>
+            <h4 data-toc-skip class="date">2026-09-15</h4>
       
-
+      <small class="dont-index">Source: <a href="https://github.com/FredHutch/VISCfunctions/blob/main/vignettes/Overview.Rmd" class="external-link"><code>vignettes/Overview.Rmd</code></a></small>
       <div class="d-none name"><code>Overview.Rmd</code></div>
     </div>
 
@@ -110,6 +111,7 @@ VISCfunctions package can be broken down to the following sections:</p>
 <li>round_away_0</li>
 <li>get_session_info</li>
 <li>get_full_name</li>
+<li>shorten_git_hash</li>
 </ul>
 </li>
 <li>Example Datasets
@@ -188,7 +190,8 @@ have associated documentation that can be viewed using <code>?</code>
 appropriate statistical tests, depending on the data and options,
 returning a p value.</p>
 <p>There is also an estimate function for getting binary confidence
-intervals (<code><a href="../reference/binom_ci.html">binom_ci()</a></code>).</p>
+intervals (<code><a href="../reference/binom_ci.html">binom_ci()</a></code>). Note that <code><a href="../reference/wilson_ci.html">wilson_ci()</a></code>
+has been superseded by the use of <code><a href="../reference/binom_ci.html">binom_ci()</a></code>.</p>
 <p><code><a href="../reference/trapz_sorted.html">trapz_sorted()</a></code> is used to create an estimate for the
 area under a curve while making sure the x-axis is sorted so that both
 the x-axis and the area are increasing and positive, respectively.</p>
@@ -443,16 +446,16 @@ specifications. Common uses for this function are for:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> A1.con.env03 140 CF       1 648.00 [9.75, 3258.50]     1038.58 (1210.00)     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> A1.con.env03 140 CF       2 529.75 [171.00, 1040.25]   550.92 (347.74)       </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> A244 D11gp120 avi         1 2542.88 [166.25, 19183.25] 5655.17 (7413.17)     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> A244 D11gp120 avi         2 1046.12 [430.00, 3704.00]  1680.71 (1348.20)     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> A244 D11gp120 avi         2 1046.13 [430.00, 3704.00]  1680.71 (1348.20)     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> B.63521 D11gp120/293F     1 1562.88 [69.50, 3910.50]   1719.88 (1572.96)     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> B.63521 D11gp120/293F     2 675.88 [307.75, 5115.50]   1577.17 (1894.48)     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> B.MN V3 gp70              1 117.38 [-36.25, 329.00]    140.04 (158.30)       </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> B.MN V3 gp70              2 14.13 [-618.75, 2425.00]   302.71 (1105.90)      </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> B.con.env03 140 CF        1 2819.25 [191.25, 5989.75]  3149.50 (2364.75)     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> B.con.env03 140 CF        2 4897.62 [589.75, 13738.25] 5152.88 (4685.93)     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> B.con.env03 140 CF        2 4897.63 [589.75, 13738.25] 5152.88 (4685.93)     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> gp41                      1 14377.75 [5380.75, 26021.… 16323.67 (8023.22)    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> gp41                      2 25038.50 [8504.50, 32447.… 22558.67 (10658.01)   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> p24                       1 6688.12 [1728.00, 13559.0… 6745.00 (4760.00)     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> p24                       1 6688.13 [1728.00, 13559.0… 6745.00 (4760.00)     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> p24                       2 3265.50 [963.50, 9886.25]  3880.46 (3180.21)     </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names: ¹​`Magnitude Info (Median [Range])`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​`Magnitude Info (Mean (SD))`</span></span></span></code></pre></div>
@@ -556,20 +559,27 @@ Functions</a> section.</p>
 <span></span>
 <span><span class="fu"><a href="../reference/pairwise_test_bin.html">pairwise_test_bin</a></span><span class="op">(</span><span class="va">x_example</span>, <span class="va">group_example</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>Separation <span class="op">=</span> <span class="st">'PerfectSeparation'</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Comparison                                                 ResponseStats</span></span>
-<span><span class="co">#&gt; 1    1 vs. 2   7/24 = 29.2% (14.9%, 49.2%) vs. 6/25 = 24.0% (11.5%, 43.4%)</span></span>
-<span><span class="co">#&gt; 2    1 vs. 3  7/24 = 29.2% (14.9%, 49.2%) vs. 20/25 = 80.0% (60.9%, 91.1%)</span></span>
-<span><span class="co">#&gt; 3    1 vs. 4  7/24 = 29.2% (14.9%, 49.2%) vs. 16/25 = 64.0% (44.5%, 79.8%)</span></span>
-<span><span class="co">#&gt; 4    2 vs. 3  6/25 = 24.0% (11.5%, 43.4%) vs. 20/25 = 80.0% (60.9%, 91.1%)</span></span>
-<span><span class="co">#&gt; 5    2 vs. 4  6/25 = 24.0% (11.5%, 43.4%) vs. 16/25 = 64.0% (44.5%, 79.8%)</span></span>
-<span><span class="co">#&gt; 6    3 vs. 4 20/25 = 80.0% (60.9%, 91.1%) vs. 16/25 = 64.0% (44.5%, 79.8%)</span></span>
-<span><span class="co">#&gt;    ResponseTest Separation</span></span>
-<span><span class="co">#&gt; 1 0.76819476151      FALSE</span></span>
-<span><span class="co">#&gt; 2 0.00038580518      FALSE</span></span>
-<span><span class="co">#&gt; 3 0.01666966048      FALSE</span></span>
-<span><span class="co">#&gt; 4 0.00009064775      FALSE</span></span>
-<span><span class="co">#&gt; 5 0.00498314375      FALSE</span></span>
-<span><span class="co">#&gt; 6 0.23445322077      FALSE</span></span></code></pre></div>
+<span><span class="co">#&gt;   Comparison SampleSizes</span></span>
+<span><span class="co">#&gt; 1    1 vs. 2   24 vs. 25</span></span>
+<span><span class="co">#&gt; 2    1 vs. 3   24 vs. 25</span></span>
+<span><span class="co">#&gt; 3    1 vs. 4   24 vs. 25</span></span>
+<span><span class="co">#&gt; 4    2 vs. 3   25 vs. 25</span></span>
+<span><span class="co">#&gt; 5    2 vs. 4   25 vs. 25</span></span>
+<span><span class="co">#&gt; 6    3 vs. 4   25 vs. 25</span></span>
+<span><span class="co">#&gt;                                                   ResponseStats  ResponseTest</span></span>
+<span><span class="co">#&gt; 1   7/24 = 29.2% (14.9%, 49.2%) vs. 6/25 = 24.0% (11.5%, 43.4%) 0.76819476151</span></span>
+<span><span class="co">#&gt; 2  7/24 = 29.2% (14.9%, 49.2%) vs. 20/25 = 80.0% (60.9%, 91.1%) 0.00038580518</span></span>
+<span><span class="co">#&gt; 3  7/24 = 29.2% (14.9%, 49.2%) vs. 16/25 = 64.0% (44.5%, 79.8%) 0.01666966048</span></span>
+<span><span class="co">#&gt; 4  6/25 = 24.0% (11.5%, 43.4%) vs. 20/25 = 80.0% (60.9%, 91.1%) 0.00009064775</span></span>
+<span><span class="co">#&gt; 5  6/25 = 24.0% (11.5%, 43.4%) vs. 16/25 = 64.0% (44.5%, 79.8%) 0.00498314375</span></span>
+<span><span class="co">#&gt; 6 20/25 = 80.0% (60.9%, 91.1%) vs. 16/25 = 64.0% (44.5%, 79.8%) 0.23445322077</span></span>
+<span><span class="co">#&gt;   Separation</span></span>
+<span><span class="co">#&gt; 1      FALSE</span></span>
+<span><span class="co">#&gt; 2      FALSE</span></span>
+<span><span class="co">#&gt; 3      FALSE</span></span>
+<span><span class="co">#&gt; 4      FALSE</span></span>
+<span><span class="co">#&gt; 5      FALSE</span></span>
+<span><span class="co">#&gt; 6      FALSE</span></span></code></pre></div>
 <p>Group comparison example using <code>pairwise_test_bin</code>:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -649,13 +659,20 @@ Variable<a class="anchor" aria-label="anchor" href="#pairwise-comparison-of-mult
 <span><span class="co">#&gt; 4    2 vs. 3   25 vs. 25  -0.1 [-1.5, 1.4] vs. 5.2 [0.9, 7.4]</span></span>
 <span><span class="co">#&gt; 5    2 vs. 4   25 vs. 25  -0.1 [-1.5, 1.4] vs. 5.1 [3.5, 6.6]</span></span>
 <span><span class="co">#&gt; 6    3 vs. 4   25 vs. 25    5.2 [0.9, 7.4] vs. 5.1 [3.5, 6.6]</span></span>
-<span><span class="co">#&gt;                   Mean_SD          MagnitudeTest Separation</span></span>
-<span><span class="co">#&gt; 1 0.1 (1.0) vs. 0.0 (0.7) 0.28742747500751675283      FALSE</span></span>
-<span><span class="co">#&gt; 2 0.1 (1.0) vs. 5.1 (1.4) 0.00000000000060121537      FALSE</span></span>
-<span><span class="co">#&gt; 3 0.1 (1.0) vs. 5.0 (0.9) 0.00000000000003164291       TRUE</span></span>
-<span><span class="co">#&gt; 4 0.0 (0.7) vs. 5.1 (1.4) 0.00000000000006328583      FALSE</span></span>
-<span><span class="co">#&gt; 5 0.0 (0.7) vs. 5.0 (0.9) 0.00000000000001582146       TRUE</span></span>
-<span><span class="co">#&gt; 6 5.1 (1.4) vs. 5.0 (0.9) 0.86260828521739307817      FALSE</span></span></code></pre></div>
+<span><span class="co">#&gt;                       Median_Quartiles                 Mean_SD</span></span>
+<span><span class="co">#&gt; 1 0.4 [-0.4, 0.8] vs. -0.1 [-0.4, 0.6] 0.1 (1.0) vs. 0.0 (0.7)</span></span>
+<span><span class="co">#&gt; 2   0.4 [-0.4, 0.8] vs. 5.2 [4.3, 5.6] 0.1 (1.0) vs. 5.1 (1.4)</span></span>
+<span><span class="co">#&gt; 3   0.4 [-0.4, 0.8] vs. 5.1 [4.4, 5.6] 0.1 (1.0) vs. 5.0 (0.9)</span></span>
+<span><span class="co">#&gt; 4  -0.1 [-0.4, 0.6] vs. 5.2 [4.3, 5.6] 0.0 (0.7) vs. 5.1 (1.4)</span></span>
+<span><span class="co">#&gt; 5  -0.1 [-0.4, 0.6] vs. 5.1 [4.4, 5.6] 0.0 (0.7) vs. 5.0 (0.9)</span></span>
+<span><span class="co">#&gt; 6    5.2 [4.3, 5.6] vs. 5.1 [4.4, 5.6] 5.1 (1.4) vs. 5.0 (0.9)</span></span>
+<span><span class="co">#&gt;            MagnitudeTest Separation</span></span>
+<span><span class="co">#&gt; 1 0.28742747500751675283      FALSE</span></span>
+<span><span class="co">#&gt; 2 0.00000000000060121537      FALSE</span></span>
+<span><span class="co">#&gt; 3 0.00000000000003164291       TRUE</span></span>
+<span><span class="co">#&gt; 4 0.00000000000006328583      FALSE</span></span>
+<span><span class="co">#&gt; 5 0.00000000000001582146       TRUE</span></span>
+<span><span class="co">#&gt; 6 0.86260828521739307817      FALSE</span></span></code></pre></div>
 <p>Group comparison example using <code><a href="../reference/pairwise_test_cont.html">pairwise_test_cont()</a></code>:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -673,8 +690,10 @@ Variable<a class="anchor" aria-label="anchor" href="#pairwise-comparison-of-mult
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>MagnitudeTest <span class="op">=</span> <span class="fu"><a href="../reference/pretty_pvalues.html">pretty_pvalues</a></span><span class="op">(</span></span>
 <span>    <span class="va">MagnitudeTest</span>, output_type <span class="op">=</span> <span class="st">'latex'</span>, </span>
 <span>    sig_alpha <span class="op">=</span> <span class="fl">.1</span>, background <span class="op">=</span> <span class="st">'yellow'</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="st">"Median (Range)"</span> <span class="op">=</span> <span class="va">Median_Min_Max</span>, <span class="st">'Mean (SD) (log10)'</span> <span class="op">=</span> <span class="va">log_Mean_SD</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="st">"Median (Range)"</span> <span class="op">=</span> <span class="va">Median_Min_Max</span>, </span>
+<span>         <span class="st">"Median (Q1, Q3)"</span> <span class="op">=</span> <span class="va">Median_Quartiles</span>, </span>
+<span>         <span class="st">'Mean (SD) (log10)'</span> <span class="op">=</span> <span class="va">log_Mean_SD</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">group_testing</span>, escape <span class="op">=</span> <span class="cn">FALSE</span>, booktabs <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                  caption <span class="op">=</span> <span class="st">'Magnitude Comparisons Across Groups'</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -701,9 +720,10 @@ Variable<a class="anchor" aria-label="anchor" href="#pairwise-comparison-of-mult
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>MagnitudeTest <span class="op">=</span> <span class="fu"><a href="../reference/pretty_pvalues.html">pretty_pvalues</a></span><span class="op">(</span></span>
 <span>    <span class="va">MagnitudeTest</span>, output_type <span class="op">=</span> <span class="st">'latex'</span>, </span>
 <span>    sig_alpha <span class="op">=</span> <span class="fl">.1</span>, background <span class="op">=</span> <span class="st">'yellow'</span><span class="op">)</span></span>
-<span>    <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="st">"Median (Range)"</span> <span class="op">=</span> <span class="va">Median_Min_Max</span>, <span class="st">'Mean (SD) (log10)'</span> <span class="op">=</span> <span class="va">log_Mean_SD</span><span class="op">)</span></span>
-<span></span>
+<span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="st">"Median (Range)"</span> <span class="op">=</span> <span class="va">Median_Min_Max</span>, </span>
+<span>         <span class="st">"Median (Q1, Q3)"</span> <span class="op">=</span> <span class="va">Median_Quartiles</span>, </span>
+<span>         <span class="st">'Mean (SD) (log10)'</span> <span class="op">=</span> <span class="va">log_Mean_SD</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">timepoint_testing</span>, </span>
 <span>                  escape <span class="op">=</span> <span class="cn">FALSE</span>, </span>
@@ -870,7 +890,9 @@ are great to add to the end of reports. The first table gives software
 session information and the second table gives software package version
 information. <code><a href="../reference/get_full_name.html">get_full_name()</a></code> is a function used by
 <code><a href="../reference/get_session_info.html">get_session_info()</a></code> to get the user’s name, based on user’s
-ID.</p>
+ID. <code><a href="../reference/shorten_git_hash.html">shorten_git_hash()</a></code> is an internal function for the
+reproducibility table and used within <code><a href="../reference/get_session_info.html">get_session_info()</a></code>
+which shortens the hash string to 7 digits.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_session_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_session_info.html">get_session_info</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span></span>
@@ -897,11 +919,11 @@ ID.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Bryan Mayer, Dave Slager, Kellie MacPhee, Gabrielle Lemire, Claudio Yurdadon, Monica Gerber, Celia Mahoney, Ellis Hughes, Heather Bouzek, Jimmy Fulp.</p>
+  <p>Developed by Bryan Mayer, Dave Slager, Kellie MacPhee, Alicia Sato, Gabrielle Lemire, Claudio Yurdadon, Monica Gerber, Celia Mahoney, Ellis Hughes, Heather Bouzek, Jimmy Fulp.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

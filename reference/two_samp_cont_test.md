@@ -66,6 +66,7 @@ level.
 ## Examples
 
 ``` r
+
 set.seed(5432322)
 outcome <- c(rnorm(10,0,3), rnorm(10,3,3))
 grp <- c(rep('a', 10), rep('b', 10))

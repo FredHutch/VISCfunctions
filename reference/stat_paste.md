@@ -78,6 +78,7 @@ rounding would not be relevant for strings.
 ## Examples
 
 ``` r
+
 stat_paste(5.109293)
 #> [1] "5"
 stat_paste(NA)
@@ -107,12 +108,12 @@ summarise(median_min_max = stat_paste(median(magnitude, na.rm = TRUE),
 #>    <chr>                 <dbl> <int> <chr>              
 #>  1 A1.con.env03 140 CF       0     1 3 (-123, 98)       
 #>  2 A1.con.env03 140 CF       0     2 -8 (-75, 69)       
-#>  3 A1.con.env03 140 CF       1     1 648 (10, 3258)     
+#>  3 A1.con.env03 140 CF       1     1 648 (10, 3259)     
 #>  4 A1.con.env03 140 CF       1     2 530 (171, 1040)    
 #>  5 A1.con.env03 140 CF       2     1 15420 (5002, 26700)
 #>  6 A1.con.env03 140 CF       2     2 11001 (4682, 20801)
 #>  7 A244 D11gp120_avi         0     1 79 (40, 112)       
-#>  8 A244 D11gp120_avi         0     2 36 (-23, 385)      
+#>  8 A244 D11gp120_avi         0     2 37 (-23, 385)      
 #>  9 A244 D11gp120_avi         1     1 2543 (166, 19183)  
 #> 10 A244 D11gp120_avi         1     2 1046 (430, 3704)   
 #> # ℹ 32 more rows

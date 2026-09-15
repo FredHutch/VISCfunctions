@@ -28,6 +28,7 @@ only work on SCHARPs network at Fred Hutching Cancer Research Center.
 ## Examples
 
 ``` r
+
 get_full_name()
 #> [1] "runner"
 ```

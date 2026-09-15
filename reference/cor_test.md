@@ -100,6 +100,7 @@ approximate method available in the coin::spearman_test.
 ## Examples
 
 ``` r
+
 set.seed(5432322)
 x <- rnorm(20,0,3)
 y <- x + rnorm(20,0,5)

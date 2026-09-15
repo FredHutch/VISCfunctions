@@ -72,6 +72,7 @@ repeated for values of `magnitude` and `breadth`.
 
 ``` r
 
+
 mb_results(magnitude = 96:105, response = c(rep(0,5), rep(1,5)),
            lower_trunc = 100, x_transform = 'log10')
 #>   magnitude breadth n_remaining n_here    aucMB

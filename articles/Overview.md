@@ -29,6 +29,7 @@ VISCfunctions package can be broken down to the following sections:
   - round_away_0
   - get_session_info
   - get_full_name
+  - shorten_git_hash
 - Example Datasets
   - exampleData_BAMA
   - exampleData_NAb
@@ -41,6 +42,7 @@ Code to initially install the VISCfunctions package:
 
 ``` r
 
+
 # Installing VISCfunctions from GitHub
 remotes::install_github("FredHutch/VISCfunctions")
 ```
@@ -48,6 +50,7 @@ remotes::install_github("FredHutch/VISCfunctions")
 Code to load in VISCfunctions and start using:
 
 ``` r
+
 
 # Loading VISCfunctions
 library(VISCfunctions)
@@ -65,6 +68,7 @@ get started making professional statistical reports.
 Code to initially download VISCtemplates package:
 
 ``` r
+
 
 # Installing VISCfunctions from GitHub
 remotes::install_github("FredHutch/VISCtemplates")
@@ -85,6 +89,7 @@ example datasets have associated documentation that can be viewed using
 [`?exampleData_BAMA`](https://fredhutch.github.io/VISCfunctions/reference/exampleData_BAMA.md)).
 
 ``` r
+
 
 # Loading in example datasets
 data("exampleData_BAMA", "exampleData_NAb", "exampleData_ICS", "CAVD812_mAB")
@@ -109,6 +114,10 @@ value.
 There is also an estimate function for getting binary confidence
 intervals
 ([`binom_ci()`](https://fredhutch.github.io/VISCfunctions/reference/binom_ci.md)).
+Note that
+[`wilson_ci()`](https://fredhutch.github.io/VISCfunctions/reference/wilson_ci.md)
+has been superseded by the use of
+[`binom_ci()`](https://fredhutch.github.io/VISCfunctions/reference/binom_ci.md).
 
 [`trapz_sorted()`](https://fredhutch.github.io/VISCfunctions/reference/trapz_sorted.md)
 is used to create an estimate for the area under a curve while making
@@ -116,6 +125,7 @@ sure the x-axis is sorted so that both the x-axis and the area are
 increasing and positive, respectively.
 
 ``` r
+
 
 # Making Testing Dataset
 testing_data <- exampleData_BAMA |>
@@ -133,6 +143,7 @@ that can be set that get passed to the
 function.
 
 ``` r
+
 
 table(testing_data$response, testing_data$group)
 #>    
@@ -192,6 +203,7 @@ t.test) and non-parametric (Wilcox Signed-Rank) options.
 
 ``` r
 
+
 by(testing_data$magnitude, testing_data$group, summary)
 #> testing_data$group: 1
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
@@ -248,6 +260,7 @@ used from `stats:cor.test`.
 
 ``` r
 
+
 # Making Testing Dataset
 cor_testing_data <- exampleData_BAMA |>
   dplyr::filter(antigen %in% c('A1.con.env03 140 CF', 'B.MN V3 gp70'),
@@ -278,6 +291,7 @@ increasing along the x-axis or when there are ‘NA’ values that are not
 removed prior to estimating the area under the curve.
 
 ``` r
+
 set.seed(93)
 n <- 10
 # unsorted data
@@ -311,6 +325,7 @@ using \< for low p-values as opposed to scientific notation (i.e., “p \<
 emphasizing p-values and specific characters for missing values.
 
 ``` r
+
 
 pvalue_example = c(1, 0.06753, 0.004435, NA, 1e-16, 0.563533)
 # For simple p value display
@@ -348,6 +363,7 @@ this function are for:
 - Estimate/Statistic (p value)
 
 ``` r
+
 # Simple Examples
 stat_paste(stat1 = 2.45, stat2 = 0.214, stat3 = 55.3, 
            digits = 2, bound_char = '[')
@@ -374,16 +390,16 @@ exampleData_BAMA |>
 #>  1 A1.con.env03 140 CF       1 648.00 [9.75, 3258.50]     1038.58 (1210.00)     
 #>  2 A1.con.env03 140 CF       2 529.75 [171.00, 1040.25]   550.92 (347.74)       
 #>  3 A244 D11gp120 avi         1 2542.88 [166.25, 19183.25] 5655.17 (7413.17)     
-#>  4 A244 D11gp120 avi         2 1046.12 [430.00, 3704.00]  1680.71 (1348.20)     
+#>  4 A244 D11gp120 avi         2 1046.13 [430.00, 3704.00]  1680.71 (1348.20)     
 #>  5 B.63521 D11gp120/293F     1 1562.88 [69.50, 3910.50]   1719.88 (1572.96)     
 #>  6 B.63521 D11gp120/293F     2 675.88 [307.75, 5115.50]   1577.17 (1894.48)     
 #>  7 B.MN V3 gp70              1 117.38 [-36.25, 329.00]    140.04 (158.30)       
 #>  8 B.MN V3 gp70              2 14.13 [-618.75, 2425.00]   302.71 (1105.90)      
 #>  9 B.con.env03 140 CF        1 2819.25 [191.25, 5989.75]  3149.50 (2364.75)     
-#> 10 B.con.env03 140 CF        2 4897.62 [589.75, 13738.25] 5152.88 (4685.93)     
+#> 10 B.con.env03 140 CF        2 4897.63 [589.75, 13738.25] 5152.88 (4685.93)     
 #> 11 gp41                      1 14377.75 [5380.75, 26021.… 16323.67 (8023.22)    
 #> 12 gp41                      2 25038.50 [8504.50, 32447.… 22558.67 (10658.01)   
-#> 13 p24                       1 6688.12 [1728.00, 13559.0… 6745.00 (4760.00)     
+#> 13 p24                       1 6688.13 [1728.00, 13559.0… 6745.00 (4760.00)     
 #> 14 p24                       2 3265.50 [963.50, 9886.25]  3880.46 (3180.21)     
 #> # ℹ abbreviated names: ¹​`Magnitude Info (Median [Range])`,
 #> #   ²​`Magnitude Info (Mean (SD))`
@@ -411,6 +427,7 @@ Example of summary information to be pasted together (partial output):
 
 ``` r
 
+
 summary_table <-  summary_info |>
   paste_tbl_grp(
     vars_to_paste = c('n', 'mean_sd', 'median_min_max'),
@@ -436,6 +453,7 @@ caption.
 
 ``` r
 
+
 value_example <- c("testvalue", "test_value", "ampersand&")
 escape(value_example)
 #> [1] "testvalue"    "test\\_value" "ampersand\\&"
@@ -453,6 +471,7 @@ which does not work well for tables that span multiple pages
 (i.e. `longtable = TRUE`).
 
 ``` r
+
 set.seed(341235432)
 sample_df <- data.frame(
   x = c(1, 1, 1, 2, 2, 2, 2),
@@ -488,6 +507,7 @@ Simple example using `pairwise_test_bin`:
 
 ``` r
 
+
 set.seed(1)
 x_example <- c(NA, sample(0:1, 50, replace = TRUE, prob = c(.75, .25)),
   sample(0:1, 50, replace = TRUE, prob = c(.25, .75)))
@@ -495,25 +515,33 @@ group_example <- c(rep(1, 25), NA, rep(2, 25), rep(3, 25), rep(4, 25))
 
 pairwise_test_bin(x_example, group_example) |> 
   rename(Separation = 'PerfectSeparation')
-#>   Comparison                                                 ResponseStats
-#> 1    1 vs. 2   7/24 = 29.2% (14.9%, 49.2%) vs. 6/25 = 24.0% (11.5%, 43.4%)
-#> 2    1 vs. 3  7/24 = 29.2% (14.9%, 49.2%) vs. 20/25 = 80.0% (60.9%, 91.1%)
-#> 3    1 vs. 4  7/24 = 29.2% (14.9%, 49.2%) vs. 16/25 = 64.0% (44.5%, 79.8%)
-#> 4    2 vs. 3  6/25 = 24.0% (11.5%, 43.4%) vs. 20/25 = 80.0% (60.9%, 91.1%)
-#> 5    2 vs. 4  6/25 = 24.0% (11.5%, 43.4%) vs. 16/25 = 64.0% (44.5%, 79.8%)
-#> 6    3 vs. 4 20/25 = 80.0% (60.9%, 91.1%) vs. 16/25 = 64.0% (44.5%, 79.8%)
-#>    ResponseTest Separation
-#> 1 0.76819476151      FALSE
-#> 2 0.00038580518      FALSE
-#> 3 0.01666966048      FALSE
-#> 4 0.00009064775      FALSE
-#> 5 0.00498314375      FALSE
-#> 6 0.23445322077      FALSE
+#>   Comparison SampleSizes
+#> 1    1 vs. 2   24 vs. 25
+#> 2    1 vs. 3   24 vs. 25
+#> 3    1 vs. 4   24 vs. 25
+#> 4    2 vs. 3   25 vs. 25
+#> 5    2 vs. 4   25 vs. 25
+#> 6    3 vs. 4   25 vs. 25
+#>                                                   ResponseStats  ResponseTest
+#> 1   7/24 = 29.2% (14.9%, 49.2%) vs. 6/25 = 24.0% (11.5%, 43.4%) 0.76819476151
+#> 2  7/24 = 29.2% (14.9%, 49.2%) vs. 20/25 = 80.0% (60.9%, 91.1%) 0.00038580518
+#> 3  7/24 = 29.2% (14.9%, 49.2%) vs. 16/25 = 64.0% (44.5%, 79.8%) 0.01666966048
+#> 4  6/25 = 24.0% (11.5%, 43.4%) vs. 20/25 = 80.0% (60.9%, 91.1%) 0.00009064775
+#> 5  6/25 = 24.0% (11.5%, 43.4%) vs. 16/25 = 64.0% (44.5%, 79.8%) 0.00498314375
+#> 6 20/25 = 80.0% (60.9%, 91.1%) vs. 16/25 = 64.0% (44.5%, 79.8%) 0.23445322077
+#>   Separation
+#> 1      FALSE
+#> 2      FALSE
+#> 3      FALSE
+#> 4      FALSE
+#> 5      FALSE
+#> 6      FALSE
 ```
 
 Group comparison example using `pairwise_test_bin`:
 
 ``` r
+
 
 ## Group Comparison
 group_testing <- exampleData_ICS |>
@@ -538,6 +566,7 @@ group_testing <- exampleData_ICS |>
 
 ``` r
 
+
 kableExtra::kable( group_testing, escape = FALSE, booktabs = TRUE,
   linesep = "", caption = 'Response Rate Comparisons Across Groups'
 ) |>
@@ -554,6 +583,7 @@ Time point comparison example (paired) using
 [`pairwise_test_bin()`](https://fredhutch.github.io/VISCfunctions/reference/pairwise_test_bin.md):
 
 ``` r
+
 
 ## Timepoint Comparison
 timepoint_testing <- exampleData_ICS |>
@@ -584,6 +614,7 @@ Simple example using
 
 ``` r
 
+
 set.seed(1)
 x_example <- c(NA, rnorm(50), rnorm(50, mean = 5))
 group_example <- c(rep(1, 25), rep(2, 25), rep(3, 25), rep(4, 25), NA)
@@ -597,19 +628,27 @@ pairwise_test_cont(x_example, group_example, digits = 1) |>
 #> 4    2 vs. 3   25 vs. 25  -0.1 [-1.5, 1.4] vs. 5.2 [0.9, 7.4]
 #> 5    2 vs. 4   25 vs. 25  -0.1 [-1.5, 1.4] vs. 5.1 [3.5, 6.6]
 #> 6    3 vs. 4   25 vs. 25    5.2 [0.9, 7.4] vs. 5.1 [3.5, 6.6]
-#>                   Mean_SD          MagnitudeTest Separation
-#> 1 0.1 (1.0) vs. 0.0 (0.7) 0.28742747500751675283      FALSE
-#> 2 0.1 (1.0) vs. 5.1 (1.4) 0.00000000000060121537      FALSE
-#> 3 0.1 (1.0) vs. 5.0 (0.9) 0.00000000000003164291       TRUE
-#> 4 0.0 (0.7) vs. 5.1 (1.4) 0.00000000000006328583      FALSE
-#> 5 0.0 (0.7) vs. 5.0 (0.9) 0.00000000000001582146       TRUE
-#> 6 5.1 (1.4) vs. 5.0 (0.9) 0.86260828521739307817      FALSE
+#>                       Median_Quartiles                 Mean_SD
+#> 1 0.4 [-0.4, 0.8] vs. -0.1 [-0.4, 0.6] 0.1 (1.0) vs. 0.0 (0.7)
+#> 2   0.4 [-0.4, 0.8] vs. 5.2 [4.3, 5.6] 0.1 (1.0) vs. 5.1 (1.4)
+#> 3   0.4 [-0.4, 0.8] vs. 5.1 [4.4, 5.6] 0.1 (1.0) vs. 5.0 (0.9)
+#> 4  -0.1 [-0.4, 0.6] vs. 5.2 [4.3, 5.6] 0.0 (0.7) vs. 5.1 (1.4)
+#> 5  -0.1 [-0.4, 0.6] vs. 5.1 [4.4, 5.6] 0.0 (0.7) vs. 5.0 (0.9)
+#> 6    5.2 [4.3, 5.6] vs. 5.1 [4.4, 5.6] 5.1 (1.4) vs. 5.0 (0.9)
+#>            MagnitudeTest Separation
+#> 1 0.28742747500751675283      FALSE
+#> 2 0.00000000000060121537      FALSE
+#> 3 0.00000000000003164291       TRUE
+#> 4 0.00000000000006328583      FALSE
+#> 5 0.00000000000001582146       TRUE
+#> 6 0.86260828521739307817      FALSE
 ```
 
 Group comparison example using
 [`pairwise_test_cont()`](https://fredhutch.github.io/VISCfunctions/reference/pairwise_test_cont.md):
 
 ``` r
+
 
 ## Group Comparison
 group_testing <- exampleData_ICS |>
@@ -625,8 +664,10 @@ group_testing <- exampleData_ICS |>
   mutate(MagnitudeTest = pretty_pvalues(
     MagnitudeTest, output_type = 'latex', 
     sig_alpha = .1, background = 'yellow')
-  ) |> 
-  rename("Median (Range)" = Median_Min_Max, 'Mean (SD) (log10)' = log_Mean_SD)
+  ) |>
+  rename("Median (Range)" = Median_Min_Max, 
+         "Median (Q1, Q3)" = Median_Quartiles, 
+         'Mean (SD) (log10)' = log_Mean_SD)
 
 kableExtra::kable(group_testing, escape = FALSE, booktabs = TRUE, 
                   caption = 'Magnitude Comparisons Across Groups') |> 
@@ -642,6 +683,7 @@ Time point comparison example (paired) using
 
 ``` r
 
+
 ## Timepoint Comparison
 timepoint_testing <- exampleData_ICS |>
   filter(Population == 'IFNg Or IL2' & Group != 4) |> 
@@ -656,9 +698,10 @@ timepoint_testing <- exampleData_ICS |>
   mutate(MagnitudeTest = pretty_pvalues(
     MagnitudeTest, output_type = 'latex', 
     sig_alpha = .1, background = 'yellow')
-    ) |> 
-  rename("Median (Range)" = Median_Min_Max, 'Mean (SD) (log10)' = log_Mean_SD)
-
+    ) |>
+  rename("Median (Range)" = Median_Min_Max, 
+         "Median (Q1, Q3)" = Median_Quartiles, 
+         'Mean (SD) (log10)' = log_Mean_SD)
 
 kableExtra::kable(timepoint_testing, 
                   escape = FALSE, 
@@ -676,6 +719,7 @@ kableExtra::kable(timepoint_testing,
 Simple example using `cor_test_pairs`:
 
 ``` r
+
 
 set.seed(1)
 x_example <- c(1, 1, rnorm(48), rnorm(49, mean = 5), NA)
@@ -696,6 +740,7 @@ cor_test_pairs(x_example, pair_example, id_example, digits = 4)
 Correlation comparisons using `cor_test_pairs`:
 
 ``` r
+
 ## Antigen Correlations
 antigen_testing <- exampleData_BAMA |>
   filter(antigen %in% c('B.63521 D11gp120/293F', 
@@ -735,6 +780,7 @@ magnitude breadth (MB) curves, and cumulative plots.
 
 ``` r
 
+
 #Potency-breadth curves
 plot_data <-
  CAVD812_mAB |>
@@ -765,6 +811,7 @@ to include response status and have logged transformation for AUC-MB
 calculation.
 
 ``` r
+
 data_here <- exampleData_BAMA |> filter(visitno == 2)
 
 group_results <- data_here |> dplyr::group_by(group) |>
@@ -795,6 +842,7 @@ BAMA Magnitude Breadth curves
 
 ``` r
 
+
 # AUC-MB plot
 AUC_MB <- dplyr::distinct(ind_results, group, pubID, aucMB)
 
@@ -824,6 +872,7 @@ the nearest even number when tied. Also
 allows for trailing zeros (i.e. 0.100 if rounding to 3 digits).
 
 ``` r
+
 vals_to_round = c(NA,-3.5:3.5)
 vals_to_round
 #> [1]   NA -3.5 -2.5 -1.5 -0.5  0.5  1.5  2.5  3.5
@@ -843,8 +892,13 @@ second table gives software package version information.
 is a function used by
 [`get_session_info()`](https://fredhutch.github.io/VISCfunctions/reference/get_session_info.md)
 to get the user’s name, based on user’s ID.
+[`shorten_git_hash()`](https://fredhutch.github.io/VISCfunctions/reference/shorten_git_hash.md)
+is an internal function for the reproducibility table and used within
+[`get_session_info()`](https://fredhutch.github.io/VISCfunctions/reference/get_session_info.md)
+which shortens the hash string to 7 digits.
 
 ``` r
+
 my_session_info <- get_session_info()
 kableExtra::kable(
   my_session_info$platform_table,
@@ -856,6 +910,7 @@ kableExtra::kable(
 ```
 
 ``` r
+
 
 kableExtra::kable(
   my_session_info$packages_table,

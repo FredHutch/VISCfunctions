@@ -117,6 +117,7 @@ return an estimate and the p-value set to NA.
 ## Examples
 
 ``` r
+
 data_in <- data.frame(
   id = 1:10,
   x = c(-2, -1, 0, 1, 2,-2, -1, 0, 1, 2),
@@ -154,16 +155,10 @@ data(exampleData_BAMA)
 exampleData_BAMA |>
 filter(visitno != 0) |>
 group_by(group, visitno) |>
- summarize(
+ reframe(
    cor_test_pairs(x = magnitude, pair = antigen, id = pubID,
-   method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE),
-   .groups = 'drop'
+   method = 'spearman', n_distinct_value = 3, digits = 1, verbose = TRUE)
  )
-#> Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
-#> dplyr 1.1.0.
-#> ℹ Please use `reframe()` instead.
-#> ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
-#>   always returns an ungrouped data frame and adjust accordingly.
 #> # A tibble: 84 × 7
 #>    group visitno Correlation                      NPoints Ties  CorrEst CorrTest
 #>    <int>   <dbl> <chr>                              <int> <chr> <chr>      <dbl>

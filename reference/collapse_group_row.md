@@ -67,49 +67,49 @@ collapse_group_row(sample_df, x, y, z) |>
 #>    <td style="text-align:right;"> 1 </td>
 #>    <td style="text-align:left;"> test1 </td>
 #>    <td style="text-align:right;"> 1 </td>
-#>    <td style="text-align:right;"> 0.0073994 </td>
+#>    <td style="text-align:right;"> 0.0807501 </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> 2 </td>
 #>    <td style="text-align:right;">  </td>
 #>    <td style="text-align:left;">  </td>
 #>    <td style="text-align:right;"> 2 </td>
-#>    <td style="text-align:right;"> 0.4663935 </td>
+#>    <td style="text-align:right;"> 0.8343330 </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> 3 </td>
 #>    <td style="text-align:right;">  </td>
 #>    <td style="text-align:left;"> test2 </td>
 #>    <td style="text-align:right;"> 3 </td>
-#>    <td style="text-align:right;"> 0.4977774 </td>
+#>    <td style="text-align:right;"> 0.6007609 </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> 4 </td>
 #>    <td style="text-align:right;"> 2 </td>
 #>    <td style="text-align:left;"> test1 </td>
 #>    <td style="text-align:right;"> 4 </td>
-#>    <td style="text-align:right;"> 0.2897672 </td>
+#>    <td style="text-align:right;"> 0.1572084 </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> 7 </td>
 #>    <td style="text-align:right;">  </td>
 #>    <td style="text-align:left;">  </td>
 #>    <td style="text-align:right;"> 7 </td>
-#>    <td style="text-align:right;"> 0.8746007 </td>
+#>    <td style="text-align:right;"> 0.4977774 </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> 5 </td>
 #>    <td style="text-align:right;">  </td>
 #>    <td style="text-align:left;"> test2 </td>
 #>    <td style="text-align:right;"> 5 </td>
-#>    <td style="text-align:right;"> 0.7328820 </td>
+#>    <td style="text-align:right;"> 0.0073994 </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> 6 </td>
 #>    <td style="text-align:right;">  </td>
 #>    <td style="text-align:left;">  </td>
 #>    <td style="text-align:right;"> 6 </td>
-#>    <td style="text-align:right;"> 0.7725215 </td>
+#>    <td style="text-align:right;"> 0.4663935 </td>
 #>   </tr>
 #> </tbody>
 #> </table>

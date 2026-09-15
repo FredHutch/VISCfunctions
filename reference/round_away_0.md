@@ -34,11 +34,13 @@ values.
 
 ## Details
 
-`round_away_0` is not designed for use at precision levels \<= 1e-15
+`round_away_0` is not designed for use at precision levels \<= 1e-15 or
+on numbers with many digits to the left of the rounded digit
 
 ## Examples
 
 ``` r
+
 vals_to_round = c(NA,-3.5:3.5,NA)
 # [1]   NA -3.5 -2.5 -1.5 -0.5  0.5  1.5  2.5  3.5   NA
 

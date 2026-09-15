@@ -16,24 +16,26 @@ A data frame with 252 rows and 6 variables:
 
 - pubID:
 
-  randomized subject ID
+  character. Randomized (de-identified) subject ID.
 
 - group:
 
-  study group
+  integer. Study group (1 or 2).
 
 - visitno:
 
-  visit number: baseline, 1, and 2
+  numeric. Visit number (0 = baseline, 1, 2).
 
 - antigen:
 
-  antigen tested
+  character. Name of the antigen tested.
 
 - magnitude:
 
-  magnitude of response, continuous, MFI\*
+  numeric. Response magnitude (MFI-blank, background-subtracted median
+  fluorescence intensity).
 
 - response:
 
-  response call for MFI\* (0/1, NA at baseline)
+  integer. Response call based on MFI-blank (1 = responder, 0 =
+  non-responder, NA at baseline).

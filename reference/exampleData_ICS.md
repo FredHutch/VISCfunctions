@@ -16,60 +16,66 @@ A data frame with 306 rows and 15 variables:
 
 - pubID:
 
-  randomized subject ID
+  character. Randomized (de-identified) subject ID.
 
 - Group:
 
-  study group
+  character. Study group.
 
 - Visit:
 
-  visit number: baseline, 1, and 2
+  integer. Visit number (0 = baseline, 1, 2).
 
 - Stim:
 
-  antigen stimulation
+  character. Antigen stimulation name (e.g. GAG, POL).
 
 - Parent:
 
-  T cell subset
+  character. T cell subset used as the parent gate (e.g. CD4/TOTM).
 
 - Population:
 
-  cell population
+  character. Cytokine-expressing cell population (e.g. IFNg, IFNg Or
+  IL2).
 
 - Count:
 
-  cell count
+  integer. Number of cytokine-positive cells in the stimulated sample.
 
 - ParentCount:
 
-  parent cell count
+  integer. Total number of parent T cells in the stimulated sample.
 
 - CountBG:
 
-  background cell count
+  integer. Number of cytokine-positive cells in the background
+  (unstimulated) sample.
 
 - ParentCountBG:
 
-  parent background cell count
+  integer. Total number of parent T cells in the background sample.
 
 - PercentCell:
 
-  count / parent count
+  numeric. Percent cytokine-positive cells in the stimulated sample
+  (Count / ParentCount).
 
 - PercentCellNet:
 
-  response magnitude: percent cell - background percent cell
+  numeric. Net (background-subtracted) percent cytokine-positive cells;
+  primary response magnitude measure (PercentCell - background
+  PercentCell).
 
 - response_prob:
 
-  MIMOSA response probability
+  numeric. MIMOSA posterior probability of a positive response.
 
 - response_fdr_P:
 
-  FDR-adjusted p-value
+  numeric. FDR-adjusted p-value from MIMOSA.
 
 - response:
 
-  response call for percent cell net (0/1)
+  numeric. Response call based on PercentCellNet (1 = responder, 0 =
+  non-responder).

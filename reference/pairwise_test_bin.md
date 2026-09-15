@@ -134,80 +134,113 @@ binary percentages
 ## Examples
 
 ``` r
+
 set.seed(1)
 x_example = c(NA,sample(0:1,50,replace = TRUE, prob = c(.75,.25)),
   sample(0:1,50,replace = TRUE, prob = c(.25,.75)),0,0,1,1)
 group_example = c(rep(1,25),NA,rep(2,25),rep(3,25),rep(4,25),'a','a','b','b')
 
 pairwise_test_bin(x_example,group_example, num_needed_for_test = 2)
-#>    Comparison                                                 ResponseStats
-#> 1     1 vs. 2   7/24 = 29.2% (14.9%, 49.2%) vs. 6/25 = 24.0% (11.5%, 43.4%)
-#> 2     1 vs. 3  7/24 = 29.2% (14.9%, 49.2%) vs. 20/25 = 80.0% (60.9%, 91.1%)
-#> 3     1 vs. 4  7/24 = 29.2% (14.9%, 49.2%) vs. 16/25 = 64.0% (44.5%, 79.8%)
-#> 4     1 vs. a      7/24 = 29.2% (14.9%, 49.2%) vs. 0/2 = 0.0% (0.0%, 65.8%)
-#> 5     1 vs. b  7/24 = 29.2% (14.9%, 49.2%) vs. 2/2 = 100.0% (34.2%, 100.0%)
-#> 6     2 vs. 3  6/25 = 24.0% (11.5%, 43.4%) vs. 20/25 = 80.0% (60.9%, 91.1%)
-#> 7     2 vs. 4  6/25 = 24.0% (11.5%, 43.4%) vs. 16/25 = 64.0% (44.5%, 79.8%)
-#> 8     2 vs. a      6/25 = 24.0% (11.5%, 43.4%) vs. 0/2 = 0.0% (0.0%, 65.8%)
-#> 9     2 vs. b  6/25 = 24.0% (11.5%, 43.4%) vs. 2/2 = 100.0% (34.2%, 100.0%)
-#> 10    3 vs. 4 20/25 = 80.0% (60.9%, 91.1%) vs. 16/25 = 64.0% (44.5%, 79.8%)
-#> 11    3 vs. a     20/25 = 80.0% (60.9%, 91.1%) vs. 0/2 = 0.0% (0.0%, 65.8%)
-#> 12    3 vs. b 20/25 = 80.0% (60.9%, 91.1%) vs. 2/2 = 100.0% (34.2%, 100.0%)
-#> 13    4 vs. a     16/25 = 64.0% (44.5%, 79.8%) vs. 0/2 = 0.0% (0.0%, 65.8%)
-#> 14    4 vs. b 16/25 = 64.0% (44.5%, 79.8%) vs. 2/2 = 100.0% (34.2%, 100.0%)
-#> 15    a vs. b     0/2 = 0.0% (0.0%, 65.8%) vs. 2/2 = 100.0% (34.2%, 100.0%)
-#>    ResponseTest PerfectSeparation
-#> 1  7.681948e-01             FALSE
-#> 2  3.858052e-04             FALSE
-#> 3  1.666966e-02             FALSE
-#> 4  5.716246e-01             FALSE
-#> 5  6.895733e-02             FALSE
-#> 6  9.064775e-05             FALSE
-#> 7  4.983144e-03             FALSE
-#> 8  7.702599e-01             FALSE
-#> 9  6.623440e-02             FALSE
-#> 10 2.344532e-01             FALSE
-#> 11 2.929379e-02             FALSE
-#> 12 7.151828e-01             FALSE
-#> 13 1.074259e-01             FALSE
-#> 14 4.735172e-01             FALSE
-#> 15 1.250000e-01              TRUE
+#>    Comparison SampleSizes
+#> 1     1 vs. 2   24 vs. 25
+#> 2     1 vs. 3   24 vs. 25
+#> 3     1 vs. 4   24 vs. 25
+#> 4     1 vs. a    24 vs. 2
+#> 5     1 vs. b    24 vs. 2
+#> 6     2 vs. 3   25 vs. 25
+#> 7     2 vs. 4   25 vs. 25
+#> 8     2 vs. a    25 vs. 2
+#> 9     2 vs. b    25 vs. 2
+#> 10    3 vs. 4   25 vs. 25
+#> 11    3 vs. a    25 vs. 2
+#> 12    3 vs. b    25 vs. 2
+#> 13    4 vs. a    25 vs. 2
+#> 14    4 vs. b    25 vs. 2
+#> 15    a vs. b     2 vs. 2
+#>                                                    ResponseStats ResponseTest
+#> 1    7/24 = 29.2% (14.9%, 49.2%) vs. 6/25 = 24.0% (11.5%, 43.4%) 7.681948e-01
+#> 2   7/24 = 29.2% (14.9%, 49.2%) vs. 20/25 = 80.0% (60.9%, 91.1%) 3.858052e-04
+#> 3   7/24 = 29.2% (14.9%, 49.2%) vs. 16/25 = 64.0% (44.5%, 79.8%) 1.666966e-02
+#> 4       7/24 = 29.2% (14.9%, 49.2%) vs. 0/2 = 0.0% (0.0%, 65.8%) 5.716246e-01
+#> 5   7/24 = 29.2% (14.9%, 49.2%) vs. 2/2 = 100.0% (34.2%, 100.0%) 6.895733e-02
+#> 6   6/25 = 24.0% (11.5%, 43.4%) vs. 20/25 = 80.0% (60.9%, 91.1%) 9.064775e-05
+#> 7   6/25 = 24.0% (11.5%, 43.4%) vs. 16/25 = 64.0% (44.5%, 79.8%) 4.983144e-03
+#> 8       6/25 = 24.0% (11.5%, 43.4%) vs. 0/2 = 0.0% (0.0%, 65.8%) 7.702599e-01
+#> 9   6/25 = 24.0% (11.5%, 43.4%) vs. 2/2 = 100.0% (34.2%, 100.0%) 6.623440e-02
+#> 10 20/25 = 80.0% (60.9%, 91.1%) vs. 16/25 = 64.0% (44.5%, 79.8%) 2.344532e-01
+#> 11     20/25 = 80.0% (60.9%, 91.1%) vs. 0/2 = 0.0% (0.0%, 65.8%) 2.929379e-02
+#> 12 20/25 = 80.0% (60.9%, 91.1%) vs. 2/2 = 100.0% (34.2%, 100.0%) 7.151828e-01
+#> 13     16/25 = 64.0% (44.5%, 79.8%) vs. 0/2 = 0.0% (0.0%, 65.8%) 1.074259e-01
+#> 14 16/25 = 64.0% (44.5%, 79.8%) vs. 2/2 = 100.0% (34.2%, 100.0%) 4.735172e-01
+#> 15     0/2 = 0.0% (0.0%, 65.8%) vs. 2/2 = 100.0% (34.2%, 100.0%) 1.250000e-01
+#>    PerfectSeparation
+#> 1              FALSE
+#> 2              FALSE
+#> 3              FALSE
+#> 4              FALSE
+#> 5              FALSE
+#> 6              FALSE
+#> 7              FALSE
+#> 8              FALSE
+#> 9              FALSE
+#> 10             FALSE
+#> 11             FALSE
+#> 12             FALSE
+#> 13             FALSE
+#> 14             FALSE
+#> 15              TRUE
 
 pairwise_test_bin(
 x_example,group_example, alternative = "less",
   sorted_group = c(1:4, 'a','b'),num_needed_for_test = 2)
-#>    Comparison                                                 ResponseStats
-#> 1       1 < 2   7/24 = 29.2% (14.9%, 49.2%) vs. 6/25 = 24.0% (11.5%, 43.4%)
-#> 2       1 < 3  7/24 = 29.2% (14.9%, 49.2%) vs. 20/25 = 80.0% (60.9%, 91.1%)
-#> 3       1 < 4  7/24 = 29.2% (14.9%, 49.2%) vs. 16/25 = 64.0% (44.5%, 79.8%)
-#> 4       1 < a      7/24 = 29.2% (14.9%, 49.2%) vs. 0/2 = 0.0% (0.0%, 65.8%)
-#> 5       1 < b  7/24 = 29.2% (14.9%, 49.2%) vs. 2/2 = 100.0% (34.2%, 100.0%)
-#> 6       2 < 3  6/25 = 24.0% (11.5%, 43.4%) vs. 20/25 = 80.0% (60.9%, 91.1%)
-#> 7       2 < 4  6/25 = 24.0% (11.5%, 43.4%) vs. 16/25 = 64.0% (44.5%, 79.8%)
-#> 8       2 < a      6/25 = 24.0% (11.5%, 43.4%) vs. 0/2 = 0.0% (0.0%, 65.8%)
-#> 9       2 < b  6/25 = 24.0% (11.5%, 43.4%) vs. 2/2 = 100.0% (34.2%, 100.0%)
-#> 10      3 < 4 20/25 = 80.0% (60.9%, 91.1%) vs. 16/25 = 64.0% (44.5%, 79.8%)
-#> 11      3 < a     20/25 = 80.0% (60.9%, 91.1%) vs. 0/2 = 0.0% (0.0%, 65.8%)
-#> 12      3 < b 20/25 = 80.0% (60.9%, 91.1%) vs. 2/2 = 100.0% (34.2%, 100.0%)
-#> 13      4 < a     16/25 = 64.0% (44.5%, 79.8%) vs. 0/2 = 0.0% (0.0%, 65.8%)
-#> 14      4 < b 16/25 = 64.0% (44.5%, 79.8%) vs. 2/2 = 100.0% (34.2%, 100.0%)
-#> 15      a < b     0/2 = 0.0% (0.0%, 65.8%) vs. 2/2 = 100.0% (34.2%, 100.0%)
-#>    ResponseTest PerfectSeparation
-#> 1  9.997601e-01             FALSE
-#> 2  1.966412e-04             FALSE
-#> 3  8.559910e-03             FALSE
-#> 4  1.000000e+00             FALSE
-#> 5  6.895733e-02             FALSE
-#> 6  4.532387e-05             FALSE
-#> 7  2.491572e-03             FALSE
-#> 8  1.000000e+00             FALSE
-#> 9  6.623440e-02             FALSE
-#> 10 1.000000e+00             FALSE
-#> 11 1.000000e+00             FALSE
-#> 12 4.509185e-01             FALSE
-#> 13 1.000000e+00             FALSE
-#> 14 2.658420e-01             FALSE
-#> 15 6.250000e-02              TRUE
+#>    Comparison SampleSizes
+#> 1       1 < 2   24 vs. 25
+#> 2       1 < 3   24 vs. 25
+#> 3       1 < 4   24 vs. 25
+#> 4       1 < a    24 vs. 2
+#> 5       1 < b    24 vs. 2
+#> 6       2 < 3   25 vs. 25
+#> 7       2 < 4   25 vs. 25
+#> 8       2 < a    25 vs. 2
+#> 9       2 < b    25 vs. 2
+#> 10      3 < 4   25 vs. 25
+#> 11      3 < a    25 vs. 2
+#> 12      3 < b    25 vs. 2
+#> 13      4 < a    25 vs. 2
+#> 14      4 < b    25 vs. 2
+#> 15      a < b     2 vs. 2
+#>                                                    ResponseStats ResponseTest
+#> 1    7/24 = 29.2% (14.9%, 49.2%) vs. 6/25 = 24.0% (11.5%, 43.4%) 9.997601e-01
+#> 2   7/24 = 29.2% (14.9%, 49.2%) vs. 20/25 = 80.0% (60.9%, 91.1%) 1.966412e-04
+#> 3   7/24 = 29.2% (14.9%, 49.2%) vs. 16/25 = 64.0% (44.5%, 79.8%) 8.559910e-03
+#> 4       7/24 = 29.2% (14.9%, 49.2%) vs. 0/2 = 0.0% (0.0%, 65.8%) 1.000000e+00
+#> 5   7/24 = 29.2% (14.9%, 49.2%) vs. 2/2 = 100.0% (34.2%, 100.0%) 6.895733e-02
+#> 6   6/25 = 24.0% (11.5%, 43.4%) vs. 20/25 = 80.0% (60.9%, 91.1%) 4.532387e-05
+#> 7   6/25 = 24.0% (11.5%, 43.4%) vs. 16/25 = 64.0% (44.5%, 79.8%) 2.491572e-03
+#> 8       6/25 = 24.0% (11.5%, 43.4%) vs. 0/2 = 0.0% (0.0%, 65.8%) 1.000000e+00
+#> 9   6/25 = 24.0% (11.5%, 43.4%) vs. 2/2 = 100.0% (34.2%, 100.0%) 6.623440e-02
+#> 10 20/25 = 80.0% (60.9%, 91.1%) vs. 16/25 = 64.0% (44.5%, 79.8%) 1.000000e+00
+#> 11     20/25 = 80.0% (60.9%, 91.1%) vs. 0/2 = 0.0% (0.0%, 65.8%) 1.000000e+00
+#> 12 20/25 = 80.0% (60.9%, 91.1%) vs. 2/2 = 100.0% (34.2%, 100.0%) 4.509185e-01
+#> 13     16/25 = 64.0% (44.5%, 79.8%) vs. 0/2 = 0.0% (0.0%, 65.8%) 1.000000e+00
+#> 14 16/25 = 64.0% (44.5%, 79.8%) vs. 2/2 = 100.0% (34.2%, 100.0%) 2.658420e-01
+#> 15     0/2 = 0.0% (0.0%, 65.8%) vs. 2/2 = 100.0% (34.2%, 100.0%) 6.250000e-02
+#>    PerfectSeparation
+#> 1              FALSE
+#> 2              FALSE
+#> 3              FALSE
+#> 4              FALSE
+#> 5              FALSE
+#> 6              FALSE
+#> 7              FALSE
+#> 8              FALSE
+#> 9              FALSE
+#> 10             FALSE
+#> 11             FALSE
+#> 12             FALSE
+#> 13             FALSE
+#> 14             FALSE
+#> 15              TRUE
 
 # Examples with Real World Data
 library(dplyr)
@@ -220,30 +253,16 @@ group_testing <- exampleData_BAMA |>
    group_by(antigen, visitno) |>
    group_modify(~ as.data.frame(
        pairwise_test_bin(x = .$response, group = .$group,
-               method = 'barnard', alternative = 'less',
+               method = 'barnard', alternative = 'two.sided',
                num_needed_for_test = 3, digits = 1,
                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
-#> "sorted_group" not specified so testing in following order: 
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
-#> "sorted_group" not specified so testing in following order: 
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
-#> "sorted_group" not specified so testing in following order: 
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
-#> "sorted_group" not specified so testing in following order: 
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
-#> "sorted_group" not specified so testing in following order: 
-#> "sorted_group" not specified so testing in following order: 
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
-#> "sorted_group" not specified so testing in following order: 
 
 
 ## Timepoint Comparison
@@ -267,114 +286,97 @@ group_testing <- exampleData_ICS |>
    group_by(Stim, Parent, Population, Visit) |>
    group_modify(~ as.data.frame(
        pairwise_test_bin(x = .$response, group = .$Group , alternative = 'greater',
+               sorted_group = 1:4,
                method = 'barnard', num_needed_for_test = 3, digits = 1,
                trailing_zeros = TRUE, sep_val = ' vs. ', verbose = TRUE)))
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
-#> "sorted_group" not specified so testing in following order: 
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned
 #> x does not have at least 3 non missing values per group, so no test run (ResponseTest=NA returned)
 #> "x" only has 1 distinct value when considering non-missing values of "y", so p=1 returned

@@ -35,6 +35,7 @@ get the Full Name, the system usernam will be displayed instead.
 ## Examples
 
 ``` r
+
 my_session_info <- get_session_info()
 
 library(dplyr)
@@ -54,15 +55,15 @@ kableExtra::kable(my_session_info$platform_table, 'html',
 #> <tbody>
 #>   <tr>
 #>    <td style="text-align:left;"> nodename </td>
-#>    <td style="text-align:left;"> runnervmmtnos </td>
+#>    <td style="text-align:left;"> runnervmlun5p </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> version </td>
-#>    <td style="text-align:left;"> R version 4.5.2 (2025-10-31) </td>
+#>    <td style="text-align:left;"> R version 4.6.1 (2026-06-24) </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> os </td>
-#>    <td style="text-align:left;"> Ubuntu 24.04.3 LTS </td>
+#>    <td style="text-align:left;"> Ubuntu 24.04.5 LTS </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> system </td>
@@ -90,11 +91,11 @@ kableExtra::kable(my_session_info$platform_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> date </td>
-#>    <td style="text-align:left;"> 2026-01-16 </td>
+#>    <td style="text-align:left;"> 2026-09-15 </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> pandoc </td>
-#>    <td style="text-align:left;"> 3.1.11 @ /opt/hostedtoolcache/pandoc/3.1.11/x64/ (via rmarkdown) </td>
+#>    <td style="text-align:left;"> 3.8.3 @ /opt/hostedtoolcache/pandoc/3.8.3/x64/ (via rmarkdown) </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> quarto </td>
@@ -136,15 +137,15 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #> <tbody>
 #>   <tr>
 #>    <td style="text-align:left;"> dplyr </td>
-#>    <td style="text-align:left;"> 1.1.4 </td>
-#>    <td style="text-align:left;"> 2023-11-17 </td>
+#>    <td style="text-align:left;"> 1.2.1 </td>
+#>    <td style="text-align:left;"> 2026-04-03 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> attached </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> VISCfunctions </td>
-#>    <td style="text-align:left;"> 1.3.1 </td>
-#>    <td style="text-align:left;"> 2026-01-16 </td>
+#>    <td style="text-align:left;"> 1.3.2 </td>
+#>    <td style="text-align:left;"> 2026-09-15 </td>
 #>    <td style="text-align:left;"> local </td>
 #>    <td style="text-align:left;"> attached </td>
 #>   </tr>
@@ -157,15 +158,15 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> binom </td>
-#>    <td style="text-align:left;"> 1.1-1.1 </td>
-#>    <td style="text-align:left;"> 2022-05-02 </td>
+#>    <td style="text-align:left;"> 1.1-2 </td>
+#>    <td style="text-align:left;"> 2026-07-07 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> bslib </td>
-#>    <td style="text-align:left;"> 0.9.0 </td>
-#>    <td style="text-align:left;"> 2025-01-30 </td>
+#>    <td style="text-align:left;"> 0.12.0 </td>
+#>    <td style="text-align:left;"> 2026-08-04 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -178,8 +179,8 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> cli </td>
-#>    <td style="text-align:left;"> 3.6.5 </td>
-#>    <td style="text-align:left;"> 2025-04-23 </td>
+#>    <td style="text-align:left;"> 3.6.6 </td>
+#>    <td style="text-align:left;"> 2026-04-09 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -187,20 +188,20 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>    <td style="text-align:left;"> codetools </td>
 #>    <td style="text-align:left;"> 0.2-20 </td>
 #>    <td style="text-align:left;"> 2024-03-31 </td>
-#>    <td style="text-align:left;"> CRAN (R 4.5.2) </td>
+#>    <td style="text-align:left;"> CRAN (R 4.6.1) </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> coin </td>
-#>    <td style="text-align:left;"> 1.4-3 </td>
-#>    <td style="text-align:left;"> 2023-09-27 </td>
+#>    <td style="text-align:left;"> 1.4-5 </td>
+#>    <td style="text-align:left;"> 2026-07-10 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> curl </td>
-#>    <td style="text-align:left;"> 7.0.0 </td>
-#>    <td style="text-align:left;"> 2025-08-19 </td>
+#>    <td style="text-align:left;"> 8.0.0 </td>
+#>    <td style="text-align:left;"> 2026-08-25 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -262,8 +263,8 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> fs </td>
-#>    <td style="text-align:left;"> 1.6.6 </td>
-#>    <td style="text-align:left;"> 2025-04-12 </td>
+#>    <td style="text-align:left;"> 2.1.0 </td>
+#>    <td style="text-align:left;"> 2026-04-18 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -276,15 +277,15 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> ggplot2 </td>
-#>    <td style="text-align:left;"> 4.0.1 </td>
-#>    <td style="text-align:left;"> 2025-11-14 </td>
+#>    <td style="text-align:left;"> 4.0.3 </td>
+#>    <td style="text-align:left;"> 2026-04-22 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> glue </td>
-#>    <td style="text-align:left;"> 1.8.0 </td>
-#>    <td style="text-align:left;"> 2024-09-30 </td>
+#>    <td style="text-align:left;"> 1.8.1 </td>
+#>    <td style="text-align:left;"> 2026-04-17 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -304,8 +305,8 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> httr2 </td>
-#>    <td style="text-align:left;"> 1.2.2 </td>
-#>    <td style="text-align:left;"> 2025-12-08 </td>
+#>    <td style="text-align:left;"> 1.3.0 </td>
+#>    <td style="text-align:left;"> 2026-07-13 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -325,15 +326,15 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> kableExtra </td>
-#>    <td style="text-align:left;"> 1.4.0 </td>
-#>    <td style="text-align:left;"> 2024-01-24 </td>
+#>    <td style="text-align:left;"> 1.4.1 </td>
+#>    <td style="text-align:left;"> 2026-07-08 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> knitr </td>
-#>    <td style="text-align:left;"> 1.51 </td>
-#>    <td style="text-align:left;"> 2025-12-20 </td>
+#>    <td style="text-align:left;"> 1.52 </td>
+#>    <td style="text-align:left;"> 2026-09-06 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -346,15 +347,15 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> lattice </td>
-#>    <td style="text-align:left;"> 0.22-7 </td>
-#>    <td style="text-align:left;"> 2025-04-02 </td>
-#>    <td style="text-align:left;"> CRAN (R 4.5.2) </td>
+#>    <td style="text-align:left;"> 0.22-9 </td>
+#>    <td style="text-align:left;"> 2026-02-09 </td>
+#>    <td style="text-align:left;"> CRAN (R 4.6.1) </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> libcoin </td>
-#>    <td style="text-align:left;"> 1.0-10 </td>
-#>    <td style="text-align:left;"> 2023-09-27 </td>
+#>    <td style="text-align:left;"> 1.0-13 </td>
+#>    <td style="text-align:left;"> 2026-06-04 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -367,8 +368,8 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> magrittr </td>
-#>    <td style="text-align:left;"> 2.0.4 </td>
-#>    <td style="text-align:left;"> 2025-09-12 </td>
+#>    <td style="text-align:left;"> 2.0.5 </td>
+#>    <td style="text-align:left;"> 2026-04-04 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -376,14 +377,14 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>    <td style="text-align:left;"> MASS </td>
 #>    <td style="text-align:left;"> 7.3-65 </td>
 #>    <td style="text-align:left;"> 2025-02-28 </td>
-#>    <td style="text-align:left;"> CRAN (R 4.5.2) </td>
+#>    <td style="text-align:left;"> CRAN (R 4.6.1) </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> Matrix </td>
-#>    <td style="text-align:left;"> 1.7-4 </td>
-#>    <td style="text-align:left;"> 2025-08-28 </td>
-#>    <td style="text-align:left;"> CRAN (R 4.5.2) </td>
+#>    <td style="text-align:left;"> 1.7-5 </td>
+#>    <td style="text-align:left;"> 2026-03-21 </td>
+#>    <td style="text-align:left;"> CRAN (R 4.6.1) </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
@@ -409,22 +410,29 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> multcomp </td>
-#>    <td style="text-align:left;"> 1.4-29 </td>
-#>    <td style="text-align:left;"> 2025-10-20 </td>
+#>    <td style="text-align:left;"> 1.4-32 </td>
+#>    <td style="text-align:left;"> 2026-08-21 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> mvtnorm </td>
-#>    <td style="text-align:left;"> 1.3-3 </td>
-#>    <td style="text-align:left;"> 2025-01-10 </td>
+#>    <td style="text-align:left;"> 1.4-2 </td>
+#>    <td style="text-align:left;"> 2026-07-12 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> openssl </td>
-#>    <td style="text-align:left;"> 2.3.4 </td>
-#>    <td style="text-align:left;"> 2025-09-30 </td>
+#>    <td style="text-align:left;"> 2.4.2 </td>
+#>    <td style="text-align:left;"> 2026-06-09 </td>
+#>    <td style="text-align:left;"> RSPM </td>
+#>    <td style="text-align:left;"> loaded </td>
+#>   </tr>
+#>   <tr>
+#>    <td style="text-align:left;"> otel </td>
+#>    <td style="text-align:left;"> 0.2.0 </td>
+#>    <td style="text-align:left;"> 2025-08-29 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -444,15 +452,15 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> pkgdown </td>
-#>    <td style="text-align:left;"> 2.2.0 </td>
-#>    <td style="text-align:left;"> 2025-11-06 </td>
-#>    <td style="text-align:left;"> any (@2.2.0) </td>
+#>    <td style="text-align:left;"> 2.2.1 </td>
+#>    <td style="text-align:left;"> 2026-07-07 </td>
+#>    <td style="text-align:left;"> any (@2.2.1) </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> purrr </td>
-#>    <td style="text-align:left;"> 1.2.1 </td>
-#>    <td style="text-align:left;"> 2026-01-09 </td>
+#>    <td style="text-align:left;"> 1.2.2 </td>
+#>    <td style="text-align:left;"> 2026-04-10 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -465,15 +473,8 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> ragg </td>
-#>    <td style="text-align:left;"> 1.5.0 </td>
-#>    <td style="text-align:left;"> 2025-09-02 </td>
-#>    <td style="text-align:left;"> RSPM </td>
-#>    <td style="text-align:left;"> loaded </td>
-#>   </tr>
-#>   <tr>
-#>    <td style="text-align:left;"> rappdirs </td>
-#>    <td style="text-align:left;"> 0.3.3 </td>
-#>    <td style="text-align:left;"> 2021-01-31 </td>
+#>    <td style="text-align:left;"> 1.5.2 </td>
+#>    <td style="text-align:left;"> 2026-03-23 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -486,36 +487,36 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> rlang </td>
-#>    <td style="text-align:left;"> 1.1.7 </td>
-#>    <td style="text-align:left;"> 2026-01-09 </td>
+#>    <td style="text-align:left;"> 1.3.0 </td>
+#>    <td style="text-align:left;"> 2026-07-05 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> rmarkdown </td>
-#>    <td style="text-align:left;"> 2.30 </td>
-#>    <td style="text-align:left;"> 2025-09-28 </td>
+#>    <td style="text-align:left;"> 2.32 </td>
+#>    <td style="text-align:left;"> 2026-09-01 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> rstudioapi </td>
-#>    <td style="text-align:left;"> 0.17.1 </td>
-#>    <td style="text-align:left;"> 2024-10-22 </td>
+#>    <td style="text-align:left;"> 0.19.0 </td>
+#>    <td style="text-align:left;"> 2026-06-11 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> S7 </td>
-#>    <td style="text-align:left;"> 0.2.1 </td>
-#>    <td style="text-align:left;"> 2025-11-14 </td>
+#>    <td style="text-align:left;"> 0.2.2 </td>
+#>    <td style="text-align:left;"> 2026-04-22 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> sandwich </td>
-#>    <td style="text-align:left;"> 3.1-1 </td>
-#>    <td style="text-align:left;"> 2024-09-15 </td>
+#>    <td style="text-align:left;"> 3.1-3 </td>
+#>    <td style="text-align:left;"> 2026-08-03 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -535,15 +536,15 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> sessioninfo </td>
-#>    <td style="text-align:left;"> 1.2.3 </td>
-#>    <td style="text-align:left;"> 2025-02-05 </td>
+#>    <td style="text-align:left;"> 1.2.4 </td>
+#>    <td style="text-align:left;"> 2026-06-04 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> stringi </td>
-#>    <td style="text-align:left;"> 1.8.7 </td>
-#>    <td style="text-align:left;"> 2025-03-27 </td>
+#>    <td style="text-align:left;"> 1.8.9 </td>
+#>    <td style="text-align:left;"> 2026-08-04 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -556,9 +557,9 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> survival </td>
-#>    <td style="text-align:left;"> 3.8-3 </td>
-#>    <td style="text-align:left;"> 2024-12-17 </td>
-#>    <td style="text-align:left;"> CRAN (R 4.5.2) </td>
+#>    <td style="text-align:left;"> 3.8-6 </td>
+#>    <td style="text-align:left;"> 2026-01-16 </td>
+#>    <td style="text-align:left;"> CRAN (R 4.6.1) </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
@@ -570,15 +571,15 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> systemfonts </td>
-#>    <td style="text-align:left;"> 1.3.1 </td>
-#>    <td style="text-align:left;"> 2025-10-01 </td>
+#>    <td style="text-align:left;"> 1.3.2 </td>
+#>    <td style="text-align:left;"> 2026-03-05 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> textshaping </td>
-#>    <td style="text-align:left;"> 1.0.4 </td>
-#>    <td style="text-align:left;"> 2025-10-10 </td>
+#>    <td style="text-align:left;"> 1.0.5 </td>
+#>    <td style="text-align:left;"> 2026-03-06 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -619,15 +620,15 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> vctrs </td>
-#>    <td style="text-align:left;"> 0.6.5 </td>
-#>    <td style="text-align:left;"> 2023-12-01 </td>
+#>    <td style="text-align:left;"> 0.7.3 </td>
+#>    <td style="text-align:left;"> 2026-04-11 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> viridisLite </td>
-#>    <td style="text-align:left;"> 0.4.2 </td>
-#>    <td style="text-align:left;"> 2023-05-02 </td>
+#>    <td style="text-align:left;"> 0.4.3 </td>
+#>    <td style="text-align:left;"> 2026-02-04 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -640,22 +641,22 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> withr </td>
-#>    <td style="text-align:left;"> 3.0.2 </td>
-#>    <td style="text-align:left;"> 2024-10-28 </td>
+#>    <td style="text-align:left;"> 3.0.3 </td>
+#>    <td style="text-align:left;"> 2026-06-19 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> xfun </td>
-#>    <td style="text-align:left;"> 0.55 </td>
-#>    <td style="text-align:left;"> 2025-12-16 </td>
+#>    <td style="text-align:left;"> 0.60 </td>
+#>    <td style="text-align:left;"> 2026-07-09 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> xml2 </td>
-#>    <td style="text-align:left;"> 1.5.1 </td>
-#>    <td style="text-align:left;"> 2025-12-01 </td>
+#>    <td style="text-align:left;"> 1.6.0 </td>
+#>    <td style="text-align:left;"> 2026-06-22 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -668,8 +669,8 @@ kableExtra::kable(my_session_info$packages_table, 'html',
 #>   </tr>
 #>   <tr>
 #>    <td style="text-align:left;"> zoo </td>
-#>    <td style="text-align:left;"> 1.8-15 </td>
-#>    <td style="text-align:left;"> 2025-12-15 </td>
+#>    <td style="text-align:left;"> 1.9-0 </td>
+#>    <td style="text-align:left;"> 2026-07-31 </td>
 #>    <td style="text-align:left;"> RSPM </td>
 #>    <td style="text-align:left;"> loaded </td>
 #>   </tr>
@@ -690,17 +691,17 @@ kableExtra::kable(my_session_info$platform_table, 'latex', booktabs = TRUE,
 #> \toprule
 #> name & value\\
 #> \midrule
-#> nodename & runnervmmtnos\\
-#> version & R version 4.5.2 (2025-10-31)\\
-#> os & Ubuntu 24.04.3 LTS\\
+#> nodename & runnervmlun5p\\
+#> version & R version 4.6.1 (2026-06-24)\\
+#> os & Ubuntu 24.04.5 LTS\\
 #> system & x86\_64, linux-gnu\\
 #> ui & X11\\
 #> language & en\\
 #> collate & C\\
 #> ctype & C.UTF-8\\
 #> tz & UTC\\
-#> date & 2026-01-16\\
-#> pandoc & 3.1.11 @ /opt/hostedtoolcache/pandoc/3.1.11/x64/ (via rmarkdown)\\
+#> date & 2026-09-15\\
+#> pandoc & 3.8.3 @ /opt/hostedtoolcache/pandoc/3.8.3/x64/ (via rmarkdown)\\
 #> quarto & NA\\
 #> repo & https://github.com/FredHutch/VISCfunctions\\
 #> file name & No Input File Detected\\
@@ -722,16 +723,16 @@ kableExtra::kable(my_session_info$packages_table, 'latex', booktabs = TRUE,
 #> \toprule
 #> package & version & date & source & status\\
 #> \midrule
-#> dplyr & 1.1.4 & 2023-11-17 & RSPM & attached\\
-#> VISCfunctions & 1.3.1 & 2026-01-16 & local & attached\\
+#> dplyr & 1.2.1 & 2026-04-03 & RSPM & attached\\
+#> VISCfunctions & 1.3.2 & 2026-09-15 & local & attached\\
 #> askpass & 1.2.1 & 2024-10-04 & RSPM & loaded\\
-#> binom & 1.1-1.1 & 2022-05-02 & RSPM & loaded\\
-#> bslib & 0.9.0 & 2025-01-30 & RSPM & loaded\\
+#> binom & 1.1-2 & 2026-07-07 & RSPM & loaded\\
+#> bslib & 0.12.0 & 2026-08-04 & RSPM & loaded\\
 #> cachem & 1.1.0 & 2024-05-16 & RSPM & loaded\\
-#> cli & 3.6.5 & 2025-04-23 & RSPM & loaded\\
-#> codetools & 0.2-20 & 2024-03-31 & CRAN (R 4.5.2) & loaded\\
-#> coin & 1.4-3 & 2023-09-27 & RSPM & loaded\\
-#> curl & 7.0.0 & 2025-08-19 & RSPM & loaded\\
+#> cli & 3.6.6 & 2026-04-09 & RSPM & loaded\\
+#> codetools & 0.2-20 & 2024-03-31 & CRAN (R 4.6.1) & loaded\\
+#> coin & 1.4-5 & 2026-07-10 & RSPM & loaded\\
+#> curl & 8.0.0 & 2026-08-25 & RSPM & loaded\\
 #> desc & 1.4.3 & 2023-12-10 & RSPM & loaded\\
 #> digest & 0.6.39 & 2025-11-19 & RSPM & loaded\\
 #> downlit & 0.4.5 & 2025-11-14 & RSPM & loaded\\
@@ -740,65 +741,65 @@ kableExtra::kable(my_session_info$packages_table, 'latex', booktabs = TRUE,
 #> farver & 2.1.2 & 2024-05-13 & RSPM & loaded\\
 #> fastmap & 1.2.0 & 2024-05-15 & RSPM & loaded\\
 #> fontawesome & 0.5.3 & 2024-11-16 & RSPM & loaded\\
-#> fs & 1.6.6 & 2025-04-12 & RSPM & loaded\\
+#> fs & 2.1.0 & 2026-04-18 & RSPM & loaded\\
 #> generics & 0.1.4 & 2025-05-09 & RSPM & loaded\\
-#> ggplot2 & 4.0.1 & 2025-11-14 & RSPM & loaded\\
-#> glue & 1.8.0 & 2024-09-30 & RSPM & loaded\\
+#> ggplot2 & 4.0.3 & 2026-04-22 & RSPM & loaded\\
+#> glue & 1.8.1 & 2026-04-17 & RSPM & loaded\\
 #> gtable & 0.3.6 & 2024-10-25 & RSPM & loaded\\
 #> htmltools & 0.5.9 & 2025-12-04 & RSPM & loaded\\
-#> httr2 & 1.2.2 & 2025-12-08 & RSPM & loaded\\
+#> httr2 & 1.3.0 & 2026-07-13 & RSPM & loaded\\
 #> jquerylib & 0.1.4 & 2021-04-26 & RSPM & loaded\\
 #> jsonlite & 2.0.0 & 2025-03-27 & RSPM & loaded\\
-#> kableExtra & 1.4.0 & 2024-01-24 & RSPM & loaded\\
-#> knitr & 1.51 & 2025-12-20 & RSPM & loaded\\
+#> kableExtra & 1.4.1 & 2026-07-08 & RSPM & loaded\\
+#> knitr & 1.52 & 2026-09-06 & RSPM & loaded\\
 #> labeling & 0.4.3 & 2023-08-29 & RSPM & loaded\\
-#> lattice & 0.22-7 & 2025-04-02 & CRAN (R 4.5.2) & loaded\\
-#> libcoin & 1.0-10 & 2023-09-27 & RSPM & loaded\\
+#> lattice & 0.22-9 & 2026-02-09 & CRAN (R 4.6.1) & loaded\\
+#> libcoin & 1.0-13 & 2026-06-04 & RSPM & loaded\\
 #> lifecycle & 1.0.5 & 2026-01-08 & RSPM & loaded\\
-#> magrittr & 2.0.4 & 2025-09-12 & RSPM & loaded\\
-#> MASS & 7.3-65 & 2025-02-28 & CRAN (R 4.5.2) & loaded\\
-#> Matrix & 1.7-4 & 2025-08-28 & CRAN (R 4.5.2) & loaded\\
+#> magrittr & 2.0.5 & 2026-04-04 & RSPM & loaded\\
+#> MASS & 7.3-65 & 2025-02-28 & CRAN (R 4.6.1) & loaded\\
+#> Matrix & 1.7-5 & 2026-03-21 & CRAN (R 4.6.1) & loaded\\
 #> matrixStats & 1.5.0 & 2025-01-07 & RSPM & loaded\\
 #> memoise & 2.0.1 & 2021-11-26 & RSPM & loaded\\
 #> modeltools & 0.2-24 & 2025-05-02 & RSPM & loaded\\
-#> multcomp & 1.4-29 & 2025-10-20 & RSPM & loaded\\
-#> mvtnorm & 1.3-3 & 2025-01-10 & RSPM & loaded\\
-#> openssl & 2.3.4 & 2025-09-30 & RSPM & loaded\\
+#> multcomp & 1.4-32 & 2026-08-21 & RSPM & loaded\\
+#> mvtnorm & 1.4-2 & 2026-07-12 & RSPM & loaded\\
+#> openssl & 2.4.2 & 2026-06-09 & RSPM & loaded\\
+#> otel & 0.2.0 & 2025-08-29 & RSPM & loaded\\
 #> pillar & 1.11.1 & 2025-09-17 & RSPM & loaded\\
 #> pkgconfig & 2.0.3 & 2019-09-22 & RSPM & loaded\\
-#> pkgdown & 2.2.0 & 2025-11-06 & any (@2.2.0) & loaded\\
-#> purrr & 1.2.1 & 2026-01-09 & RSPM & loaded\\
+#> pkgdown & 2.2.1 & 2026-07-07 & any (@2.2.1) & loaded\\
+#> purrr & 1.2.2 & 2026-04-10 & RSPM & loaded\\
 #> R6 & 2.6.1 & 2025-02-15 & RSPM & loaded\\
-#> ragg & 1.5.0 & 2025-09-02 & RSPM & loaded\\
-#> rappdirs & 0.3.3 & 2021-01-31 & RSPM & loaded\\
+#> ragg & 1.5.2 & 2026-03-23 & RSPM & loaded\\
 #> RColorBrewer & 1.1-3 & 2022-04-03 & RSPM & loaded\\
-#> rlang & 1.1.7 & 2026-01-09 & RSPM & loaded\\
-#> rmarkdown & 2.30 & 2025-09-28 & RSPM & loaded\\
-#> rstudioapi & 0.17.1 & 2024-10-22 & RSPM & loaded\\
-#> S7 & 0.2.1 & 2025-11-14 & RSPM & loaded\\
-#> sandwich & 3.1-1 & 2024-09-15 & RSPM & loaded\\
+#> rlang & 1.3.0 & 2026-07-05 & RSPM & loaded\\
+#> rmarkdown & 2.32 & 2026-09-01 & RSPM & loaded\\
+#> rstudioapi & 0.19.0 & 2026-06-11 & RSPM & loaded\\
+#> S7 & 0.2.2 & 2026-04-22 & RSPM & loaded\\
+#> sandwich & 3.1-3 & 2026-08-03 & RSPM & loaded\\
 #> sass & 0.4.10 & 2025-04-11 & RSPM & loaded\\
 #> scales & 1.4.0 & 2025-04-24 & RSPM & loaded\\
-#> sessioninfo & 1.2.3 & 2025-02-05 & RSPM & loaded\\
-#> stringi & 1.8.7 & 2025-03-27 & RSPM & loaded\\
+#> sessioninfo & 1.2.4 & 2026-06-04 & RSPM & loaded\\
+#> stringi & 1.8.9 & 2026-08-04 & RSPM & loaded\\
 #> stringr & 1.6.0 & 2025-11-04 & RSPM & loaded\\
-#> survival & 3.8-3 & 2024-12-17 & CRAN (R 4.5.2) & loaded\\
+#> survival & 3.8-6 & 2026-01-16 & CRAN (R 4.6.1) & loaded\\
 #> svglite & 2.2.2 & 2025-10-21 & RSPM & loaded\\
-#> systemfonts & 1.3.1 & 2025-10-01 & RSPM & loaded\\
-#> textshaping & 1.0.4 & 2025-10-10 & RSPM & loaded\\
+#> systemfonts & 1.3.2 & 2026-03-05 & RSPM & loaded\\
+#> textshaping & 1.0.5 & 2026-03-06 & RSPM & loaded\\
 #> TH.data & 1.1-5 & 2025-11-17 & RSPM & loaded\\
 #> tibble & 3.3.1 & 2026-01-11 & RSPM & loaded\\
 #> tidyr & 1.3.2 & 2025-12-19 & RSPM & loaded\\
 #> tidyselect & 1.2.1 & 2024-03-11 & RSPM & loaded\\
 #> utf8 & 1.2.6 & 2025-06-08 & RSPM & loaded\\
-#> vctrs & 0.6.5 & 2023-12-01 & RSPM & loaded\\
-#> viridisLite & 0.4.2 & 2023-05-02 & RSPM & loaded\\
+#> vctrs & 0.7.3 & 2026-04-11 & RSPM & loaded\\
+#> viridisLite & 0.4.3 & 2026-02-04 & RSPM & loaded\\
 #> whisker & 0.4.1 & 2022-12-05 & RSPM & loaded\\
-#> withr & 3.0.2 & 2024-10-28 & RSPM & loaded\\
-#> xfun & 0.55 & 2025-12-16 & RSPM & loaded\\
-#> xml2 & 1.5.1 & 2025-12-01 & RSPM & loaded\\
+#> withr & 3.0.3 & 2026-06-19 & RSPM & loaded\\
+#> xfun & 0.60 & 2026-07-09 & RSPM & loaded\\
+#> xml2 & 1.6.0 & 2026-06-22 & RSPM & loaded\\
 #> yaml & 2.3.12 & 2025-12-10 & RSPM & loaded\\
-#> zoo & 1.8-15 & 2025-12-15 & RSPM & loaded\\
+#> zoo & 1.9-0 & 2026-07-31 & RSPM & loaded\\
 #> \bottomrule
 #> \end{tabular}
 #> \end{table}

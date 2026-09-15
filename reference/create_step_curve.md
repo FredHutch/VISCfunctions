@@ -55,6 +55,7 @@ data.frame needed for horizontal line at the top of the plot
 ## Examples
 
 ``` r
+
 create_step_curve(x = 1:10)
 #>    time surv n.risk n.event n.censor
 #> 1     0  1.0     10      NA       NA

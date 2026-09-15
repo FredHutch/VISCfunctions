@@ -5,7 +5,7 @@
 - [`CAVD812_mAB`](https://fredhutch.github.io/VISCfunctions/reference/CAVD812_mAB.md)
   : Example mAB dataset from DataSpace
 - [`G001_Bcell_flow_seq_PBMC`](https://fredhutch.github.io/VISCfunctions/reference/G001_Bcell_flow_seq_PBMC.md)
-  : Example B-cell flow-and-summary file derived from G001
+  : Example B-cell flow and sequencing dataset from G001
 - [`binom_ci()`](https://fredhutch.github.io/VISCfunctions/reference/binom_ci.md)
   **\[stable\]** : Binomial confidence intervals
 - [`collapse_group_row()`](https://fredhutch.github.io/VISCfunctions/reference/collapse_group_row.md)

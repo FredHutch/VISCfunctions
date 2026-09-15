@@ -15,6 +15,7 @@ for VISC statisticians and programmers at Fred Hutch.
 The package is available on the Fred Hutch organization GitHub page.
 
 ``` r
+
 remotes::install_github("FredHutch/VISCfunctions")
 
 # Use the build_vignettes parameter to access the vignette
@@ -105,6 +106,6 @@ For more information, browse the vignette
 
 # Contribute to this package
 
-See our [contibuting
+See our [contributing
 guide](https://fredhutch.github.io/VISCfunctions/CONTRIBUTING.md) to
 learn more about how you can contribute to this package.

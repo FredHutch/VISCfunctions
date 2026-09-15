@@ -1,14 +1,45 @@
 # Changelog
 
+## VISCfunctions 1.3.2
+
+- Add PR template for the package
+  ([\#138](https://github.com/FredHutch/VISCfunctions/issues/138))
+- Add `SampleSizes` output to
+  [`pairwise_test_bin()`](https://fredhutch.github.io/VISCfunctions/reference/pairwise_test_bin.md)
+  ([\#130](https://github.com/FredHutch/VISCfunctions/issues/130))
+- Minor updates to vignette
+  ([\#141](https://github.com/FredHutch/VISCfunctions/issues/141))
+- Update title and description in package DESCRIPTION file
+  ([\#139](https://github.com/FredHutch/VISCfunctions/issues/139))
+- Add `Median_Quartiles` to
+  [`pairwise_test_cont()`](https://fredhutch.github.io/VISCfunctions/reference/pairwise_test_cont.md)
+  output ([\#99](https://github.com/FredHutch/VISCfunctions/issues/99))
+- Improve documentation for datasets and fix typos in various
+  documentation files
+  ([\#148](https://github.com/FredHutch/VISCfunctions/issues/148))
+- Minor Changes:
+  - Update `Overview()` to include new `Median_Quartiles`
+    ([\#99](https://github.com/FredHutch/VISCfunctions/issues/99))
+- Fix hardcoded floating point issues causing unexpected behavior in
+  [`round_away_0()`](https://fredhutch.github.io/VISCfunctions/reference/round_away_0.md)
+  ([\#156](https://github.com/FredHutch/VISCfunctions/issues/156))
+
 ## VISCfunctions 1.3.1
 
 - Report loaded and attached packages in package reproducibility table
-  (#132)
-- Report nodename in platform reproducibility table (#121)
-- Add B cell example dataset from G001 flow and sequencing file (#108)
-- Maintenance of package and CI (#114, \#116, \#124)
-- VISCfunctions now depends on R \>= 4.1.0 (#134)
-- Auto-generate VISCfunctions pkgdown website with GitHub Actions (#119)
+  ([\#132](https://github.com/FredHutch/VISCfunctions/issues/132))
+- Report nodename in platform reproducibility table
+  ([\#121](https://github.com/FredHutch/VISCfunctions/issues/121))
+- Add B cell example dataset from G001 flow and sequencing file
+  ([\#108](https://github.com/FredHutch/VISCfunctions/issues/108))
+- Maintenance of package and CI
+  ([\#114](https://github.com/FredHutch/VISCfunctions/issues/114),
+  [\#116](https://github.com/FredHutch/VISCfunctions/issues/116),
+  [\#124](https://github.com/FredHutch/VISCfunctions/issues/124))
+- VISCfunctions now depends on R \>= 4.1.0
+  ([\#134](https://github.com/FredHutch/VISCfunctions/issues/134))
+- Auto-generate VISCfunctions pkgdown website with GitHub Actions
+  ([\#119](https://github.com/FredHutch/VISCfunctions/issues/119))
 
 ## VISCfunctions 1.3.0
 
@@ -16,23 +47,30 @@
   [`pairwise_test_bin()`](https://fredhutch.github.io/VISCfunctions/reference/pairwise_test_bin.md)
   and
   [`pairwise_test_cont()`](https://fredhutch.github.io/VISCfunctions/reference/pairwise_test_cont.md)
-  (#111)
+  ([\#111](https://github.com/FredHutch/VISCfunctions/issues/111))
 - Add option to show library path in packages reproducibility table
-  (#107)
-- Maintenance of package and CI (#110, \#107)
+  ([\#107](https://github.com/FredHutch/VISCfunctions/issues/107))
+- Maintenance of package and CI
+  ([\#110](https://github.com/FredHutch/VISCfunctions/issues/110),
+  [\#107](https://github.com/FredHutch/VISCfunctions/issues/107))
 
 ## VISCfunctions 1.2.4
 
 - Suppress warning from get_full_name() when fragile ldapsearch system
-  call fails on Linux and macOS (#96)
+  call fails on Linux and macOS
+  ([\#96](https://github.com/FredHutch/VISCfunctions/issues/96))
 
 ## VISCfunctions 1.2.3
 
-- Use shorter git hash in reproducibility table (#92)
+- Use shorter git hash in reproducibility table
+  ([\#92](https://github.com/FredHutch/VISCfunctions/issues/92))
 - Update t-test syntax in unit test expectations to avoid new error
-  message introduced in R \>= 4.4 (#89)
-- Update instructions for installing vignettes with dependencies (#94)
-- Update CI (#91)
+  message introduced in R \>= 4.4
+  ([\#89](https://github.com/FredHutch/VISCfunctions/issues/89))
+- Update instructions for installing vignettes with dependencies
+  ([\#94](https://github.com/FredHutch/VISCfunctions/issues/94))
+- Update CI
+  ([\#91](https://github.com/FredHutch/VISCfunctions/issues/91))
 
 ## VISCfunctions 1.2.2
 
@@ -101,8 +139,9 @@
     characters
   - [`wilson_ci()`](https://fredhutch.github.io/VISCfunctions/reference/wilson_ci.md)
     function for Wilson Confident Intervals
-  - `pariwise_test_bin()` for pairwise binary testing comparisons
-    (i.e. pairwise group differences in response rates)
+  - [`pairwise_test_bin()`](https://fredhutch.github.io/VISCfunctions/reference/pairwise_test_bin.md)
+    for pairwise binary testing comparisons (i.e. pairwise group
+    differences in response rates)
 - Minor Changes:
   - Adding suffix param to
     [`stat_paste()`](https://fredhutch.github.io/VISCfunctions/reference/stat_paste.md).
