@@ -59,7 +59,46 @@ test_that("round_away_0 testing various options (no errors)", {
 
 })
 
+test_that("round_away_0 handles floating point exceptions", {
 
+  # Jin's reprex
+   expect_equal(
+     round_away_0(11:20 + .25, digits = 1),
+     11:20 + .3
+   )
+
+  # Moni's tests
+
+  # set base2 integers (plus 0)
+  base2_ints <- c(0, 2^(0:16))
+
+  # add half rounding units
+  make_test_vals <- function(int_vals, frac_str) {
+    as.numeric(paste0(format(int_vals, scientific = FALSE), frac_str))
+  }
+
+  round0 <- make_test_vals(base2_ints, ".5")
+  round1 <- make_test_vals(base2_ints, ".05")
+  round2 <- make_test_vals(base2_ints, ".005")
+  round3 <- make_test_vals(base2_ints, ".0005")
+  round4 <- make_test_vals(base2_ints, ".00005")
+
+  #  round round<n> values and subtract base numbers
+  # correct result should be non-zero (indicates rounding away from 0)
+  tests <- data.frame(
+    base2_int = base2_ints,
+    r0 = round_away_0(round0, 0) - base2_ints,
+    r1 = round_away_0(round1, 1) - base2_ints,
+    r2 = round_away_0(round2, 2) - base2_ints,
+    r3 = round_away_0(round3, 3) - base2_ints,
+    r4 = round_away_0(round4, 4) - base2_ints
+  )
+
+  expect_true(
+    all(sapply(tests[2:5], function(x) all(x > 0)))
+  )
+
+})
 
 
 # test two_samp_cont_test
