@@ -52,4 +52,4 @@ You can file an issue or feature request on GitHub:
 <https://github.com/FredHutch/VISCfunctions/issues>
 
 See our [contributing guide](CONTRIBUTING.md) to learn more about how
-you can contribute.
+you can contribute to this package.

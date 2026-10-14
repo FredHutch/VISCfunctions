@@ -1,5 +1,7 @@
 # VISCfunctions (development version)
 
+# VISCfunctions 1.3.2
+
 * Add PR template for the package (#138)
 * Add `SampleSizes` output to `pairwise_test_bin()` (#130)
 * Minor updates to vignette (#141)
@@ -8,6 +10,7 @@
 * Improve documentation for datasets and fix typos in various documentation files (#148)
 * Minor Changes:
   * Update `Overview()` to include new `Median_Quartiles` (#99)
+* Fix hardcoded floating point issues causing unexpected behavior in `round_away_0()` (#156)
 
 # VISCfunctions 1.3.1
 
