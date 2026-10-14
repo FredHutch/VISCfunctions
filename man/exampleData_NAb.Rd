@@ -3,7 +3,7 @@
 \docType{data}
 \name{exampleData_NAb}
 \alias{exampleData_NAb}
-\title{Example NAb dataset}
+\title{Example dataset for NAb (Neutralizing Antibody) assay}
 \format{
 A data frame with 210 rows and 9 variables:
 \describe{

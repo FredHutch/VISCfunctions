@@ -16,9 +16,9 @@ cor_test(
 )
 }
 \arguments{
-\item{x}{numeric vector (can include NA values).}
+\item{x}{numeric vector (can include NA values) representing variable 1}
 
-\item{y}{numeric vector (can include NA values).}
+\item{y}{numeric vector (can include NA values) representing variable 2}
 
 \item{method}{a character string indicating which correlation coefficient
 is to be used for the test. One of "pearson", "kendall", or "spearman",
@@ -40,11 +40,12 @@ should be displayed.}
 \item{...}{parameters passed to \link[stats:cor.test]{stats::cor.test} or \link[coin:CorrelationTests]{coin::spearman_test}}
 }
 \value{
-correlation estimate p value.
+estimated p-value.
 }
 \description{
-This function is a wrapper for \link[stats:cor.test]{stats::cor.test} function, except if
-\code{method = "spearman"} is selected and there are ties in at least one
+This function performs a test to determine if the value of the association
+between two continuous variables equals zero. It is a wrapper for \link[stats:cor.test]{stats::cor.test},
+except if \code{method = "spearman"} is selected and there are ties in at least one
 variable, in which case this is a wrapper for \link[coin:CorrelationTests]{coin::spearman_test}
 employing the approximate method.
 }

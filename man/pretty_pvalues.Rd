@@ -46,7 +46,7 @@ with trailing zeros to the defined number of digits (i.e. 0.100 instead of 0.1 i
 (for Word document output), or "no_markup"}
 }
 \value{
-Vector of transformed p-values for table output
+Character vector of transformed p-values for table output
 }
 \description{
 pretty_pvalues() takes a vector of p-values, rounds them to a specified

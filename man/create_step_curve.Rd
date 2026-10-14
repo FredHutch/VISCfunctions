@@ -7,8 +7,8 @@
 create_step_curve(x, event = NULL, flip_surv = FALSE, flip_top_x = Inf)
 }
 \arguments{
-\item{x}{Time values used to create the x-axis in step curves (numeric
-vector)}
+\item{x}{Values used to create the x-axis in step curves (numeric
+vector) - typically time, or net-MFI for MB.}
 
 \item{event}{event status, 0=censor and 1=event (numeric vector). If NULL
 assumes no censoring}
