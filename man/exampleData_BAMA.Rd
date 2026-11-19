@@ -3,7 +3,7 @@
 \docType{data}
 \name{exampleData_BAMA}
 \alias{exampleData_BAMA}
-\title{Example BAMA dataset}
+\title{Example dataset for BAMA (Binding Antibody Multiplex Assay)}
 \format{
 A data frame with 252 rows and 6 variables:
 \describe{

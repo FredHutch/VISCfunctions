@@ -19,7 +19,7 @@ paste_tbl_grp(
 )
 }
 \arguments{
-\item{data}{input dataset. User must use consistent naming throughout,
+\item{data}{input dataset (wide). User must use consistent naming throughout,
 \strong{with an underscore} to separate the group names from the measures
 (i.e. \code{Group1_mean} and \code{Group2_mean}). There also must be two
 columns with column names that exactly match the input for \code{first_name}
@@ -56,10 +56,10 @@ determine the character to be pasted between the group names
 \item{verbose}{a logical variable indicating if warnings and messages should be displayed. Default FALSE.}
 }
 \value{
-data.frame with all the pasted values requested. Each name will have '_comparison' at the end of the names (i.e. mean_comparison, median_comparison, ...)
+Long data.frame with all the pasted values requested. Each name will have '_comparison' at the end of the names (i.e. mean_comparison, median_comparison, ...)
 }
 \description{
-Paste together information, often statistics, from two groups. There are three
+Paste together information, usually descriptive statistics, from two groups. There are three
 predefined combinations: mean(sd) and median[min, max] and median[first quartile, third quartile], but user may also
 paste any single measure together.
 }

@@ -57,9 +57,9 @@ should be displayed.}
 \item{...}{parameters passed to \code{stats::cor.test} or \code{coin:spearman_test}}
 }
 \value{
-Returns a data frame of all possible pairwise correlations
+Returns a data frame covering all possible pairwise correlations
 with pair sizes greater than or equal to the minimum number of values
-in pair, as set by \code{n_distinct_value}:
+in pair, as set by \code{n_distinct_value}; columns are
 \itemize{
 \item \code{Correlation} - Comparisons made
 \item \code{NPairs} - number of non-missing pairs considered

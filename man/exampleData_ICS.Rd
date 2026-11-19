@@ -3,7 +3,7 @@
 \docType{data}
 \name{exampleData_ICS}
 \alias{exampleData_ICS}
-\title{Example ICS dataset}
+\title{Example dataset for ICS (Intracellular Cytokine Staining) assay}
 \format{
 A data frame with 306 rows and 15 variables:
 \describe{
