@@ -16,22 +16,20 @@ binom_ci(x, conf.level = 0.95, methods = "wilson", ...)
 \item{...}{Additional arguments to be passed to \link[binom:binom.bayes]{binom::binom.bayes}}
 }
 \value{
-data.frame with with mean (\code{mean}), and bounds of confidence interval (\code{lower}, \code{upper})
-
-Returns a data frame with the following columns:
+Returns a data frame of summary statistics with the following columns:
 \itemize{
 \item \code{method} - method(s) selected
 \item \code{x} - number of successes in the binomial experiment
 \item \code{n} - number of independent trials in the binomial experiment
 \item \code{mean} -  success proportion mean
-\item \code{lower} - success proportion lower bound
-\item \code{upper} - success proportion upper bound
+\item \code{lower} - success proportion confidence internal lower bound
+\item \code{upper} - success proportion confidence internal upper bound
 }
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-Wrapper for \link[binom:binom.confint]{binom::binom.confint}
+Wrapper for \link[binom:binom.confint]{binom::binom.confint} that estimates binomial confidence intervals for a binary vector.
 }
 \details{
 See \link[binom:binom.confint]{binom::binom.confint} for method details

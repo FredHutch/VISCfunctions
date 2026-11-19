@@ -2,3 +2,60 @@ url: https://fredhutch.github.io/VISCfunctions/
 template:
   bootstrap: 5
 
+navbar:
+  structure:
+    left:
+      - home
+      - reference
+      - vignettes   # instead of default "articles"
+      - news        # instead of default "changelog"
+  components:
+    vignettes:
+      text: "Vignettes"
+      href: articles/index.html
+    news:
+      text: "News"
+      href: news/index.html
+
+
+reference:
+  - title: "General Statistical Tests"
+    desc: "Formal hypothesis testing and p-value computations"
+    contents:
+      - two_samp_bin_test
+      - two_samp_cont_test
+      - cor_test
+      - pairwise_test_bin
+      - pairwise_test_cont
+      - cor_test_pairs
+      - binom_ci
+      - wilson_ci
+
+  - title: "Survival and Magnitude Breadth"
+    contents:
+      - create_step_curve
+      - mb_results
+      - trapz_sorted
+
+  - title: "Figure, Table, PDF/Word Output Formatting"
+    contents:
+      - collapse_group_row
+      - escape
+      - paste_tbl_grp
+      - pretty_pvalues
+      - round_away_0
+      - stat_paste
+
+  - title: "Transparency and Reproducibility"
+    contents:
+      - get_full_name
+      - get_session_info
+      - shorten_git_hash
+
+  - title: "Example Datasets"
+    contents:
+      - exampleData_BAMA
+      - exampleData_ICS
+      - exampleData_NAb
+      - CAVD812_mAB
+      - G001_Bcell_flow_seq_PBMC

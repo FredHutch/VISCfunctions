@@ -65,7 +65,7 @@ missing values.}
 be displayed.}
 }
 \value{
-Returns a data frame with all possible pairwise comparisons:
+Returns a data frame covering all possible pairwise comparisons with the following columns:
 \itemize{
 \item \code{Comparison} - Comparisons made
 \item \code{SampleSizes} - number of samples per group
@@ -85,7 +85,7 @@ separation).
 }
 \description{
 Takes a continuous variable and performs pairwise testing (t-test or wilcox
-test)
+test, paired or unpaired) for all possible combinations of the group variable.
 }
 \details{
 Runs \code{wilcox_test()} in the coin package, with "exact" distribution.

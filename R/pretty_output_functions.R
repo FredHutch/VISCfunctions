@@ -1,11 +1,11 @@
 #' Pasting Together Information for Two Groups
 #'
-#' Paste together information, often statistics, from two groups. There are two
-#' predefined combinations: mean(sd) and median\[min, max\], but user may also
+#' Paste together information, usually descriptive statistics, from two groups. There are three
+#' predefined combinations: mean(sd) and median\[min, max\] and median\[first quartile, third quartile\], but user may also
 #' paste any single measure together.
 #'
 #'
-#' @param data input dataset. User must use consistent naming throughout,
+#' @param data input dataset (wide). User must use consistent naming throughout,
 #' \strong{with an underscore} to separate the group names from the measures
 #' (i.e. `Group1_mean` and `Group2_mean`). There also must be two
 #' columns with column names that exactly match the input for `first_name`
@@ -32,12 +32,12 @@
 #' @param verbose a logical variable indicating if warnings and messages should be displayed. Default FALSE.
 #' @details
 #'
-#' User must use consistant naming throughout, with a underscore to separate the group names from the measures (i.e. `Group1_mean` and `Group2_mean`). There also must be columns defining the group names (i.e. `Group1` and `Group2`), which are used to form the `Comparison` variable.
+#' User must use consistent naming throughout, with a underscore to separate the group names from the measures (i.e. `Group1_mean` and `Group2_mean`). There also must be columns defining the group names (i.e. `Group1` and `Group2`), which are used to form the `Comparison` variable.
 #'
 #' `alternative` included as a parameter so the direction can easily be seen in one-sided test. If "two.sided" is selected the value to be pasted between the two group names will be set to `sep_val`, where "greater" will use " > " and "less" with use " < " as the pasting value.
 #'
 #'
-#' @return data.frame with all the pasted values requested. Each name will have '_comparison' at the end of the names (i.e. mean_comparison, median_comparison, ...)
+#' @return Long data.frame with all the pasted values requested. Each name will have '_comparison' at the end of the names (i.e. mean_comparison, median_comparison, ...)
 #' @examples
 #'
 #' library(dplyr)
@@ -137,6 +137,9 @@ paste_tbl_grp <- function(
         vars_to_paste_here <- c(vars_to_paste_here, 'median_min_max')
       if (sum(vars_to_paste_here %in% c('mean','sd')) == 2)
         vars_to_paste_here <- c(vars_to_paste_here, 'mean_sd')
+      if (sum(vars_to_paste_here %in% c('median','q1','q3')) == 3)
+        vars_to_paste_here <- c(vars_to_paste_here, 'median_quartiles')
+
 
       if (verbose) message('The following measures will be combined: ',
                            paste0(vars_to_paste_here, collapse = ', '))
@@ -151,11 +154,14 @@ paste_tbl_grp <- function(
 
   # Need to define which variables to check. Special considerations for the predefined values
   vars_to_check <- vars_to_paste_here[!vars_to_paste_here %in%
-                                        c('median_min_max','mean_sd')]
+                                        c('median_min_max','median_quartiles','mean_sd')]
   if (any(vars_to_paste_here == 'median_min_max'))
     vars_to_check <- unique(c(vars_to_check, 'median', 'min', 'max'))
   if (any(vars_to_paste_here == 'mean_sd'))
     vars_to_check <- unique(c(vars_to_check, 'mean', 'sd'))
+  if (any(vars_to_paste_here == 'median_quartiles'))
+    vars_to_check <- unique(c(vars_to_check, 'median', 'q1','q3'))
+
 
   # Need to check the group1 and group2 version of each variable being pasted
   group1_vars_to_check <- paste0(first_name, '_', vars_to_check)
@@ -223,7 +229,23 @@ paste_tbl_grp <- function(
                    trailing_zeros = trailing_zeros
         )
       )
-    } else {
+    } else if (vars_to_paste_here[i] == 'median_quartiles') {
+      pasted_results[[i]] <-  paste0(
+        stat_paste(stat1 = data_here[, paste0(first_name, '_median')],
+                   stat2 = data_here[, paste0(first_name, '_q1')],
+                   stat3 = data_here[, paste0(first_name, '_q3')],
+                   digits = digits, bound_char = '[', sep = ', ',
+                   na_str_out = na_str_out, trailing_zeros = trailing_zeros
+        ),
+        sep_val,
+        stat_paste(stat1 = data_here[, paste0(second_name, '_median')],
+                   stat2 = data_here[, paste0(second_name, '_q1')],
+                   stat3 = data_here[, paste0(second_name, '_q3')],
+                   digits = digits, bound_char = '[', sep = ', ',
+                   na_str_out = na_str_out, trailing_zeros = trailing_zeros
+        )
+      )
+      } else {
       first_var_here <- data_here[, paste0(first_name, '_', vars_to_paste_here[i])]
       second_var_here <- data_here[, paste0(second_name, '_', vars_to_paste_here[i])]
       both_var_here <- c(first_var_here, second_var_here)
@@ -267,24 +289,24 @@ paste_tbl_grp <- function(
 
 
 
-#' Rounds and combines up to three numbers into table friendly presentation
+#' Rounds and combines up to three numbers into table-friendly presentation
 #'
 #' Takes in up to 3 numeric values, rounds each to a specified digit amount
 #' (if numeric), and then combines them accordingly.
 #'
-#' @param stat1 first statistic to be pasted.
-#' @param stat2 second statistic to be pasted (optional).
-#' @param stat3 third statistic to be pasted (optional).
+#' @param stat1 first statistic to be pasted (e.g., mean)
+#' @param stat2 optional second statistic to be pasted (e.g., sd/se, p-value, CI lower bound, minimum)
+#' @param stat3 optional third statistic to be pasted (e.g., CI upper bound, maximum, nth percentile).
 #' @param digits positive integer of length 1 between 0 (default) and 14,
-#' giving the amount of digits to round to.
-#' @param trailing_zeros logical indicating if trailing zeros should included
-#' (i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector
+#' giving the amount of digits to round stat1, stat2, and stat3 to.
+#' @param trailing_zeros logical indicating if trailing zeros should be included
+#' (i.e. 0.100 instead of 0.1); default is TRUE
 #' @param bound_char the character to be used between stat1 and stat2/stat3.
 #' Available options are '(' (default), '[', '\{', and '|'.
 #' @param sep the string to be used between stat2 and stat3. The default is ', '.
-#' @param na_str_out the character to replace missing values with.
-#' @param suffix a character string to add at the end of each stat
-#' (i.e. `%` if doing response rates)
+#' @param na_str_out the character to replace missing values with (default is '---')
+#' @param suffix an optional character string to add at the end of each stat
+#' (e.g. `%` if doing response rates); default is NULL
 #'
 #' @return string of combined values
 #'
@@ -400,7 +422,7 @@ stat_paste = function(
 #' @param output_type output type, "latex" (default), "html" , "pandoc"
 #' (for Word document output), or "no_markup"
 #'
-#' @return Vector of transformed p-values for table output
+#' @return Character vector of transformed p-values for table output
 #'
 #' @details
 #'

@@ -3,32 +3,45 @@
 \docType{data}
 \name{G001_Bcell_flow_seq_PBMC}
 \alias{G001_Bcell_flow_seq_PBMC}
-\title{Example B-cell flow-and-summary file derived from G001}
+\title{Example B-cell flow and sequencing dataset from G001}
 \format{
 A data frame with 3995 rows and 22 variables:
 \describe{
-\item{\code{pubid}}{character COLUMN_DESCRIPTION}
-\item{\code{group}}{integer COLUMN_DESCRIPTION}
-\item{\code{treatment}}{character COLUMN_DESCRIPTION}
-\item{\code{dose}}{double COLUMN_DESCRIPTION}
-\item{\code{dose_unit}}{character COLUMN_DESCRIPTION}
-\item{\code{visitno}}{character COLUMN_DESCRIPTION}
-\item{\code{visit}}{integer COLUMN_DESCRIPTION}
-\item{\code{visit_units}}{character COLUMN_DESCRIPTION}
-\item{\code{sample_type}}{character COLUMN_DESCRIPTION}
-\item{\code{probeset}}{character COLUMN_DESCRIPTION}
-\item{\code{source_assay}}{character COLUMN_DESCRIPTION}
-\item{\code{endpoint}}{character COLUMN_DESCRIPTION}
-\item{\code{endpoint_value}}{double COLUMN_DESCRIPTION}
-\item{\code{endpoint_value_type}}{character COLUMN_DESCRIPTION}
-\item{\code{endpoint_value_imputed}}{character COLUMN_DESCRIPTION}
-\item{\code{bcell_population}}{character COLUMN_DESCRIPTION}
-\item{\code{percent_denominator}}{character COLUMN_DESCRIPTION}
-\item{\code{igx_type}}{character COLUMN_DESCRIPTION}
-\item{\code{antigen_specificity}}{character COLUMN_DESCRIPTION}
-\item{\code{epitope_specificity}}{character COLUMN_DESCRIPTION}
-\item{\code{bnab_class}}{character COLUMN_DESCRIPTION}
-\item{\code{source_file}}{character COLUMN_DESCRIPTION}
+\item{pubid}{character. Randomized (de-identified) participant ID.}
+\item{group}{integer. Study group (1 = low dose, 2 = high dose; NA for placebo).}
+\item{treatment}{character. Treatment description (e.g. "20 µg eOD-GT8 60mer + AS01B",
+"DPBS sucrose").}
+\item{dose}{numeric. Vaccine dose in micrograms (NA for placebo).}
+\item{dose_unit}{character. Unit for the dose field (µg); NA for placebo.}
+\item{visitno}{character. Visit identifier as a zero-padded string (e.g. "02", "06").}
+\item{visit}{integer. Visit time point in weeks relative to first vaccination
+(negative = pre-vaccination).}
+\item{visit_units}{character. Units for the visit column (always "weeks").}
+\item{sample_type}{character. Biological sample type (always "PBMC").}
+\item{probeset}{character. Label for the probe/stain panel used (e.g.
+"G001 PBMC (KO11 eOD-GT8)").}
+\item{source_assay}{character. Assay that generated the row
+("flow", "sequencing", or "flow and sequencing").}
+\item{endpoint}{character. Full description of the measured endpoint (e.g.
+"Number of B cells", "Percent of IgG+ B cells that are GT8++").}
+\item{endpoint_value}{numeric. Measured value of the endpoint (count or percent
+depending on endpoint_value_type).}
+\item{endpoint_value_type}{character. Type of endpoint value ("count" or "percent").}
+\item{endpoint_value_imputed}{numeric. Endpoint value after imputation of values
+below the limit of detection; equals endpoint_value when no imputation was needed.}
+\item{bcell_population}{character. B-cell population label (e.g. "GT8++ IgG+ B cells",
+"epitope-specific (KO-GT8++) IgG+ B cells").}
+\item{percent_denominator}{character. Parent population used as the denominator for
+percent endpoints (NA for count endpoints).}
+\item{igx_type}{character. Immunoglobulin isotype classification (e.g. "IgG+"; NA
+when not applicable).}
+\item{antigen_specificity}{character. Antigen-binding specificity classification
+(e.g. "GT8++"; NA when not applicable).}
+\item{epitope_specificity}{character. Epitope-level specificity based on KO probe
+binding (e.g. "KO-"; NA when not applicable).}
+\item{bnab_class}{character. Broadly neutralizing antibody class assignment
+(e.g. "VRC01-class"; NA when not applicable).}
+\item{source_file}{character. URL of the original source file on GitHub.}
 }
 }
 \source{
@@ -38,9 +51,8 @@ A data frame with 3995 rows and 22 variables:
 G001_Bcell_flow_seq_PBMC
 }
 \description{
-Example B-cell flow-and-summary file derived from G001
-}
-\details{
-Example B-cell flow-and-summary file derived from G001
+A subset of the B-cell flow cytometry and BCR sequencing summary file from
+the G001 clinical trial (germline-targeting HIV vaccine). Contains PBMC
+samples only.
 }
 \keyword{datasets}
