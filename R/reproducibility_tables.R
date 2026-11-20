@@ -101,7 +101,7 @@ ood_env_var <- function(var){
 #'   container, if known. Returns environment variable `APPTAINER_CONTAINER` if
 #'   available. Otherwise, if on Fred Hutch Gizmo cluster, attempts to find the
 #'   SIF image in Open OnDemand tempfiles. Otherwise returns NA.
-#' @noRD
+#' @noRd
 apptainer_image <- function(){
   if (nzchar(res <- Sys.getenv('APPTAINER_CONTAINER'))){
     return(res)
