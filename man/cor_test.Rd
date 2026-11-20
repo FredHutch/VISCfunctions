@@ -37,7 +37,7 @@ ties in x or y.}
 \item{verbose}{a logical variable indicating if warnings and messages
 should be displayed.}
 
-\item{...}{parameters passed to \link[stats:cor.test]{stats::cor.test} or \link[coin:CorrelationTests]{coin::spearman_test}}
+\item{...}{parameters passed to \link[stats:cor.test]{stats::cor.test} or \link[coin:spearman_test]{coin::spearman_test}}
 }
 \value{
 estimated p-value.
@@ -46,7 +46,7 @@ estimated p-value.
 This function performs a test to determine if the value of the association
 between two continuous variables equals zero. It is a wrapper for \link[stats:cor.test]{stats::cor.test},
 except if \code{method = "spearman"} is selected and there are ties in at least one
-variable, in which case this is a wrapper for \link[coin:CorrelationTests]{coin::spearman_test}
+variable, in which case this is a wrapper for \link[coin:spearman_test]{coin::spearman_test}
 employing the approximate method.
 }
 \details{
@@ -74,7 +74,7 @@ When there are ties in either variable there is no exact method possible.
 Unfortunately if there are any ties the \link[stats:cor.test]{stats::cor.test} function switches
 to the asymptotic method, which is especially troubling with small sample
 sizes. If there are ties \code{cor_test} will switch to the approximate
-method available in the \link[coin:CorrelationTests]{coin::spearman_test}.
+method available in the \link[coin:spearman_test]{coin::spearman_test}.
 }
 \examples{
 
