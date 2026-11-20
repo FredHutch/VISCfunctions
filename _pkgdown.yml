@@ -30,6 +30,7 @@ reference:
       - cor_test_pairs
       - binom_ci
       - wilson_ci
+      - geomean
 
   - title: "Survival and Magnitude Breadth"
     contents:
@@ -50,6 +51,7 @@ reference:
     contents:
       - get_full_name
       - get_session_info
+      - apptainer_image
 
   - title: "Example Datasets"
     contents:

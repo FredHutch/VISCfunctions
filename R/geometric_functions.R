@@ -46,8 +46,6 @@
 #' median(y)
 #' geoquantile(x)
 #' fivenum(x)
-
-
 #' @export
 #' @rdname geomean
 geomean <- function(x, na.rm = TRUE) {
