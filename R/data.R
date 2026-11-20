@@ -1,4 +1,4 @@
-#' Example BAMA dataset
+#' Example dataset for BAMA (Binding Antibody Multiplex Assay)
 #'
 #' A dataset containing response (0/1) and magnitude (continuous) BAMA data for
 #' 7 antigens, 2 groups, and 3 visits. Can be used to run VISCfunctions examples.
@@ -16,7 +16,7 @@
 #' }
 "exampleData_BAMA"
 
-#' Example ICS dataset
+#' Example dataset for ICS (Intracellular Cytokine Staining) assay
 #'
 #' A dataset containing response (0/1) and magnitude (continuous) ICS data for
 #' 3 cell populations and 2 antigen stimulations. Can be used to run VISCfunctions examples.
@@ -44,7 +44,7 @@
 #' }
 "exampleData_ICS"
 
-#' Example NAb dataset
+#' Example dataset for NAb (Neutralizing Antibody) assay
 #'
 #' A dataset containing response (0/1) and magnitude (continuous) NAb data for
 #' 6 isolates, 4 groups, and 1 visit. Can be used to run VISCfunctions examples.
@@ -67,9 +67,10 @@
 #' }
 "exampleData_NAb"
 
-#' Example mAB dataset from DataSpace
+#' Example dataset for mAB (monoclonal antibody) data
 #'
-#' A subset dataset from the Farzan CAVD 812 Study, looking at eCD4 neutralization.
+#' A subset of data from the Farzan CAVD 812 Study, looking at eCD4 neutralization.
+#' Data is sourced from the CAVD DataSpace (CDS).
 #'
 #' @format A data frame with 480 rows and 4 variables:
 #' \describe{

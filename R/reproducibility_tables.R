@@ -1,6 +1,4 @@
-#' Get Full Username from ID
-#'
-#' For a given ID looks up user name
+#' Look up a username from a Fred Hutch ID
 #'
 #' @param id ID to look full name up. If null (default) looks up ID of current
 #'   user
@@ -74,6 +72,7 @@ get_full_name <- function(id = NULL){
 #'
 #' @param x String containing `@` followed by long git hash
 #' @return String containing `@` followed by short git hash
+#' @noRd
 shorten_git_hash <- function(x) sub('([@][0-9a-f]{7})[0-9a-f]{33}', '\\1', x)
 
 #' Get environment variable from Open OnDemand Rstudio Session launcher. This is

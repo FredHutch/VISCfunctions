@@ -1,6 +1,6 @@
 #' Sorted Trapezoidal Integration
 #'
-#' This function is a wrapper for the `trapz` function. It sorts the x and y values
+#' This function is a wrapper for the `pracma::trapz` function. It sorts the x and y values
 #' so that it is monotonically increasing along the x values.  Then computes the
 #' area of a function with values `y` and points `x`. There is an optional
 #' parameter to remove any NA values so that integration can proceed by
@@ -9,7 +9,7 @@
 #' @param x A vector of numeric values representing the x-axis over which to integrate.
 #' @param y A vector of numeric values representing the y-axis.
 #' @param na.rm A logical indicating whether to remove NA values from both x and y values.
-#' @return Approximated integral of the function, discretized through the points
+#' @return Numeric value of approximated integral of the function, discretized through the points
 #' x, y, from \code{min(x)} to \code{max(x)}.
 #'
 #' @details

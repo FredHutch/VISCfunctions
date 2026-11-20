@@ -14,11 +14,11 @@ trapz_sorted(x, y, na.rm = TRUE)
 \item{na.rm}{A logical indicating whether to remove NA values from both x and y values.}
 }
 \value{
-Approximated integral of the function, discretized through the points
+Numeric value of approximated integral of the function, discretized through the points
 x, y, from \code{min(x)} to \code{max(x)}.
 }
 \description{
-This function is a wrapper for the \code{trapz} function. It sorts the x and y values
+This function is a wrapper for the \code{pracma::trapz} function. It sorts the x and y values
 so that it is monotonically increasing along the x values.  Then computes the
 area of a function with values \code{y} and points \code{x}. There is an optional
 parameter to remove any NA values so that integration can proceed by

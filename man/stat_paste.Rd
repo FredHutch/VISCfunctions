@@ -2,7 +2,7 @@
 % Please edit documentation in R/pretty_output_functions.R
 \name{stat_paste}
 \alias{stat_paste}
-\title{Rounds and combines up to three numbers into table friendly presentation}
+\title{Rounds and combines up to three numbers into table-friendly presentation}
 \usage{
 stat_paste(
   stat1,
@@ -17,27 +17,27 @@ stat_paste(
 )
 }
 \arguments{
-\item{stat1}{first statistic to be pasted.}
+\item{stat1}{first statistic to be pasted (e.g., mean)}
 
-\item{stat2}{second statistic to be pasted (optional).}
+\item{stat2}{optional second statistic to be pasted (e.g., sd/se, p-value, CI lower bound, minimum)}
 
-\item{stat3}{third statistic to be pasted (optional).}
+\item{stat3}{optional third statistic to be pasted (e.g., CI upper bound, maximum, nth percentile).}
 
 \item{digits}{positive integer of length 1 between 0 (default) and 14,
-giving the amount of digits to round to.}
+giving the amount of digits to round stat1, stat2, and stat3 to.}
 
-\item{trailing_zeros}{logical indicating if trailing zeros should included
-(i.e. 0.100 instead of 0.1). Note is set to TRUE output is a character vector}
+\item{trailing_zeros}{logical indicating if trailing zeros should be included
+(i.e. 0.100 instead of 0.1); default is TRUE}
 
 \item{bound_char}{the character to be used between stat1 and stat2/stat3.
 Available options are '(' (default), '[', '\{', and '|'.}
 
 \item{sep}{the string to be used between stat2 and stat3. The default is ', '.}
 
-\item{na_str_out}{the character to replace missing values with.}
+\item{na_str_out}{the character to replace missing values with (default is '---')}
 
-\item{suffix}{a character string to add at the end of each stat
-(i.e. \verb{\%} if doing response rates)}
+\item{suffix}{an optional character string to add at the end of each stat
+(e.g. \verb{\%} if doing response rates); default is NULL}
 }
 \value{
 string of combined values

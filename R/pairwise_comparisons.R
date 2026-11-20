@@ -1,7 +1,7 @@
 #'Pairwise Testing for a Continuous Variable
 #'
 #'Takes a continuous variable and performs pairwise testing (t-test or wilcox
-#'test)
+#'test, paired or unpaired) for all possible combinations of the group variable.
 #'
 #'@param x numeric vector (can include NA values).
 #'@param group categorical vector of group values.
@@ -31,7 +31,7 @@
 #'  missing values.
 #'@param verbose a logical variable indicating if warnings and messages should
 #'  be displayed.
-#'@return Returns a data frame with all possible pairwise comparisons:
+#'@return Returns a data frame covering all possible pairwise comparisons with the following columns:
 #' * `Comparison` - Comparisons made
 #' * `SampleSizes` - number of samples per group
 #' * `Median_Min_Max` - Median \[Min, Max\] per group
@@ -447,7 +447,7 @@ pairwise_test_cont <- function(
 #' @param ... other parameters to pass to Exact::exact.test when running
 #'   Barnard test
 #' @return Returns a data frame with all possible pairwise comparisons.
-#'   Variables include Comparison, ResponseStats (group stats; number positive /
+#'   Columns include Comparison, ResponseStats (group stats; number positive /
 #'  number = rate (Wilson CI Bounds)), ResponseTest (fisher/chisq p value),
 #'  PerfectSeparation (a logical flag indicating if one group if 0% and the
 #'  other 100%)
@@ -741,9 +741,9 @@ pairwise_test_bin <- function(x,
 #'   should be displayed.
 #' @param ... parameters passed to `stats::cor.test` or `coin:spearman_test`
 #'
-#' @return Returns a data frame of all possible pairwise correlations
+#' @return Returns a data frame covering all possible pairwise correlations
 #' with pair sizes greater than or equal to the minimum number of values
-#' in pair, as set by `n_distinct_value`:
+#' in pair, as set by `n_distinct_value`; columns are
 #' * `Correlation` - Comparisons made
 #' * `NPairs` - number of non-missing pairs considered
 #' * `Ties` - are ties present in either variable

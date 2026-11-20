@@ -77,7 +77,7 @@ Barnard test}
 }
 \value{
 Returns a data frame with all possible pairwise comparisons.
-Variables include Comparison, ResponseStats (group stats; number positive /
+Columns include Comparison, ResponseStats (group stats; number positive /
 number = rate (Wilson CI Bounds)), ResponseTest (fisher/chisq p value),
 PerfectSeparation (a logical flag indicating if one group if 0\% and the
 other 100\%)
