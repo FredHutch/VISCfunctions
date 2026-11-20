@@ -20,6 +20,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Bryan Mayer \email{bmayer@fredhutch.org} (\href{https://orcid.org/0000-0003-2258-5276}{ORCID})
   \item Dave Slager \email{dslager@fredhutch.org} (\href{https://orcid.org/0000-0003-2525-2039}{ORCID})
   \item Kellie MacPhee \email{kmacphee@fredhutch.org} (\href{https://orcid.org/0009-0008-0993-4009}{ORCID})
   \item Alicia Sato \email{asato@fredhutch.org} (\href{https://orcid.org/0000-0001-8371-8007}{ORCID})
