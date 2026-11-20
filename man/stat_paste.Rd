@@ -10,10 +10,12 @@ stat_paste(
   stat3 = NULL,
   digits = 0,
   trailing_zeros = TRUE,
-  bound_char = c("(", "[", "{", "|"),
+  bound_char = c("(", "[", "{", "|", ",", "--"),
   sep = ", ",
   na_str_out = "---",
-  suffix = NULL
+  suffix = NULL,
+  bold_first = FALSE,
+  output_type = c("latex", "html", "pandoc", "no_markup")
 )
 }
 \arguments{
@@ -30,7 +32,9 @@ giving the amount of digits to round stat1, stat2, and stat3 to.}
 (i.e. 0.100 instead of 0.1); default is TRUE}
 
 \item{bound_char}{the character to be used between stat1 and stat2/stat3.
-Available options are '(' (default), '[', '\{', and '|'.}
+Available options are '(' (default), '[', '\{', '|', ',', and '--'.
+The last two options join stat1 and stat2 with ', ' and '--', respectively,
+without a closing delimiter. With three statistics, sep still separates stat2 and stat3.}
 
 \item{sep}{the string to be used between stat2 and stat3. The default is ', '.}
 
@@ -38,6 +42,12 @@ Available options are '(' (default), '[', '\{', and '|'.}
 
 \item{suffix}{an optional character string to add at the end of each stat
 (e.g. \verb{\%} if doing response rates); default is NULL}
+
+\item{bold_first}{logical; bold nonmissing stat1 values, including their suffix.
+Default is FALSE. Missing-value placeholders are not bolded.}
+
+\item{output_type}{markup for bold formatting: 'latex' (default), 'html',
+'pandoc', or 'no_markup'. No markup is added when bold_first is FALSE.}
 }
 \value{
 string of combined values
@@ -54,6 +64,12 @@ Three values - returns stat1 (stat2, stat3). e.g., estimate (95\% lower,
 
 Currently the method does work with string variables, but of course rounding
 would not be relevant for strings.
+
+HTML and LaTeX bold formatting uses kableExtra::text_spec() with
+escape = FALSE. Match output_type to the table format and use escape = FALSE
+in knitr::kable(). Escape special characters in input strings yourself.
+Pandoc formatting uses Markdown bold syntax. All-missing combinations
+retain the existing missing-value output without bold markup.
 }
 \examples{
 
@@ -64,6 +80,10 @@ stat_paste(5.109293, 1.7645, 8.0345)
 stat_paste(NA, NA, NA)
 stat_paste(5.109, "p < 0.001", digits = 3)
 stat_paste(c(rep(5,5),NA),c(1:5,NA),c(1,NA,2,NA,3,NA),bound_char = '[')
+stat_paste(5.1, 1.2, 8.3, digits = 1, bound_char = '[',
+           bold_first = TRUE, output_type = 'pandoc')
+stat_paste(1, 5, bound_char = '--')
+stat_paste(1, 5, bound_char = ',')
 
 library(dplyr)
 exampleData_BAMA |>

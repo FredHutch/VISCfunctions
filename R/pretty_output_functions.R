@@ -302,11 +302,17 @@ paste_tbl_grp <- function(
 #' @param trailing_zeros logical indicating if trailing zeros should be included
 #' (i.e. 0.100 instead of 0.1); default is TRUE
 #' @param bound_char the character to be used between stat1 and stat2/stat3.
-#' Available options are '(' (default), '[', '\{', and '|'.
+#' Available options are '(' (default), '[', '\{', '|', ',', and '--'.
+#' The last two options join stat1 and stat2 with ', ' and '--', respectively,
+#' without a closing delimiter. With three statistics, sep still separates stat2 and stat3.
 #' @param sep the string to be used between stat2 and stat3. The default is ', '.
 #' @param na_str_out the character to replace missing values with (default is '---')
 #' @param suffix an optional character string to add at the end of each stat
 #' (e.g. `%` if doing response rates); default is NULL
+#' @param bold_first logical; bold nonmissing stat1 values, including their suffix.
+#' Default is FALSE. Missing-value placeholders are not bolded.
+#' @param output_type markup for bold formatting: 'latex' (default), 'html',
+#' 'pandoc', or 'no_markup'. No markup is added when bold_first is FALSE.
 #'
 #' @return string of combined values
 #'
@@ -320,6 +326,11 @@ paste_tbl_grp <- function(
 #' Currently the method does work with string variables, but of course rounding
 #' would not be relevant for strings.
 #'
+#' HTML and LaTeX bold formatting uses kableExtra::text_spec() with
+#' escape = FALSE. Match output_type to the table format and use escape = FALSE
+#' in knitr::kable(). Escape special characters in input strings yourself.
+#' Pandoc formatting uses Markdown bold syntax. All-missing combinations
+#' retain the existing missing-value output without bold markup.
 #'
 #' @examples
 #'
@@ -330,6 +341,10 @@ paste_tbl_grp <- function(
 #' stat_paste(NA, NA, NA)
 #' stat_paste(5.109, "p < 0.001", digits = 3)
 #' stat_paste(c(rep(5,5),NA),c(1:5,NA),c(1,NA,2,NA,3,NA),bound_char = '[')
+#' stat_paste(5.1, 1.2, 8.3, digits = 1, bound_char = '[',
+#'            bold_first = TRUE, output_type = 'pandoc')
+#' stat_paste(1, 5, bound_char = '--')
+#' stat_paste(1, 5, bound_char = ',')
 #'
 #' library(dplyr)
 #' exampleData_BAMA |>
@@ -340,60 +355,65 @@ paste_tbl_grp <- function(
 #'           .groups = "keep")
 #'
 #' @export
-stat_paste = function(
+stat_paste <- function(
   stat1, stat2 = NULL, stat3 = NULL, digits = 0, trailing_zeros = TRUE,
-  bound_char = c('(','[','{','|'), sep = ', ',
-  na_str_out = "---", suffix = NULL
-  ){
+  bound_char = c("(", "[", "{", "|", ",", "--"), sep = ", ",
+  na_str_out = "---", suffix = NULL, bold_first = FALSE,
+  output_type = c("latex", "html", "pandoc", "no_markup")
+) {
   bound_char <- match.arg(bound_char)
-  end_bound_char <-   switch(bound_char,
-                      `(` = ')',
-                      `[` = ']',
-                      `{` = '}',
-                      `|` = '|'
-  )
+  output_type <- match.arg(output_type)
+  if (!is.logical(bold_first) || length(bold_first) != 1L ||
+      is.na(bold_first)) {
+    stop('"bold_first" must be a single non-missing logical value.',
+         call. = FALSE)
+  }
 
-  stat1_pasted_obj <-  ifelse(
-    is.na(stat1), na_str_out,
-    as.character(.round_if_numeric(stat1, digits = digits,
-                                   trailing_zeros = trailing_zeros))
-    )
-  if (!is.null(suffix)) stat1_pasted_obj <- paste0(stat1_pasted_obj, suffix)
+  first_separator <- switch(bound_char, "," = ", ", "--" = "--",
+                            paste0(" ", bound_char))
+  end_bound_char <- switch(bound_char, "(" = ")", "[" = "]",
+                           "{" = "}", "|" = "|", "")
 
-  if (is.null(stat2)) {
-    pasted_output <- stat1_pasted_obj
-  } else {
-    stat2_pasted_obj <-  ifelse(
-      is.na(stat2),
-      na_str_out,
-      as.character(.round_if_numeric(stat2, digits = digits,
+  format_stat <- function(x) {
+    result <- ifelse(
+      is.na(x), na_str_out,
+      as.character(.round_if_numeric(x, digits = digits,
                                      trailing_zeros = trailing_zeros))
-      )
-    if (!is.null(suffix)) stat2_pasted_obj <- paste0(stat2_pasted_obj, suffix)
+    )
+    if (!is.null(suffix)) result <- paste0(result, suffix)
+    result
+  }
 
-    if (is.null(stat3)) {
-      pasted_output <- ifelse(
-        is.na(stat1) & is.na(stat2),
-        na_str_out,
-        paste0(stat1_pasted_obj, " ", bound_char, stat2_pasted_obj, end_bound_char)
+  stat1_pasted_obj <- format_stat(stat1)
+  if (bold_first && output_type != "no_markup") {
+    present <- which(!is.na(stat1))
+    if (length(present)) {
+      if (output_type == "pandoc") {
+        stat1_pasted_obj[present] <- paste0("**", stat1_pasted_obj[present], "**")
+      } else {
+        stat1_pasted_obj[present] <- kableExtra::text_spec(
+          stat1_pasted_obj[present], format = output_type,
+          bold = TRUE, escape = FALSE
         )
-    } else {
-      stat3_pasted_obj <-  ifelse(
-        is.na(stat3),
-        na_str_out,
-        as.character(.round_if_numeric(stat3, digits = digits,
-                                       trailing_zeros = trailing_zeros))
-        )
-      if (!is.null(suffix)) stat3_pasted_obj <- paste0(stat3_pasted_obj, suffix)
-
-      pasted_output <- ifelse(
-        is.na(stat1) & is.na(stat2) & is.na(stat3),
-        na_str_out,
-        paste0(stat1_pasted_obj, " ", bound_char, stat2_pasted_obj, sep,
-               stat3_pasted_obj, end_bound_char))
+      }
     }
   }
-  pasted_output
+
+  if (is.null(stat2)) return(stat1_pasted_obj)
+  stat2_pasted_obj <- format_stat(stat2)
+  if (is.null(stat3)) {
+    return(ifelse(
+      is.na(stat1) & is.na(stat2), na_str_out,
+      paste0(stat1_pasted_obj, first_separator, stat2_pasted_obj, end_bound_char)
+    ))
+  }
+
+  stat3_pasted_obj <- format_stat(stat3)
+  ifelse(
+    is.na(stat1) & is.na(stat2) & is.na(stat3), na_str_out,
+    paste0(stat1_pasted_obj, first_separator, stat2_pasted_obj, sep,
+           stat3_pasted_obj, end_bound_char)
+  )
 }
 
 
