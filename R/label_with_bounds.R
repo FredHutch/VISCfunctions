@@ -18,11 +18,11 @@
 #' label_with_bounds(lower = TRUE, upper = TRUE)(c(0, 0.5, 1))
 #' label_with_bounds(function(x) paste0(100 * x, "%"),
 #'                   lower = TRUE, upper = TRUE)(c(0, 0.5, 1))
-#' ggplot2::ggplot(data.frame(x = c(0, 0.5, 1)), ggplot2::aes(x, x)) +
+#' ggplot2::ggplot(data.frame(x = 1:3, y = c(0, 0.5, 0.75)), ggplot2::aes(x, y)) +
 #'   ggplot2::geom_point() +
 #'   ggplot2::scale_y_continuous(
-#'     breaks = c(0, 0.5, 1),
-#'     labels = label_with_bounds(lower = TRUE, upper = TRUE)
+#'     breaks = c(0, 0.25, 0.5, 0.75),
+#'     labels = label_with_bounds(lower = FALSE, upper = TRUE, formatter = scales::percent)
 #'   )
 #' @export
 label_with_bounds <- function(formatter = as.character,
